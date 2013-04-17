@@ -8,6 +8,4 @@ default.properties
 lint.xml
 .DS_Store
 # Remove workstation-related files for versioning
-src/fr/epicdream/android/prixing/util/LocalConfig.java
-src/fr/epicdream/android/prixing/config/LocalConfig.java
 local.properties
