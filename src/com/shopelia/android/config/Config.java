@@ -58,4 +58,13 @@ public final class Config {
      * enabled, even in production releases.
      */
     public static final boolean ERROR_LOGS_ENABLED = WARNING_LOGS_ENABLED || (LOG_LEVEL == LOG_LEVEL_ERROR);
+
+    // /////////////////////////////////////////////////////////////
+    //
+    // Extras
+    //
+    // /////////////////////////////////////////////////////////////
+
+    public static final String EXTRA_PREFIX = "com.shopelia.android.extras.";
+
 }
