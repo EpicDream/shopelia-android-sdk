@@ -2,9 +2,8 @@ package com.shopelia.android.api;
 
 import org.json.JSONObject;
 
-import android.content.Context;
-
-import com.shopelia.android.http.HttpMethod;
+import com.shopelia.android.config.Config;
+import com.shopelia.android.http.LogcatRequestLogger;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
@@ -48,6 +47,11 @@ public final class ShopeliaRestClient {
         sHttpClient.setReadTimeout(READ_TINEOUT);
         sHttpClient.setMaxRetries(MAX_RETRIES);
 
+        /*
+         * Logger
+         */
+
+        sHttpClient.setRequestLogger(new LogcatRequestLogger(LOG_TAG, Config.INFO_LOGS_ENABLED));
     }
 
     private ShopeliaRestClient() {
@@ -59,7 +63,7 @@ public final class ShopeliaRestClient {
      * 
      * @return ParameterMap
      */
-    public ParameterMap newParams() {
+    public static ParameterMap newParams() {
         return sHttpClient.newParams();
     }
 
@@ -71,8 +75,8 @@ public final class ShopeliaRestClient {
      * @param params
      * @return
      */
-    public static HttpResponse get(Context context, String path, ParameterMap params) {
-        return request(context, HttpMethod.GET, path, params, null, null);
+    public static HttpResponse get(String path, ParameterMap params) {
+        return sHttpClient.get(path, params);
     }
 
     /**
@@ -83,8 +87,8 @@ public final class ShopeliaRestClient {
      * @param params
      * @param callback
      */
-    public static void get(Context context, String path, ParameterMap params, AsyncCallback callback) {
-        request(context, HttpMethod.GET, path, params, null, callback);
+    public static void get(String path, ParameterMap params, AsyncCallback callback) {
+        sHttpClient.get(path, params, callback);
     }
 
     /**
@@ -93,30 +97,8 @@ public final class ShopeliaRestClient {
      * @param path
      * @param params
      */
-    public static HttpResponse post(Context context, String path, ParameterMap params) {
-        return request(context, HttpMethod.POST, path, params, null, null);
-    }
-
-    /**
-     * Execute a GET request and invoke the callback on completion. The supplied
-     * parameters are URL encoded and sent as the query string.
-     * 
-     * @param path
-     * @param params
-     * @param callback
-     */
-    public static void get(Context context, String path, JSONObject json, AsyncCallback callback) {
-        request(context, HttpMethod.POST, path, null, json, callback);
-    }
-
-    /**
-     * Execute a POST request with parameter map and return the response.
-     * 
-     * @param path
-     * @param params
-     */
-    public static HttpResponse post(Context context, String path, JSONObject json) {
-        return request(context, HttpMethod.POST, path, null, json, null);
+    public static HttpResponse post(String path, ParameterMap params) {
+        return sHttpClient.post(path, params);
     }
 
     /**
@@ -127,19 +109,30 @@ public final class ShopeliaRestClient {
      * @param params
      * @param callback
      */
-    public static void post(Context context, String path, ParameterMap params, AsyncCallback callback) {
-        request(context, HttpMethod.POST, path, params, null, callback);
+    public static void post(String path, ParameterMap params, AsyncCallback callback) {
+        sHttpClient.post(path, params, callback);
     }
 
-    private static HttpResponse request(Context context, HttpMethod method, String path, ParameterMap map, JSONObject object,
-            AsyncCallback callback) {
-        // sHttpClient.addHeader("X-Shopelia-AuthToken",
-        // UserManager.get(context));
-        if (callback != null) {
-            method.request(sHttpClient, path, map, object, callback);
-        } else {
-            return method.request(sHttpClient, path, map, object);
-        }
-        return null;
+    /**
+     * Execute a POST request with parameter map and return the response.
+     * 
+     * @param path
+     * @param params
+     */
+    public static HttpResponse post(String path, JSONObject json) {
+        return sHttpClient.post(path, "application/json", json.toString().getBytes());
     }
+
+    /**
+     * Execute a POST request with parameter map and invoke the callback on
+     * completion.
+     * 
+     * @param path
+     * @param params
+     * @param callback
+     */
+    public static void post(String path, JSONObject object, AsyncCallback callback) {
+        sHttpClient.post(path, "application/json", object.toString().getBytes(), callback);
+    }
+
 }
