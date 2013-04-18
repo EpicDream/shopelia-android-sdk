@@ -16,7 +16,7 @@ public class ShopeliaFragment<Contract extends FragmentActivity> extends Fragmen
     }
 
     @SuppressWarnings("unchecked")
-    public <T extends BaseActivity> T getBaseActivity() {
+    public <T extends HostActivity> T getBaseActivity() {
         return (T) getActivity();
     }
 

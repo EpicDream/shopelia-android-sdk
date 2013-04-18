@@ -2,15 +2,15 @@ package com.shopelia.android;
 
 import android.os.Bundle;
 
-import com.shopelia.android.app.BaseActivity;
+import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.manager.UserManager;
 
-public class StartActivity extends BaseActivity {
+public class StartActivity extends HostActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setHostContentView(R.layout.activity_main);
 
         if (UserManager.get(this).isLogged()) {
 
@@ -20,8 +20,4 @@ public class StartActivity extends BaseActivity {
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
 }
