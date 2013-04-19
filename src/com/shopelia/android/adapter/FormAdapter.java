@@ -162,7 +162,7 @@ public class FormAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return mFieldList.get(position).getFieldType();
+        return position >= 0 && position < mFieldList.size() ? mFieldList.get(position).getFieldType() : super.getItemViewType(position);
     }
 
     public JSONObject toJson() {
