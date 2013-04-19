@@ -70,4 +70,9 @@ public class HeaderField extends Field {
         TextView title;
     }
 
+    @Override
+    public boolean isSectionHeader() {
+        return true;
+    }
+
 }

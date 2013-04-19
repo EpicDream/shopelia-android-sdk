@@ -4,13 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <EditText
+    <com.shopelia.android.widget.FormEditText
         android:id="@+id/edit_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" >
-
-        <requestFocus />
-    </EditText>
+    </com.shopelia.android.widget.FormEditText>
 
 </LinearLayout>

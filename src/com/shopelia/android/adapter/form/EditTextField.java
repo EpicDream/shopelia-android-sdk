@@ -49,7 +49,9 @@ public class EditTextField extends Field {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.editText.removeTextChangedListener(holder.textWatcher);
         holder.textWatcher = mTextWatcher;
-        holder.editText.addTextChangedListener(mTextWatcher);
+        if (mTextWatcher != null) {
+            holder.editText.addTextChangedListener(mTextWatcher);
+        }
         setViewStyle(holder);
         holder.editText.setHint(mHint);
         if (!CharSequenceUtils.isEmpty(mContentText)) {
@@ -91,6 +93,11 @@ public class EditTextField extends Field {
     public static class ViewHolder {
         EditText editText;
         TextWatcher textWatcher;
+    }
+
+    @Override
+    public boolean isSectionHeader() {
+        return false;
     }
 
 }

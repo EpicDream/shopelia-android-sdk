@@ -44,9 +44,15 @@ public class FormAdapter extends BaseAdapter {
     public abstract static class Field {
 
         private final int mType;
+        private boolean mSectionValid = false;
+        private FormAdapter mAdapter;
 
         protected Field(int type) {
             mType = type;
+        }
+
+        public void setAdapter(FormAdapter adapter) {
+            mAdapter = adapter;
         }
 
         public int getFieldType() {
@@ -84,6 +90,20 @@ public class FormAdapter extends BaseAdapter {
         public abstract void onSaveInstanceState(Bundle outState);
 
         public abstract void onCreate(Bundle savedInstanceState);
+
+        public abstract boolean isSectionHeader();
+
+        public boolean isSectionValid() {
+            return mSectionValid;
+        }
+
+        public void setSectionValidity(boolean isValid, Object userdata) {
+            mSectionValid = isValid;
+        }
+
+        public FormAdapter getAdapter() {
+            return mAdapter;
+        }
 
     }
 
@@ -125,7 +145,8 @@ public class FormAdapter extends BaseAdapter {
         mFieldTypes = new HashSet<Integer>();
         for (Field field : mFieldList) {
             mFieldTypes.add(field.getFieldType());
-
+            field.setAdapter(this);
+            field.onCreate(savedInstanceState);
         }
         notifyDataSetChanged();
     }
