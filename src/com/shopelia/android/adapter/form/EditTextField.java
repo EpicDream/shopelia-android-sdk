@@ -2,6 +2,7 @@ package com.shopelia.android.adapter.form;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,11 +15,32 @@ import com.shopelia.utils.CharSequenceUtils;
 
 public class EditTextField extends Field {
 
+    public abstract static class OnValidateListener implements TextWatcher {
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        public abstract boolean onValidate(EditTextField editTextField);
+
+    }
+
     public static final int TYPE = 1;
 
     private String mContentText;
     private String mHint;
-    private TextWatcher mTextWatcher;
+    private OnValidateListener mOnValidateListener;
 
     public EditTextField(String defaultText, String hint) {
         super(TYPE);
@@ -26,8 +48,14 @@ public class EditTextField extends Field {
         mHint = hint;
     }
 
-    public EditTextField(Context context, int hintResId) {
+    public EditTextField(Context context, String defaultText, int hintResId) {
         this(null, context.getString(hintResId));
+    }
+
+    public EditTextField setOnValidateListener(OnValidateListener listener) {
+        mOnValidateListener = listener;
+        setContentText(mContentText);
+        return this;
     }
 
     @Override
@@ -59,6 +87,11 @@ public class EditTextField extends Field {
         }
     }
 
+    public void setContentText(CharSequence contentText) {
+        mContentText = contentText.toString();
+        setValid(mOnValidateListener != null ? mOnValidateListener.onValidate(this) : true);
+    }
+
     protected void setViewStyle(ViewHolder holder) {
         // Here for extension purpose so we can later create PasswordField,
         // EmailField... just by extending EditTextField and overriding this
@@ -73,11 +106,6 @@ public class EditTextField extends Field {
     @Override
     public String getJsonPath() {
         return null;
-    }
-
-    @Override
-    public boolean isValid() {
-        return false;
     }
 
     @Override
@@ -99,5 +127,30 @@ public class EditTextField extends Field {
     public boolean isSectionHeader() {
         return false;
     }
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+            if (mOnValidateListener != null) {
+                mOnValidateListener.onTextChanged(s, start, before, count);
+            }
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            if (mOnValidateListener != null) {
+                mOnValidateListener.beforeTextChanged(s, start, count, after);
+            }
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            setContentText(s);
+            if (mOnValidateListener != null) {
+                mOnValidateListener.afterTextChanged(s);
+            }
+        }
+    };
 
 }
