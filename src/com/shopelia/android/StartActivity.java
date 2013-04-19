@@ -1,23 +1,21 @@
 package com.shopelia.android;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.app.HostActivity;
-import com.shopelia.android.manager.UserManager;
 
 public class StartActivity extends HostActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        getIntent().putExtra(EXTRA_INIT_ORDER, true);
         super.onCreate(savedInstanceState);
-        setHostContentView(R.layout.activity_main);
+        setHostContentView(R.layout.shopelia_start_activity);
 
-        if (UserManager.get(this).isLogged()) {
-
-        } else {
-
-        }
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.add(R.id.fragment_container, new SignUpFragment());
+        ft.commit();
 
     }
-
 }

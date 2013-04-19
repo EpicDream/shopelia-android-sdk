@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter.Field;
+import com.shopelia.utils.CharSequenceUtils;
 
 public class EditTextField extends Field {
 
@@ -17,10 +18,14 @@ public class EditTextField extends Field {
     private String mContentText;
     private String mHint;
 
-    protected EditTextField(String defaultText, String hint) {
+    public EditTextField(String defaultText, String hint) {
         super(TYPE);
         mContentText = defaultText;
         mHint = hint;
+    }
+
+    public EditTextField(Context context, int hintResId) {
+        this(null, context.getString(hintResId));
     }
 
     @Override
@@ -30,7 +35,7 @@ public class EditTextField extends Field {
 
     @Override
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
-        View view = inflater.inflate(R.layout.form_field_edit_text, viewGroup, false);
+        View view = inflater.inflate(R.layout.shopelia_form_field_edit_text, viewGroup, false);
         ViewHolder holder = new ViewHolder();
         holder.editText = (EditText) view.findViewById(R.id.edit_text);
         view.setTag(holder);
@@ -40,6 +45,11 @@ public class EditTextField extends Field {
     @Override
     public void bindView(View view) {
         ViewHolder holder = (ViewHolder) view.getTag();
+        setViewStyle(holder);
+        holder.editText.setHint(mHint);
+        if (!CharSequenceUtils.isEmpty(mContentText)) {
+            holder.editText.setText(mContentText);
+        }
     }
 
     protected void setViewStyle(ViewHolder holder) {

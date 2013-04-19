@@ -88,7 +88,7 @@ public class FormAdapter extends BaseAdapter {
     }
 
     private List<Field> mFieldList = new ArrayList<FormAdapter.Field>();
-    private HashSet<Integer> mFieldTypes = new HashSet<Integer>();
+    private HashSet<Integer> mFieldTypes = null;
     private LayoutInflater mInflater;
     private Context mContext;
 
@@ -157,7 +157,12 @@ public class FormAdapter extends BaseAdapter {
 
     @Override
     public int getViewTypeCount() {
-        return mFieldTypes.size();
+        return mFieldTypes == null ? 1 : mFieldTypes.size();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        return mFieldList.get(position).getFieldType();
     }
 
     public JSONObject toJson() {
@@ -229,5 +234,9 @@ public class FormAdapter extends BaseAdapter {
             }
         }
         return nodeName;
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+
     }
 }

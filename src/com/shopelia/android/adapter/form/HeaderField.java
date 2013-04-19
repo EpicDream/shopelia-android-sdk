@@ -33,7 +33,7 @@ public class HeaderField extends Field {
 
     @Override
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
-        View out = inflater.inflate(R.layout.form_field_title_header, viewGroup, false);
+        View out = inflater.inflate(R.layout.shopelia_form_field_title_header, viewGroup, false);
         ViewHolder holder = new ViewHolder();
         holder.title = (TextView) out.findViewById(R.id.title);
         out.setTag(holder);

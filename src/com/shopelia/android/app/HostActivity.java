@@ -29,7 +29,7 @@ public class HostActivity extends FragmentActivity {
     protected void onCreate(Bundle saveState) {
         super.onCreate(saveState);
 
-        setContentView(R.layout.host_activity);
+        setContentView(R.layout.shopelia_host_activity);
         mRootView = (FrameLayout) super.findViewById(R.id.host_container);
         recoverOrder(saveState == null ? getIntent().getExtras() : saveState);
 
