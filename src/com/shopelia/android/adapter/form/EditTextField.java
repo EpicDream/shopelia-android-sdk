@@ -2,6 +2,7 @@ package com.shopelia.android.adapter.form;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ public class EditTextField extends Field {
 
     private String mContentText;
     private String mHint;
+    private TextWatcher mTextWatcher;
 
     public EditTextField(String defaultText, String hint) {
         super(TYPE);
@@ -45,6 +47,9 @@ public class EditTextField extends Field {
     @Override
     public void bindView(View view) {
         ViewHolder holder = (ViewHolder) view.getTag();
+        holder.editText.removeTextChangedListener(holder.textWatcher);
+        holder.textWatcher = mTextWatcher;
+        holder.editText.addTextChangedListener(mTextWatcher);
         setViewStyle(holder);
         holder.editText.setHint(mHint);
         if (!CharSequenceUtils.isEmpty(mContentText)) {
@@ -85,6 +90,7 @@ public class EditTextField extends Field {
 
     public static class ViewHolder {
         EditText editText;
+        TextWatcher textWatcher;
     }
 
 }
