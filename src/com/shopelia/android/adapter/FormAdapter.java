@@ -9,6 +9,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,8 +53,24 @@ public class FormAdapter extends BaseAdapter {
             return mType;
         }
 
+        /**
+         * Return the id of the item. 0 if it has no id.
+         * 
+         * @return
+         */
         public abstract long getItemId();
 
+        /**
+         * Create a new view for the {@link Field}. You should not bind data in
+         * this method because {@link Field#bindView(View)} will be called
+         * after. <br/>
+         * <b>Note:</b> You should create your VieHolder pattern here.
+         * 
+         * @param context
+         * @param inflater
+         * @param viewGroup
+         * @return
+         */
         public abstract View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup);
 
         public abstract void bindView(View view);
@@ -63,6 +80,10 @@ public class FormAdapter extends BaseAdapter {
         public abstract String getJsonPath();
 
         public abstract boolean isValid();
+
+        public abstract void onSaveInstanceState(Bundle outState);
+
+        public abstract void onCreate(Bundle savedInstanceState);
 
     }
 
@@ -100,8 +121,12 @@ public class FormAdapter extends BaseAdapter {
         return this;
     }
 
-    public void commit() {
+    public void commit(Bundle savedInstanceState) {
         mFieldTypes = new HashSet<Integer>();
+        for (Field field : mFieldList) {
+            mFieldTypes.add(field.getFieldType());
+
+        }
         notifyDataSetChanged();
     }
 
