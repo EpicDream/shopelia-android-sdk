@@ -10,6 +10,8 @@ import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.form.EditTextField;
 import com.shopelia.android.adapter.form.HeaderField;
 import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.widget.FormListFooter;
+import com.shopelia.android.widget.FormListHeader;
 
 public class SignUpFragment extends ShopeliaFragment<Void> {
 
@@ -26,6 +28,9 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
         super.onViewCreated(view, savedInstanceState);
 
         mListView = (ListView) view.findViewById(R.id.form);
+        mListView.addHeaderView(new FormListHeader(getActivity()).getView(), null, false);
+        mListView.addFooterView(new FormListFooter(getActivity()).getView(), null, false);
+
         mAdapter = new FormAdapter(getActivity());
 
         //@formatter:off
