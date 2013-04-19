@@ -51,7 +51,7 @@ public class FormAdapter extends BaseAdapter {
             mType = type;
         }
 
-        public void setAdapter(FormAdapter adapter) {
+        private void setAdapter(FormAdapter adapter) {
             mAdapter = adapter;
         }
 
@@ -81,24 +81,83 @@ public class FormAdapter extends BaseAdapter {
 
         public abstract void bindView(View view);
 
+        /**
+         * Returns data held by this field. It could either {@link String},
+         * {@link Long}, {@link Integer}, {@link Boolean}, {@link Double},
+         * {@link Float}, {@link JSONObject} or {@link JSONArray}.
+         * 
+         * @return
+         */
         public abstract Object getResult();
 
+        /**
+         * The path in the final {@link JSONObject} to retrieve this field
+         * result. Json keys are separated with '.' and '#' indicates an array.
+         * 
+         * @return
+         */
         public abstract String getJsonPath();
 
+        /**
+         * Indicates if data are valid or not
+         * 
+         * @return
+         */
         public boolean isValid() {
             return mIsValid;
         }
 
+        /**
+         * This method is called when it is time validate the field and fire
+         * error in case of invalid data.
+         * 
+         * @return
+         */
+        public abstract boolean validate();
+
+        /**
+         * Called when memory will be released and field should save its data to
+         * recover state later.
+         * 
+         * @param outState
+         */
         public abstract void onSaveInstanceState(Bundle outState);
 
+        /**
+         * Called each time the {@link FormAdapter} is being commited.
+         * 
+         * @param savedInstanceState
+         */
         public abstract void onCreate(Bundle savedInstanceState);
 
+        /**
+         * Indicates if the given field is a section header or not
+         * 
+         * @return
+         */
         public abstract boolean isSectionHeader();
 
+        /**
+         * This method changes the validity of the field. This method will ask
+         * to the form to compute its sections.
+         * 
+         * @param isValid
+         */
         public void setValid(boolean isValid) {
-            mIsValid = isValid;
+            if (mIsValid != isValid) {
+                mIsValid = isValid;
+                if (getAdapter() != null) {
+                    getAdapter().updateSections();
+                }
+            }
         }
 
+        /**
+         * Returns the attached adapter. <br />
+         * <b>Note:</b> This method could return a null value.
+         * 
+         * @return
+         */
         public FormAdapter getAdapter() {
             return mAdapter;
         }

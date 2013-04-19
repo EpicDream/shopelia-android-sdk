@@ -6,8 +6,10 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter.Field;
@@ -32,7 +34,7 @@ public class EditTextField extends Field {
 
         }
 
-        public abstract boolean onValidate(EditTextField editTextField);
+        public abstract boolean onValidate(EditTextField editTextField, boolean shouldFireError);
 
     }
 
@@ -80,16 +82,19 @@ public class EditTextField extends Field {
         if (mTextWatcher != null) {
             holder.editText.addTextChangedListener(mTextWatcher);
         }
+        holder.editText.setOnFocusChangeListener(mOnFocusChangeListener);
         setViewStyle(holder);
         holder.editText.setHint(mHint);
         if (!CharSequenceUtils.isEmpty(mContentText)) {
             holder.editText.setText(mContentText);
+        } else {
+            holder.editText.setText("");
         }
     }
 
     public void setContentText(CharSequence contentText) {
         mContentText = contentText.toString();
-        setValid(mOnValidateListener != null ? mOnValidateListener.onValidate(this) : true);
+        setValid(mOnValidateListener != null ? mOnValidateListener.onValidate(this, false) : true);
     }
 
     protected void setViewStyle(ViewHolder holder) {
@@ -128,6 +133,10 @@ public class EditTextField extends Field {
         return false;
     }
 
+    public void setError(String errorMsg) {
+
+    }
+
     private TextWatcher mTextWatcher = new TextWatcher() {
 
         @Override
@@ -146,11 +155,25 @@ public class EditTextField extends Field {
 
         @Override
         public void afterTextChanged(Editable s) {
-            setContentText(s);
             if (mOnValidateListener != null) {
                 mOnValidateListener.afterTextChanged(s);
             }
         }
     };
+
+    private OnFocusChangeListener mOnFocusChangeListener = new OnFocusChangeListener() {
+
+        @Override
+        public void onFocusChange(View view, boolean hasFocus) {
+            if (!hasFocus) {
+                setContentText(((TextView) view).getText().toString());
+            }
+        }
+    };
+
+    @Override
+    public boolean validate() {
+        return mOnValidateListener != null ? mOnValidateListener.onValidate(this, true) : true;
+    }
 
 }
