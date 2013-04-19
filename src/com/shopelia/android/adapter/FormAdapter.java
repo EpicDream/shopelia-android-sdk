@@ -44,7 +44,7 @@ public class FormAdapter extends BaseAdapter {
     public abstract static class Field {
 
         private final int mType;
-        private boolean mSectionValid = false;
+        private boolean mIsValid = false;
         private FormAdapter mAdapter;
 
         protected Field(int type) {
@@ -85,7 +85,9 @@ public class FormAdapter extends BaseAdapter {
 
         public abstract String getJsonPath();
 
-        public abstract boolean isValid();
+        public boolean isValid() {
+            return mIsValid;
+        }
 
         public abstract void onSaveInstanceState(Bundle outState);
 
@@ -93,12 +95,8 @@ public class FormAdapter extends BaseAdapter {
 
         public abstract boolean isSectionHeader();
 
-        public boolean isSectionValid() {
-            return mSectionValid;
-        }
-
-        public void setSectionValidity(boolean isValid, Object userdata) {
-            mSectionValid = isValid;
+        public void setValid(boolean isValid) {
+            mIsValid = isValid;
         }
 
         public FormAdapter getAdapter() {
@@ -148,6 +146,7 @@ public class FormAdapter extends BaseAdapter {
             field.setAdapter(this);
             field.onCreate(savedInstanceState);
         }
+        updateSections();
         notifyDataSetChanged();
     }
 
@@ -184,6 +183,19 @@ public class FormAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         return position >= 0 && position < mFieldList.size() ? mFieldList.get(position).getFieldType() : super.getItemViewType(position);
+    }
+
+    public void updateSections() {
+        boolean isSectionValid = true;
+        for (int index = mFieldList.size() - 1; index >= 0; index--) {
+            Field field = mFieldList.get(index);
+            if (!field.isSectionHeader()) {
+                field.setValid(isSectionValid);
+                isSectionValid = true;
+            } else {
+                isSectionValid = isSectionValid && field.isValid();
+            }
+        }
     }
 
     public JSONObject toJson() {
