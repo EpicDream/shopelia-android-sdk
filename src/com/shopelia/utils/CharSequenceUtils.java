@@ -21,7 +21,7 @@ public final class CharSequenceUtils {
      *         otherwise
      */
     public static boolean isEmpty(CharSequence string) {
-        return string != null && string.length() > 0;
+        return string == null || string.length() == 0;
     }
 
 }
