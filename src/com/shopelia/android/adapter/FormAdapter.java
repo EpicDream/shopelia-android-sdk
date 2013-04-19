@@ -339,6 +339,8 @@ public class FormAdapter extends BaseAdapter {
     }
 
     public void onSaveInstanceState(Bundle outState) {
-
+        for (Field field : mFieldList) {
+            field.onSaveInstanceState(outState);
+        }
     }
 }

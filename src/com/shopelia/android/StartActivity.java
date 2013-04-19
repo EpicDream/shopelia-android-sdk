@@ -13,9 +13,11 @@ public class StartActivity extends HostActivity {
         super.onCreate(savedInstanceState);
         setHostContentView(R.layout.shopelia_start_activity);
 
-        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, new SignUpFragment());
-        ft.commit();
+        if (savedInstanceState == null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.fragment_container, new SignUpFragment());
+            ft.commit();
+        }
 
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
@@ -40,6 +41,7 @@ public class EditTextField extends Field {
     }
 
     public static final int TYPE = 1;
+    public static final String SAVE_TAG = "EditTextFieldSave_";
 
     private String mContentText;
     private String mHint;
@@ -108,19 +110,20 @@ public class EditTextField extends Field {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.editText.removeTextChangedListener(holder.textWatcher);
         holder.textWatcher = mTextWatcher;
-        if (mTextWatcher != null) {
-            holder.editText.addTextChangedListener(mTextWatcher);
-        }
         holder.editText.setOnFocusChangeListener(mOnFocusChangeListener);
         setViewStyle(holder);
         holder.editText.setHint(mHint);
         holder.editText.setText(mContentText);
         holder.editText.setChecked(isValid());
+        if (mTextWatcher != null) {
+            holder.editText.addTextChangedListener(mTextWatcher);
+        }
     }
 
     public void setContentText(CharSequence contentText) {
         if (contentText != null) {
             mContentText = contentText.toString();
+            Log.d(null, "CONTENT = " + mContentText);
             if (mAutoTrim) {
                 mContentText = mContentText.trim();
             }
@@ -148,12 +151,14 @@ public class EditTextField extends Field {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
+        outState.putString(SAVE_TAG + mJsonPath, mContentText);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+        if (savedInstanceState != null && mJsonPath != null) {
+            setContentText(savedInstanceState.getString(SAVE_TAG + mJsonPath));
+        }
     }
 
     public static class ViewHolder {
@@ -191,7 +196,6 @@ public class EditTextField extends Field {
             if (mOnValidateListener != null) {
                 mOnValidateListener.afterTextChanged(s);
             }
-            mContentText = s.toString();
         }
     };
 
