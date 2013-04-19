@@ -46,6 +46,7 @@ public class FormAdapter extends BaseAdapter {
         private final int mType;
         private boolean mIsValid = false;
         private FormAdapter mAdapter;
+        private String mJSonPath;
 
         protected Field(int type) {
             mType = type;
@@ -255,6 +256,7 @@ public class FormAdapter extends BaseAdapter {
                 isSectionValid = isSectionValid && field.isValid();
             }
         }
+        notifyDataSetChanged();
     }
 
     public JSONObject toJson() {
@@ -271,6 +273,14 @@ public class FormAdapter extends BaseAdapter {
         boolean out = true;
         for (Field field : mFieldList) {
             out = out && field.isValid();
+        }
+        return out;
+    }
+
+    public boolean validate() {
+        boolean out = true;
+        for (Field field : mFieldList) {
+            out = out & field.validate();
         }
         return out;
     }

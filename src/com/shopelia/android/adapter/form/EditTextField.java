@@ -8,11 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import com.shopelia.android.R;
+import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.FormAdapter.Field;
+import com.shopelia.android.widget.FormEditText;
 import com.shopelia.utils.CharSequenceUtils;
 
 public class EditTextField extends Field {
@@ -43,6 +44,9 @@ public class EditTextField extends Field {
     private String mContentText;
     private String mHint;
     private OnValidateListener mOnValidateListener;
+    private boolean mAllowEmptyContent = false;
+    private boolean mAutoTrim = true;
+    private String mJsonPath;
 
     public EditTextField(String defaultText, String hint) {
         super(TYPE);
@@ -60,6 +64,31 @@ public class EditTextField extends Field {
         return this;
     }
 
+    public EditTextField setAllowingEmptyContent(boolean allowEmptyContent) {
+        mAllowEmptyContent = allowEmptyContent;
+        return this;
+    }
+
+    public EditTextField setAutoTrimEnable(boolean autoTrim) {
+        mAutoTrim = autoTrim;
+        return this;
+    }
+
+    public EditTextField setJsonPath(String... jsonPath) {
+        StringBuilder builder = new StringBuilder();
+        if (jsonPath != null) {
+            for (String item : jsonPath) {
+                builder.append(item);
+                builder.append(FormAdapter.PATH_SEPARATOR);
+            }
+            if (builder.length() > 0) {
+                builder.deleteCharAt(builder.length() - 1);
+            }
+        }
+        mJsonPath = builder.toString();
+        return this;
+    }
+
     @Override
     public long getItemId() {
         return 0;
@@ -69,7 +98,7 @@ public class EditTextField extends Field {
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         View view = inflater.inflate(R.layout.shopelia_form_field_edit_text, viewGroup, false);
         ViewHolder holder = new ViewHolder();
-        holder.editText = (EditText) view.findViewById(R.id.edit_text);
+        holder.editText = (FormEditText) view.findViewById(R.id.edit_text);
         view.setTag(holder);
         return view;
     }
@@ -85,15 +114,19 @@ public class EditTextField extends Field {
         holder.editText.setOnFocusChangeListener(mOnFocusChangeListener);
         setViewStyle(holder);
         holder.editText.setHint(mHint);
-        if (!CharSequenceUtils.isEmpty(mContentText)) {
-            holder.editText.setText(mContentText);
-        } else {
-            holder.editText.setText("");
-        }
+        holder.editText.setText(mContentText);
+        holder.editText.setChecked(isValid());
     }
 
     public void setContentText(CharSequence contentText) {
-        mContentText = contentText.toString();
+        if (contentText != null) {
+            mContentText = contentText.toString();
+            if (mAutoTrim) {
+                mContentText = mContentText.trim();
+            }
+        } else {
+            mContentText = null;
+        }
         setValid(mOnValidateListener != null ? mOnValidateListener.onValidate(this, false) : true);
     }
 
@@ -110,7 +143,7 @@ public class EditTextField extends Field {
 
     @Override
     public String getJsonPath() {
-        return null;
+        return mJsonPath;
     }
 
     @Override
@@ -124,7 +157,7 @@ public class EditTextField extends Field {
     }
 
     public static class ViewHolder {
-        EditText editText;
+        FormEditText editText;
         TextWatcher textWatcher;
     }
 
@@ -158,6 +191,7 @@ public class EditTextField extends Field {
             if (mOnValidateListener != null) {
                 mOnValidateListener.afterTextChanged(s);
             }
+            mContentText = s.toString();
         }
     };
 
@@ -173,7 +207,10 @@ public class EditTextField extends Field {
 
     @Override
     public boolean validate() {
-        return mOnValidateListener != null ? mOnValidateListener.onValidate(this, true) : true;
+        setContentText(mContentText);
+        setValid(mOnValidateListener != null ? mOnValidateListener.onValidate(this, true) : CharSequenceUtils.isEmpty(mContentText)
+                || mAllowEmptyContent);
+        return isValid();
     }
 
 }

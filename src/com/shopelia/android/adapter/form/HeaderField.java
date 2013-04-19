@@ -75,4 +75,9 @@ public class HeaderField extends Field {
         return true;
     }
 
+    @Override
+    public boolean validate() {
+        return isValid();
+    }
+
 }
