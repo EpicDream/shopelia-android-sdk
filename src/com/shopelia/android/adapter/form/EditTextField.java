@@ -123,7 +123,6 @@ public class EditTextField extends Field {
     public void setContentText(CharSequence contentText) {
         if (contentText != null) {
             mContentText = contentText.toString();
-            Log.d(null, "CONTENT = " + mContentText);
             if (mAutoTrim) {
                 mContentText = mContentText.trim();
             }
@@ -203,6 +202,7 @@ public class EditTextField extends Field {
 
         @Override
         public void onFocusChange(View view, boolean hasFocus) {
+            Log.d(null, "ON FOCUS CHANGED");
             if (!hasFocus) {
                 setContentText(((TextView) view).getText().toString());
             }
@@ -212,8 +212,9 @@ public class EditTextField extends Field {
     @Override
     public boolean validate() {
         setContentText(mContentText);
-        setValid(mOnValidateListener != null ? mOnValidateListener.onValidate(this, true) : CharSequenceUtils.isEmpty(mContentText)
-                || mAllowEmptyContent);
+        setValid(mOnValidateListener != null ? mOnValidateListener.onValidate(this, true)
+                : (!CharSequenceUtils.isEmpty(mContentText) || mAllowEmptyContent));
+        Log.d(null, "Is Valid " + isValid());
         return isValid();
     }
 

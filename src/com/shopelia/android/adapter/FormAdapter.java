@@ -147,6 +147,7 @@ public class FormAdapter extends BaseAdapter {
         public void setValid(boolean isValid) {
             if (mIsValid != isValid) {
                 mIsValid = isValid;
+                Log.d(null, "SET VALID " + isValid);
                 if (getAdapter() != null) {
                     getAdapter().updateSections();
                 }
@@ -249,7 +250,7 @@ public class FormAdapter extends BaseAdapter {
         boolean isSectionValid = true;
         for (int index = mFieldList.size() - 1; index >= 0; index--) {
             Field field = mFieldList.get(index);
-            if (!field.isSectionHeader()) {
+            if (field.isSectionHeader()) {
                 field.setValid(isSectionValid);
                 isSectionValid = true;
             } else {
