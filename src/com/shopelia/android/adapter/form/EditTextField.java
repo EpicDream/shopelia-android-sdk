@@ -4,11 +4,11 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.shopelia.android.R;
@@ -46,9 +46,11 @@ public class EditTextField extends Field {
     private String mContentText;
     private String mHint;
     private OnValidateListener mOnValidateListener;
-    private boolean mAllowEmptyContent = false;
+    private boolean mAllowEmptyContent = true;
     private boolean mAutoTrim = true;
     private String mJsonPath;
+
+    private EditText mBoundedEditText;
 
     public EditTextField(String defaultText, String hint) {
         super(TYPE);
@@ -91,6 +93,27 @@ public class EditTextField extends Field {
         return this;
     }
 
+    /**
+     * Sets this field as mandatory. It has to be filled to success validation
+     * 
+     * @return
+     */
+    public EditTextField mandatory() {
+        mAllowEmptyContent = false;
+        return this;
+    }
+
+    /**
+     * Sets this field as optional. It will not be necessary to be filled to
+     * success validation.
+     * 
+     * @return
+     */
+    public EditTextField optional() {
+        mAllowEmptyContent = true;
+        return this;
+    }
+
     @Override
     public long getItemId() {
         return 0;
@@ -115,6 +138,11 @@ public class EditTextField extends Field {
         holder.editText.setHint(mHint);
         holder.editText.setText(mContentText);
         holder.editText.setChecked(isValid());
+        if (holder.boundedField != null) {
+            holder.boundedField.mBoundedEditText = null;
+        }
+        holder.boundedField = this;
+        mBoundedEditText = holder.editText;
         if (mTextWatcher != null) {
             holder.editText.addTextChangedListener(mTextWatcher);
         }
@@ -129,7 +157,7 @@ public class EditTextField extends Field {
         } else {
             mContentText = null;
         }
-        setValid(mOnValidateListener != null ? mOnValidateListener.onValidate(this, false) : true);
+        setValid(onValidation(false) && (mOnValidateListener != null ? mOnValidateListener.onValidate(this, false) : true));
     }
 
     protected void setViewStyle(ViewHolder holder) {
@@ -163,6 +191,7 @@ public class EditTextField extends Field {
     public static class ViewHolder {
         FormEditText editText;
         TextWatcher textWatcher;
+        EditTextField boundedField;
     }
 
     @Override
@@ -202,7 +231,6 @@ public class EditTextField extends Field {
 
         @Override
         public void onFocusChange(View view, boolean hasFocus) {
-            Log.d(null, "ON FOCUS CHANGED");
             if (!hasFocus) {
                 setContentText(((TextView) view).getText().toString());
             }
@@ -211,11 +239,16 @@ public class EditTextField extends Field {
 
     @Override
     public boolean validate() {
+        if (mBoundedEditText != null) {
+            mContentText = mBoundedEditText.getText().toString();
+        }
         setContentText(mContentText);
-        setValid(mOnValidateListener != null ? mOnValidateListener.onValidate(this, true)
-                : (!CharSequenceUtils.isEmpty(mContentText) || mAllowEmptyContent));
-        Log.d(null, "Is Valid " + isValid());
+        setValid(onValidation(false) && (mOnValidateListener != null ? mOnValidateListener.onValidate(this, true) : true));
         return isValid();
+    }
+
+    protected boolean onValidation(boolean fireError) {
+        return (!CharSequenceUtils.isEmpty(mContentText) || mAllowEmptyContent);
     }
 
 }

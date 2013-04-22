@@ -147,7 +147,6 @@ public class FormAdapter extends BaseAdapter {
         public void setValid(boolean isValid) {
             if (mIsValid != isValid) {
                 mIsValid = isValid;
-                Log.d(null, "SET VALID " + isValid);
                 if (getAdapter() != null) {
                     getAdapter().updateSections();
                 }
@@ -162,6 +161,10 @@ public class FormAdapter extends BaseAdapter {
          */
         public FormAdapter getAdapter() {
             return mAdapter;
+        }
+
+        public void notifyDataChanged() {
+
         }
 
     }
@@ -253,11 +256,11 @@ public class FormAdapter extends BaseAdapter {
             if (field.isSectionHeader()) {
                 field.setValid(isSectionValid);
                 isSectionValid = true;
+                field.notifyDataChanged();
             } else {
                 isSectionValid = isSectionValid && field.isValid();
             }
         }
-        notifyDataSetChanged();
     }
 
     public JSONObject toJson() {
