@@ -3,11 +3,13 @@ package com.shopelia.android;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -75,6 +77,9 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
 
         @Override
         public void onClick(View view) {
+            view.requestFocus();
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             if (mAdapter.validate()) {
                 JSONObject result = mAdapter.toJson();
                 try {
