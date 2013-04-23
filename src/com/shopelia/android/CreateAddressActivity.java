@@ -4,10 +4,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -37,6 +40,8 @@ public class CreateAddressActivity extends HostActivity {
     public static final String EXTRA_CITY = Config.EXTRA_PREFIX + "CITY";
     public static final String EXTRA_COUNTRY = Config.EXTRA_PREFIX + "COUNTRY";
 
+    public static final String EXTRA_ADDRESS_OBJECT = Config.EXTRA_PREFIX + "OBJECT";
+
     public static final String LOG_TAG = "CreateAddressActivity";
 
     private static final long REQUEST_DELAY = 400;
@@ -54,6 +59,8 @@ public class CreateAddressActivity extends HostActivity {
     private long mRequestId;
     private LayoutInflater mLayoutInflater;
     private AutocompletionAdapter mAutocompletionAdapter = new AutocompletionAdapter(null);
+
+    private Address mResult = new Address();
 
     @Override
     protected void onCreate(Bundle saveState) {
@@ -73,6 +80,8 @@ public class CreateAddressActivity extends HostActivity {
 
         mAddressField.setAdapter(mAutocompletionAdapter);
         mAddressField.setOnItemClickListener(mOnSuggestionClickListener);
+
+        findViewById(R.id.validate).setOnClickListener(mOnValidateClickListener);
 
         initUi(saveState == null ? getIntent().getExtras() : saveState);
     }
@@ -196,5 +205,43 @@ public class CreateAddressActivity extends HostActivity {
         }
 
     };
+
+    private OnClickListener mOnValidateClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            if (validate()) {
+                Intent data = new Intent();
+                Bundle extras = new Bundle();
+                extras.putParcelable(EXTRA_ADDRESS_OBJECT, mResult);
+                data.putExtras(extras);
+                setResult(RESULT_OK, data);
+                finish();
+            }
+        }
+    };
+
+    private boolean validate() {
+        mResult = new Address();
+        mResult.name = mNameField.getText().toString();
+        mResult.firstname = mFirstNameField.getText().toString();
+        mResult.address = mAddressField.getText().toString();
+        mResult.extras = mAddressExtrasField.getText().toString();
+        mResult.zipcode = mPostalCodeField.getText().toString();
+        mResult.address = mCityField.getText().toString();
+        mResult.country = mCountryField.getText().toString();
+        return validateFields(mAddressField, mNameField, mFirstNameField, mCityField, mCountryField, mPostalCodeField);
+    }
+
+    private static boolean validateFields(EditText... fields) {
+        boolean out = true;
+        for (int index = 0; index < fields.length; index++) {
+            if (TextUtils.isEmpty(fields[index].getText().toString())) {
+                out = false;
+                fields[index].setError("Erreur");
+            }
+        }
+        return out;
+    }
 
 }

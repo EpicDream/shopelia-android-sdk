@@ -1,5 +1,7 @@
 package com.shopelia.android.adapter.form;
 
+import org.json.JSONException;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.shopelia.android.CreateAddressActivity;
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter.Field;
+import com.shopelia.android.model.Address;
 
 public class AddressField extends Field {
 
@@ -20,6 +23,7 @@ public class AddressField extends Field {
     public static int REQUEST_ADDRESS = 0x16;
 
     private String mJsonPath = "Address";
+    private Address mAddress = null;
 
     public AddressField() {
         super(TYPE);
@@ -43,11 +47,18 @@ public class AddressField extends Field {
     public void bindView(View view) {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.address.setOnClickListener(mOnClickListener);
+        if (mAddress != null) {
+            holder.address.setText(mAddress.address);
+        }
     }
 
     @Override
     public Object getResult() {
-        return "un petit test de résultat";
+        try {
+            return mAddress.toJson();
+        } catch (JSONException e) {
+            return null;
+        }
     }
 
     @Override
@@ -68,6 +79,15 @@ public class AddressField extends Field {
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ADDRESS && resultCode == Activity.RESULT_OK) {
+            mAddress = data.getParcelableExtra(CreateAddressActivity.EXTRA_ADDRESS);
+            getAdapter().notifyDataSetChanged();
+        }
     }
 
     @Override

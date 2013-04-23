@@ -35,6 +35,7 @@ public final class Address implements JsonData, Parcelable {
 
     public String name;
     public String firstname;
+    public String extras;
 
     public Address() {
 
@@ -49,6 +50,7 @@ public final class Address implements JsonData, Parcelable {
         reference = source.readString();
         name = source.readString();
         firstname = source.readString();
+        extras = source.readString();
     }
 
     @Override
@@ -83,6 +85,7 @@ public final class Address implements JsonData, Parcelable {
         dest.writeString(reference);
         dest.writeString(name);
         dest.writeString(firstname);
+        dest.writeString(extras);
     }
 
     public static Address inflate(JSONObject object) throws JSONException {
@@ -107,6 +110,7 @@ public final class Address implements JsonData, Parcelable {
         }
     };
 
+    @Override
     public String toString() {
         return address;
     };
