@@ -3,6 +3,7 @@ package com.shopelia.android.adapter.form;
 import android.content.Context;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,7 +16,6 @@ import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.FormAdapter.Field;
 import com.shopelia.android.widget.FormEditText;
-import com.shopelia.utils.CharSequenceUtils;
 
 public class EditTextField extends Field {
 
@@ -248,7 +248,7 @@ public class EditTextField extends Field {
     }
 
     protected boolean onValidation(boolean fireError) {
-        return (!CharSequenceUtils.isEmpty(mContentText) || mAllowEmptyContent);
+        return (!TextUtils.isEmpty(mContentText) || mAllowEmptyContent);
     }
 
 }
