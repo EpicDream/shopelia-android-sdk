@@ -8,6 +8,7 @@ public class Order implements Parcelable {
     public String productUrl;
 
     // Shipping
+    public Address address;
 
     // Payment card
 

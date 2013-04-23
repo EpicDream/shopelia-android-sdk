@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.shopelia.android.adapter.FormAdapter;
+import com.shopelia.android.adapter.form.AddressField;
 import com.shopelia.android.adapter.form.EmailField;
 import com.shopelia.android.adapter.form.HeaderField;
 import com.shopelia.android.adapter.form.NameField;
@@ -49,14 +51,18 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
         mAdapter
             
             /*
-             * First section
+             * User informations
              */
             .add(new HeaderField("Test"))
             .add(new EmailField(null, "Email").setJsonPath("User.email"))
             .add(new PasswordField(null, "Mot de passe").setJsonPath("User.password"))
             .add(new NameField(null, "Nom").setJsonPath("User.name"))
             
-            
+            /*
+             * Shipment details
+             */
+            .add(new HeaderField("Adresse de livraison"))
+            .add(new AddressField())
             
             .commit(savedInstanceState);
         //@formatter:on
@@ -65,6 +71,11 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
 
         mFooter.getView().findViewById(R.id.validate).setOnClickListener(mOnClickListener);
 
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

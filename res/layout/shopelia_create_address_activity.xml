@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100" >
+
+        <EditText
+            android:id="@+id/name"
+            android:hint="@string/shopelia_form_address_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+            android:ems="10"
+            android:inputType="textPersonName|textCapSentences"
+            
+            android:nextFocusDown="@+id/first_name"
+             >
+
+        </EditText>
+
+        <EditText
+            android:id="@+id/first_name"
+            android:hint="@string/shopelia_form_address_first_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+             android:inputType="textPersonName|textCapSentences"
+            android:ems="10" />
+        
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/shopelia_form_address_address"
+        android:singleLine="true"
+        android:nextFocusDown="@+id/extras"
+        android:imeOptions="actionNext"
+        android:inputType="textPostalAddress" />
+
+    <EditText
+        android:id="@+id/extras"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/shopelia_form_address_extra_informations"
+        android:singleLine="true"
+        android:nextFocusDown="@+id/zipcode" >
+
+    </EditText>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum="100" >
+
+        <EditText
+            android:id="@+id/zipcode"
+            android:layout_width="0dp"
+            android:hint="@string/shopelia_form_address_zipcode"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:layout_weight="50"
+            android:inputType="number"
+            android:nextFocusDown="@+id/city" />
+
+        <EditText
+            android:id="@+id/city"
+            android:hint="@string/shopelia_form_address_city"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="50"
+             android:inputType="textPersonName|textCapSentences"
+            android:ems="10" />
+        
+    </LinearLayout>
+
+    <EditText
+        android:id="@+id/country"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="@string/shopelia_form_address_country"
+        android:inputType="textPersonName|textCapSentences" >
+
+    </EditText>
+
+    <Button
+        android:id="@+id/validate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/shopelia_form_address_validate" />
+    
+</LinearLayout>

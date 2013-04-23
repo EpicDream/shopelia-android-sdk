@@ -31,12 +31,13 @@ public class HostActivity extends FragmentActivity {
 
         setContentView(R.layout.shopelia_host_activity);
         mRootView = (FrameLayout) super.findViewById(R.id.host_container);
-        recoverOrder(saveState == null ? getIntent().getExtras() : saveState);
 
-        if (mOrder == null) {
-            throw new UnsupportedOperationException("Activity should hold an order at this point");
+        if (isPartOfOrderWorkFlow()) {
+            recoverOrder(saveState == null ? getIntent().getExtras() : saveState);
+            if (mOrder == null) {
+                throw new UnsupportedOperationException("Activity should hold an order at this point");
+            }
         }
-
     }
 
     protected void setHostContentView(int resId) {
@@ -78,6 +79,10 @@ public class HostActivity extends FragmentActivity {
 
     public Order getOrder() {
         return mOrder;
+    }
+
+    protected boolean isPartOfOrderWorkFlow() {
+        return true;
     }
 
 }

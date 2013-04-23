@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    
+       <!-- Account creation form -->
+    <string name="shopelia_form_account_name">Nom</string>
+    <string name="shopelia_form_account_first_name">Prénom</string>
+    <string name="shopelia_form_account_card_number">Numéro de la carte</string>
+    <string name="shopelia_form_account_validate">Continuer la commande</string>
+    
+    <!-- Address creation form -->
+    <string name="shopelia_form_address_name">Nom</string>
+    <string name="shopelia_form_address_first_name">Prénom</string>
+    <string name="shopelia_form_address_address">Adresse</string>
+    <string name="shopelia_form_address_extra_informations">Complément d\'informations</string>
+    <string name="shopelia_form_address_city">Ville</string>
+    <string name="shopelia_form_address_zipcode">Code postal</string>
+    <string name="shopelia_form_address_country">Pays</string>
+    <string name="shopelia_form_address_validate">Enregistrer mon adresse</string>
+    
+</resources>

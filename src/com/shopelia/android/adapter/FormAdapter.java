@@ -9,11 +9,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 
 import com.shopelia.android.config.Config;
@@ -163,8 +165,20 @@ public class FormAdapter extends BaseAdapter {
             return mAdapter;
         }
 
+        /**
+         * Called each time that data changed and adapter do not want to notify
+         * its {@link AdapterView}
+         */
         public void notifyDataChanged() {
 
+        }
+
+        public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        }
+
+        public Context getContext() {
+            return getAdapter().getContext();
         }
 
     }
@@ -214,6 +228,10 @@ public class FormAdapter extends BaseAdapter {
         notifyDataSetChanged();
     }
 
+    public Context getContext() {
+        return mContext;
+    }
+
     @Override
     public int getCount() {
         return mFieldList.size();
@@ -237,6 +255,34 @@ public class FormAdapter extends BaseAdapter {
         }
         field.bindView(convertView);
         return convertView;
+    }
+
+    public Field getField(int index) {
+        return mFieldList.get(index);
+    }
+
+    public Field getField(String jsonPath, Class<? extends Field> clazz) {
+        if (jsonPath == null || clazz == null) {
+            return getField(jsonPath);
+        }
+        for (Field field : mFieldList) {
+            if (jsonPath.equals(field.getJsonPath()) && clazz.isInstance(field)) {
+                return field;
+            }
+        }
+        return null;
+    }
+
+    public Field getField(String jsonPath) {
+        if (jsonPath == null) {
+            return null;
+        }
+        for (Field field : mFieldList) {
+            if (jsonPath.equals(field.getJsonPath())) {
+                return field;
+            }
+        }
+        return null;
     }
 
     @Override
@@ -347,4 +393,11 @@ public class FormAdapter extends BaseAdapter {
             field.onSaveInstanceState(outState);
         }
     }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        for (Field field : mFieldList) {
+            field.onActivityResult(requestCode, resultCode, data);
+        }
+    }
+
 }
