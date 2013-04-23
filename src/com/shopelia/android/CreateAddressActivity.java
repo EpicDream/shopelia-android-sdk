@@ -2,14 +2,15 @@ package com.shopelia.android;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.shopelia.android.api.PlacesAutoCompleteClient;
+import com.shopelia.android.api.PlacesAutoCompleteClient.OnAddressDetailsListener;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
@@ -69,12 +71,10 @@ public class CreateAddressActivity extends HostActivity {
         mCountryField = (EditText) findViewById(R.id.country);
         mPostalCodeField = (EditText) findViewById(R.id.zipcode);
 
-        mAddressField.addTextChangedListener(mTextWatcher);
-
         mAddressField.setAdapter(mAutocompletionAdapter);
+        mAddressField.setOnItemClickListener(mOnSuggestionClickListener);
 
         initUi(saveState == null ? getIntent().getExtras() : saveState);
-
     }
 
     private void initUi(Bundle bundle) {
@@ -153,7 +153,7 @@ public class CreateAddressActivity extends HostActivity {
             TextView description;
         }
 
-        private Filter FILTER = new Filter() {
+        private final Filter FILTER = new Filter() {
 
             @Override
             protected FilterResults performFiltering(CharSequence constraints) {
@@ -176,22 +176,25 @@ public class CreateAddressActivity extends HostActivity {
 
     }
 
-    private TextWatcher mTextWatcher = new TextWatcher() {
+    private OnItemClickListener mOnSuggestionClickListener = new OnItemClickListener() {
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
+        public void onItemClick(AdapterView<?> adapterView, View view, int position, long itemId) {
+            mAddressExtrasField.requestFocus();
+            Address address = (Address) mAutocompletionAdapter.getItem(position);
+            PlacesAutoCompleteClient.getAddressDetails(address.reference, new OnAddressDetailsListener() {
 
+                @Override
+                public void onAddressDetails(Address address) {
+                    mAddressField.setText(address.address);
+                    Locale locale = new Locale("", address.country);
+                    mPostalCodeField.setText(address.zipcode);
+                    mCityField.setText(address.city);
+                    mCountryField.setText(locale.getDisplayCountry());
+                }
+            });
         }
 
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-
-        }
     };
 
 }
