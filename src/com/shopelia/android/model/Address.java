@@ -21,6 +21,7 @@ public final class Address implements JsonData, Parcelable {
         String ZIP = "zip";
         String CITY = "city";
         String PHONES_ATTRIBUTES = "phones_attributes";
+        String COUNTRY = "country";
     }
 
     public long id;
@@ -31,6 +32,9 @@ public final class Address implements JsonData, Parcelable {
     public ArrayList<Phone> phones;
 
     public String reference;
+
+    public String name;
+    public String firstname;
 
     public Address() {
 
@@ -43,6 +47,8 @@ public final class Address implements JsonData, Parcelable {
         city = source.readString();
         country = source.readString();
         reference = source.readString();
+        name = source.readString();
+        firstname = source.readString();
     }
 
     @Override
@@ -75,6 +81,17 @@ public final class Address implements JsonData, Parcelable {
         dest.writeString(city);
         dest.writeString(country);
         dest.writeString(reference);
+        dest.writeString(name);
+        dest.writeString(firstname);
+    }
+
+    public static Address inflate(JSONObject object) throws JSONException {
+        Address address = new Address();
+        address.address = object.getString(Api.ADDRESS1);
+        address.city = object.getString(Api.CITY);
+        address.country = object.getString(Api.COUNTRY);
+        address.zipcode = object.getString(Api.ZIP);
+        return address;
     }
 
     public static final Creator<Address> CREATOR = new Creator<Address>() {
