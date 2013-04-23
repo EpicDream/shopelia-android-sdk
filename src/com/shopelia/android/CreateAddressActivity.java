@@ -1,12 +1,21 @@
 package com.shopelia.android;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
 
+import com.shopelia.android.api.PlacesAutoCompleteClient;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.model.Address;
 
 public class CreateAddressActivity extends HostActivity {
 
@@ -24,7 +33,7 @@ public class CreateAddressActivity extends HostActivity {
     public static final String LOG_TAG = "CreateAddressActivity";
 
     // Views
-    private EditText mAddressField;
+    private AutoCompleteTextView mAddressField;
     private EditText mNameField;
     private EditText mFirstNameField;
     private EditText mAddressExtrasField;
@@ -32,22 +41,33 @@ public class CreateAddressActivity extends HostActivity {
     private EditText mCityField;
     private EditText mCountryField;
 
+    // Backend
+    private long mRequestId;
+    private LayoutInflater mLayoutInflater;
+
     @Override
     protected void onCreate(Bundle saveState) {
         super.onCreate(saveState);
+
         setHostContentView(R.layout.shopelia_create_address_activity);
+
+        mLayoutInflater = LayoutInflater.from(this);
 
         mNameField = (EditText) findViewById(R.id.name);
         mFirstNameField = (EditText) findViewById(R.id.first_name);
         mCityField = (EditText) findViewById(R.id.city);
-        mAddressField = (EditText) findViewById(R.id.address);
+        mAddressField = (AutoCompleteTextView) findViewById(R.id.address);
         mAddressExtrasField = (EditText) findViewById(R.id.extras);
         mCountryField = (EditText) findViewById(R.id.country);
         mPostalCodeField = (EditText) findViewById(R.id.zipcode);
 
         initUi(saveState == null ? getIntent().getExtras() : saveState);
 
-        mAddressField.setOnClickListener(mOnAddressClickListener);
+        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line);
+        for (int i = 0; i < 10000; i++) {
+            arrayAdapter.add(i + " Rue d'Aboukir, 75002, Paris, France");
+        }
+        mAddressField.setAdapter(arrayAdapter);
 
     }
 
@@ -81,12 +101,42 @@ public class CreateAddressActivity extends HostActivity {
         return false;
     }
 
-    private OnClickListener mOnAddressClickListener = new OnClickListener() {
+    private class AutocompleteRequest implements PlacesAutoCompleteClient.OnAddressesAvailableListener {
+
+        long id = ++mRequestId;
 
         @Override
-        public void onClick(View v) {
+        public void onAddressesAvailable(List<Address> addresses) {
 
         }
-    };
+
+    }
+
+    private class AutocompletionAdapter extends BaseAdapter {
+
+        private List<Address> mAddressList = new ArrayList<Address>();
+
+        @Override
+        public int getCount() {
+            return mAddressList.size();
+        }
+
+        @Override
+        public Object getItem(int position) {
+            return mAddressList.get(position);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return 0;
+        }
+
+        @Override
+        public View getView(int position, View convertView, ViewGroup viewGroup) {
+
+            return convertView;
+        }
+
+    }
 
 }
