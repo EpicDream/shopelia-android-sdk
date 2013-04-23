@@ -228,7 +228,7 @@ public class CreateAddressActivity extends HostActivity {
         mResult.address = mAddressField.getText().toString();
         mResult.extras = mAddressExtrasField.getText().toString();
         mResult.zipcode = mPostalCodeField.getText().toString();
-        mResult.address = mCityField.getText().toString();
+        mResult.city = mCityField.getText().toString();
         mResult.country = mCountryField.getText().toString();
         return validateFields(mAddressField, mNameField, mFirstNameField, mCityField, mCountryField, mPostalCodeField);
     }

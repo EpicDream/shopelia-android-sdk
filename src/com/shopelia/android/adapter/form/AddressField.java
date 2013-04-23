@@ -73,19 +73,21 @@ public class AddressField extends Field {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-
+        outState.putParcelable(mJsonPath, mAddress);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
+        if (savedInstanceState != null) {
+            mAddress = savedInstanceState.getParcelable(mJsonPath);
+        }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ADDRESS && resultCode == Activity.RESULT_OK) {
-            mAddress = data.getParcelableExtra(CreateAddressActivity.EXTRA_ADDRESS);
+            mAddress = data.getParcelableExtra(CreateAddressActivity.EXTRA_ADDRESS_OBJECT);
             getAdapter().notifyDataSetChanged();
         }
     }
@@ -106,6 +108,15 @@ public class AddressField extends Field {
             if (getContext() instanceof Activity) {
                 Activity activity = (Activity) getContext();
                 Intent intent = new Intent(activity, CreateAddressActivity.class);
+                if (mAddress != null) {
+                    intent.putExtra(CreateAddressActivity.EXTRA_ADDRESS, mAddress.address);
+                    intent.putExtra(CreateAddressActivity.EXTRA_ZIPCODE, mAddress.zipcode);
+                    intent.putExtra(CreateAddressActivity.EXTRA_ADDRESS_EXTRAS, mAddress.extras);
+                    intent.putExtra(CreateAddressActivity.EXTRA_CITY, mAddress.city);
+                    intent.putExtra(CreateAddressActivity.EXTRA_COUNTRY, mAddress.country);
+                    intent.putExtra(CreateAddressActivity.EXTRA_FIRSTNAME, mAddress.firstname);
+                    intent.putExtra(CreateAddressActivity.EXTRA_NAME, mAddress.name);
+                }
                 activity.startActivityForResult(intent, REQUEST_ADDRESS);
             }
         }
