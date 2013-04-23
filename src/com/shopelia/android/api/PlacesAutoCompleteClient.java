@@ -17,20 +17,21 @@ import android.util.Log;
 
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
+import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
 
 public final class PlacesAutoCompleteClient {
 
-    public interface OnAddressesAvailableListener {
-        public void onAddressesAvailable(List<Address> addresses);
+    public interface OnAddressDetailsListener {
+        public void onAddressDetails(Address address);
     }
 
     public static final String LOG_TAG = "PlacesAutocompleteClient";
 
-    private interface Command {
+    private static class Command {
 
-        String $ = "/api/places/";
+        static String $ = "/api/places/";
 
         interface Autocomplete {
             String $ = Command.$ + "autocomplete";
@@ -40,6 +41,9 @@ public final class PlacesAutoCompleteClient {
             String LONGITUDE = "lng";
         }
 
+        public static String Details(String reference) {
+            return Command.$ + "details/" + reference;
+        }
     }
 
     private interface Api {
@@ -103,6 +107,23 @@ public final class PlacesAutoCompleteClient {
             });
         }
         return null;
+    }
+
+    public static void getAddressDetails(String reference, final OnAddressDetailsListener listener) {
+        ShopeliaRestClient.get(Command.Details(reference), null, new AsyncCallback() {
+
+            @Override
+            public void onComplete(HttpResponse httpResponse) {
+                try {
+                    Address address = Address.inflate(new JSONObject(httpResponse.getBodyAsString()));
+                    listener.onAddressDetails(address);
+                } catch (JSONException e) {
+                    if (Config.ERROR_LOGS_ENABLED) {
+                        Log.e(LOG_TAG, "Unexpected JSON exception", e);
+                    }
+                }
+            }
+        });
     }
 
     private static List<Address> inflatesAutocompletionAddresses(JSONArray array) throws JSONException {
