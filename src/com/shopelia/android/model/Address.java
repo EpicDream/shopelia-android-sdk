@@ -24,11 +24,13 @@ public final class Address implements JsonData, Parcelable {
     }
 
     public long id;
-    public String address1;
+    public String address;
     public String zipcode;
     public String city;
     public String country;
     public ArrayList<Phone> phones;
+
+    public String reference;
 
     public Address() {
 
@@ -36,18 +38,18 @@ public final class Address implements JsonData, Parcelable {
 
     private Address(Parcel source) {
         id = source.readLong();
-        address1 = source.readString();
+        address = source.readString();
         zipcode = source.readString();
         city = source.readString();
         country = source.readString();
-
+        reference = source.readString();
     }
 
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
         json.put(Api.ID, id);
-        json.put(Api.ADDRESS1, address1);
+        json.put(Api.ADDRESS1, address);
         json.put(Api.ZIP, zipcode);
         json.put(Api.CITY, city);
         if (phones.size() > 0) {
@@ -68,11 +70,11 @@ public final class Address implements JsonData, Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
-        dest.writeString(address1);
+        dest.writeString(address);
         dest.writeString(zipcode);
         dest.writeString(city);
         dest.writeString(country);
-
+        dest.writeString(reference);
     }
 
     public static final Creator<Address> CREATOR = new Creator<Address>() {
@@ -86,6 +88,10 @@ public final class Address implements JsonData, Parcelable {
         public Address createFromParcel(Parcel source) {
             return new Address(source);
         }
+    };
+
+    public String toString() {
+        return address;
     };
 
 }
