@@ -2,7 +2,6 @@ package com.shopelia.android.model;
 
 import java.util.ArrayList;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -60,13 +59,6 @@ public final class Address implements JsonData, Parcelable {
         json.put(Api.ADDRESS1, address);
         json.put(Api.ZIP, zipcode);
         json.put(Api.CITY, city);
-        if (phones.size() > 0) {
-            JSONArray array = new JSONArray();
-            for (Phone phone : phones) {
-                // array.put(phone.toJSONObject());
-            }
-            json.put(Api.PHONES_ATTRIBUTES, array);
-        }
         return json;
     }
 
