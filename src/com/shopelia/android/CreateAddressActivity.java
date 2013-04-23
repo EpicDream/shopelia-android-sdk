@@ -4,13 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.Filter;
+import android.widget.Filterable;
+import android.widget.TextView;
 
 import com.shopelia.android.api.PlacesAutoCompleteClient;
 import com.shopelia.android.app.HostActivity;
@@ -32,6 +37,8 @@ public class CreateAddressActivity extends HostActivity {
 
     public static final String LOG_TAG = "CreateAddressActivity";
 
+    private static final long REQUEST_DELAY = 400;
+
     // Views
     private AutoCompleteTextView mAddressField;
     private EditText mNameField;
@@ -44,6 +51,7 @@ public class CreateAddressActivity extends HostActivity {
     // Backend
     private long mRequestId;
     private LayoutInflater mLayoutInflater;
+    private AutocompletionAdapter mAutocompletionAdapter = new AutocompletionAdapter(null);
 
     @Override
     protected void onCreate(Bundle saveState) {
@@ -61,13 +69,11 @@ public class CreateAddressActivity extends HostActivity {
         mCountryField = (EditText) findViewById(R.id.country);
         mPostalCodeField = (EditText) findViewById(R.id.zipcode);
 
-        initUi(saveState == null ? getIntent().getExtras() : saveState);
+        mAddressField.addTextChangedListener(mTextWatcher);
 
-        ArrayAdapter<String> arrayAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_dropdown_item_1line);
-        for (int i = 0; i < 10000; i++) {
-            arrayAdapter.add(i + " Rue d'Aboukir, 75002, Paris, France");
-        }
-        mAddressField.setAdapter(arrayAdapter);
+        mAddressField.setAdapter(mAutocompletionAdapter);
+
+        initUi(saveState == null ? getIntent().getExtras() : saveState);
 
     }
 
@@ -101,24 +107,17 @@ public class CreateAddressActivity extends HostActivity {
         return false;
     }
 
-    private class AutocompleteRequest implements PlacesAutoCompleteClient.OnAddressesAvailableListener {
-
-        long id = ++mRequestId;
-
-        @Override
-        public void onAddressesAvailable(List<Address> addresses) {
-
-        }
-
-    }
-
-    private class AutocompletionAdapter extends BaseAdapter {
+    private class AutocompletionAdapter extends BaseAdapter implements Filterable {
 
         private List<Address> mAddressList = new ArrayList<Address>();
 
+        public AutocompletionAdapter(List<Address> addresses) {
+            mAddressList = addresses != null ? addresses : mAddressList;
+        }
+
         @Override
         public int getCount() {
-            return mAddressList.size();
+            return mAddressList != null ? mAddressList.size() : 0;
         }
 
         @Override
@@ -133,10 +132,66 @@ public class CreateAddressActivity extends HostActivity {
 
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
-
+            if (convertView == null) {
+                convertView = mLayoutInflater.inflate(R.layout.shopelia_form_address_place_item, viewGroup, false);
+                ViewHolder holder = new ViewHolder();
+                convertView.setTag(holder);
+                holder.description = (TextView) convertView.findViewById(R.id.address);
+            }
+            ViewHolder holder = (ViewHolder) convertView.getTag();
+            Address address = (Address) getItem(position);
+            holder.description.setText(address.toString());
             return convertView;
         }
 
+        @Override
+        public Filter getFilter() {
+            return FILTER;
+        }
+
+        private class ViewHolder {
+            TextView description;
+        }
+
+        private Filter FILTER = new Filter() {
+
+            @Override
+            protected FilterResults performFiltering(CharSequence constraints) {
+                Log.d(null, "FILTER");
+                List<Address> addresses = PlacesAutoCompleteClient.autocomplete(CreateAddressActivity.this,
+                        constraints != null ? constraints.toString() : "", 0);
+                FilterResults results = new FilterResults();
+                results.values = addresses;
+                results.count = addresses != null ? addresses.size() : 0;
+                return results;
+            }
+
+            @Override
+            protected void publishResults(CharSequence constraints, FilterResults results) {
+                mAddressList = (List<Address>) results.values;
+                notifyDataSetChanged();
+            }
+
+        };
+
     }
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+
+        }
+    };
 
 }
