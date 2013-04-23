@@ -18,8 +18,7 @@ import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.form.AddressField;
 import com.shopelia.android.adapter.form.EmailField;
 import com.shopelia.android.adapter.form.HeaderField;
-import com.shopelia.android.adapter.form.NameField;
-import com.shopelia.android.adapter.form.PasswordField;
+import com.shopelia.android.adapter.form.PhoneField;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.widget.FormListFooter;
 import com.shopelia.android.widget.FormListHeader;
@@ -54,9 +53,8 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
              * User informations
              */
             .add(new HeaderField("Test"))
+            .add(new PhoneField("", "Numéro de téléphone"))
             .add(new EmailField(null, "Email").setJsonPath("User.email"))
-            .add(new PasswordField(null, "Mot de passe").setJsonPath("User.password"))
-            .add(new NameField(null, "Nom").setJsonPath("User.name"))
             
             /*
              * Shipment details
