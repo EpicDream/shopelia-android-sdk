@@ -1,77 +1,124 @@
 package com.shopelia.android.api;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.content.Context;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.shopelia.android.config.Config;
-import com.shopelia.android.http.LogcatRequestLogger;
 import com.shopelia.android.model.Address;
+import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
-import com.turbomanage.httpclient.android.AndroidHttpClient;
 
 public final class PlacesAutoCompleteClient {
 
-    public static final String LOG_TAG = "ShopelisRestClient";
-
-    private static final String ROOT = "https://maps.googleapis.com/maps/api/place/autocomplete/json";
-
-    public static final String API_KEY = "AIzaSyDy_IvoH2PkTUM3e_5FBwMjHotCkNX1fTY";
-
-    public static final String PLACES_TYPES = "geocode";
-
-    private static final int CONNECTION_TIMEOUT = 10000;
-    private static final int READ_TINEOUT = 100000;
-    private static final int MAX_RETRIES = 1;
-
-    private static final AndroidHttpClient sHttpClient;
-
-    private interface GooglePlacesApi {
-        public String INPUT = "input";
-        public String SENSOR = "sensor";
-        public String OFFSET = "offset";
-        public String LOCATION = "location";
-        public String RADIUS = "radius";
-        public String TYPES = "types";
-        public String LANGUAGE = "language";
-        public String API_KEY = "key";
+    public interface OnAddressesAvailableListener {
+        public void onAddressesAvailable(List<Address> addresses);
     }
 
-    static {
-        sHttpClient = new AndroidHttpClient(ROOT);
+    public static final String LOG_TAG = "PlacesAutocompleteClient";
 
-        /*
-         * Timeouts and retries
-         */
+    private interface Command {
 
-        sHttpClient.setConnectionTimeout(CONNECTION_TIMEOUT);
-        sHttpClient.setReadTimeout(READ_TINEOUT);
-        sHttpClient.setMaxRetries(MAX_RETRIES);
+        String $ = "/api/places/";
 
-        /*
-         * Logger
-         */
+        interface Autocomplete {
+            String $ = Command.$ + "autocomplete";
 
-        sHttpClient.setRequestLogger(new LogcatRequestLogger(LOG_TAG, Config.INFO_LOGS_ENABLED));
+            String QUERY = "query";
+            String LATITUDE = "lat";
+            String LONGITUDE = "lng";
+        }
+
+    }
+
+    private interface Api {
+        interface Autocomplete {
+            String DESCRIPTION = "description";
+            String REFERENCE = "reference";
+        }
     }
 
     private PlacesAutoCompleteClient() {
 
     }
 
-    public static List<Address> autocomplete(Context context, String input, int cursorOffset) {
-        ParameterMap params = new ParameterMap();
-        params.add(GooglePlacesApi.INPUT, input);
-        params.add(GooglePlacesApi.SENSOR, String.valueOf(true));
-        params.add(GooglePlacesApi.OFFSET, String.valueOf(cursorOffset));
-        params.add(GooglePlacesApi.API_KEY, API_KEY);
-        params.add(GooglePlacesApi.TYPES, PLACES_TYPES);
-        params.add(GooglePlacesApi.LANGUAGE, Locale.getDefault().getCountry());
-        HttpResponse response = sHttpClient.get("", params);
-        Log.d(null, "RESULT = " + response.getBodyAsString());
-        return null;
+    public static void autocomplete(final Context context, final String input, final int cursorOffset,
+            final OnAddressesAvailableListener listener) {
+
+        final LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        if (location != null) {
+            ParameterMap params = ShopeliaRestClient.newParams();
+            params.add(Command.Autocomplete.QUERY, input);
+            params.add(Command.Autocomplete.LATITUDE, String.valueOf(location.getLatitude()));
+            params.add(Command.Autocomplete.LONGITUDE, String.valueOf(location.getLongitude()));
+
+            ShopeliaRestClient.get(Command.Autocomplete.$, params, new AsyncCallback() {
+
+                @Override
+                public void onComplete(HttpResponse httpResponse) {
+                    if (listener != null) {
+                        try {
+                            List<Address> addresses = inflatesAutocompletionAddresses(new JSONArray(httpResponse.getBodyAsString()));
+                            listener.onAddressesAvailable(addresses);
+                        } catch (JSONException e) {
+                            if (Config.ERROR_LOGS_ENABLED) {
+                                Log.e(LOG_TAG, "Unexpected JSON exception ", e);
+                            }
+                        }
+                    }
+                }
+            });
+
+        } else {
+            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
+
+                @Override
+                public void onStatusChanged(String provider, int status, Bundle extras) {
+
+                }
+
+                @Override
+                public void onProviderEnabled(String provider) {
+
+                }
+
+                @Override
+                public void onProviderDisabled(String provider) {
+
+                }
+
+                @Override
+                public void onLocationChanged(Location location) {
+                    lm.removeUpdates(this);
+                    autocomplete(context, input, cursorOffset, listener);
+                }
+            });
+        }
+    }
+
+    private static List<Address> inflatesAutocompletionAddresses(JSONArray array) throws JSONException {
+        ArrayList<Address> addresses = new ArrayList<Address>(array.length());
+        final int count = array.length();
+        for (int index = 0; index < count; index++) {
+            JSONObject entry = array.getJSONObject(index);
+            Address address = new Address();
+            address.address = entry.getString(Api.Autocomplete.DESCRIPTION);
+            address.reference = entry.getString(Api.Autocomplete.REFERENCE);
+            addresses.add(address);
+        }
+        return addresses;
     }
 }

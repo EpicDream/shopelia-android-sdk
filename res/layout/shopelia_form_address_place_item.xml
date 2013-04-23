@@ -14,22 +14,4 @@
         android:layout_alignParentTop="true"
         android:text="TextView" />
 
-    <TextView
-        android:id="@+id/city"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/address"
-        android:layout_toLeftOf="@+id/zipcode"
-        android:text="TextView" />
-
-    <TextView
-        android:id="@+id/zipcode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/city"
-        android:layout_alignBottom="@+id/city"
-        android:layout_alignParentRight="true"
-        android:text="TextView" />
-
 </RelativeLayout>

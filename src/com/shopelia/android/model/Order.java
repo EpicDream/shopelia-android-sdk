@@ -12,6 +12,14 @@ public class Order implements Parcelable {
 
     // Payment card
 
+    public Order() {
+
+    }
+
+    private Order(Parcel source) {
+
+    }
+
     @Override
     public int describeContents() {
         // TODO Auto-generated method stub
@@ -20,8 +28,20 @@ public class Order implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        // TODO Auto-generated method stub
 
     }
+
+    public static final Creator<Order> CREATOR = new Creator<Order>() {
+
+        @Override
+        public Order[] newArray(int size) {
+            return new Order[size];
+        }
+
+        @Override
+        public Order createFromParcel(Parcel source) {
+            return new Order(source);
+        }
+    };
 
 }
