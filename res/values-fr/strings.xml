@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-       <!-- Account creation form -->
+    <!-- Main form -->
+    <string name="shopelia_form_main_phone">Numéro de téléphone</string>
+	<string name="shopelia_form_main_email">Email</string>
+	<string name="shopelia_form_main_validate">Poursuivre ma commande</string>
+    <string name="shopelia_form_main_personal_info">Informations personnelles</string>
+    <string name="shopelia_form_main_shipping_address">Adresse de livraison</string>
+    <string name="shopelia_form_main_payment_method">Moyen de paiement</string>
+    <string name="shopelia_form_main_card_number">Numéro de la carte</string>
+	<string name="shopelia_form_main_address">Adresse</string>
+    
+    <!-- Account creation form -->
     <string name="shopelia_form_account_name">Nom</string>
     <string name="shopelia_form_account_first_name">Prénom</string>
     <string name="shopelia_form_account_card_number">Numéro de la carte</string>
@@ -16,5 +26,11 @@
     <string name="shopelia_form_address_zipcode">Code postal</string>
     <string name="shopelia_form_address_country">Pays</string>
     <string name="shopelia_form_address_validate">Enregistrer mon adresse</string>
+    
+     <!-- Payment card creation form -->
+    <string name="shopelia_form_payment_card_number">Numéro de la carte</string>
+    <string name="shopelia_form_payment_card_expiry_date">Date d\'expiration</string>
+    <string name="shopelia_form_payment_card_cvv">CCV</string>
+    <string name="shopelia_form_payment_card_scan">Scanner le numéro de carte</string>
     
 </resources>

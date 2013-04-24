@@ -5,11 +5,21 @@
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
+    <!-- Main form -->
+    <string name="shopelia_form_main_phone">Phone number</string>
+	<string name="shopelia_form_main_email">Email</string>
+	<string name="shopelia_form_main_validate">Continue my order</string>
+    <string name="shopelia_form_main_personal_info">Personal informations</string>
+    <string name="shopelia_form_main_shipping_address">Shipping address</string>
+    <string name="shopelia_form_main_payment_method">Payment method</string>
+    <string name="shopelia_form_main_card_number">Payment card number</string>
+	<string name="shopelia_form_main_address">Address</string>
+    
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Name</string>
     <string name="shopelia_form_account_first_name">First name</string>
     <string name="shopelia_form_account_card_number">Card number</string>
-    <string name="shopelia_form_account_validate">OK</string>
+    <string name="shopelia_form_account_validate">Continue</string>
     
     <!-- Address creation form -->
     <string name="shopelia_form_address_name">Name</string>
@@ -19,6 +29,13 @@
     <string name="shopelia_form_address_city">City</string>
     <string name="shopelia_form_address_zipcode">Zip code</string>
     <string name="shopelia_form_address_country">Country</string>
-    <string name="shopelia_form_address_validate">OK</string>
+    <string name="shopelia_form_address_validate">Add address</string>
+    
+    <!-- Payment card creation form -->
+    <string name="shopelia_form_payment_card_number">Card number</string>
+    <string name="shopelia_form_payment_card_expiry_date">Expiry date</string>
+    <string name="shopelia_form_payment_card_cvv">CVV</string>
+    <string name="shopelia_form_payment_card_scan">Scan card number</string>
+    <string name="shopelia_form_payment_card_validate">Add this card</string>
     
 </resources>

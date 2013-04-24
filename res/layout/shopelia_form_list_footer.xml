@@ -13,7 +13,7 @@
         android:id="@+id/validate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="@string/shopelia_form_main_validate" />
 
     <TextView
         android:id="@+id/json"
