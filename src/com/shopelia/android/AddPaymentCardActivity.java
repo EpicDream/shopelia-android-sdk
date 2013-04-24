@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.pretty.CardNumberFormattingTextWatcher;
+import com.shopelia.android.pretty.DateFormattingTextWatcher;
 
 public class AddPaymentCardActivity extends HostActivity {
 
@@ -33,6 +34,8 @@ public class AddPaymentCardActivity extends HostActivity {
             new CardNumberFormattingTextWatcher.CardNumberInputFilter()
         });
         mCardNumberField.addTextChangedListener(new CardNumberFormattingTextWatcher());
+
+        mExpiryField.addTextChangedListener(new DateFormattingTextWatcher());
 
     }
 
