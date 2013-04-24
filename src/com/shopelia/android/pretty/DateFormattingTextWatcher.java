@@ -7,6 +7,7 @@ public class DateFormattingTextWatcher implements TextWatcher {
 
     private boolean mIsEditing = false;
     private boolean mZeroFill = false;
+    private boolean mBackwardDelete = false;
 
     @Override
     public synchronized void afterTextChanged(Editable s) {
@@ -24,8 +25,11 @@ public class DateFormattingTextWatcher implements TextWatcher {
             if (mZeroFill) {
                 s.insert(0, "0");
             }
-            if (s.length() == 2) {
+            if (s.length() == 2 && !mBackwardDelete) {
                 s.append("/");
+            }
+            if (mBackwardDelete) {
+                s.delete(1, 2);
             }
             mIsEditing = false;
         }
@@ -33,7 +37,11 @@ public class DateFormattingTextWatcher implements TextWatcher {
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+        if (start == 2 && count == 1 && after == 0) {
+            mBackwardDelete = true;
+        } else {
+            mBackwardDelete = false;
+        }
     }
 
     @Override
