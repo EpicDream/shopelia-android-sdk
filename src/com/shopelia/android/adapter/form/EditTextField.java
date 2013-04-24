@@ -203,7 +203,7 @@ public class EditTextField extends Field {
 
     }
 
-    private TextWatcher mTextWatcher = new TextWatcher() {
+    protected TextWatcher mTextWatcher = new TextWatcher() {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
