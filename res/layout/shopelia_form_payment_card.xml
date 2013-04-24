@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/shopelia_form_payment_card_number"
-        android:inputType="number" >
+        android:inputType="number|text" >
 
         <requestFocus />
     </EditText>

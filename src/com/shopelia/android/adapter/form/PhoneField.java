@@ -1,14 +1,13 @@
 package com.shopelia.android.adapter.form;
 
 import android.content.Context;
-import android.graphics.Rect;
+import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
 import android.text.TextUtils;
-import android.text.method.TransformationMethod;
-import android.view.View;
-import android.widget.EditText;
 
 public class PhoneField extends EditTextField {
+
+    public static final int TYPE = 3;
 
     public PhoneField(String defaultText, String hint) {
         super(defaultText, hint);
@@ -22,23 +21,7 @@ public class PhoneField extends EditTextField {
     protected void setViewStyle(ViewHolder holder) {
         super.setViewStyle(holder);
         holder.editText.setInputType(InputType.TYPE_CLASS_PHONE);
-        holder.editText.setTransformationMethod(new TransformationMethod() {
-
-            @Override
-            public void onFocusChanged(View view, CharSequence sourceText, boolean focused, int direction, Rect previouslyFocusedRect) {
-                EditText editText = (EditText) view;
-                if (focused) {
-                    editText.setText(makeUglyPhoneNumber(sourceText));
-                } else {
-                    editText.setText(makePrettyPhoneNumber(sourceText));
-                }
-            }
-
-            @Override
-            public CharSequence getTransformation(CharSequence source, View view) {
-                return source;
-            }
-        });
+        holder.editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 
     public CharSequence makePrettyPhoneNumber(CharSequence source) {
@@ -66,6 +49,11 @@ public class PhoneField extends EditTextField {
             return source;
         }
         return source.toString().replace(" ", "");
+    }
+
+    @Override
+    public int getFieldType() {
+        return TYPE;
     }
 
 }

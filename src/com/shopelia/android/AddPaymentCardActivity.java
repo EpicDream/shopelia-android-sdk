@@ -3,12 +3,14 @@ package com.shopelia.android;
 import io.card.payment.CardIOActivity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.pretty.CardNumberFormattingTextWatcher;
 
 public class AddPaymentCardActivity extends HostActivity {
 
@@ -26,6 +28,11 @@ public class AddPaymentCardActivity extends HostActivity {
         mCardNumberField = (EditText) findViewById(R.id.card_numer);
         mCvvField = (EditText) findViewById(R.id.card_numer);
         mExpiryField = (EditText) findViewById(R.id.expiry_date);
+
+        mCardNumberField.setFilters(new InputFilter[] {
+            new CardNumberFormattingTextWatcher.CardNumberInputFilter()
+        });
+        mCardNumberField.addTextChangedListener(new CardNumberFormattingTextWatcher());
 
     }
 
