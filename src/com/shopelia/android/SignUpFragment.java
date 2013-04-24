@@ -18,6 +18,7 @@ import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.form.AddressField;
 import com.shopelia.android.adapter.form.EmailField;
 import com.shopelia.android.adapter.form.HeaderField;
+import com.shopelia.android.adapter.form.PaymentCardField;
 import com.shopelia.android.adapter.form.PhoneField;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.widget.FormListFooter;
@@ -52,15 +53,21 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
             /*
              * User informations
              */
-            .add(new HeaderField("Test"))
-            .add(new PhoneField("", "Numéro de téléphone"))
-            .add(new EmailField(null, "Email").setJsonPath("User.email"))
+            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_personal_info))
+            .add(new PhoneField(getActivity(), null, R.string.shopelia_form_main_phone))
+            .add(new EmailField(getActivity(), null, R.string.shopelia_form_main_email).setJsonPath("User.email"))
             
             /*
              * Shipment details
              */
-            .add(new HeaderField("Adresse de livraison"))
-            .add(new AddressField())
+            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_shipping_address))
+            .add(new AddressField(getActivity(), R.string.shopelia_form_main_address))
+            
+            /*
+             * Payment methods
+             */
+            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_payment_method))
+            .add(new PaymentCardField(getActivity(), R.string.shopelia_form_main_card_number))
             
             .commit(savedInstanceState);
         //@formatter:on

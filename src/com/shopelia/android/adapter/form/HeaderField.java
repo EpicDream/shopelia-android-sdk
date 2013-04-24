@@ -21,6 +21,10 @@ public class HeaderField extends Field {
         mTitle = title;
     }
 
+    public HeaderField(Context context, int resId) {
+        this(context.getString(resId));
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
 

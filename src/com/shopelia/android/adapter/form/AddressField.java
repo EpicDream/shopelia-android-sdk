@@ -6,64 +6,32 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.Button;
 
 import com.shopelia.android.CreateAddressActivity;
-import com.shopelia.android.R;
-import com.shopelia.android.adapter.FormAdapter.Field;
 import com.shopelia.android.model.Address;
 
-public class AddressField extends Field {
+public class AddressField extends ButtonField {
 
     public static final int TYPE = 2;
     public static int REQUEST_ADDRESS = 0x16;
 
-    private String mJsonPath = "Address";
+    public static String JSON_PATH = "Address";
+
     private Address mAddress = null;
 
-    public AddressField() {
-        super(TYPE);
-    }
-
-    @Override
-    public long getItemId() {
-        return 0;
-    }
-
-    @Override
-    public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
-        View root = inflater.inflate(R.layout.shopelia_form_field_address_field, viewGroup, false);
-        ViewHolder holder = new ViewHolder();
-        holder.address = (TextView) root.findViewById(R.id.address);
-        root.setTag(holder);
-        return root;
-    }
-
-    @Override
-    public void bindView(View view) {
-        ViewHolder holder = (ViewHolder) view.getTag();
-        holder.address.setOnClickListener(mOnClickListener);
-        if (mAddress != null) {
-            holder.address.setText(mAddress.address);
-        }
+    public AddressField(Context context, int resId) {
+        super(context, resId);
+        setJsonPath(JSON_PATH);
     }
 
     @Override
     public Object getResult() {
         try {
-            return mAddress.toJson();
+            return mAddress != null ? mAddress.toJson() : null;
         } catch (JSONException e) {
             return null;
         }
-    }
-
-    @Override
-    public String getJsonPath() {
-        return mJsonPath;
     }
 
     @Override
@@ -73,13 +41,13 @@ public class AddressField extends Field {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(mJsonPath, mAddress);
+        outState.putParcelable(getJsonPath(), mAddress);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            mAddress = savedInstanceState.getParcelable(mJsonPath);
+            mAddress = savedInstanceState.getParcelable(getJsonPath());
         }
     }
 
@@ -97,29 +65,22 @@ public class AddressField extends Field {
         return false;
     }
 
-    private class ViewHolder {
-        TextView address;
-    }
-
-    private OnClickListener mOnClickListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
-            if (getContext() instanceof Activity) {
-                Activity activity = (Activity) getContext();
-                Intent intent = new Intent(activity, CreateAddressActivity.class);
-                if (mAddress != null) {
-                    intent.putExtra(CreateAddressActivity.EXTRA_ADDRESS, mAddress.address);
-                    intent.putExtra(CreateAddressActivity.EXTRA_ZIPCODE, mAddress.zipcode);
-                    intent.putExtra(CreateAddressActivity.EXTRA_ADDRESS_EXTRAS, mAddress.extras);
-                    intent.putExtra(CreateAddressActivity.EXTRA_CITY, mAddress.city);
-                    intent.putExtra(CreateAddressActivity.EXTRA_COUNTRY, mAddress.country);
-                    intent.putExtra(CreateAddressActivity.EXTRA_FIRSTNAME, mAddress.firstname);
-                    intent.putExtra(CreateAddressActivity.EXTRA_NAME, mAddress.name);
-                }
-                activity.startActivityForResult(intent, REQUEST_ADDRESS);
+    @Override
+    protected void onClick(Button view) {
+        if (getContext() instanceof Activity) {
+            Activity activity = (Activity) getContext();
+            Intent intent = new Intent(activity, CreateAddressActivity.class);
+            if (mAddress != null) {
+                intent.putExtra(CreateAddressActivity.EXTRA_ADDRESS, mAddress.address);
+                intent.putExtra(CreateAddressActivity.EXTRA_ZIPCODE, mAddress.zipcode);
+                intent.putExtra(CreateAddressActivity.EXTRA_ADDRESS_EXTRAS, mAddress.extras);
+                intent.putExtra(CreateAddressActivity.EXTRA_CITY, mAddress.city);
+                intent.putExtra(CreateAddressActivity.EXTRA_COUNTRY, mAddress.country);
+                intent.putExtra(CreateAddressActivity.EXTRA_FIRSTNAME, mAddress.firstname);
+                intent.putExtra(CreateAddressActivity.EXTRA_NAME, mAddress.name);
             }
+            activity.startActivityForResult(intent, REQUEST_ADDRESS);
         }
-    };
+    }
 
 }

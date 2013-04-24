@@ -67,4 +67,12 @@ public final class Config {
 
     public static final String EXTRA_PREFIX = "com.shopelia.android.extras.";
 
+    // /////////////////////////////////////////////////////////////
+    //
+    // Token
+    //
+    // /////////////////////////////////////////////////////////////
+
+    public final static String CARDIO_TOKEN = "d6d9251b267d40e9bbc608a51e63e728";
+
 }

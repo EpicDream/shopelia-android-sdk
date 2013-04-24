@@ -8,6 +8,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.provider.ContactsContract.CommonDataKinds.Phone;
+import android.text.TextUtils;
 
 public final class Address implements JsonData, Parcelable {
 
@@ -21,9 +22,12 @@ public final class Address implements JsonData, Parcelable {
         String CITY = "city";
         String PHONES_ATTRIBUTES = "phones_attributes";
         String COUNTRY = "country";
+        String EXTRAS = "extras";
     }
 
-    public long id;
+    private static final long INVALID_ID = -1;
+
+    public long id = INVALID_ID;
     public String address;
     public String zipcode;
     public String city;
@@ -55,10 +59,15 @@ public final class Address implements JsonData, Parcelable {
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put(Api.ID, id);
+        if (id != INVALID_ID) {
+            json.put(Api.ID, id);
+        }
         json.put(Api.ADDRESS1, address);
         json.put(Api.ZIP, zipcode);
         json.put(Api.CITY, city);
+        if (!TextUtils.isEmpty(extras)) {
+            json.put(Api.EXTRAS, extras);
+        }
         return json;
     }
 

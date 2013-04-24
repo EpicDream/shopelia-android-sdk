@@ -46,6 +46,7 @@ public class PhoneField extends EditTextField {
             return source;
         }
         StringBuilder builder = new StringBuilder();
+        source = makeUglyPhoneNumber(source);
         int cluster = 2;
         if (!TextUtils.isDigitsOnly(source.subSequence(0, 1).toString())) {
             cluster = 3;
