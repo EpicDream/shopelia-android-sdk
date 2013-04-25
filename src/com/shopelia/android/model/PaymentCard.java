@@ -3,7 +3,10 @@ package com.shopelia.android.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class PaymentCard implements JsonData {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class PaymentCard implements JsonData, Parcelable {
 
     public interface Api {
         String PAYMENT_CARD = "payment_card";
@@ -35,6 +38,14 @@ public class PaymentCard implements JsonData {
         expYear = json.getString(Api.EXP_YEAR);
     }
 
+    private PaymentCard(Parcel source) {
+        id = source.readLong();
+        number = source.readString();
+        expYear = source.readString();
+        expMonth = source.readString();
+        cvv = source.readString();
+    }
+
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
@@ -47,5 +58,32 @@ public class PaymentCard implements JsonData {
         json.put(Api.CVV, cvv);
         return json;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(number);
+        dest.writeString(expYear);
+        dest.writeString(expMonth);
+        dest.writeString(cvv);
+    }
+
+    public static final Parcelable.Creator<PaymentCard> CREATOR = new Creator<PaymentCard>() {
+
+        @Override
+        public PaymentCard[] newArray(int size) {
+            return new PaymentCard[size];
+        }
+
+        @Override
+        public PaymentCard createFromParcel(Parcel source) {
+            return new PaymentCard(source);
+        }
+    };
 
 }
