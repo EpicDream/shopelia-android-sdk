@@ -1,5 +1,6 @@
 package com.shopelia.android.model;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Parcel;
@@ -65,6 +66,27 @@ public class Order implements Parcelable {
         Order order = new Order();
         order.uuid = object.optLong(Api.UUID, NO_ID);
         order.productUrl = object.optString(Api.PRODUCT_URL);
+        if (object.has(Api.ADDRESS)) {
+            try {
+                order.address = Address.inflate(object.getJSONObject(Api.ADDRESS));
+            } catch (JSONException e) {
+                // Nothing to be done
+            }
+        }
+        if (object.has(Api.PAYMENT_CARD)) {
+            try {
+                order.card = PaymentCard.inflate(object.getJSONObject(Api.PAYMENT_CARD));
+            } catch (JSONException e) {
+                // Nothing to be done
+            }
+        }
+        if (object.has(Api.USER)) {
+            try {
+                order.user = User.inflate(object.getJSONObject(Api.USER));
+            } catch (JSONException e) {
+                // Nothing to be done
+            }
+        }
         return order;
     }
 }
