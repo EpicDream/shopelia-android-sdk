@@ -48,4 +48,9 @@ public class User implements JsonData {
         return json;
     }
 
+    public static User inflates(JSONObject json) {
+        User user = new User();
+        return user;
+    }
+
 }

@@ -9,6 +9,7 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.shopelia.android.config.Config;
 import com.shopelia.android.model.User;
 
 public class UserManager {
@@ -48,7 +49,6 @@ public class UserManager {
         if (user == null) {
             return;
         }
-
         mUser = user;
         saveUser();
     }
@@ -56,11 +56,12 @@ public class UserManager {
     public void saveUser() {
         try {
             Editor editor = mPreferences.edit();
-            editor.putString(PREFS_USER_JSON, mUser.toJSONObject().toString());
+            editor.putString(PREFS_USER_JSON, mUser.toJson().toString());
             editor.commit();
-            Log.i("Shopelia", "Saving user\n" + mUser.toJSONObject().toString());
         } catch (JSONException e) {
-            Log.e("Shopelia", "Impossible to save user", e);
+            if (Config.ERROR_LOGS_ENABLED) {
+                Log.e("Shopelia", "Impossible to save user", e);
+            }
         }
     }
 
