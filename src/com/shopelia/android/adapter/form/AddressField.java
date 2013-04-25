@@ -16,13 +16,10 @@ public class AddressField extends ButtonField {
     public static final int TYPE = 2;
     public static int REQUEST_ADDRESS = 0x16;
 
-    public static String JSON_PATH = "Address";
-
     private Address mAddress = null;
 
     public AddressField(Context context, int resId) {
         super(context, resId);
-        setJsonPath(JSON_PATH);
     }
 
     @Override
