@@ -57,8 +57,9 @@ public abstract class ButtonField extends Field {
         return false;
     }
 
-    protected void setJsonPath(String jsonPath) {
+    public ButtonField setJsonPath(String jsonPath) {
         mJsonPath = jsonPath;
+        return this;
     }
 
     protected void setContentText(String text) {
