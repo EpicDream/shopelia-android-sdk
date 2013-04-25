@@ -23,6 +23,10 @@ public final class Address implements JsonData, Parcelable {
         String PHONES_ATTRIBUTES = "phones_attributes";
         String COUNTRY = "country";
         String EXTRAS = "extras";
+
+        String NAME = "name";
+        String FIRSTNAME = "firstname";
+
     }
 
     private static final long INVALID_ID = -1;
@@ -62,6 +66,8 @@ public final class Address implements JsonData, Parcelable {
         if (id != INVALID_ID) {
             json.put(Api.ID, id);
         }
+        json.put(Api.NAME, name);
+        json.put(Api.FIRSTNAME, firstname);
         json.put(Api.ADDRESS1, address);
         json.put(Api.ZIP, zipcode);
         json.put(Api.CITY, city);
@@ -91,6 +97,8 @@ public final class Address implements JsonData, Parcelable {
 
     public static Address inflate(JSONObject object) throws JSONException {
         Address address = new Address();
+        address.name = object.optString(Api.NAME);
+        address.firstname = object.optString(Api.FIRSTNAME);
         address.address = object.getString(Api.ADDRESS1);
         address.city = object.getString(Api.CITY);
         address.country = object.getString(Api.COUNTRY);
