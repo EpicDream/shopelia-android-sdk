@@ -86,4 +86,8 @@ public class PaymentCard implements JsonData, Parcelable {
         }
     };
 
+    public static PaymentCard inflate(JSONObject object) throws JSONException {
+        return new PaymentCard(object);
+    }
+
 }

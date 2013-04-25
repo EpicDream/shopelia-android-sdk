@@ -48,8 +48,12 @@ public class User implements JsonData {
         return json;
     }
 
-    public static User inflates(JSONObject json) {
+    public static User inflate(JSONObject json) {
         User user = new User();
+        user.email = json.optString(Api.EMAIL);
+        user.firstName = json.optString(Api.FIRST_NAME);
+        user.lastName = json.optString(Api.LAST_NAME);
+        user.phone = json.optString(Api.PHONE);
         return user;
     }
 
