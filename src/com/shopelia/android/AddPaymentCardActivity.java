@@ -99,6 +99,9 @@ public class AddPaymentCardActivity extends HostActivity {
             // Fire error
             isValid = false;
         }
+
+        Log.d(null, "1 IS VALID " + isValid);
+
         if (date.length() != 5) {
             // Fire error
             isValid = false;
@@ -108,7 +111,11 @@ public class AddPaymentCardActivity extends HostActivity {
             isValid = isValid && checkIfExpiryDateIsValid(card.expMonth, card.expYear);
         }
 
+        Log.d(null, "2 IS VALID " + isValid);
+
         isValid = checkIfCardNumberIsMod10(card.number);
+
+        Log.d(null, "3 IS VALID " + isValid);
 
         if (isValid) {
             finish();
@@ -145,7 +152,7 @@ public class AddPaymentCardActivity extends HostActivity {
     }
 
     private boolean checkIfCardNumberIsMod10(String cardNumber) {
-        if (cardNumber.length() < 16 || TextUtils.isDigitsOnly(cardNumber)) {
+        if (cardNumber.length() < 16 || !TextUtils.isDigitsOnly(cardNumber)) {
             // Fire error
             return false;
         }
@@ -181,7 +188,6 @@ public class AddPaymentCardActivity extends HostActivity {
                 if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                     CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                     mCardNumberField.setText(scanResult.cardNumber);
-                    Log.d(null, scanResult.cardNumber);
                     mCvvField.setText(scanResult.cvv);
                     mExpiryField.setText(String.format("%02d/%02d", scanResult.expiryMonth, scanResult.expiryYear % 100));
                 }
