@@ -37,11 +37,16 @@ public class AddPaymentCardActivity extends HostActivity {
 
         mExpiryField.addTextChangedListener(new DateFormattingTextWatcher());
 
+        findViewById(R.id.validate).setOnClickListener(mOnValidateClickListener);
+
     }
 
     @Override
     protected boolean isPartOfOrderWorkFlow() {
         return false;
+    }
+
+    private void validate() {
     }
 
     private OnClickListener mOnScanClickListener = new OnClickListener() {
@@ -57,6 +62,14 @@ public class AddPaymentCardActivity extends HostActivity {
             scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_ZIP, false);
             scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_MANUAL_ENTRY, true);
             startActivityForResult(scanIntent, 12);
+        }
+    };
+
+    private OnClickListener mOnValidateClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+
         }
     };
 
