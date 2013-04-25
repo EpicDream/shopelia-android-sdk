@@ -16,9 +16,9 @@ public class Order implements Parcelable {
         String PRODUCT_URL = "product_url";
     }
 
-    public static final long NO_ID = -1;
+    public static final String NO_ID = null;
 
-    public long uuid = NO_ID;
+    public String uuid = NO_ID;
 
     public String productUrl;
 
@@ -36,7 +36,11 @@ public class Order implements Parcelable {
     }
 
     private Order(Parcel source) {
-
+        productUrl = source.readString();
+        uuid = source.readString();
+        address = source.readParcelable(Address.class.getClassLoader());
+        card = source.readParcelable(PaymentCard.class.getClassLoader());
+        user = source.readParcelable(User.class.getClassLoader());
     }
 
     @Override
@@ -46,7 +50,11 @@ public class Order implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(productUrl);
+        dest.writeString(uuid);
+        dest.writeParcelable(address, flags);
+        dest.writeParcelable(card, flags);
+        dest.writeParcelable(user, flags);
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
@@ -64,7 +72,7 @@ public class Order implements Parcelable {
 
     public static Order inflate(JSONObject object) {
         Order order = new Order();
-        order.uuid = object.optLong(Api.UUID, NO_ID);
+        order.uuid = object.optString(Api.UUID, NO_ID);
         order.productUrl = object.optString(Api.PRODUCT_URL);
         if (object.has(Api.ADDRESS)) {
             try {

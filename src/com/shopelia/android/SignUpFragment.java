@@ -22,6 +22,7 @@ import com.shopelia.android.adapter.form.PaymentCardField;
 import com.shopelia.android.adapter.form.PhoneField;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
 import com.shopelia.android.widget.FormListFooter;
@@ -110,8 +111,7 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
                 Order order = Order.inflate(result);
                 Intent intent = new Intent(getActivity(), ProcessOrderActivity.class);
                 intent.putExtra(HostActivity.EXTRA_ORDER, order);
-                // getActivity().startActivityForResult(intent,
-                // Config.REQUEST_ORDER);
+                getActivity().startActivityForResult(intent, Config.REQUEST_ORDER);
             }
         }
     };
