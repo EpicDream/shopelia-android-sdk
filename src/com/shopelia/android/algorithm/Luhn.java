@@ -19,17 +19,18 @@ public final class Luhn {
      * string only composed of digits other this methods will give you an
      * irrelevant result.</b>
      * 
-     * @param id
-     * @return
+     * @param id A sequence of digit char with no spaces and no separator.
+     * @return True if the number is valid false otherwise
      */
-    static boolean isValid(CharSequence id) {
+    public static boolean isValid(CharSequence id) {
         int sum = 0;
         for (int index = id.length() - 1; index >= 0; index--) {
             int digit = id.charAt(index) - '0';
-            Log.d(null, "DIGIT = " + digit);
-            if (index > 0 && index % 2 == 0) {
+            if (index % 2 == 0) {
+                Log.d(null, "2 * " + digit);
                 sum += digit > 4 ? digit * 2 - 9 : digit * 2;
             } else {
+                Log.d(null, "1 * " + digit);
                 sum += digit;
             }
         }
