@@ -3,7 +3,7 @@ package com.shopelia.android.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class User {
+public class User implements JsonData {
 
     public interface Api {
         String USER = "user";
@@ -15,12 +15,16 @@ public class User {
         String FIRST_NAME = "first_name";
         String LAST_NAME = "last_name";
         String ADDRESSES_ATTRIBUTES = "addresses_attributes";
+
+        String PHONE = "phone";
+
     }
 
     public long id;
     public String email;
     public String firstName;
     public String lastName;
+    public String phone;
 
     public User() {
 
@@ -34,7 +38,8 @@ public class User {
         lastName = json.getString(Api.LAST_NAME);
     }
 
-    public JSONObject toJSONObject() throws JSONException {
+    @Override
+    public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
         json.put(Api.ID, id);
         json.put(Api.EMAIL, email);
