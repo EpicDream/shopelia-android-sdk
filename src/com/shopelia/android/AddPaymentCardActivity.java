@@ -9,7 +9,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -99,8 +98,6 @@ public class AddPaymentCardActivity extends HostActivity {
             isValid = false;
         }
 
-        Log.d(null, "1 IS VALID " + isValid);
-
         if (date.length() != 5) {
             // Fire error
             isValid = false;
@@ -110,11 +107,7 @@ public class AddPaymentCardActivity extends HostActivity {
             isValid = isValid && checkIfExpiryDateIsValid(card.expMonth, card.expYear);
         }
 
-        Log.d(null, "2 IS VALID " + isValid);
-
         isValid = isValid && checkIfCardNumberIsMod10(card.number);
-
-        Log.d(null, "3 IS VALID " + isValid);
 
         if (isValid) {
             Intent data = new Intent();
