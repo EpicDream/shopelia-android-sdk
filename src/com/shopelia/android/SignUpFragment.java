@@ -22,8 +22,8 @@ import com.shopelia.android.adapter.form.PaymentCardField;
 import com.shopelia.android.adapter.form.PhoneField;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.app.ShopeliaFragment;
-import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.model.User;
 import com.shopelia.android.widget.FormListFooter;
 import com.shopelia.android.widget.FormListHeader;
 
@@ -57,20 +57,20 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
              * User informations
              */
             .add(new HeaderField(getActivity(), R.string.shopelia_form_main_personal_info))
-            .add(new PhoneField(getActivity(), null, R.string.shopelia_form_main_phone))
-            .add(new EmailField(getActivity(), null, R.string.shopelia_form_main_email).setJsonPath("User.email"))
+            .add(new PhoneField(getActivity(), null, R.string.shopelia_form_main_phone).setJsonPath(Order.Api.USER, User.Api.PHONE))
+            .add(new EmailField(getActivity(), null, R.string.shopelia_form_main_email).setJsonPath(Order.Api.USER, User.Api.EMAIL))
             
             /*
              * Shipment details
              */
             .add(new HeaderField(getActivity(), R.string.shopelia_form_main_shipping_address))
-            .add(new AddressField(getActivity(), R.string.shopelia_form_main_address))
+            .add(new AddressField(getActivity(), R.string.shopelia_form_main_address).setJsonPath(Order.Api.ADDRESS))
             
             /*
              * Payment methods
              */
             .add(new HeaderField(getActivity(), R.string.shopelia_form_main_payment_method))
-            .add(new PaymentCardField(getActivity(), R.string.shopelia_form_main_card_number))
+            .add(new PaymentCardField(getActivity(), R.string.shopelia_form_main_card_number).setJsonPath(Order.Api.PAYMENT_CARD))
             
             .commit(savedInstanceState);
         //@formatter:on
@@ -110,7 +110,8 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
                 Order order = Order.inflate(result);
                 Intent intent = new Intent(getActivity(), ProcessOrderActivity.class);
                 intent.putExtra(HostActivity.EXTRA_ORDER, order);
-                getActivity().startActivityForResult(intent, Config.REQUEST_ORDER);
+                // getActivity().startActivityForResult(intent,
+                // Config.REQUEST_ORDER);
             }
         }
     };
