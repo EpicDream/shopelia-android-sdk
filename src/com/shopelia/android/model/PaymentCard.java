@@ -16,33 +16,27 @@ public class PaymentCard implements JsonData {
         String CVV = "cvv";
     }
 
-    public long id;
+    private static final long INVALID_ID = -1;
+
+    public long id = INVALID_ID;
     public String number;
     public String expMonth;
     public String expYear;
     public String cvv;
 
     public PaymentCard(JSONObject json) throws JSONException {
-        id = json.getLong(Api.ID);
+        id = json.optLong(Api.ID, INVALID_ID);
         number = json.getString(Api.NUMBER);
         expMonth = json.getString(Api.EXP_MONTH);
         expYear = json.getString(Api.EXP_YEAR);
     }
 
-    public JSONObject toJSONObject() throws JSONException {
-        JSONObject json = new JSONObject();
-        json.put(Api.ID, id);
-        json.put(Api.NUMBER, number);
-        json.put(Api.EXP_MONTH, expMonth);
-        json.put(Api.EXP_YEAR, expYear);
-        json.put(Api.CVV, cvv);
-        return json;
-    }
-
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put(Api.ID, id);
+        if (id != INVALID_ID) {
+            json.put(Api.ID, id);
+        }
         json.put(Api.NUMBER, number);
         json.put(Api.EXP_MONTH, expMonth);
         json.put(Api.EXP_YEAR, expYear);
