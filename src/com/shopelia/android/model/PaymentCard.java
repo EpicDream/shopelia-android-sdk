@@ -24,6 +24,10 @@ public class PaymentCard implements JsonData {
     public String expYear;
     public String cvv;
 
+    public PaymentCard() {
+
+    }
+
     public PaymentCard(JSONObject json) throws JSONException {
         id = json.optLong(Api.ID, INVALID_ID);
         number = json.getString(Api.NUMBER);
