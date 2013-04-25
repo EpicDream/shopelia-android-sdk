@@ -48,6 +48,9 @@ public class AddressField extends ButtonField {
     public void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mAddress = savedInstanceState.getParcelable(getJsonPath());
+            if (mAddress != null) {
+                setContentText(mAddress.toString());
+            }
         }
     }
 
