@@ -16,7 +16,8 @@
         android:layout_height="wrap_content"
         android:ems="10"
         android:hint="@string/shopelia_form_payment_card_number"
-        android:inputType="number|text" >
+        android:inputType="number|text"
+        android:nextFocusDown="@+id/expiry_date" >
 
         <requestFocus />
     </EditText>
@@ -34,7 +35,8 @@
             android:ems="10"
             android:hint="@string/shopelia_form_payment_card_expiry_date"
             android:inputType="date"
-            android:maxLength="5" />
+            android:maxLength="5"
+            android:nextFocusDown="@+id/cvv" />
 
         <EditText
             android:id="@+id/cvv"
