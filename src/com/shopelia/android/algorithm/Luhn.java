@@ -1,6 +1,5 @@
 package com.shopelia.android.algorithm;
 
-import android.util.Log;
 
 /**
  * A helper class to check if a given card number is valid using Luhn Algorithm.<br/>
@@ -27,10 +26,8 @@ public final class Luhn {
         for (int index = id.length() - 1; index >= 0; index--) {
             int digit = id.charAt(index) - '0';
             if (index % 2 == 0) {
-                Log.d(null, "2 * " + digit);
                 sum += digit > 4 ? digit * 2 - 9 : digit * 2;
             } else {
-                Log.d(null, "1 * " + digit);
                 sum += digit;
             }
         }
