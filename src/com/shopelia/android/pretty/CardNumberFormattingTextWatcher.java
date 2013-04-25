@@ -51,9 +51,7 @@ public class CardNumberFormattingTextWatcher implements TextWatcher {
             if (relativeIndex % 5 == 0 && s.charAt(index) != ' ') {
                 s.insert(index, " ");
                 index++;
-            }
-            if (index < s.length() && s.charAt(index) == ' ') {
-                relativeIndex = 0;
+                relativeIndex = 1;
             }
             relativeIndex++;
         }
