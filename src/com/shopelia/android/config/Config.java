@@ -75,4 +75,11 @@ public final class Config {
 
     public final static String CARDIO_TOKEN = "d6d9251b267d40e9bbc608a51e63e728";
 
+    // /////////////////////////////////////////////////////////////
+    //
+    // Activity request
+    //
+    // /////////////////////////////////////////////////////////////
+    public static final int REQUEST_ORDER = 0x916;
+
 }
