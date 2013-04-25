@@ -238,7 +238,7 @@ public class CreateAddressActivity extends HostActivity {
         for (int index = 0; index < fields.length; index++) {
             if (TextUtils.isEmpty(fields[index].getText().toString())) {
                 out = false;
-                fields[index].setError("Erreur");
+                // Fire error
             }
         }
         return out;
