@@ -44,7 +44,6 @@ public class AddPaymentCardActivity extends HostActivity {
         mCardNumberField = (EditText) findViewById(R.id.card_numer);
         mCvvField = (EditText) findViewById(R.id.cvv);
         mExpiryField = (EditText) findViewById(R.id.expiry_date);
-
         mCardNumberField.setFilters(new InputFilter[] {
             new CardNumberFormattingTextWatcher.CardNumberInputFilter()
         });
@@ -113,11 +112,14 @@ public class AddPaymentCardActivity extends HostActivity {
 
         Log.d(null, "2 IS VALID " + isValid);
 
-        isValid = checkIfCardNumberIsMod10(card.number);
+        isValid = isValid && checkIfCardNumberIsMod10(card.number);
 
         Log.d(null, "3 IS VALID " + isValid);
 
         if (isValid) {
+            Intent data = new Intent();
+            data.putExtra(EXTRA_PAYMENT_CARD, card);
+            setResult(RESULT_OK, data);
             finish();
         } else {
 
@@ -173,8 +175,8 @@ public class AddPaymentCardActivity extends HostActivity {
 
             scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Config.CARDIO_TOKEN);
 
-            scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, true);
-            scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, true);
+            scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, false);
+            scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false);
             scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_ZIP, false);
             scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_MANUAL_ENTRY, true);
             startActivityForResult(scanIntent, REQUEST_SCAN_CARD);
@@ -188,8 +190,10 @@ public class AddPaymentCardActivity extends HostActivity {
                 if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                     CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                     mCardNumberField.setText(scanResult.cardNumber);
-                    mCvvField.setText(scanResult.cvv);
-                    mExpiryField.setText(String.format("%02d/%02d", scanResult.expiryMonth, scanResult.expiryYear % 100));
+                    // mCvvField.setText(scanResult.cvv);
+                    // mExpiryField.setText(String.format("%02d/%02d",
+                    // scanResult.expiryMonth, scanResult.expiryYear % 100));
+                    mExpiryField.requestFocus();
                 }
                 break;
         }
