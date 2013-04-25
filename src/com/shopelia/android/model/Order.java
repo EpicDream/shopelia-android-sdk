@@ -1,9 +1,23 @@
 package com.shopelia.android.model;
 
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
 public class Order implements Parcelable {
+
+    public interface Api {
+        String UUID = "uuid";
+        String USER = "user";
+        String ADDRESS = "address";
+        String PAYMENT_CARD = "payment_card";
+        String PRODUCT_URL = "product_url";
+    }
+
+    public static final long NO_ID = -1;
+
+    public long uuid = NO_ID;
 
     public String productUrl;
 
@@ -11,6 +25,10 @@ public class Order implements Parcelable {
     public Address address;
 
     // Payment card
+    public PaymentCard card;
+
+    // User
+    public User user;
 
     public Order() {
 
@@ -22,7 +40,6 @@ public class Order implements Parcelable {
 
     @Override
     public int describeContents() {
-        // TODO Auto-generated method stub
         return 0;
     }
 
@@ -44,4 +61,10 @@ public class Order implements Parcelable {
         }
     };
 
+    public static Order inflate(JSONObject object) {
+        Order order = new Order();
+        order.uuid = object.optLong(Api.UUID, NO_ID);
+        order.productUrl = object.optString(Api.PRODUCT_URL);
+        return order;
+    }
 }
