@@ -44,7 +44,7 @@
             android:ems="10"
             android:hint="@string/shopelia_form_payment_card_cvv"
             android:inputType="number"
-            android:maxLength="3" />
+            android:maxLength="4" />
     </LinearLayout>
 
     <Button
