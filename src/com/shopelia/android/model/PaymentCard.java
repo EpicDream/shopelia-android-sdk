@@ -17,6 +17,9 @@ public class PaymentCard implements JsonData, Parcelable {
         String EXP_MONTH = "exp_month";
         String EXP_YEAR = "exp_year";
         String CVV = "cvv";
+
+        String NAME = "name";
+
     }
 
     private static final long INVALID_ID = -1;
