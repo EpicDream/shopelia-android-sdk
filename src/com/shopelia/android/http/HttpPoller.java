@@ -7,7 +7,8 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
-import com.turbomanage.httpclient.AsyncCallback;
+import com.shopelia.android.api.ShopeliaRestClient;
+import com.turbomanage.httpclient.HttpResponse;
 
 public class HttpPoller extends HandlerThread {
 
@@ -21,7 +22,7 @@ public class HttpPoller extends HandlerThread {
 
     private PollerHandler mPollerHandler;
     private String mRequest;
-    private AsyncCallback mAsyncCallback;
+    private Handler mHandler;
 
     private final AtomicInteger mState = new AtomicInteger(STATE_STOPPED);
 
@@ -30,19 +31,18 @@ public class HttpPoller extends HandlerThread {
     }
 
     public synchronized void poll(String request) {
-        if (isPaused()) {
+        if (isPaused() && mRequest != null && mRequest.equals(request)) {
             resumePolling();
             return;
         } else {
             mRequest = request;
+            mState.set(STATE_STOPPED);
+            sendPollingRequest(mRequest);
         }
     }
 
-    public synchronized void setAsyncCallback(AsyncCallback callback) {
-        mAsyncCallback = callback;
-    }
-
     public synchronized void end() {
+        mState.set(STATE_STOPPED);
         mRequest = null;
         mPollerHandler.removeMessages(MESSAGE_POLL);
     }
@@ -54,7 +54,8 @@ public class HttpPoller extends HandlerThread {
 
     public synchronized void resumePolling() {
         if (mRequest != null && isPaused()) {
-
+            mState.set(STATE_POLLING);
+            sendPollingRequest(mRequest);
         }
     }
 
@@ -76,6 +77,13 @@ public class HttpPoller extends HandlerThread {
         mPollerHandler = new PollerHandler(getLooper());
     }
 
+    private void sendPollingRequest(String request) {
+        Message msg = mPollerHandler.obtainMessage();
+        msg.what = MESSAGE_POLL;
+        msg.obj = request;
+        mPollerHandler.sendMessageDelayed(msg, DEFAULT_POLLING_FREQUENCY);
+    }
+
     private class PollerHandler extends Handler {
 
         public PollerHandler(Looper looper) {
@@ -85,6 +93,55 @@ public class HttpPoller extends HandlerThread {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
+            Handler handler = mHandler;
+            switch (msg.what) {
+                case MESSAGE_POLL:
+                    HttpResponse response = null;
+                    Exception exception = null;
+                    try {
+                        response = ShopeliaRestClient.get((String) msg.obj, null);
+                    } catch (Exception e) {
+                        exception = e;
+                    }
+                    if (handler != null) {
+                        Message message = handler.obtainMessage();
+                        message.what = MESSAGE_POLL;
+                        message.obj = response != null ? response : exception;
+                        handler.sendMessage(message);
+                    }
+                    sendPollingRequest(mRequest);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+
+    }
+
+    public static abstract class PollerCalback extends Handler {
+
+        protected abstract void onComplete(HttpResponse response);
+
+        protected void onError(Exception e) {
+
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case MESSAGE_POLL:
+                    if (msg.obj instanceof HttpResponse) {
+                        onComplete((HttpResponse) msg.obj);
+                    } else {
+                        onError((Exception) msg.obj);
+                    }
+                    break;
+
+                default:
+                    break;
+            }
         }
 
     }
