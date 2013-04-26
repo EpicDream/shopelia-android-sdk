@@ -2,8 +2,11 @@ package com.shopelia.android.api;
 
 import org.json.JSONObject;
 
+import android.content.Context;
+
 import com.shopelia.android.config.Config;
 import com.shopelia.android.http.LogcatRequestLogger;
+import com.shopelia.android.manager.UserManager;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
@@ -65,6 +68,12 @@ public final class ShopeliaRestClient {
      */
     public static ParameterMap newParams() {
         return sHttpClient.newParams();
+    }
+
+    public static void authenticate(Context context) {
+        if (UserManager.get(context).isLogged()) {
+            sHttpClient.addHeader("X-Shopelia-AuthToken", UserManager.get(context).getAuthToken());
+        }
     }
 
     /**
@@ -133,6 +142,10 @@ public final class ShopeliaRestClient {
      */
     public static void post(String path, JSONObject object, AsyncCallback callback) {
         sHttpClient.post(path, "application/json", object.toString().getBytes(), callback);
+    }
+
+    private static void init(Context context) {
+
     }
 
 }
