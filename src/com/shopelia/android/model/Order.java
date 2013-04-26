@@ -13,7 +13,10 @@ public class Order implements Parcelable {
         String USER = "user";
         String ADDRESS = "address";
         String PAYMENT_CARD = "payment_card";
-        String PRODUCT_URL = "product_url";
+        String PRODUCT_URL = "url";
+
+        String ORDER = "order";
+
     }
 
     public static final String NO_ID = null;
