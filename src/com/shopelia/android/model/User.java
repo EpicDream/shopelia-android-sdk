@@ -83,6 +83,7 @@ public class User implements JsonData, Parcelable {
         JSONObject out = new JSONObject();
         out.put(User.Api.FIRST_NAME, user.firstName);
         out.put(User.Api.LAST_NAME, user.lastName);
+        out.put(User.Api.EMAIL, user.email);
         JSONArray addresses = new JSONArray();
         addresses.put(address.toJson());
         out.put(User.Api.ADDRESSES_ATTRIBUTES, addresses);
