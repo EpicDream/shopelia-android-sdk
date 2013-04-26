@@ -45,8 +45,8 @@
             android:layout_weight="50"
             android:ems="10"
             android:hint="@string/shopelia_form_payment_card_cvv"
-            android:inputType="number"
-            android:maxLength="4" />
+            android:inputType="numberPassword"
+            android:maxLength="3" />
     </LinearLayout>
 
     <Button
