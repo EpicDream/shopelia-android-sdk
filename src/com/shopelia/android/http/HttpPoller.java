@@ -2,6 +2,7 @@ package com.shopelia.android.http;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
+import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
@@ -39,6 +40,10 @@ public class HttpPoller extends HandlerThread {
             mState.set(STATE_STOPPED);
             sendPollingRequest(mRequest);
         }
+    }
+
+    public void setPollerCallback(Handler handler) {
+        mHandler = handler;
     }
 
     public synchronized void end() {
@@ -86,6 +91,7 @@ public class HttpPoller extends HandlerThread {
 
     private class PollerHandler extends Handler {
 
+        @SuppressLint("HandlerLeak")
         public PollerHandler(Looper looper) {
             super(looper);
         }

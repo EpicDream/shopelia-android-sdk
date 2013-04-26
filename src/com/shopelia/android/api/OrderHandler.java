@@ -7,12 +7,16 @@ import android.content.Context;
 import android.util.Log;
 
 import com.shopelia.android.http.HttpPoller;
+import com.shopelia.android.http.HttpPoller.PollerCalback;
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.model.OrderState;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
 
 public final class OrderHandler {
 
@@ -21,7 +25,9 @@ public final class OrderHandler {
 
         public void onPaymentInformationSent(PaymentCard paymentInformation);
 
-        // public void onOrderStateUpdate();
+        public void onOrderBegin(Order order);
+
+        public void onOrderStateUpdate(OrderState newState);
 
         public void onError(int step, JSONObject response, Exception e);
 
@@ -35,7 +41,7 @@ public final class OrderHandler {
     private Context mContext;
     private Callback mCallback;
 
-    private static final HttpPoller sHttpPoller = new HttpPoller();
+    private static HttpPoller sHttpPoller;
 
     public OrderHandler(Context context, Callback callback) {
         this.mContext = context;
@@ -108,8 +114,62 @@ public final class OrderHandler {
 
     }
 
-    public void order(Order order) {
+    public void order(final Order order) {
+        JSONObject params = new JSONObject();
+        try {
+            JSONObject orderObject = new JSONObject();
+            orderObject.put(Order.Api.PRODUCT_URL, order.productUrl);
+            params.put(Order.Api.ORDER, order);
+        } catch (JSONException e) {
+            fireError(STEP_ORDER, null, e);
+            return;
+        }
+        ShopeliaRestClient.authenticate(mContext);
+        ShopeliaRestClient.post(Command.V1.Orders.$, params, new AsyncCallback() {
 
+            @Override
+            public void onComplete(HttpResponse httpResponse) {
+
+                if (httpResponse.getStatus() == 200) {
+                    try {
+                        JSONObject object = new JSONObject(httpResponse.getBodyAsString());
+                        order.uuid = object.getJSONObject(Order.Api.ORDER).getString(Order.Api.UUID);
+                        if (mCallback != null) {
+                            mCallback.onOrderBegin(order);
+                        }
+                        OrderState state = OrderState.inflate(object.getJSONObject(OrderState.Api.ORDER));
+                        if (mCallback != null) {
+                            mCallback.onOrderStateUpdate(state);
+                        }
+
+                        if (sHttpPoller == null) {
+                            sHttpPoller = new HttpPoller();
+                            sHttpPoller.start();
+                        }
+
+                        if (!sHttpPoller.isStopped()) {
+                            sHttpPoller.end();
+                        }
+
+                        sHttpPoller.setPollerCallback(mPollerCalback);
+                        sHttpPoller.poll(Command.V1.Orders.Order(order.uuid));
+
+                    } catch (JSONException e) {
+                        fireError(STEP_ORDER, null, e);
+                    }
+                } else {
+                    fireError(STEP_ORDER, null, new IllegalStateException());
+                }
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+                fireError(STEP_ORDER, null, e);
+            }
+
+        });
     }
 
     public void confirm() {
@@ -121,5 +181,19 @@ public final class OrderHandler {
             mCallback.onError(step, response, e);
         }
     }
+
+    private HttpPoller.PollerCalback mPollerCalback = new PollerCalback() {
+
+        @Override
+        protected void onComplete(HttpResponse response) {
+
+        }
+
+        @Override
+        protected void onError(Exception e) {
+
+        };
+
+    };
 
 }

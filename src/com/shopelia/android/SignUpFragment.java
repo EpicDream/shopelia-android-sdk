@@ -14,21 +14,24 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.form.AddressField;
 import com.shopelia.android.adapter.form.EmailField;
 import com.shopelia.android.adapter.form.HeaderField;
 import com.shopelia.android.adapter.form.PaymentCardField;
 import com.shopelia.android.adapter.form.PhoneField;
-import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.app.ShopeliaFragment;
-import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
 import com.shopelia.android.widget.FormListFooter;
 import com.shopelia.android.widget.FormListHeader;
 
-public class SignUpFragment extends ShopeliaFragment<Void> {
+public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
+
+    public interface OnSignUpListener {
+        public void onSignUp(JSONObject result);
+    }
 
     private ListView mListView;
     private FormAdapter mAdapter;
@@ -108,10 +111,7 @@ public class SignUpFragment extends ShopeliaFragment<Void> {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                Order order = Order.inflate(result);
-                Intent intent = new Intent(getActivity(), ProcessOrderActivity.class);
-                intent.putExtra(HostActivity.EXTRA_ORDER, order);
-                getActivity().startActivityForResult(intent, Config.REQUEST_ORDER);
+                getContract().onSignUp(result);
             }
         }
     };

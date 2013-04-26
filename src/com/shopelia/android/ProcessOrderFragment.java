@@ -13,6 +13,7 @@ import com.shopelia.android.api.OrderHandler;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.model.OrderState;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 
@@ -70,6 +71,16 @@ public class ProcessOrderFragment extends ShopeliaFragment<Void> implements Orde
         if (response != null) {
             Log.d(null, response.toString());
         }
+    }
+
+    @Override
+    public void onOrderBegin(Order order) {
+
+    }
+
+    @Override
+    public void onOrderStateUpdate(OrderState newState) {
+
     }
 
 }

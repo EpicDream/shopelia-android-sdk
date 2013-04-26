@@ -36,6 +36,11 @@ public final class Command {
 
         public static final class Orders {
             public static final String $ = V1.$ + "/orders";
+
+            public static String Order(String uuid) {
+                return $ + "/" + uuid;
+            }
+
         }
 
         public static final class Users {
