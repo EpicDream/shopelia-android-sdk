@@ -3,6 +3,7 @@ package com.shopelia.android;
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,12 @@ public class ProcessOrderFragment extends ShopeliaFragment<Void> implements Orde
 
     @Override
     public void onError(int step, JSONObject response, Exception e) {
-
+        if (e != null) {
+            e.printStackTrace();
+        }
+        if (response != null) {
+            Log.d(null, response.toString());
+        }
     }
 
 }
