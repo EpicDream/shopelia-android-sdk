@@ -4,14 +4,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
+import com.shopelia.android.http.JsonAsyncCallback;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
-import com.turbomanage.httpclient.AsyncCallback;
-import com.turbomanage.httpclient.HttpResponse;
 
 public final class OrderHandler {
 
@@ -38,7 +37,7 @@ public final class OrderHandler {
         this.mContext = context;
     }
 
-    public void createAccount(User user, Address address) {
+    public void createAccount(final User user, final Address address) {
         JSONObject params = new JSONObject();
 
         try {
@@ -48,11 +47,19 @@ public final class OrderHandler {
             return;
         }
 
-        ShopeliaRestClient.post(Command.V1.Users.$, params, new AsyncCallback() {
+        ShopeliaRestClient.post(Command.V1.Users.$, params, new JsonAsyncCallback() {
 
             @Override
-            public void onComplete(HttpResponse httpResponse) {
-                Log.d(null, "GOT " + httpResponse.getBodyAsString());
+            public void onComplete(JSONObject object) {
+                if (mCallback != null && object.has(User.Api.USER) && object.has(User.Api.AUTH_TOKEN)) {
+                    UserManager.get(mContext).login(user);
+                    UserManager.get(mContext).setAuthToken(object.optString(User.Api.AUTH_TOKEN));
+                    UserManager.get(mContext).saveUser();
+
+                    mCallback.onAccountCreationSucceed(user, address);
+                } else if (mCallback != null) {
+                    mCallback.onError(STEP_ACCOUNT_CREATION, object, null);
+                }
             }
         });
 
@@ -75,38 +82,5 @@ public final class OrderHandler {
             mCallback.onError(step, response, e);
         }
     }
-
-    private AsyncCallback mOnCreateAccount = new AsyncCallback() {
-
-        @Override
-        public void onComplete(HttpResponse httpResponse) {
-
-        }
-    };
-
-    private AsyncCallback mOnSendPaymentInformation = new AsyncCallback() {
-
-        @Override
-        public void onComplete(HttpResponse httpResponse) {
-
-        }
-    };
-
-    private AsyncCallback mOnOrder = new AsyncCallback() {
-
-        @Override
-        public void onComplete(HttpResponse httpResponse) {
-            // TODO Auto-generated method stub
-
-        }
-    };
-
-    private AsyncCallback mOnConfirm = new AsyncCallback() {
-
-        @Override
-        public void onComplete(HttpResponse httpResponse) {
-
-        }
-    };
 
 }
