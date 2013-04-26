@@ -36,6 +36,11 @@ public class PaymentCard implements JsonData, Parcelable {
         number = json.getString(Api.NUMBER);
         expMonth = json.getString(Api.EXP_MONTH);
         expYear = json.getString(Api.EXP_YEAR);
+        cvv = json.getString(Api.CVV);
+        if (expYear != null && expYear.length() > 2) {
+            expYear = expYear.substring(expYear.length() - 2);
+        }
+
     }
 
     private PaymentCard(Parcel source) {
@@ -54,7 +59,7 @@ public class PaymentCard implements JsonData, Parcelable {
         }
         json.put(Api.NUMBER, number);
         json.put(Api.EXP_MONTH, expMonth);
-        json.put(Api.EXP_YEAR, expYear);
+        json.put(Api.EXP_YEAR, "20" + expYear);
         json.put(Api.CVV, cvv);
         return json;
     }
