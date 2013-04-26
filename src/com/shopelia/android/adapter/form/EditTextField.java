@@ -221,6 +221,7 @@ public class EditTextField extends Field {
 
         @Override
         public void afterTextChanged(Editable s) {
+            mContentText = s.toString();
             if (mOnValidateListener != null) {
                 mOnValidateListener.afterTextChanged(s);
             }
