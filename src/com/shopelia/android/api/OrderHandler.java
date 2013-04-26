@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
@@ -82,12 +83,13 @@ public final class OrderHandler {
             fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
             return;
         }
-
+        Log.d(null, "SEND " + params);
+        ShopeliaRestClient.authenticate(mContext);
         ShopeliaRestClient.post(Command.V1.PaymentCards.$, params, new JsonAsyncCallback() {
 
             @Override
             public void onComplete(JSONObject object) {
-
+                Log.d(null, "GOT " + object);
             }
 
             @Override
