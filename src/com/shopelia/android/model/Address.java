@@ -71,6 +71,7 @@ public final class Address implements JsonData, Parcelable {
         json.put(Api.ADDRESS1, address);
         json.put(Api.ZIP, zipcode);
         json.put(Api.CITY, city);
+        json.put(Api.COUNTRY, country);
         if (!TextUtils.isEmpty(extras)) {
             json.put(Api.EXTRAS, extras);
         }
