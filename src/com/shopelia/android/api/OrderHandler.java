@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
+import com.shopelia.android.http.HttpPoller;
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
@@ -33,6 +34,8 @@ public final class OrderHandler {
 
     private Context mContext;
     private Callback mCallback;
+
+    private static final HttpPoller sHttpPoller = new HttpPoller();
 
     public OrderHandler(Context context, Callback callback) {
         this.mContext = context;
