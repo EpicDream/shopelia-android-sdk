@@ -35,6 +35,7 @@ public final class OrderHandler {
 
     public OrderHandler(Context context, Callback callback) {
         this.mContext = context;
+        mCallback = callback;
     }
 
     public void createAccount(final User user, final Address address) {
@@ -57,15 +58,45 @@ public final class OrderHandler {
                     UserManager.get(mContext).saveUser();
 
                     mCallback.onAccountCreationSucceed(user, address);
-                } else if (mCallback != null) {
-                    mCallback.onError(STEP_ACCOUNT_CREATION, object, null);
+                } else {
+                    fireError(STEP_ACCOUNT_CREATION, object, null);
                 }
             }
+
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+                fireError(STEP_ACCOUNT_CREATION, null, e);
+            }
+
         });
 
     }
 
     public void sendPaymentInformation(PaymentCard card) {
+        JSONObject params = new JSONObject();
+
+        try {
+            params.put(PaymentCard.Api.PAYMENT_CARD, card.toJson());
+        } catch (JSONException e) {
+            fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
+            return;
+        }
+
+        ShopeliaRestClient.post(Command.V1.PaymentCards.$, params, new JsonAsyncCallback() {
+
+            @Override
+            public void onComplete(JSONObject object) {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+                fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
+            }
+
+        });
 
     }
 
