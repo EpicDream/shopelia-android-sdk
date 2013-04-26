@@ -74,11 +74,14 @@ public final class OrderHandler {
 
     }
 
-    public void sendPaymentInformation(PaymentCard card) {
+    public void sendPaymentInformation(User user, PaymentCard card) {
         JSONObject params = new JSONObject();
 
         try {
-            params.put(PaymentCard.Api.PAYMENT_CARD, card.toJson());
+            JSONObject cardObject = card.toJson();
+            cardObject.put(PaymentCard.Api.NAME, user.lastName);
+            params.put(PaymentCard.Api.PAYMENT_CARD, cardObject);
+
         } catch (JSONException e) {
             fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
             return;
