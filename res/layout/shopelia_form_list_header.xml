@@ -6,8 +6,8 @@
     android:orientation="vertical"
     android:clickable="false"
     android:focusable="false"
-    
-     >
+    android:paddingTop="@dimen/shopelia_activity_vertical_margin"
+     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/introduction_text"

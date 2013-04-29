@@ -14,4 +14,8 @@
         </attr>
     </declare-styleable>
 
+    <declare-styleable name="FormState">
+        <attr name="state_error" format="boolean" />
+    </declare-styleable>
+    
 </resources>
