@@ -14,9 +14,9 @@
         android:layout_height="wrap_content"
         android:text="@string/shopelia_form_payment_card_scan" />
 
-    <EditText
+    <com.shopelia.android.widget.FormEditText
         android:id="@+id/card_numer"
-        style="@style/Theme.Shopelia.Widget.EditText"
+        style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_normal"
@@ -27,16 +27,16 @@
         android:nextFocusDown="@+id/expiry_date" >
 
         <requestFocus />
-    </EditText>
+    </com.shopelia.android.widget.FormEditText>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal" >
 
-        <EditText
+        <com.shopelia.android.widget.FormEditText
             android:id="@+id/expiry_date"
-            style="@style/Theme.Shopelia.Widget.EditText"
+            style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/shopelia_margin_small"
@@ -47,9 +47,9 @@
             android:maxLength="5"
             android:nextFocusDown="@+id/cvv" />
 
-        <EditText
+        <com.shopelia.android.widget.FormEditText
             android:id="@+id/cvv"
-            style="@style/Theme.Shopelia.Widget.EditText"
+            style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/shopelia_margin_small"
