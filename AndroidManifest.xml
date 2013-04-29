@@ -51,21 +51,25 @@
             android:name="com.shopelia.android.StartActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Shopelia"
+            android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.shopelia.android.CreateAddressActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Shopelia"
+              android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.shopelia.android.AddPaymentCardActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Shopelia"
+              android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustPan" />
         <activity
             android:name="com.shopelia.android.ProcessOrderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Shopelia"
+              android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustPan" />
 
         <!-- Activities responsible for gathering payment info -->
