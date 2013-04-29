@@ -2,7 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingTop="@dimen/shopelia_margin_normal"
+    android:paddingBottom="@dimen/shopelia_margin_normal"
+    android:paddingLeft="@dimen/shopelia_margin_large"
+    android:paddingRight="@dimen/shopelia_margin_large" >
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -11,50 +15,53 @@
 
         <EditText
             android:id="@+id/first_name"
-            android:hint="@string/shopelia_form_address_first_name"
+            style="@style/Theme.Shopelia.Widget.EditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/shopelia_margin_small"
             android:layout_weight="50"
             android:ems="10"
+            android:hint="@string/shopelia_form_address_first_name"
             android:inputType="textPersonName|textCapSentences"
-            
-            android:nextFocusDown="@+id/name"
-             >
-
+            android:nextFocusDown="@+id/name" >
         </EditText>
 
         <EditText
             android:id="@+id/name"
-            android:hint="@string/shopelia_form_address_name"
+            style="@style/Theme.Shopelia.Widget.EditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_small"
             android:layout_weight="50"
-             android:inputType="textPersonName|textCapSentences"
-            android:ems="10" 
-            android:nextFocusDown="@+id/address"/>
-        
+            android:ems="10"
+            android:hint="@string/shopelia_form_address_name"
+            android:inputType="textPersonName|textCapSentences"
+            android:nextFocusDown="@+id/address" />
     </LinearLayout>
 
     <AutoCompleteTextView
         android:id="@+id/address"
+        style="@style/Theme.Shopelia.Widget.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
         android:ems="10"
         android:hint="@string/shopelia_form_address_address"
-        android:singleLine="true"
-        android:nextFocusDown="@+id/extras"
         android:imeOptions="actionNext"
-        android:inputType="textPostalAddress" />
+        android:inputType="textPostalAddress"
+        android:nextFocusDown="@+id/extras"
+        android:singleLine="true" />
 
     <EditText
         android:id="@+id/extras"
+        style="@style/Theme.Shopelia.Widget.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
         android:ems="10"
         android:hint="@string/shopelia_form_address_extra_informations"
-        android:singleLine="true"
-        android:nextFocusDown="@+id/zipcode" >
-
+        android:nextFocusDown="@+id/zipcode"
+        android:singleLine="true" >
     </EditText>
 
     <LinearLayout
@@ -64,39 +71,46 @@
 
         <EditText
             android:id="@+id/zipcode"
+            style="@style/Theme.Shopelia.Widget.EditText"
             android:layout_width="0dp"
-            android:hint="@string/shopelia_form_address_zipcode"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:layout_marginRight="@dimen/shopelia_margin_small"
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
             android:layout_weight="50"
+            android:ems="10"
+            android:hint="@string/shopelia_form_address_zipcode"
             android:inputType="number"
             android:nextFocusDown="@+id/city" />
 
         <EditText
             android:id="@+id/city"
-            android:hint="@string/shopelia_form_address_city"
+            style="@style/Theme.Shopelia.Widget.EditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_small"
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
             android:layout_weight="50"
-             android:inputType="textPersonName|textCapSentences"
-            android:ems="10" />
-        
+            android:ems="10"
+            android:hint="@string/shopelia_form_address_city"
+            android:inputType="textPersonName|textCapSentences" />
     </LinearLayout>
 
     <EditText
         android:id="@+id/country"
+        style="@style/Theme.Shopelia.Widget.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
         android:ems="10"
         android:hint="@string/shopelia_form_address_country"
         android:inputType="textPersonName|textCapSentences" >
-
     </EditText>
 
     <Button
         android:id="@+id/validate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
         android:text="@string/shopelia_form_address_validate" />
-    
+
 </LinearLayout>

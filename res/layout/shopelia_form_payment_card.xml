@@ -2,7 +2,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:paddingTop="@dimen/shopelia_margin_normal"
+    android:paddingBottom="@dimen/shopelia_margin_normal"
+    android:paddingLeft="@dimen/shopelia_margin_large"
+    android:paddingRight="@dimen/shopelia_margin_large" >
 
     <Button
         android:id="@+id/scan"
@@ -12,8 +16,11 @@
 
     <EditText
         android:id="@+id/card_numer"
+        style="@style/Theme.Shopelia.Widget.EditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
         android:ems="10"
         android:hint="@string/shopelia_form_payment_card_number"
         android:inputType="number|text"
@@ -29,8 +36,10 @@
 
         <EditText
             android:id="@+id/expiry_date"
+            style="@style/Theme.Shopelia.Widget.EditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/shopelia_margin_small"
             android:layout_weight="50"
             android:ems="10"
             android:hint="@string/shopelia_form_payment_card_expiry_date"
@@ -40,19 +49,23 @@
 
         <EditText
             android:id="@+id/cvv"
+            style="@style/Theme.Shopelia.Widget.EditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_small"
             android:layout_weight="50"
             android:ems="10"
             android:hint="@string/shopelia_form_payment_card_cvv"
             android:inputType="numberPassword"
             android:maxLength="3" />
+
     </LinearLayout>
 
     <Button
         android:id="@+id/validate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
         android:text="@string/shopelia_form_payment_card_validate" />
 
 </LinearLayout>

@@ -39,7 +39,7 @@
     <style name="Theme.Shopelia.TextAppearance" parent="@android:style/TextAppearance"></style>
 
     <style name="Theme.Shopelia.TextAppearance.Header" parent="@android:style/TextAppearance.Large">
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

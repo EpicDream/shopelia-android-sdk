@@ -7,7 +7,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/shopelia_title_bar_height"
-        android:background="@color/shopelia_titleBarBackground"
+        android:background="@drawable/shopelia_title_bar_background"
         android:padding="@dimen/shopelia_margin_normal" >
 
         <ImageView

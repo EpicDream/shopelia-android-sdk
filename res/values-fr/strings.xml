@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    
+
     <!-- Main form -->
     <string name="shopelia_form_main_phone">Numéro de téléphone</string>
-	<string name="shopelia_form_main_email">Email</string>
-	<string name="shopelia_form_main_validate">Poursuivre ma commande</string>
+    <string name="shopelia_form_main_email">Email</string>
+    <string name="shopelia_form_main_validate">Poursuivre ma commande</string>
     <string name="shopelia_form_main_personal_info">INFORMATIONS PERSONNELLES</string>
     <string name="shopelia_form_main_shipping_address">ADRESSE DE LIVRAISON</string>
     <string name="shopelia_form_main_payment_method">MOYEN DE PAIEMENT</string>
     <string name="shopelia_form_main_card_number">Numéro de la carte</string>
-	<string name="shopelia_form_main_address">Adresse</string>
+    <string name="shopelia_form_main_address">Adresse</string>
     <string name="shopelia_form_main_header_text" formatted="false">
-	    <![CDATA[
+<![CDATA[
 	    Votre commande va être préparé automatiquement sur le site <b>%s</b> avec le service <b>Shopelia</b>
 	    ]]>
-	</string>
-	
+    </string>
+
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Nom</string>
     <string name="shopelia_form_account_first_name">Prénom</string>
     <string name="shopelia_form_account_card_number">Numéro de la carte</string>
     <string name="shopelia_form_account_validate">Continuer la commande</string>
-    
+
     <!-- Address creation form -->
     <string name="shopelia_form_address_name">Nom</string>
     <string name="shopelia_form_address_first_name">Prénom</string>
@@ -31,11 +31,12 @@
     <string name="shopelia_form_address_zipcode">Code postal</string>
     <string name="shopelia_form_address_country">Pays</string>
     <string name="shopelia_form_address_validate">Enregistrer mon adresse</string>
-    
-     <!-- Payment card creation form -->
+
+    <!-- Payment card creation form -->
     <string name="shopelia_form_payment_card_number">Numéro de la carte</string>
     <string name="shopelia_form_payment_card_expiry_date">Date d\'expiration</string>
     <string name="shopelia_form_payment_card_cvv">CCV</string>
     <string name="shopelia_form_payment_card_scan">Scanner le numéro de carte</string>
-    
+    <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
+
 </resources>
