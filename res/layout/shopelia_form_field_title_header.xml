@@ -23,6 +23,7 @@
         android:text="Large Text"
         app:fontStyle="bold"
         app:fontFamily="normal"
+        android:textAppearance="@style/Theme.Shopelia.TextAppearance.Header"
          />
 
 </LinearLayout>
