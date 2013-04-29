@@ -182,6 +182,16 @@ public class FormAdapter extends BaseAdapter {
             return getAdapter().getContext();
         }
 
+        /**
+         * Returns the bounded view if it exists otherwise returns null
+         * 
+         * @return
+         */
+        public View getBoundedView() {
+            int index = mAdapter.mFieldList.indexOf(this);
+            return mAdapter.getViewByIndex(index);
+        }
+
     }
 
     private List<Field> mFieldList = new ArrayList<FormAdapter.Field>();
