@@ -1,13 +1,16 @@
 package com.shopelia.android.adapter.form;
 
+import java.util.regex.Pattern;
+
 import android.content.Context;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
-import android.text.TextUtils;
 
 public class PhoneField extends EditTextField {
 
     public static final int TYPE = 3;
+
+    private static final Pattern PHONE_PATTERN = Pattern.compile("^[+]?[0-9]{10,13}$");
 
     public PhoneField(String defaultText, String hint) {
         super(defaultText, hint);
@@ -24,36 +27,21 @@ public class PhoneField extends EditTextField {
         holder.editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
     }
 
-    public CharSequence makePrettyPhoneNumber(CharSequence source) {
-        if (TextUtils.isEmpty(source)) {
-            return source;
-        }
-        StringBuilder builder = new StringBuilder();
-        source = makeUglyPhoneNumber(source);
-        int cluster = 2;
-        if (!TextUtils.isDigitsOnly(source.subSequence(0, 1).toString())) {
-            cluster = 3;
-        }
-        final int count = source.length();
-        for (int index = 0; index < count; index++) {
-            if (index > 0 && index % cluster == 0) {
-                builder.append(' ');
-            }
-            builder.append(source.charAt(index));
-        }
-        return builder;
-    }
-
-    public CharSequence makeUglyPhoneNumber(CharSequence source) {
-        if (TextUtils.isEmpty(source)) {
-            return source;
-        }
-        return source.toString().replace(" ", "");
-    }
-
     @Override
     public int getFieldType() {
         return TYPE;
+    }
+
+    @Override
+    protected boolean onValidation(boolean fireError) {
+        String content = (String) getResult();
+        boolean out = super.onValidation(fireError) && PHONE_PATTERN.matcher(content).matches();
+        return out;
+    }
+
+    @Override
+    public Object getResult() {
+        return ((String) super.getResult()).replace(" ", "");
     }
 
 }

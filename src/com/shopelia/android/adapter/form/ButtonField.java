@@ -6,7 +6,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter.Field;
@@ -32,9 +34,9 @@ public abstract class ButtonField extends Field {
 
     @Override
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
-        View root = inflater.inflate(R.layout.shopelia_form_field_address_field, viewGroup, false);
+        View root = inflater.inflate(R.layout.shopelia_form_field_button_field, viewGroup, false);
         ViewHolder holder = new ViewHolder();
-        holder.address = (TextView) root.findViewById(R.id.address);
+        holder.button = (CheckBox) root.findViewById(R.id.address);
         root.setTag(holder);
         return root;
     }
@@ -42,9 +44,11 @@ public abstract class ButtonField extends Field {
     @Override
     public void bindView(View view) {
         ViewHolder holder = (ViewHolder) view.getTag();
-        holder.address.setOnClickListener(mOnClickListener);
-        holder.address.setText(mContentText);
-        holder.address.setHint(mHint);
+        holder.button.setOnClickListener(mOnClickListener);
+        holder.button.setText(mContentText);
+        holder.button.setHint(mHint);
+        holder.button.setChecked(isValid());
+        holder.button.setOnCheckedChangeListener(mOnCheckedChangeListener);
     }
 
     @Override
@@ -67,7 +71,7 @@ public abstract class ButtonField extends Field {
     }
 
     private class ViewHolder {
-        TextView address;
+        CheckBox button;
     }
 
     protected abstract void onClick(Button view);
@@ -77,6 +81,16 @@ public abstract class ButtonField extends Field {
         @Override
         public void onClick(View v) {
             ButtonField.this.onClick((Button) v);
+        }
+    };
+
+    private OnCheckedChangeListener mOnCheckedChangeListener = new OnCheckedChangeListener() {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (isChecked != isValid()) {
+                buttonView.setChecked(isValid());
+            }
         }
     };
 

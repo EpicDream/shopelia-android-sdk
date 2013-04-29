@@ -3,6 +3,8 @@ package com.shopelia.android.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 public class OrderState {
 
     public enum State {
@@ -68,6 +70,7 @@ public class OrderState {
     }
 
     public static OrderState inflate(JSONObject object) throws JSONException {
+        Log.d(null, object.toString());
         OrderState state = new OrderState();
         state.uuid = object.getString(Api.UUID);
         state.state = State.fromLabel(object.getString(Api.STATE));

@@ -52,7 +52,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         mListView.addHeaderView(new FormListHeader(getActivity()).getView(), null, false);
         mListView.addFooterView(mFooter.getView(), null, false);
 
-        mAdapter = new FormAdapter(getActivity());
+        mAdapter = new FormAdapter(mListView);
 
         //@formatter:off
         mAdapter
@@ -60,20 +60,20 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             /*
              * User informations
              */
-            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_personal_info))
-            .add(new PhoneField(getActivity(), null, R.string.shopelia_form_main_phone).setJsonPath(Order.Api.USER, User.Api.PHONE))
-            .add(new EmailField(getActivity(), null, R.string.shopelia_form_main_email).setJsonPath(Order.Api.USER, User.Api.EMAIL))
+            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_personal_info, R.drawable.shopelia_user))
+            .add(new PhoneField(getActivity(), null, R.string.shopelia_form_main_phone).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory())
+            .add(new EmailField(getActivity(), null, R.string.shopelia_form_main_email).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory())
             
             /*
              * Shipment details
              */
-            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_shipping_address))
+            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_shipping_address, R.drawable.shopelia_pin))
             .add(new AddressField(getActivity(), R.string.shopelia_form_main_address).setJsonPath(Order.Api.ADDRESS))
             
             /*
              * Payment methods
              */
-            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_payment_method))
+            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_payment_method, R.drawable.shopelia_card))
             .add(new PaymentCardField(getActivity(), R.string.shopelia_form_main_card_number).setJsonPath(Order.Api.PAYMENT_CARD))
             
             .commit(savedInstanceState);

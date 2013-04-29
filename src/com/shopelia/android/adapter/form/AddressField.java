@@ -57,6 +57,7 @@ public class AddressField extends ButtonField {
         if (requestCode == REQUEST_ADDRESS && resultCode == Activity.RESULT_OK) {
             mAddress = data.getParcelableExtra(CreateAddressActivity.EXTRA_ADDRESS_OBJECT);
             setContentText(mAddress.toString());
+            setValid(true);
             getAdapter().notifyDataSetChanged();
         }
     }

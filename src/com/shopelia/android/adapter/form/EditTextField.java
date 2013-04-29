@@ -234,6 +234,12 @@ public class EditTextField extends Field {
         public void onFocusChange(View view, boolean hasFocus) {
             if (!hasFocus) {
                 setContentText(((TextView) view).getText().toString());
+                FormEditText editText = (FormEditText) view;
+                if (isValid()) {
+                    editText.setChecked(true);
+                } else {
+                    editText.setChecked(false);
+                }
             }
         }
     };
@@ -250,6 +256,12 @@ public class EditTextField extends Field {
 
     protected boolean onValidation(boolean fireError) {
         return (!TextUtils.isEmpty(mContentText) || mAllowEmptyContent);
+    }
+
+    @Override
+    public void notifyDataChanged(View view) {
+        super.notifyDataChanged(view);
+
     }
 
 }

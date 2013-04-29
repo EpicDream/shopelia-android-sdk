@@ -17,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.shopelia.android.config.Config;
 
@@ -169,7 +170,7 @@ public class FormAdapter extends BaseAdapter {
          * Called each time that data changed and adapter do not want to notify
          * its {@link AdapterView}
          */
-        public void notifyDataChanged() {
+        public void notifyDataChanged(View view) {
 
         }
 
@@ -187,9 +188,11 @@ public class FormAdapter extends BaseAdapter {
     private HashSet<Integer> mFieldTypes = null;
     private LayoutInflater mInflater;
     private Context mContext;
+    private AdapterView<?> mAdapterView;
 
-    public FormAdapter(Context context) {
-        mContext = context;
+    public FormAdapter(AdapterView<?> adapterView) {
+        mContext = adapterView.getContext();
+        mAdapterView = adapterView;
         mInflater = LayoutInflater.from(mContext);
     }
 
@@ -302,11 +305,19 @@ public class FormAdapter extends BaseAdapter {
             if (field.isSectionHeader()) {
                 field.setValid(isSectionValid);
                 isSectionValid = true;
-                field.notifyDataChanged();
+                field.notifyDataChanged(getViewByIndex(index));
             } else {
                 isSectionValid = isSectionValid && field.isValid();
             }
         }
+    }
+
+    private View getViewByIndex(int index) {
+        int headersCount = 0;
+        if (mAdapterView instanceof ListView) {
+            headersCount = ((ListView) mAdapterView).getHeaderViewsCount();
+        }
+        return mAdapterView.getChildAt(index - mAdapterView.getFirstVisiblePosition() + headersCount);
     }
 
     public JSONObject toJson() {

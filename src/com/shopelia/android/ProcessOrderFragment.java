@@ -14,6 +14,7 @@ import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.OrderState;
+import com.shopelia.android.model.OrderState.State;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 
@@ -47,6 +48,18 @@ public class ProcessOrderFragment extends ShopeliaFragment<Void> implements Orde
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mOrderHandler.resume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mOrderHandler.pause();
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mStateView = (TextView) view.findViewById(R.id.state);
@@ -56,11 +69,13 @@ public class ProcessOrderFragment extends ShopeliaFragment<Void> implements Orde
     @Override
     public void onAccountCreationSucceed(User user, Address address) {
         mOrderHandler.sendPaymentInformation(user, mOrder.card);
+        mStateView.setText("Account created");
     }
 
     @Override
     public void onPaymentInformationSent(PaymentCard paymentInformation) {
         mOrderHandler.order(mOrder);
+        mStateView.setText("Payment card sent");
     }
 
     @Override
@@ -69,18 +84,23 @@ public class ProcessOrderFragment extends ShopeliaFragment<Void> implements Orde
             e.printStackTrace();
         }
         if (response != null) {
-            Log.d(null, response.toString());
+            Log.w(null, response.toString());
         }
     }
 
     @Override
     public void onOrderBegin(Order order) {
-
+        Log.d(null, "ORDER BEGIN " + order.uuid);
+        mStateView.setText("Order began");
     }
 
     @Override
     public void onOrderStateUpdate(OrderState newState) {
-
+        Log.d(null, "NEW STATE = " + newState.uuid + " " + newState.message + " " + newState.state);
+        if (newState.state == State.ERROR) {
+            mStateView.setText("Vulcain fatal error");
+            mOrderHandler.stopOrderForError();
+        }
     }
 
 }

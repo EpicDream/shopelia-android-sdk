@@ -1,10 +1,10 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="AppBaseTheme" parent="android:Theme.Light">
+    <style name="Theme.Legacy.ShopeliaBaseTheme" parent="android:Theme.Light.NoTitleBar.Fullscreen">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -13,8 +13,34 @@
     </style>
 
     <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <style name="Theme.Shopelia" parent="Theme.Legacy.ShopeliaBaseTheme">
+		<item name="android:windowBackground">@color/shopelia_windowsBackground</item>
+    </style>
+
+    <style name="Theme.Shopelia.Widget"></style>
+
+    <style name="Theme.Shopelia.Widget.EditText" parent="@android:style/Widget.EditText">
+        <item name="android:background">@drawable/shopelia_field</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+    </style>
+
+    <style name="Theme.Shopelia.Widget.FormButton" parent="Theme.Shopelia.Widget.EditText">
+        <item name="android:background">@drawable/shopelia_field</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:focusable">false</item>
+    </style>
+
+    <style name="Theme.Shopelia.TextAppearance" parent="@android:style/TextAppearance"></style>
+
+    <style name="Theme.Shopelia.TextAppearance.Header" parent="@android:style/TextAppearance.Large">
+        <item name="android:textSize">9sp</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 </resources>

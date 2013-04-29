@@ -39,7 +39,7 @@ public class PaymentCard implements JsonData, Parcelable {
         number = json.getString(Api.NUMBER);
         expMonth = json.getString(Api.EXP_MONTH);
         expYear = json.getString(Api.EXP_YEAR);
-        cvv = json.getString(Api.CVV);
+        cvv = json.optString(Api.CVV);
         if (expYear != null && expYear.length() > 2) {
             expYear = expYear.substring(expYear.length() - 2);
         }

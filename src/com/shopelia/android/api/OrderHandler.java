@@ -36,7 +36,8 @@ public final class OrderHandler {
     public static final int STEP_ACCOUNT_CREATION = 1;
     public static final int STEP_SEND_PAYMENT_INFORMATION = 2;
     public static final int STEP_ORDER = 3;
-    public static final int STEP_CONFIRM = 4;
+    public static final int STEP_ORDERING = 4;
+    public static final int STEP_CONFIRM = 5;
 
     private Context mContext;
     private Callback mCallback;
@@ -61,12 +62,11 @@ public final class OrderHandler {
         ShopeliaRestClient.post(Command.V1.Users.$, params, new JsonAsyncCallback() {
 
             @Override
-            public void onComplete(JSONObject object) {
+            public void onComplete(HttpResponse response, JSONObject object) {
                 if (mCallback != null && object.has(User.Api.USER) && object.has(User.Api.AUTH_TOKEN)) {
                     UserManager.get(mContext).login(user);
                     UserManager.get(mContext).setAuthToken(object.optString(User.Api.AUTH_TOKEN));
                     UserManager.get(mContext).saveUser();
-
                     mCallback.onAccountCreationSucceed(user, address);
                 } else {
                     fireError(STEP_ACCOUNT_CREATION, object, null);
@@ -100,8 +100,15 @@ public final class OrderHandler {
         ShopeliaRestClient.post(Command.V1.PaymentCards.$, params, new JsonAsyncCallback() {
 
             @Override
-            public void onComplete(JSONObject object) {
-                Log.d(null, "GOT " + object);
+            public void onComplete(HttpResponse response, JSONObject object) {
+                try {
+                    PaymentCard card = PaymentCard.inflate(object.getJSONObject(PaymentCard.Api.PAYMENT_CARD));
+                    if (mCallback != null) {
+                        mCallback.onPaymentInformationSent(card);
+                    }
+                } catch (JSONException e) {
+                    fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
+                }
             }
 
             @Override
@@ -118,8 +125,9 @@ public final class OrderHandler {
         JSONObject params = new JSONObject();
         try {
             JSONObject orderObject = new JSONObject();
+            orderObject.put("merchant_id", 4);
             orderObject.put(Order.Api.PRODUCT_URL, order.productUrl);
-            params.put(Order.Api.ORDER, order);
+            params.put(Order.Api.ORDER, orderObject);
         } catch (JSONException e) {
             fireError(STEP_ORDER, null, e);
             return;
@@ -130,7 +138,7 @@ public final class OrderHandler {
             @Override
             public void onComplete(HttpResponse httpResponse) {
 
-                if (httpResponse.getStatus() == 200) {
+                if (httpResponse.getStatus() == 201) {
                     try {
                         JSONObject object = new JSONObject(httpResponse.getBodyAsString());
                         order.uuid = object.getJSONObject(Order.Api.ORDER).getString(Order.Api.UUID);
@@ -158,7 +166,7 @@ public final class OrderHandler {
                         fireError(STEP_ORDER, null, e);
                     }
                 } else {
-                    fireError(STEP_ORDER, null, new IllegalStateException());
+                    fireError(STEP_ORDER, null, new IllegalStateException(httpResponse.getBodyAsString()));
                 }
 
             }
@@ -176,6 +184,24 @@ public final class OrderHandler {
 
     }
 
+    public void stopOrderForError() {
+        if (sHttpPoller != null) {
+            sHttpPoller.end();
+        }
+    }
+
+    public void pause() {
+        if (sHttpPoller != null) {
+            sHttpPoller.pause();
+        }
+    }
+
+    public void resume() {
+        if (sHttpPoller != null) {
+            sHttpPoller.resumePolling();
+        }
+    }
+
     private void fireError(int step, JSONObject response, Exception e) {
         if (mCallback != null) {
             mCallback.onError(step, response, e);
@@ -186,12 +212,23 @@ public final class OrderHandler {
 
         @Override
         protected void onComplete(HttpResponse response) {
-
+            if (response.getStatus() == 200) {
+                try {
+                    OrderState state = OrderState.inflate(new JSONObject(response.getBodyAsString()).getJSONObject(OrderState.Api.ORDER));
+                    if (mCallback != null) {
+                        mCallback.onOrderStateUpdate(state);
+                    }
+                } catch (JSONException e) {
+                    fireError(STEP_ORDERING, null, e);
+                }
+            } else {
+                fireError(STEP_ORDERING, null, null);
+            }
         }
 
         @Override
         protected void onError(Exception e) {
-
+            fireError(STEP_ORDERING, null, e);
         };
 
     };

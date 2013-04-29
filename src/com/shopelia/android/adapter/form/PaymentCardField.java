@@ -54,6 +54,7 @@ public class PaymentCardField extends ButtonField {
             mPaymentCard = data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD);
             setDisplayableCardNumber();
             getAdapter().updateSections();
+            setValid(true);
             getAdapter().notifyDataSetChanged();
         }
     }

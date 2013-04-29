@@ -4,10 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <Button
+    <CheckBox
         android:id="@+id/address"
+        style="@style/Theme.Shopelia.Widget.FormButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:button="@null"
         android:text="Button" />
 
 </LinearLayout>

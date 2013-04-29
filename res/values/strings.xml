@@ -14,6 +14,11 @@
     <string name="shopelia_form_main_payment_method">Payment method</string>
     <string name="shopelia_form_main_card_number">Payment card number</string>
 	<string name="shopelia_form_main_address">Address</string>
+	<string name="shopelia_form_main_header_text" formatted="false">
+	    <![CDATA[
+	    You order will be automatically prepared on <b>%s</b> by <b>Shopelia</b>
+	    ]]>
+	</string>
     
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Name</string>

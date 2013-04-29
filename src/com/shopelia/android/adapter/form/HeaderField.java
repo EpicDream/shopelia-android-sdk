@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shopelia.android.R;
@@ -15,14 +16,18 @@ public class HeaderField extends Field {
     public static final int TYPE = 0;
 
     private String mTitle;
+    private int mIconId;
+    private boolean mHasIcon = false;
 
     public HeaderField(String title) {
         super(TYPE);
         mTitle = title;
     }
 
-    public HeaderField(Context context, int resId) {
+    public HeaderField(Context context, int resId, int iconId) {
         this(context.getString(resId));
+        mIconId = iconId;
+        mHasIcon = true;
     }
 
     @Override
@@ -40,6 +45,7 @@ public class HeaderField extends Field {
         View out = inflater.inflate(R.layout.shopelia_form_field_title_header, viewGroup, false);
         ViewHolder holder = new ViewHolder();
         holder.title = (TextView) out.findViewById(R.id.title);
+        holder.icon = (ImageView) out.findViewById(R.id.icon);
         out.setTag(holder);
         return out;
     }
@@ -48,6 +54,13 @@ public class HeaderField extends Field {
     public void bindView(View view) {
         ViewHolder holder = (ViewHolder) view.getTag();
         holder.title.setText(mTitle);
+        holder.title.setTextColor(isValid() ? getContext().getResources().getColor(R.color.shopelia_headerTitleSectionOkColor)
+                : getContext().getResources().getColor(R.color.shopelia_headerTitleSectionRegularColor));
+        if (mHasIcon == true) {
+            holder.icon.setImageResource(isValid() ? R.drawable.shopelia_check_ok : mIconId);
+        } else {
+            holder.icon.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -61,17 +74,13 @@ public class HeaderField extends Field {
     }
 
     @Override
-    public boolean isValid() {
-        return true;
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
 
     }
 
     private static class ViewHolder {
         TextView title;
+        ImageView icon;
     }
 
     @Override
@@ -82,6 +91,14 @@ public class HeaderField extends Field {
     @Override
     public boolean validate() {
         return isValid();
+    }
+
+    @Override
+    public void notifyDataChanged(View view) {
+        super.notifyDataChanged(view);
+        if (view != null) {
+            bindView(view);
+        }
     }
 
 }

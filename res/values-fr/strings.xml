@@ -5,12 +5,17 @@
     <string name="shopelia_form_main_phone">Numéro de téléphone</string>
 	<string name="shopelia_form_main_email">Email</string>
 	<string name="shopelia_form_main_validate">Poursuivre ma commande</string>
-    <string name="shopelia_form_main_personal_info">Informations personnelles</string>
-    <string name="shopelia_form_main_shipping_address">Adresse de livraison</string>
-    <string name="shopelia_form_main_payment_method">Moyen de paiement</string>
+    <string name="shopelia_form_main_personal_info">INFORMATIONS PERSONNELLES</string>
+    <string name="shopelia_form_main_shipping_address">ADRESSE DE LIVRAISON</string>
+    <string name="shopelia_form_main_payment_method">MOYEN DE PAIEMENT</string>
     <string name="shopelia_form_main_card_number">Numéro de la carte</string>
 	<string name="shopelia_form_main_address">Adresse</string>
-    
+    <string name="shopelia_form_main_header_text" formatted="false">
+	    <![CDATA[
+	    Votre commande va être préparé automatiquement sur le site <b>%s</b> avec le service <b>Shopelia</b>
+	    ]]>
+	</string>
+	
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Nom</string>
     <string name="shopelia_form_account_first_name">Prénom</string>
