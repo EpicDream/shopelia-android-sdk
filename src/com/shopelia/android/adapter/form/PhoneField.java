@@ -36,6 +36,9 @@ public class PhoneField extends EditTextField {
     protected boolean onValidation(boolean fireError) {
         String content = (String) getResult();
         boolean out = super.onValidation(fireError) && PHONE_PATTERN.matcher(content).matches();
+        if (getBoundedView() != null) {
+            bindView(getBoundedView());
+        }
         return out;
     }
 
