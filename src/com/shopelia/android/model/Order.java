@@ -14,6 +14,7 @@ public class Order implements Parcelable {
         String ADDRESS = "address";
         String PAYMENT_CARD = "payment_card";
         String PRODUCT_URL = "url";
+        String PRODUCT_URLS = "urls";
 
         String ORDER = "order";
 
