@@ -119,13 +119,10 @@ public class AddPaymentCardActivity extends HostActivity {
         isValid = checkCvv(card, fireError) && isValid;
         isValid = checkExpiryDate(card, fireError) && isValid;
 
+        validateHeader();
         if (isValid) {
-            mHeaderTitle.setTextColor(getResources().getColor(R.color.shopelia_headerTitleSectionOkColor));
-            mHeaderIcon.setImageResource(R.drawable.shopelia_check_ok);
             mPaymentCard = card;
         } else {
-            mHeaderIcon.setImageResource(R.drawable.shopelia_card);
-            mHeaderTitle.setText(R.string.shopelia_form_main_payment_method);
             mPaymentCard = null;
         }
 
@@ -271,6 +268,7 @@ public class AddPaymentCardActivity extends HostActivity {
             } else if (v == mCvvField) {
                 checkCvv(null, false);
             }
+            validateHeader();
         }
     };
 
@@ -289,11 +287,14 @@ public class AddPaymentCardActivity extends HostActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.length() == CardNumberFormattingTextWatcher.CardNumberInputFilter.FORMAT.length()) {
-                checkCardNumber(null, false);
+                if (checkCardNumber(null, false)) {
+                    mExpiryField.requestFocus();
+                }
             } else {
                 mCardNumberField.setChecked(false);
                 mCardNumberField.setError(false);
             }
+            validateHeader();
         }
     };
 
@@ -312,11 +313,14 @@ public class AddPaymentCardActivity extends HostActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.length() == 3) {
-                checkCvv(null, false);
+                if (checkCvv(null, false)) {
+
+                }
             } else {
                 mCvvField.setChecked(false);
                 mCvvField.setError(false);
             }
+            validateHeader();
         }
     };
 
@@ -335,11 +339,14 @@ public class AddPaymentCardActivity extends HostActivity {
         @Override
         public void afterTextChanged(Editable s) {
             if (s.length() == 5) {
-                checkExpiryDate(null, false);
+                if (checkExpiryDate(null, false)) {
+                    mCvvField.requestFocus();
+                }
             } else {
                 mExpiryField.setError(false);
                 mExpiryField.setChecked(false);
             }
+            validateHeader();
         }
     };
 
@@ -358,6 +365,16 @@ public class AddPaymentCardActivity extends HostActivity {
                 break;
         }
     };
+
+    private void validateHeader() {
+        if (mCardNumberField.isChecked() && mCvvField.isChecked() && mExpiryField.isChecked()) {
+            mHeaderTitle.setTextColor(getResources().getColor(R.color.shopelia_headerTitleSectionOkColor));
+            mHeaderIcon.setImageResource(R.drawable.shopelia_check_ok);
+        } else {
+            mHeaderIcon.setImageResource(R.drawable.shopelia_card);
+            mHeaderTitle.setText(R.string.shopelia_form_main_payment_method);
+        }
+    }
 
     private OnClickListener mOnValidateClickListener = new OnClickListener() {
 
