@@ -12,6 +12,8 @@ public class PhoneField extends EditTextField {
 
     private static final Pattern PHONE_PATTERN = Pattern.compile("^[+]?[0-9]{10,13}$");
 
+    private PhoneNumberFormattingTextWatcher mPhoneNumberFormattingTextWatcher = new PhoneNumberFormattingTextWatcher();
+
     public PhoneField(String defaultText, String hint) {
         super(defaultText, hint);
     }
@@ -24,7 +26,7 @@ public class PhoneField extends EditTextField {
     protected void setViewStyle(ViewHolder holder) {
         super.setViewStyle(holder);
         holder.editText.setInputType(InputType.TYPE_CLASS_PHONE);
-        holder.editText.addTextChangedListener(new PhoneNumberFormattingTextWatcher());
+        holder.editText.addTextChangedListener(mPhoneNumberFormattingTextWatcher);
     }
 
     @Override
