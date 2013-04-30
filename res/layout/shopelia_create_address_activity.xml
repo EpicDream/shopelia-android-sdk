@@ -13,9 +13,11 @@
         android:layout_height="wrap_content"
         android:weightSum="100" >
 
+        <include layout="@layout/shopelia_form_field_title_header"/>
+        
         <com.shopelia.android.widget.FormEditText
             android:id="@+id/first_name"
-            style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
+            style="@style/Theme.Shopelia.Widget.FormEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/shopelia_margin_small"
@@ -28,7 +30,7 @@
 
         <com.shopelia.android.widget.FormEditText
             android:id="@+id/name"
-            style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
+            style="@style/Theme.Shopelia.Widget.FormEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/shopelia_margin_small"
@@ -41,7 +43,7 @@
 
     <AutoCompleteTextView
         android:id="@+id/address"
-        style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
+        style="@style/Theme.Shopelia.Widget.FormEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
@@ -54,7 +56,7 @@
 
     <com.shopelia.android.widget.FormEditText
         android:id="@+id/extras"
-        style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
+        style="@style/Theme.Shopelia.Widget.FormEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
@@ -71,7 +73,7 @@
 
         <com.shopelia.android.widget.FormEditText
             android:id="@+id/zipcode"
-            style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
+            style="@style/Theme.Shopelia.Widget.FormEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/shopelia_margin_small"
@@ -84,7 +86,7 @@
 
         <com.shopelia.android.widget.FormEditText
             android:id="@+id/city"
-            style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
+            style="@style/Theme.Shopelia.Widget.FormEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/shopelia_margin_small"
@@ -97,7 +99,7 @@
 
     <com.shopelia.android.widget.FormEditText
         android:id="@+id/country"
-        style="@style/Theme.Shopelia.Widget.com.shopelia.android.widget.FormEditText"
+        style="@style/Theme.Shopelia.Widget.FormEditText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
