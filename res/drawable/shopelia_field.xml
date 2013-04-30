@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:drawable="@drawable/shopelia_field_active" android:state_focused="true"></item>
     <item android:drawable="@drawable/shopelia_field_active" android:state_pressed="true"></item>
-       <item android:drawable="@drawable/shopelia_field_ok" android:state_checked="true"></item>
+    <item android:drawable="@drawable/shopelia_field_ok" android:state_checked="true"></item>
+    <item android:drawable="@drawable/shopelia_field_active" android:state_focused="true"></item>
     <item android:drawable="@drawable/shopelia_field_error" app:state_error="true"></item>
     <item android:drawable="@drawable/shopelia_field_normal"></item>
 
