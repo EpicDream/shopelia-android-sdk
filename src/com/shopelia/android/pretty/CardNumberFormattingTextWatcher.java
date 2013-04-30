@@ -67,7 +67,7 @@ public class CardNumberFormattingTextWatcher implements TextWatcher {
 
     public static class CardNumberInputFilter implements InputFilter {
 
-        private static final String FORMAT = "0000-0000-0000-0000";
+        public static final String FORMAT = "0000-0000-0000-0000";
 
         @Override
         public CharSequence filter(CharSequence s, int start, int end, Spanned dest, int dstart, int dend) {
