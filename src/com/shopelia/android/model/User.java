@@ -85,14 +85,25 @@ public class User implements JsonData, Parcelable {
         out.put(User.Api.LAST_NAME, user.lastName);
         out.put(User.Api.EMAIL, user.email);
         JSONArray addresses = new JSONArray();
-        addresses.put(address.toJson());
+        JSONObject addressObject = address.toJson();
+
+        addressObject.remove(Address.Api.FIRSTNAME);
+        addressObject.remove(Address.Api.NAME);
+        addressObject.remove(Address.Api.COUNTRY);
+        // TODO Handle multiple ISO
+        addressObject.put(Address.Api.COUNTRY_ISO, "FR");
+
         out.put(User.Api.ADDRESSES_ATTRIBUTES, addresses);
         JSONArray phones = new JSONArray();
         JSONObject phoneObject = new JSONObject();
         phoneObject.put(Api.Phone.LINE_TYPE, 0);
         phoneObject.put(Api.Phone.NUMBER, user.phone);
         phones.put(phoneObject);
-        out.put(Api.PHONES, phones);
+
+        addressObject.put(Address.Api.PHONES_ATTRIBUTES, phones);
+
+        addresses.put(addressObject);
+
         return out;
     }
 
