@@ -2,7 +2,6 @@ package com.shopelia.android.pretty;
 
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 
 public class DateFormattingTextWatcher implements TextWatcher {
 
@@ -13,7 +12,7 @@ public class DateFormattingTextWatcher implements TextWatcher {
     @Override
     public synchronized void afterTextChanged(Editable s) {
         if (!mIsEditing) {
-            Log.d(null, "TEXT = " + s.toString());
+            // TODO Log.d(null, "TEXT = " + s.toString());
             mIsEditing = true;
             for (int index = 0; index < s.length(); index++) {
                 if (s.charAt(index) == '/' && index != 2) {

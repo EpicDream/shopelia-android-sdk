@@ -7,11 +7,15 @@ import java.util.Calendar;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
+import android.view.View.OnFocusChangeListener;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.shopelia.android.algorithm.Luhn;
 import com.shopelia.android.app.HostActivity;
@@ -19,6 +23,7 @@ import com.shopelia.android.config.Config;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.pretty.CardNumberFormattingTextWatcher;
 import com.shopelia.android.pretty.DateFormattingTextWatcher;
+import com.shopelia.android.widget.FormEditText;
 
 public class AddPaymentCardActivity extends HostActivity {
 
@@ -29,9 +34,14 @@ public class AddPaymentCardActivity extends HostActivity {
 
     private static final int REQUEST_SCAN_CARD = 16;
 
-    private EditText mCardNumberField;
-    private EditText mCvvField;
-    private EditText mExpiryField;
+    private FormEditText mCardNumberField;
+    private FormEditText mCvvField;
+    private FormEditText mExpiryField;
+
+    private ImageView mHeaderIcon;
+    private TextView mHeaderTitle;
+
+    private PaymentCard mPaymentCard;
 
     @Override
     protected void onCreate(Bundle saveState) {
@@ -40,15 +50,27 @@ public class AddPaymentCardActivity extends HostActivity {
 
         findViewById(R.id.scan).setOnClickListener(mOnScanClickListener);
 
-        mCardNumberField = (EditText) findViewById(R.id.card_numer);
-        mCvvField = (EditText) findViewById(R.id.cvv);
-        mExpiryField = (EditText) findViewById(R.id.expiry_date);
+        mCardNumberField = (FormEditText) findViewById(R.id.card_numer);
+        mCvvField = (FormEditText) findViewById(R.id.cvv);
+        mExpiryField = (FormEditText) findViewById(R.id.expiry_date);
         mCardNumberField.setFilters(new InputFilter[] {
             new CardNumberFormattingTextWatcher.CardNumberInputFilter()
         });
         mCardNumberField.addTextChangedListener(new CardNumberFormattingTextWatcher());
 
+        mCardNumberField.setOnFocusChangeListener(mOnFocusChangeListener);
+        mCvvField.setOnFocusChangeListener(mOnFocusChangeListener);
+        mExpiryField.setOnFocusChangeListener(mOnFocusChangeListener);
+
+        mCardNumberField.addTextChangedListener(mTextWatcher);
+        mCvvField.addTextChangedListener(mTextWatcher);
+        mExpiryField.addTextChangedListener(mTextWatcher);
+
         mExpiryField.addTextChangedListener(new DateFormattingTextWatcher());
+
+        View headerFrame = findViewById(R.id.header_frame);
+        mHeaderIcon = (ImageView) headerFrame.findViewById(R.id.icon);
+        mHeaderTitle = (TextView) headerFrame.findViewById(R.id.title);
 
         findViewById(R.id.validate).setOnClickListener(mOnValidateClickListener);
         initUi(saveState == null ? getIntent().getExtras() : saveState);
@@ -64,6 +86,9 @@ public class AddPaymentCardActivity extends HostActivity {
                         + card.expYear);
             }
         }
+        mHeaderIcon.setImageResource(R.drawable.shopelia_card);
+        mHeaderTitle.setText(R.string.shopelia_form_main_payment_method);
+        validate(false);
     }
 
     @Override
@@ -86,38 +111,99 @@ public class AddPaymentCardActivity extends HostActivity {
         return false;
     }
 
-    private void validate() {
+    private boolean validate(boolean fireError) {
         boolean isValid = true;
-        String date = mExpiryField.getText().toString();
         PaymentCard card = new PaymentCard();
-        card.number = mCardNumberField.getText().toString().replace(" ", "");
-        card.cvv = mCvvField.getText().toString();
 
-        if (card.cvv.length() != 3 && card.cvv.length() != 4) {
-            // Fire error
-            isValid = false;
-        }
-
-        if (date.length() != 5) {
-            // Fire error
-            isValid = false;
-        } else {
-            card.expMonth = date.substring(0, 2);
-            card.expYear = date.substring(3);
-            isValid = isValid && checkIfExpiryDateIsValid(card.expMonth, card.expYear);
-        }
-
-        isValid = isValid && checkIfCardNumberIsMod10(card.number);
+        isValid = checkCardNumber(card, fireError) && isValid;
+        isValid = checkCvv(card, fireError) && isValid;
+        isValid = checkExpiryDate(card, fireError) && isValid;
 
         if (isValid) {
-            Intent data = new Intent();
-            data.putExtra(EXTRA_PAYMENT_CARD, card);
-            setResult(RESULT_OK, data);
-            finish();
+            mHeaderTitle.setTextColor(getResources().getColor(R.color.shopelia_headerTitleSectionOkColor));
+            mHeaderIcon.setImageResource(R.drawable.shopelia_check_ok);
+            mPaymentCard = card;
         } else {
-
+            mHeaderIcon.setImageResource(R.drawable.shopelia_card);
+            mHeaderTitle.setText(R.string.shopelia_form_main_payment_method);
+            mPaymentCard = null;
         }
 
+        return isValid;
+    }
+
+    private boolean checkCvv(PaymentCard card, boolean fireError) {
+        boolean isValid = true;
+        String cvv = mCvvField.getText().toString();
+        if (TextUtils.isEmpty(cvv)) {
+            if (fireError) {
+                mCvvField.setError(true);
+            }
+            isValid = false;
+        } else if (cvv.length() != 3) {
+            if (fireError) {
+                mCvvField.setError(true);
+            }
+            isValid = false;
+        } else {
+            mCvvField.setChecked(true);
+        }
+        if (card != null) {
+            card.cvv = cvv;
+        }
+        return isValid;
+    }
+
+    private boolean checkCardNumber(PaymentCard card, boolean fireError) {
+        boolean isValid = true;
+        String number = mCardNumberField.getText().toString().replace(" ", "");
+
+        if (TextUtils.isEmpty(number)) {
+            if (fireError) {
+                mCardNumberField.setError(true);
+            }
+            isValid = false;
+        } else if (!checkIfCardNumberIsMod10(number)) {
+            isValid = false;
+            mCardNumberField.setError(true);
+        } else {
+            mCardNumberField.setChecked(true);
+        }
+        if (card != null) {
+            card.number = number;
+        }
+        return isValid;
+    }
+
+    private boolean checkExpiryDate(PaymentCard card, boolean fireError) {
+        boolean isValid = true;
+        String date = mExpiryField.getText().toString();
+        String expMonth = null;
+        String expYear = null;
+
+        if (TextUtils.isEmpty(date)) {
+            if (fireError) {
+                mExpiryField.setError(true);
+            }
+            isValid = false;
+        } else if (date.length() != 5) {
+            mExpiryField.setError(true);
+            isValid = false;
+        } else {
+            expMonth = date.substring(0, 2);
+            expYear = date.substring(3);
+            if (!checkIfExpiryDateIsValid(expMonth, expYear)) {
+                isValid = false;
+                mExpiryField.setError(true);
+            } else {
+                mExpiryField.setChecked(true);
+            }
+        }
+        if (card != null) {
+            card.expMonth = expMonth;
+            card.expYear = expYear;
+        }
+        return isValid;
     }
 
     private boolean checkIfExpiryDateIsValid(String month, String year) {
@@ -176,6 +262,38 @@ public class AddPaymentCardActivity extends HostActivity {
         }
     };
 
+    private OnFocusChangeListener mOnFocusChangeListener = new OnFocusChangeListener() {
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            if (v == mCardNumberField) {
+                checkCardNumber(null, false);
+            } else if (v == mExpiryField) {
+                checkExpiryDate(null, false);
+            } else if (v == mCvvField) {
+                checkCvv(null, false);
+            }
+        }
+    };
+
+    private TextWatcher mTextWatcher = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            validate(false);
+        }
+    };
+
     @Override
     protected void onActivityResult(int requestCode, int result, Intent data) {
         switch (requestCode) {
@@ -196,7 +314,12 @@ public class AddPaymentCardActivity extends HostActivity {
 
         @Override
         public void onClick(View v) {
-            validate();
+            if (validate(true)) {
+                Intent data = new Intent();
+                data.putExtra(EXTRA_PAYMENT_CARD, mPaymentCard);
+                setResult(RESULT_OK, data);
+                finish();
+            }
         }
     };
 

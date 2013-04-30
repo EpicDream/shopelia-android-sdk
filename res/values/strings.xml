@@ -42,5 +42,6 @@
     <string name="shopelia_form_payment_card_cvv">CVV</string>
     <string name="shopelia_form_payment_card_scan">Scan card number</string>
     <string name="shopelia_form_payment_card_validate">Add this card</string>
+    <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saississez manuellement les informations</string>
     
 </resources>

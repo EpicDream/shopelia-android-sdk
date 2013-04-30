@@ -8,11 +8,25 @@
     android:paddingLeft="@dimen/shopelia_margin_large"
     android:paddingRight="@dimen/shopelia_margin_large" >
 
+    <include
+            android:id="@+id/header_frame"
+            layout="@layout/shopelia_form_field_title_header" />
+    
     <Button
         android:id="@+id/scan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
         android:text="@string/shopelia_form_payment_card_scan" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/fontableTextView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
+        android:text="@string/shopelia_form_payment_card_scan_or_fill"
+        android:textSize="@dimen/shopelia_font_size_small"
+        android:gravity="center" />
 
     <com.shopelia.android.widget.FormEditText
         android:id="@+id/card_numer"
@@ -26,7 +40,6 @@
         android:inputType="number|text"
         android:nextFocusDown="@+id/expiry_date" >
 
-        <requestFocus />
     </com.shopelia.android.widget.FormEditText>
 
     <LinearLayout
