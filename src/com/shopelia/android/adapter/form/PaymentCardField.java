@@ -44,7 +44,10 @@ public class PaymentCardField extends ButtonField {
 
     @Override
     public boolean validate() {
-        return mPaymentCard != null;
+        setValid(mPaymentCard != null);
+        setChecked(isValid());
+        setError(!isValid());
+        return isValid();
     }
 
     @Override
@@ -55,6 +58,7 @@ public class PaymentCardField extends ButtonField {
             setDisplayableCardNumber();
             getAdapter().updateSections();
             setValid(true);
+            setChecked(true);
             getAdapter().notifyDataSetChanged();
         }
     }

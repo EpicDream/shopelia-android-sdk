@@ -15,9 +15,10 @@ import android.widget.TextView;
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.FormAdapter.Field;
+import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormEditText;
 
-public class EditTextField extends Field {
+public class EditTextField extends Field implements Errorable {
 
     public abstract static class OnValidateListener implements TextWatcher {
 
@@ -49,6 +50,8 @@ public class EditTextField extends Field {
     private boolean mAllowEmptyContent = true;
     private boolean mAutoTrim = true;
     private String mJsonPath;
+
+    private boolean mError = false;
 
     private EditText mBoundedEditText;
 
@@ -138,6 +141,7 @@ public class EditTextField extends Field {
         holder.editText.setHint(mHint);
         holder.editText.setText(mContentText);
         holder.editText.setChecked(isValid());
+        holder.editText.setError(hasError());
         if (holder.boundedField != null) {
             holder.boundedField.mBoundedEditText = null;
         }
@@ -251,7 +255,16 @@ public class EditTextField extends Field {
         }
         setContentText(mContentText);
         setValid(onValidation(false) && (mOnValidateListener != null ? mOnValidateListener.onValidate(this, true) : true));
+        setError(!isValid());
         return isValid();
+    }
+
+    @Override
+    public void setValid(boolean isValid) {
+        super.setValid(isValid);
+        if (isValid()) {
+            mError = false;
+        }
     }
 
     protected boolean onValidation(boolean fireError) {
@@ -262,6 +275,21 @@ public class EditTextField extends Field {
     public void notifyDataChanged(View view) {
         super.notifyDataChanged(view);
 
+    }
+
+    @Override
+    public void setError(boolean hasError) {
+        if (hasError() != hasError) {
+            mError = hasError;
+            if (getBoundedView() != null) {
+                bindView(getBoundedView());
+            }
+        }
+    }
+
+    @Override
+    public boolean hasError() {
+        return mError;
     }
 
 }

@@ -6,14 +6,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.Checkable;
 
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter.Field;
+import com.shopelia.android.widget.Errorable;
+import com.shopelia.android.widget.FormEditTextButton;
 
-public abstract class ButtonField extends Field {
+public abstract class ButtonField extends Field implements Errorable, Checkable {
 
     public static final int TYPE = 2;
     public static int REQUEST_ADDRESS = 0x16;
@@ -21,6 +21,9 @@ public abstract class ButtonField extends Field {
     private String mHint;
     private String mContentText;
     private String mJsonPath;
+
+    private boolean mChecked = false;
+    private boolean mError = false;
 
     public ButtonField(Context context, int resId) {
         super(TYPE);
@@ -36,7 +39,7 @@ public abstract class ButtonField extends Field {
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         View root = inflater.inflate(R.layout.shopelia_form_field_button_field, viewGroup, false);
         ViewHolder holder = new ViewHolder();
-        holder.button = (CheckBox) root.findViewById(R.id.address);
+        holder.button = (FormEditTextButton) root.findViewById(R.id.address);
         root.setTag(holder);
         return root;
     }
@@ -48,7 +51,7 @@ public abstract class ButtonField extends Field {
         holder.button.setText(mContentText);
         holder.button.setHint(mHint);
         holder.button.setChecked(isValid());
-        holder.button.setOnCheckedChangeListener(mOnCheckedChangeListener);
+        holder.button.setError(mError);
     }
 
     @Override
@@ -71,7 +74,7 @@ public abstract class ButtonField extends Field {
     }
 
     private class ViewHolder {
-        CheckBox button;
+        FormEditTextButton button;
     }
 
     protected abstract void onClick(Button view);
@@ -84,14 +87,46 @@ public abstract class ButtonField extends Field {
         }
     };
 
-    private OnCheckedChangeListener mOnCheckedChangeListener = new OnCheckedChangeListener() {
+    public boolean isChecked() {
+        return mChecked;
+    };
 
-        @Override
-        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (isChecked != isValid()) {
-                buttonView.setChecked(isValid());
+    @Override
+    public void setChecked(boolean checked) {
+        if (isChecked() != checked) {
+            mChecked = checked;
+            if (checked) {
+                setError(false);
+            }
+
+            if (getBoundedView() != null) {
+                bindView(getBoundedView());
             }
         }
-    };
+    }
+
+    @Override
+    public void toggle() {
+        setChecked(!mChecked);
+    }
+
+    @Override
+    public boolean hasError() {
+        return mError;
+    }
+
+    @Override
+    public void setError(boolean hasError) {
+        if (hasError() != hasError) {
+            mError = hasError;
+            if (hasError) {
+                setChecked(false);
+            }
+
+            if (getBoundedView() != null) {
+                bindView(getBoundedView());
+            }
+        }
+    }
 
 }

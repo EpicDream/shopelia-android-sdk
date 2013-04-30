@@ -33,7 +33,10 @@ public class AddressField extends ButtonField {
 
     @Override
     public boolean validate() {
-        return true;
+        setValid(mAddress != null);
+        setChecked(isValid());
+        setError(!isValid());
+        return isValid();
     }
 
     @Override
@@ -58,6 +61,7 @@ public class AddressField extends ButtonField {
             mAddress = data.getParcelableExtra(CreateAddressActivity.EXTRA_ADDRESS_OBJECT);
             setContentText(mAddress.toString());
             setValid(true);
+            setChecked(true);
             getAdapter().notifyDataSetChanged();
         }
     }
