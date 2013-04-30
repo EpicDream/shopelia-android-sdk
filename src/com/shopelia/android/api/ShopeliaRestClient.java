@@ -144,8 +144,8 @@ public final class ShopeliaRestClient {
         sHttpClient.post(path, "application/json", object.toString().getBytes(), callback);
     }
 
-    private static void init(Context context) {
-
+    public static void put(String path, JSONObject object, AsyncCallback callback) {
+        sHttpClient.put(path, "application/json", object.toString().getBytes(), callback);
     }
 
 }
