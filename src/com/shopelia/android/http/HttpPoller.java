@@ -14,7 +14,7 @@ import com.turbomanage.httpclient.HttpResponse;
 public class HttpPoller extends HandlerThread {
 
     private static final String THREAD_NAME = "HttpPoller";
-    private static final long DEFAULT_POLLING_FREQUENCY = 500;
+    private static final long DEFAULT_POLLING_FREQUENCY = 1000;
 
     public static final int MESSAGE_POLL = 0x1;
     public static final int STATE_STOPPED = 0;

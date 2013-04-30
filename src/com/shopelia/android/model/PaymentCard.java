@@ -20,9 +20,11 @@ public class PaymentCard implements JsonData, Parcelable {
 
         String NAME = "name";
 
+        String PAYMENT_CARD_ID = "payment_card_id";
+
     }
 
-    private static final long INVALID_ID = -1;
+    public static final long INVALID_ID = -1;
 
     public long id = INVALID_ID;
     public String number;

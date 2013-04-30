@@ -28,6 +28,22 @@ public class OrderState {
 
     }
 
+    public enum Verb {
+        CONFIRM("confirm");
+
+        private String mVerb;
+
+        Verb(String verb) {
+            mVerb = verb;
+        }
+
+        @Override
+        public String toString() {
+            return mVerb;
+        }
+
+    }
+
     public enum Message {
         LOGGED("logged"), EMPTY_CART("empty_cart"), NOTHING("");
 
@@ -59,6 +75,10 @@ public class OrderState {
         String PRICE_PRODUCT = "price_product";
         String PRICE_DELIVERY = "price_delivery";
         String PRICE_TOTAL = "price_total";
+
+        String CONTENT = "content";
+        String VERB = "content";
+
     }
 
     public String uuid = Order.NO_ID;

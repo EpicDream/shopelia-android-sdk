@@ -22,10 +22,14 @@ public final class Address implements JsonData, Parcelable {
         String CITY = "city";
         String PHONES_ATTRIBUTES = "phones_attributes";
         String COUNTRY = "country";
-        String EXTRAS = "extras";
+        String EXTRAS = "address2";
 
-        String NAME = "name";
-        String FIRSTNAME = "firstname";
+        String COUNTRY_ISO = "country_iso";
+
+        String ADDRESS_NAME = "name";
+
+        String NAME = "owner_name";
+        String FIRSTNAME = "owner_firstname";
 
     }
 
@@ -100,10 +104,10 @@ public final class Address implements JsonData, Parcelable {
         Address address = new Address();
         address.name = object.optString(Api.NAME);
         address.firstname = object.optString(Api.FIRSTNAME);
-        address.address = object.getString(Api.ADDRESS1);
-        address.city = object.getString(Api.CITY);
+        address.address = object.optString(Api.ADDRESS1);
+        address.city = object.optString(Api.CITY);
         address.country = object.getString(Api.COUNTRY);
-        address.zipcode = object.getString(Api.ZIP);
+        address.zipcode = object.optString(Api.ZIP);
         return address;
     }
 
