@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
 import com.shopelia.android.api.OrderHandler;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Address;
@@ -18,7 +19,16 @@ import com.shopelia.android.model.OrderState.State;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 
-public class ProcessOrderFragment extends ShopeliaFragment<Void> implements OrderHandler.Callback {
+public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> implements OrderHandler.Callback {
+
+    public interface OrderHandlerHolder {
+        public OrderHandler getOrderHandler();
+
+        public void askForConfirmation();
+
+        public void confirm();
+
+    }
 
     private TextView mStateView;
     private OrderHandler mOrderHandler;
@@ -34,7 +44,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<Void> implements Orde
         super.onCreate(savedInstanceState);
 
         if (mOrderHandler == null) {
-            mOrderHandler = new OrderHandler(getActivity(), this);
+            mOrderHandler = getContract().getOrderHandler();
         }
 
         mOrder = getBaseActivity().getOrder();
@@ -76,6 +86,9 @@ public class ProcessOrderFragment extends ShopeliaFragment<Void> implements Orde
     public void onPaymentInformationSent(PaymentCard paymentInformation) {
         mOrderHandler.order(mOrder);
         mStateView.setText("Payment card sent");
+        if (mOrderHandler.canConfirm()) {
+            getContract().askForConfirmation();
+        }
     }
 
     @Override
@@ -101,6 +114,11 @@ public class ProcessOrderFragment extends ShopeliaFragment<Void> implements Orde
             mStateView.setText("Vulcain fatal error");
             mOrderHandler.stopOrderForError();
         }
+
+        if (mOrderHandler.canConfirm()) {
+            getContract().askForConfirmation();
+        }
+
     }
 
 }

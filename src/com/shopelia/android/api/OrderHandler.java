@@ -14,6 +14,7 @@ import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.OrderState;
+import com.shopelia.android.model.OrderState.State;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.AsyncCallback;
@@ -45,9 +46,19 @@ public final class OrderHandler {
 
     private static HttpPoller sHttpPoller;
 
+    private PaymentCard mPaymentCard;
+    private OrderState mOrderState;
+
     public OrderHandler(Context context, Callback callback) {
         this.mContext = context;
+        setCallback(callback);
+    }
+
+    public void setCallback(Callback callback) {
         mCallback = callback;
+        if (mCallback == null) {
+            throw new NullPointerException("Callback cannot be null");
+        }
     }
 
     public void createAccount(final User user, final Address address) {
@@ -55,6 +66,7 @@ public final class OrderHandler {
 
         try {
             params.put(Order.Api.USER, User.createObjectForAccountCreation(user, address));
+
         } catch (JSONException e) {
             fireError(STEP_ACCOUNT_CREATION, null, e);
             return;
@@ -105,6 +117,7 @@ public final class OrderHandler {
                 try {
                     PaymentCard card = PaymentCard.inflate(object.getJSONObject(PaymentCard.Api.PAYMENT_CARD));
                     if (mCallback != null) {
+                        mPaymentCard = card;
                         mCallback.onPaymentInformationSent(card);
                     }
                 } catch (JSONException e) {
@@ -182,8 +195,24 @@ public final class OrderHandler {
         });
     }
 
-    public void confirm() {
+    public boolean confirm() {
+        if (canConfirm()) {
+            JSONObject params = new JSONObject();
+            try {
+                JSONObject paymentCard = new JSONObject();
+                paymentCard.put(PaymentCard.Api.PAYMENT_CARD_ID, mPaymentCard.id);
+                params.put(OrderState.Api.VERB, OrderState.Verb.CONFIRM.toString());
+                params.put(OrderState.Api.CONTENT, paymentCard);
+                return true;
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
 
+    public boolean canConfirm() {
+        return mOrderState.state == State.PENDING_CONFIRMATION && mPaymentCard != null && mPaymentCard.id != PaymentCard.INVALID_ID;
     }
 
     public void stopOrderForError() {
@@ -217,6 +246,7 @@ public final class OrderHandler {
             if (response.getStatus() == 200) {
                 try {
                     OrderState state = OrderState.inflate(new JSONObject(response.getBodyAsString()).getJSONObject(OrderState.Api.ORDER));
+                    mOrderState = state;
                     if (mCallback != null) {
                         mCallback.onOrderStateUpdate(state);
                     }

@@ -11,6 +11,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -185,6 +186,7 @@ public class AddPaymentCardActivity extends HostActivity {
             mExpiryField.setError(true);
             isValid = false;
         } else {
+            Log.d(null, "YO");
             expMonth = date.substring(0, 2);
             expYear = date.substring(3);
             if (!checkIfExpiryDateIsValid(expMonth, expYear)) {
