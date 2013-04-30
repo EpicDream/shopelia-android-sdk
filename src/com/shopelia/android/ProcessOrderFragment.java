@@ -68,7 +68,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<Void> implements Orde
 
     @Override
     public void onAccountCreationSucceed(User user, Address address) {
-        mOrderHandler.sendPaymentInformation(user, mOrder.card);
+        mOrderHandler.order(mOrder);
         mStateView.setText("Account created");
     }
 
