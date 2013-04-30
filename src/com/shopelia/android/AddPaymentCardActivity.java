@@ -62,9 +62,9 @@ public class AddPaymentCardActivity extends HostActivity {
         mCvvField.setOnFocusChangeListener(mOnFocusChangeListener);
         mExpiryField.setOnFocusChangeListener(mOnFocusChangeListener);
 
-        mCardNumberField.addTextChangedListener(mTextWatcher);
-        mCvvField.addTextChangedListener(mTextWatcher);
-        mExpiryField.addTextChangedListener(mTextWatcher);
+        mCardNumberField.addTextChangedListener(mCardNumberTextWatcher);
+        mCvvField.addTextChangedListener(mCvvTextWatcher);
+        mExpiryField.addTextChangedListener(mExpiryTextWatcher);
 
         mExpiryField.addTextChangedListener(new DateFormattingTextWatcher());
 
@@ -141,9 +141,7 @@ public class AddPaymentCardActivity extends HostActivity {
             }
             isValid = false;
         } else if (cvv.length() != 3) {
-            if (fireError) {
-                mCvvField.setError(true);
-            }
+            mCvvField.setError(true);
             isValid = false;
         } else {
             mCvvField.setChecked(true);
@@ -276,7 +274,7 @@ public class AddPaymentCardActivity extends HostActivity {
         }
     };
 
-    private TextWatcher mTextWatcher = new TextWatcher() {
+    private TextWatcher mCardNumberTextWatcher = new TextWatcher() {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -290,7 +288,58 @@ public class AddPaymentCardActivity extends HostActivity {
 
         @Override
         public void afterTextChanged(Editable s) {
-            validate(false);
+            if (s.length() == CardNumberFormattingTextWatcher.CardNumberInputFilter.FORMAT.length()) {
+                checkCardNumber(null, false);
+            } else {
+                mCardNumberField.setChecked(false);
+                mCardNumberField.setError(false);
+            }
+        }
+    };
+
+    private TextWatcher mCvvTextWatcher = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.length() == 3) {
+                checkCvv(null, false);
+            } else {
+                mCvvField.setChecked(false);
+                mCvvField.setError(false);
+            }
+        }
+    };
+
+    private TextWatcher mExpiryTextWatcher = new TextWatcher() {
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (s.length() == 5) {
+                checkExpiryDate(null, false);
+            } else {
+                mExpiryField.setError(false);
+                mExpiryField.setChecked(false);
+            }
         }
     };
 
