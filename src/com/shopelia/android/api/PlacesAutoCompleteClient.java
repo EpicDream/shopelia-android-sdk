@@ -25,6 +25,8 @@ public final class PlacesAutoCompleteClient {
 
     public interface OnAddressDetailsListener {
         public void onAddressDetails(Address address);
+
+        public void onError();
     }
 
     public static final String LOG_TAG = "PlacesAutocompleteClient";
@@ -121,8 +123,16 @@ public final class PlacesAutoCompleteClient {
                     if (Config.ERROR_LOGS_ENABLED) {
                         Log.e(LOG_TAG, "Unexpected JSON exception", e);
                     }
+                    onError(e);
                 }
             }
+
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+                listener.onError();
+            }
+
         });
     }
 
