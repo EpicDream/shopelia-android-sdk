@@ -128,9 +128,8 @@ public final class OrderHandler {
             JSONObject orderObject = new JSONObject();
             JSONArray urls = new JSONArray();
             urls.put(order.productUrl);
-            orderObject.put(Order.Api.PRODUCT_URL + "s", order.productUrl);
+            orderObject.put(Order.Api.PRODUCT_URLS, urls);
             params.put(Order.Api.ORDER, orderObject);
-            params.put(Order.Api.PRODUCT_URL, order.productUrl);
         } catch (JSONException e) {
             fireError(STEP_ORDER, null, e);
             return;
