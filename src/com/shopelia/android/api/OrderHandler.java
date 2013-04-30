@@ -1,5 +1,6 @@
 package com.shopelia.android.api;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -125,9 +126,11 @@ public final class OrderHandler {
         JSONObject params = new JSONObject();
         try {
             JSONObject orderObject = new JSONObject();
-            orderObject.put("merchant_id", 4);
-            orderObject.put(Order.Api.PRODUCT_URL, order.productUrl);
+            JSONArray urls = new JSONArray();
+            urls.put(order.productUrl);
+            orderObject.put(Order.Api.PRODUCT_URL + "s", order.productUrl);
             params.put(Order.Api.ORDER, orderObject);
+            params.put(Order.Api.PRODUCT_URL, order.productUrl);
         } catch (JSONException e) {
             fireError(STEP_ORDER, null, e);
             return;
