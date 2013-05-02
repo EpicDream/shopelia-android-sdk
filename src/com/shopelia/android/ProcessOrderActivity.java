@@ -2,6 +2,7 @@ package com.shopelia.android;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.widget.Toast;
 
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
 import com.shopelia.android.api.OrderHandler;
@@ -50,6 +51,24 @@ public class ProcessOrderActivity extends HostActivity implements OrderHandlerHo
     @Override
     public void confirm() {
         getOrderHandler().confirm();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        getOrderHandler().cancel();
+    }
+
+    @Override
+    public void onCheckoutSucceed() {
+        // TODO Display success screen
+        Toast.makeText(this, "Order succeed", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public void onCheckoutFailed() {
+        // TODO Display failure screen
+        Toast.makeText(this, "Order failed", Toast.LENGTH_LONG).show();
     }
 
 }
