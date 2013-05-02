@@ -44,4 +44,7 @@
     <string name="shopelia_form_payment_card_validate">Add this card</string>
     <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saississez manuellement les informations</string>
     
+    <!-- Shopelia footer -->
+    <string name="shopelia_footer">Secured by</string>
+    
 </resources>

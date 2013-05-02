@@ -40,4 +40,7 @@
     <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
     <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saisissez manuellement les informations</string>
 
+    <!-- Shopelia footer -->
+    <string name="shopelia_footer">PAIEMENT SECURISE PAR</string>
+    
 </resources>

@@ -116,13 +116,19 @@
             android:inputType="textPersonName|textCapSentences" >
         </com.shopelia.android.widget.FormEditText>
 
-        <Button
+        <com.shopelia.android.widget.ValidationButton
             android:id="@+id/validate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/shopelia_margin_large"
-            android:text="@string/shopelia_form_address_validate"
-            android:layout_marginBottom="50dp" />
+            android:layout_marginTop="@dimen/shopelia_margin_extra_large"
+            android:text="@string/shopelia_form_address_validate" />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/shopelia_include_footer"
+            android:layout_marginBottom="20dp" />
+
     </LinearLayout>
 
 </ScrollView>

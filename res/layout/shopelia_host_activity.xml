@@ -11,7 +11,7 @@
         android:padding="@dimen/shopelia_margin_normal" >
 
         <ImageView
-            android:id="@+id/imageView1"
+            android:id="@+id/lock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

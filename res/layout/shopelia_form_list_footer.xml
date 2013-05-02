@@ -16,9 +16,9 @@
         android:layout_marginTop="@dimen/shopelia_margin_large"
         android:text="@string/shopelia_form_main_validate" />
 
-    <TextView
-        android:id="@+id/json"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/shopelia_include_footer" />
 
 </LinearLayout>

@@ -1,6 +1,5 @@
 package com.shopelia.android;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -12,7 +11,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.adapter.FormAdapter;
@@ -60,7 +58,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             /*
              * User informations
              */
-            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_personal_info, R.drawable.shopelia_user))
+            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_personal_info, R.drawable.shopelia_user).displayLock())
             .add(new PhoneField(getActivity(), null, R.string.shopelia_form_main_phone).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory())
             .add(new EmailField(getActivity(), null, R.string.shopelia_form_main_email).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory())
             
@@ -73,7 +71,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             /*
              * Payment methods
              */
-            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_payment_method, R.drawable.shopelia_card))
+            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_payment_method, R.drawable.shopelia_card).displayLock())
             .add(new PaymentCardField(getActivity(), R.string.shopelia_form_main_card_number).setJsonPath(Order.Api.PAYMENT_CARD))
             
             .commit(savedInstanceState);
@@ -106,11 +104,6 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             if (mAdapter.validate()) {
                 JSONObject result = mAdapter.toJson();
-                try {
-                    ((TextView) mFooter.getView().findViewById(R.id.json)).setText(result.toString(2));
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
                 getContract().onSignUp(result);
             }
         }

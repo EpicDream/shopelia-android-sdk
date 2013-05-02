@@ -49,6 +49,9 @@ public class ValidationButton extends FrameLayout {
     }
 
     public void setText(CharSequence text) {
+        if (text != null) {
+            text = text.toString().toUpperCase();
+        }
         mLabel.setText(text);
     }
 

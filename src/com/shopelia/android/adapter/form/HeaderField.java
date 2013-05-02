@@ -18,6 +18,7 @@ public class HeaderField extends Field {
     private String mTitle;
     private int mIconId;
     private boolean mHasIcon = false;
+    private boolean mHasLock = false;
 
     public HeaderField(String title) {
         super(TYPE);
@@ -28,6 +29,11 @@ public class HeaderField extends Field {
         this(context.getString(resId));
         mIconId = iconId;
         mHasIcon = true;
+    }
+
+    public HeaderField displayLock() {
+        mHasLock = true;
+        return this;
     }
 
     @Override
@@ -46,6 +52,7 @@ public class HeaderField extends Field {
         ViewHolder holder = new ViewHolder();
         holder.title = (TextView) out.findViewById(R.id.title);
         holder.icon = (ImageView) out.findViewById(R.id.icon);
+        holder.lock = (ImageView) out.findViewById(R.id.lock);
         out.setTag(holder);
         return out;
     }
@@ -61,6 +68,7 @@ public class HeaderField extends Field {
         } else {
             holder.icon.setVisibility(View.GONE);
         }
+        holder.lock.setVisibility(mHasLock ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -81,6 +89,7 @@ public class HeaderField extends Field {
     private static class ViewHolder {
         TextView title;
         ImageView icon;
+        ImageView lock;
     }
 
     @Override
