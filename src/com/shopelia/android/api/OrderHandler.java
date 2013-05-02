@@ -37,11 +37,13 @@ public final class OrderHandler {
 
     }
 
+    public static final int STEP_DEAD = 0;
     public static final int STEP_ACCOUNT_CREATION = 1;
     public static final int STEP_SEND_PAYMENT_INFORMATION = 2;
     public static final int STEP_ORDER = 3;
     public static final int STEP_ORDERING = 4;
     public static final int STEP_CONFIRM = 5;
+    public static final int STEP_WAITING_CONFIRMATION = 6;
 
     private Context mContext;
     private Callback mCallback;
@@ -50,6 +52,8 @@ public final class OrderHandler {
 
     private PaymentCard mPaymentCard;
     private OrderState mOrderState;
+
+    private int mCurrentStep = STEP_DEAD;
 
     public OrderHandler(Context context, Callback callback) {
         this.mContext = context;
@@ -65,11 +69,11 @@ public final class OrderHandler {
 
     public void createAccount(final User user, final Address address) {
 
-        if (true) {
+        if (UserManager.get(mContext).isLogged()) {
             mCallback.onAccountCreationSucceed(user, address);
             return;
         }
-
+        mCurrentStep = STEP_ACCOUNT_CREATION;
         JSONObject params = new JSONObject();
 
         try {
@@ -106,7 +110,7 @@ public final class OrderHandler {
 
     public void sendPaymentInformation(User user, PaymentCard card) {
         JSONObject params = new JSONObject();
-
+        mCurrentStep = STEP_SEND_PAYMENT_INFORMATION;
         try {
             JSONObject cardObject = card.toJson();
             cardObject.put(PaymentCard.Api.NAME, user.lastName);
@@ -145,6 +149,7 @@ public final class OrderHandler {
 
     public void order(final Order order) {
         JSONObject params = new JSONObject();
+        mCurrentStep = STEP_ORDER;
         try {
             JSONObject orderObject = new JSONObject();
             JSONArray urls = new JSONArray();
@@ -173,7 +178,7 @@ public final class OrderHandler {
                         if (mCallback != null) {
                             mCallback.onOrderStateUpdate(state);
                         }
-
+                        mCurrentStep = STEP_ORDERING;
                         if (sHttpPoller == null) {
                             sHttpPoller = new HttpPoller();
                             sHttpPoller.start();
@@ -206,6 +211,7 @@ public final class OrderHandler {
 
     public boolean confirm() {
         if (canConfirm()) {
+            mCurrentStep = STEP_WAITING_CONFIRMATION;
             JSONObject params = new JSONObject();
             try {
                 JSONObject paymentCard = new JSONObject();
@@ -213,24 +219,24 @@ public final class OrderHandler {
                 params.put(OrderState.Api.VERB, OrderState.Verb.CONFIRM.toString());
                 params.put(OrderState.Api.CONTENT, paymentCard);
 
-                ShopeliaRestClient.put(Command.V1.Orders.Order(mOrderState.uuid), params, new AsyncCallback() {
+                ShopeliaRestClient.put(Command.V1.Callback.Orders(mOrderState.uuid), params, new AsyncCallback() {
 
                     @Override
                     public void onComplete(HttpResponse httpResponse) {
-                        if (httpResponse.getStatus() == 200) {
 
-                        } else {
-
-                        }
                     }
                 });
-
+                sHttpPoller.resumePolling();
                 return true;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
         return false;
+    }
+
+    public void done() {
+        sHttpPoller.end();
     }
 
     public void cancel() {
@@ -241,7 +247,7 @@ public final class OrderHandler {
         try {
             params.put(OrderState.Api.VERB, OrderState.Verb.CANCEL.toString());
 
-            ShopeliaRestClient.put(Command.V1.Orders.Order(mOrderState.uuid), params, new AsyncCallback() {
+            ShopeliaRestClient.put(Command.V1.Callback.Orders(mOrderState.uuid), params, new AsyncCallback() {
 
                 @Override
                 public void onComplete(HttpResponse httpResponse) {
@@ -293,21 +299,28 @@ public final class OrderHandler {
                     mOrderState = state;
                     if (mCallback != null) {
                         mCallback.onOrderStateUpdate(state);
-                        if (canConfirm()) {
-                            sHttpPoller.end();
+                        if (mCurrentStep == STEP_WAITING_CONFIRMATION) {
+                            if (state.state == State.SUCCESS) {
+                                mCallback.onOrderConfirmation(true);
+                            } else if (state.state == State.ERROR) {
+                                mCallback.onOrderConfirmation(false);
+                            }
+                        }
+                        if (canConfirm() && mCurrentStep == STEP_ORDERING) {
+                            sHttpPoller.pause();
                         }
                     }
                 } catch (JSONException e) {
-                    fireError(STEP_ORDERING, null, e);
+                    fireError(mCurrentStep, null, e);
                 }
             } else {
-                fireError(STEP_ORDERING, null, null);
+                fireError(mCurrentStep, null, null);
             }
         }
 
         @Override
         protected void onError(Exception e) {
-            fireError(STEP_ORDERING, null, e);
+            fireError(mCurrentStep, null, e);
         };
 
     };

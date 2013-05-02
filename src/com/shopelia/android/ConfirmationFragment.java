@@ -72,6 +72,7 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
     @Override
     public void onOrderConfirmation(boolean succeed) {
+        getContract().getOrderHandler().done();
         if (succeed) {
             getContract().onCheckoutSucceed();
         } else {

@@ -1,5 +1,6 @@
 package com.shopelia.android.api;
 
+
 /**
  * This class contains every command of the ShopeliaAPI
  * 
