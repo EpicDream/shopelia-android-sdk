@@ -1,5 +1,6 @@
 package com.shopelia.android.app;
 
+import android.app.Activity;
 import android.support.v4.app.Fragment;
 
 /**
@@ -9,9 +10,17 @@ import android.support.v4.app.Fragment;
  */
 public class ShopeliaFragment<Contract> extends Fragment {
 
+    private Contract mContract;
+
     @SuppressWarnings("unchecked")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mContract = (Contract) activity;
+    }
+
     public Contract getContract() {
-        return (Contract) getActivity();
+        return mContract;
     }
 
     @SuppressWarnings("unchecked")
