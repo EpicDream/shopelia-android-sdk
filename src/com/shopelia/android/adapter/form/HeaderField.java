@@ -6,6 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
+import android.widget.LinearLayout;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.shopelia.android.R;
@@ -19,6 +22,7 @@ public class HeaderField extends Field {
     private int mIconId;
     private boolean mHasIcon = false;
     private boolean mHasLock = false;
+    private int[] mImagesIds = new int[0];
 
     public HeaderField(String title) {
         super(TYPE);
@@ -33,6 +37,11 @@ public class HeaderField extends Field {
 
     public HeaderField displayLock() {
         mHasLock = true;
+        return this;
+    }
+
+    public HeaderField addPictures(int... resIds) {
+        mImagesIds = resIds;
         return this;
     }
 
@@ -53,6 +62,7 @@ public class HeaderField extends Field {
         holder.title = (TextView) out.findViewById(R.id.title);
         holder.icon = (ImageView) out.findViewById(R.id.icon);
         holder.lock = (ImageView) out.findViewById(R.id.lock);
+        holder.scroller = (LinearLayout) out.findViewById(R.id.scroller);
         out.setTag(holder);
         return out;
     }
@@ -69,6 +79,14 @@ public class HeaderField extends Field {
             holder.icon.setVisibility(View.GONE);
         }
         holder.lock.setVisibility(mHasLock ? View.VISIBLE : View.INVISIBLE);
+        holder.scroller.removeAllViews();
+        for (int resId : mImagesIds) {
+            ImageView image = new ImageView(getContext());
+            image.setImageResource(resId);
+            image.setScaleType(ScaleType.CENTER_INSIDE);
+            image.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            holder.scroller.addView(image);
+        }
     }
 
     @Override
@@ -90,6 +108,7 @@ public class HeaderField extends Field {
         TextView title;
         ImageView icon;
         ImageView lock;
+        LinearLayout scroller;
     }
 
     @Override
