@@ -8,7 +8,7 @@ import android.util.Log;
 public class OrderState {
 
     public enum State {
-        ERROR("error"), PENDING_CONFIRMATION("pending_confirmation"), ORDERING(""), SUCCESS("success");
+        ERROR("error"), PENDING_CONFIRMATION("pending_confirmation"), ORDERING("ordering"), SUCCESS("success"), FINALIZING("finalizing");
 
         private String mLabel;
 
@@ -77,7 +77,7 @@ public class OrderState {
         String PRICE_TOTAL = "price_total";
 
         String CONTENT = "content";
-        String VERB = "content";
+        String VERB = "verb";
 
     }
 
