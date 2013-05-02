@@ -1,5 +1,7 @@
 package com.shopelia.android;
 
+import org.json.JSONObject;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +9,21 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
+import com.shopelia.android.api.OrderHandler;
 import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.model.Address;
+import com.shopelia.android.model.Order;
+import com.shopelia.android.model.OrderState;
+import com.shopelia.android.model.PaymentCard;
+import com.shopelia.android.model.User;
 
-public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> {
+public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> implements OrderHandler.Callback {
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getContract().getOrderHandler().setCallback(this);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -30,5 +44,39 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> {
             getContract().getOrderHandler().confirm();
         }
     };
+
+    @Override
+    public void onAccountCreationSucceed(User user, Address address) {
+        // Useless
+    }
+
+    @Override
+    public void onPaymentInformationSent(PaymentCard paymentInformation) {
+        // Useless
+    }
+
+    @Override
+    public void onOrderBegin(Order order) {
+        // Useless
+    }
+
+    @Override
+    public void onOrderStateUpdate(OrderState newState) {
+        // Useless
+    }
+
+    @Override
+    public void onError(int step, JSONObject response, Exception e) {
+
+    }
+
+    @Override
+    public void onOrderConfirmation(boolean succeed) {
+        if (succeed) {
+            getContract().onCheckoutSucceed();
+        } else {
+            getContract().onCheckoutFailed();
+        }
+    }
 
 }

@@ -28,6 +28,10 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
         public void confirm();
 
+        public void onCheckoutSucceed();
+
+        public void onCheckoutFailed();
+
     }
 
     private TextView mStateView;
@@ -79,12 +83,11 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onAccountCreationSucceed(User user, Address address) {
         mOrderHandler.order(mOrder);
-        mStateView.setText("Account created");
+        mOrderHandler.sendPaymentInformation(mOrder.user, mOrder.card);
     }
 
     @Override
     public void onPaymentInformationSent(PaymentCard paymentInformation) {
-        mOrderHandler.order(mOrder);
         mStateView.setText("Payment card sent");
         if (mOrderHandler.canConfirm()) {
             getContract().askForConfirmation();
@@ -118,6 +121,11 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         if (mOrderHandler.canConfirm()) {
             getContract().askForConfirmation();
         }
+
+    }
+
+    @Override
+    public void onOrderConfirmation(boolean succeed) {
 
     }
 
