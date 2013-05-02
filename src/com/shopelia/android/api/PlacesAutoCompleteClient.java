@@ -51,7 +51,7 @@ public final class PlacesAutoCompleteClient {
     private interface Api {
         interface Autocomplete {
             String DESCRIPTION = "description";
-            String REFERENCE = "reference";
+            String REFERENCE = Address.Api.REFERENCE;
         }
     }
 

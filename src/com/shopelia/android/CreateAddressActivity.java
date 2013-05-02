@@ -6,7 +6,9 @@ import java.util.Locale;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,10 +26,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shopelia.android.api.PlacesAutoCompleteClient;
-import com.shopelia.android.api.PlacesAutoCompleteClient.OnAddressDetailsListener;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
+import com.shopelia.android.utils.LocaleUtils;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormEditText;
 
@@ -43,12 +45,11 @@ public class CreateAddressActivity extends HostActivity {
     public static final String EXTRA_ZIPCODE = Config.EXTRA_PREFIX + "ZIPCODE";
     public static final String EXTRA_CITY = Config.EXTRA_PREFIX + "CITY";
     public static final String EXTRA_COUNTRY = Config.EXTRA_PREFIX + "COUNTRY";
+    public static final String EXTRA_REFERENCE = Config.EXTRA_PREFIX + "REFERENCE";
 
     public static final String EXTRA_ADDRESS_OBJECT = Config.EXTRA_PREFIX + "OBJECT";
 
     public static final String LOG_TAG = "CreateAddressActivity";
-
-    private static final long REQUEST_DELAY = 400;
 
     // Views
     private AutoCompleteTextView mAddressField;
@@ -62,6 +63,8 @@ public class CreateAddressActivity extends HostActivity {
     private ImageView mHeaderIcon;
     private TextView mHeaderTitle;
 
+    private String mReferencedText;
+
     // Backend
     private LayoutInflater mLayoutInflater;
     private AutocompletionAdapter mAutocompletionAdapter = new AutocompletionAdapter(null);
@@ -73,7 +76,6 @@ public class CreateAddressActivity extends HostActivity {
         super.onCreate(saveState);
 
         setHostContentView(R.layout.shopelia_create_address_activity);
-
         mLayoutInflater = LayoutInflater.from(this);
 
         mNameField = (FormEditText) findViewById(R.id.name);
@@ -96,6 +98,27 @@ public class CreateAddressActivity extends HostActivity {
         mCountryField.setOnFocusChangeListener(mOnFocusChangeListener);
         mPostalCodeField.setOnFocusChangeListener(mOnFocusChangeListener);
 
+        mAddressField.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (mReferencedText != null && !s.toString().equals(mReferencedText)) {
+                    mAddressField.setTag(null);
+                }
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+        });
+
         View headerFrame = findViewById(R.id.header_frame);
         mHeaderIcon = (ImageView) headerFrame.findViewById(R.id.icon);
         mHeaderTitle = (TextView) headerFrame.findViewById(R.id.title);
@@ -115,9 +138,11 @@ public class CreateAddressActivity extends HostActivity {
             mPostalCodeField.setText(bundle.getString(EXTRA_ZIPCODE));
             mCityField.setText(bundle.getString(EXTRA_CITY));
             mCountryField.setText(bundle.getString(EXTRA_COUNTRY));
+            mAddressField.setTag(bundle.getString(EXTRA_REFERENCE));
+            mReferencedText = bundle.getString(EXTRA_REFERENCE);
         }
 
-        if (!TextUtils.isEmpty(mAddressField.getText())) {
+        if (!TextUtils.isEmpty(mAddressField.getText()) && mAddressField.getTag() == null) {
             mPostalCodeField.setVisibility(View.VISIBLE);
             mCityField.setVisibility(View.VISIBLE);
             mCountryField.setVisibility(View.VISIBLE);
@@ -125,6 +150,10 @@ public class CreateAddressActivity extends HostActivity {
             mPostalCodeField.setVisibility(View.GONE);
             mCityField.setVisibility(View.GONE);
             mCountryField.setVisibility(View.GONE);
+        }
+
+        if (TextUtils.isEmpty(mCountryField.getText())) {
+            mCountryField.setText(Locale.getDefault().getDisplayCountry());
         }
 
         mHeaderIcon.setImageResource(R.drawable.shopelia_pin);
@@ -143,6 +172,7 @@ public class CreateAddressActivity extends HostActivity {
         outState.putString(EXTRA_ZIPCODE, mPostalCodeField.getText().toString());
         outState.putString(EXTRA_CITY, mCityField.getText().toString());
         outState.putString(EXTRA_COUNTRY, mCountryField.getText().toString());
+        outState.putString(EXTRA_REFERENCE, (String) mAddressField.getTag());
     }
 
     @Override
@@ -224,25 +254,12 @@ public class CreateAddressActivity extends HostActivity {
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long itemId) {
             mAddressExtrasField.requestFocus();
             Address address = (Address) mAutocompletionAdapter.getItem(position);
-            PlacesAutoCompleteClient.getAddressDetails(address.reference, new OnAddressDetailsListener() {
-
-                @Override
-                public void onAddressDetails(Address address) {
-                    mAddressField.setTag(address);
-                    mAddressField.setText(address.address);
-                    Locale locale = new Locale("", address.country);
-                    mPostalCodeField.setText(address.zipcode);
-                    mCityField.setText(address.city);
-                    mCountryField.setText(locale.getDisplayCountry());
-                    validate(false);
-                }
-
-                @Override
-                public void onError() {
-                    mAddressField.setTag(null);
-                }
-
-            });
+            mPostalCodeField.setVisibility(View.GONE);
+            mCityField.setVisibility(View.GONE);
+            mCountryField.setVisibility(View.GONE);
+            mAddressField.setTag(address.reference);
+            mReferencedText = address.address;
+            validate(false);
         }
 
     };
@@ -270,14 +287,21 @@ public class CreateAddressActivity extends HostActivity {
         mResult.extras = mAddressExtrasField.getText().toString();
         mResult.zipcode = mPostalCodeField.getText().toString();
         mResult.city = mCityField.getText().toString();
-        mResult.country = mCountryField.getText().toString();
-        boolean out = validateFields(fireError, mAddressField, mNameField, mFirstNameField, mCityField, mCountryField, mPostalCodeField);
+        mResult.country = LocaleUtils.getCountryISO2Code(mCountryField.getText().toString());
+        if (mAddressField.getTag() != null) {
+            mResult.reference = (String) mAddressField.getTag();
+        }
+        boolean out = mResult.reference != null ? validateFields(fireError, mAddressField, mNameField, mFirstNameField) : validateFields(
+                fireError, mAddressField, mNameField, mFirstNameField, mCityField, mCountryField, mPostalCodeField);
         if (out) {
             mHeaderTitle.setTextColor(getResources().getColor(R.color.shopelia_headerTitleSectionOkColor));
             mHeaderIcon.setImageResource(R.drawable.shopelia_check_ok);
         } else {
             mHeaderTitle.setTextColor(getResources().getColor(R.color.shopelia_headerTitleSectionRegularColor));
             mHeaderIcon.setImageResource(R.drawable.shopelia_pin);
+        }
+        if (fireError && TextUtils.isEmpty(mResult.country) && mResult.reference == null) {
+            mCountryField.setError(true);
         }
         return out;
     }
@@ -312,7 +336,7 @@ public class CreateAddressActivity extends HostActivity {
         public void onFocusChange(View v, boolean hasFocus) {
             validate(false);
 
-            if (v == mAddressField && !TextUtils.isEmpty(mAddressField.getText())) {
+            if (v == mAddressField && !TextUtils.isEmpty(mAddressField.getText()) && v.getTag() == null) {
                 mPostalCodeField.setVisibility(View.VISIBLE);
                 mCityField.setVisibility(View.VISIBLE);
                 mCountryField.setVisibility(View.VISIBLE);

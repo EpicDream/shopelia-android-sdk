@@ -31,6 +31,8 @@ public final class Address implements JsonData, Parcelable {
         String NAME = "owner_name";
         String FIRSTNAME = "owner_firstname";
 
+        String REFERENCE = "reference";
+
     }
 
     private static final long INVALID_ID = -1;
@@ -72,10 +74,14 @@ public final class Address implements JsonData, Parcelable {
         }
         json.put(Api.NAME, name);
         json.put(Api.FIRSTNAME, firstname);
-        json.put(Api.ADDRESS1, address);
-        json.put(Api.ZIP, zipcode);
-        json.put(Api.CITY, city);
-        json.put(Api.COUNTRY, country);
+        if (reference == null) {
+            json.put(Api.ADDRESS1, address);
+            json.put(Api.ZIP, zipcode);
+            json.put(Api.CITY, city);
+            json.put(Api.COUNTRY, country);
+        } else {
+            json.put(Api.REFERENCE, reference);
+        }
         if (!TextUtils.isEmpty(extras)) {
             json.put(Api.EXTRAS, extras);
         }
@@ -106,8 +112,9 @@ public final class Address implements JsonData, Parcelable {
         address.firstname = object.optString(Api.FIRSTNAME);
         address.address = object.optString(Api.ADDRESS1);
         address.city = object.optString(Api.CITY);
-        address.country = object.getString(Api.COUNTRY);
+        address.country = object.optString(Api.COUNTRY);
         address.zipcode = object.optString(Api.ZIP);
+        address.reference = object.optString(Api.REFERENCE);
         return address;
     }
 

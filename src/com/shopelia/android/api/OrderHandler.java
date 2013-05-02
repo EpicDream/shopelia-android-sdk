@@ -69,10 +69,10 @@ public final class OrderHandler {
 
     public void createAccount(final User user, final Address address) {
 
-        if (UserManager.get(mContext).isLogged()) {
-            mCallback.onAccountCreationSucceed(user, address);
-            return;
-        }
+        // if (UserManager.get(mContext).isLogged()) {
+        // mCallback.onAccountCreationSucceed(user, address);
+        // return;
+        // }
         mCurrentStep = STEP_ACCOUNT_CREATION;
         JSONObject params = new JSONObject();
 
