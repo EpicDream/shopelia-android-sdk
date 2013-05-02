@@ -25,7 +25,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/shopelia_margin_large"
         android:layout_marginRight="@dimen/shopelia_margin_large"
-        android:src="@drawable/shopelia_cart_white" />
+        android:src="@drawable/shopelia_photo" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/text"
