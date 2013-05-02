@@ -29,7 +29,7 @@ public class OrderState {
     }
 
     public enum Verb {
-        CONFIRM("confirm");
+        CONFIRM("confirm"), CANCEL("cancel");
 
         private String mVerb;
 
