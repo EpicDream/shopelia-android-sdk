@@ -37,7 +37,7 @@
         android:gravity="center"
         android:text="@string/shopelia_form_payment_card_scan"
         android:textColor="@color/shopelia_grey_button_text_color"
-        android:textSize="@dimen/shopelia_font_size_normal"
+        android:textSize="@dimen/shopelia_font_size_small"
         android:textStyle="bold"
         app:fontStyle="bold" />
 

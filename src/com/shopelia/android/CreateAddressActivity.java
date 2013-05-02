@@ -137,7 +137,9 @@ public class CreateAddressActivity extends HostActivity {
             mAddressExtrasField.setText(bundle.getString(EXTRA_ADDRESS_EXTRAS));
             mPostalCodeField.setText(bundle.getString(EXTRA_ZIPCODE));
             mCityField.setText(bundle.getString(EXTRA_CITY));
-            mCountryField.setText(bundle.getString(EXTRA_COUNTRY));
+            if (bundle.containsKey(EXTRA_COUNTRY)) {
+                mCountryField.setText(new Locale("", bundle.getString(EXTRA_COUNTRY)).getDisplayCountry());
+            }
             mAddressField.setTag(bundle.getString(EXTRA_REFERENCE));
             mReferencedText = bundle.getString(EXTRA_REFERENCE);
         }

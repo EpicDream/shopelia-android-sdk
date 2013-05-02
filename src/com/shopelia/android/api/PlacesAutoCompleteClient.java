@@ -65,26 +65,6 @@ public final class PlacesAutoCompleteClient {
         Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
         if (location != null) {
-
-            if (TextUtils.isEmpty(input)) {
-                return null;
-            }
-
-            ParameterMap params = ShopeliaRestClient.newParams();
-            params.add(Command.Autocomplete.QUERY, input);
-            params.add(Command.Autocomplete.LATITUDE, String.valueOf(location.getLatitude()));
-            params.add(Command.Autocomplete.LONGITUDE, String.valueOf(location.getLongitude()));
-
-            HttpResponse httpResponse = ShopeliaRestClient.get(Command.Autocomplete.$, params);
-            try {
-                List<Address> addresses = inflatesAutocompletionAddresses(new JSONArray(httpResponse.getBodyAsString()));
-                return addresses;
-            } catch (JSONException e) {
-                if (Config.ERROR_LOGS_ENABLED) {
-                    Log.e(LOG_TAG, "Unexpected JSON exception ", e);
-                }
-            }
-        } else {
             lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
 
                 @Override
@@ -107,7 +87,28 @@ public final class PlacesAutoCompleteClient {
                     lm.removeUpdates(this);
                 }
             });
+        } else {
+            location = new Location(LocationManager.NETWORK_PROVIDER);
         }
+
+        if (TextUtils.isEmpty(input)) {
+            return null;
+        }
+
+        ParameterMap params = ShopeliaRestClient.newParams();
+        params.add(Command.Autocomplete.QUERY, input);
+        params.add(Command.Autocomplete.LATITUDE, String.valueOf(location.getLatitude()));
+        params.add(Command.Autocomplete.LONGITUDE, String.valueOf(location.getLongitude()));
+        HttpResponse httpResponse = ShopeliaRestClient.get(Command.Autocomplete.$, params);
+        try {
+            List<Address> addresses = inflatesAutocompletionAddresses(new JSONArray(httpResponse.getBodyAsString()));
+            return addresses;
+        } catch (JSONException e) {
+            if (Config.ERROR_LOGS_ENABLED) {
+                Log.e(LOG_TAG, "Unexpected JSON exception ", e);
+            }
+        }
+
         return null;
     }
 

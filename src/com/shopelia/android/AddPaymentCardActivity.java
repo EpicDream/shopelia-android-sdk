@@ -6,6 +6,7 @@ import io.card.payment.CreditCard;
 import java.util.Calendar;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.InputFilter;
@@ -89,6 +90,12 @@ public class AddPaymentCardActivity extends HostActivity {
         }
         mHeaderIcon.setImageResource(R.drawable.shopelia_card);
         mHeaderTitle.setText(R.string.shopelia_form_main_payment_method);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+            findViewById(R.id.description).setVisibility(View.GONE);
+            findViewById(R.id.scan).setVisibility(View.GONE);
+        }
+
         validate(false);
     }
 
