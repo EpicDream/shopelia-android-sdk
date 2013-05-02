@@ -36,7 +36,7 @@
     <string name="shopelia_form_payment_card_number">Numéro de la carte</string>
     <string name="shopelia_form_payment_card_expiry_date">Date d\'expiration</string>
     <string name="shopelia_form_payment_card_cvv">CCV</string>
-    <string name="shopelia_form_payment_card_scan">Scanner le numéro de carte</string>
+    <string name="shopelia_form_payment_card_scan">SCANNER MA CARTE</string>
     <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
     <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saisissez manuellement les informations</string>
 

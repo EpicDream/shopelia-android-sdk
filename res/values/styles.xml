@@ -4,7 +4,7 @@
         Base application theme, dependent on API level. This theme is replaced
         by AppBaseTheme from res/values-vXX/styles.xml on newer devices.
     -->
-    <style name="Theme.Legacy.ShopeliaBaseTheme" parent="android:Theme.Light.NoTitleBar.Fullscreen">
+    <style name="Theme.Legacy.ShopeliaBaseTheme" parent="android:Theme.Light.NoTitleBar">
         <!--
             Theme customizations available in newer API levels can go in
             res/values-vXX/styles.xml, while customizations related to
@@ -15,6 +15,7 @@
     <!-- Application theme. -->
     <style name="Theme.Shopelia" parent="Theme.Legacy.ShopeliaBaseTheme">
 		<item name="android:windowBackground">@color/shopelia_windowsBackground</item>
+		 <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="Theme.Shopelia.Widget"></style>

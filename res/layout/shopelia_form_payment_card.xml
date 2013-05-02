@@ -11,22 +11,24 @@
     <include
             android:id="@+id/header_frame"
             layout="@layout/shopelia_form_field_title_header" />
-    
-    <Button
+
+    <include
         android:id="@+id/scan"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
+        android:layout_height="45dp"
         android:layout_marginTop="@dimen/shopelia_margin_large"
-        android:text="@string/shopelia_form_payment_card_scan" />
+        layout="@layout/shopelia_grey_button" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/fontableTextView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/shopelia_margin_large"
+        android:layout_marginRight="@dimen/shopelia_margin_large"
         android:layout_marginTop="@dimen/shopelia_margin_large"
+        android:gravity="center"
         android:text="@string/shopelia_form_payment_card_scan_or_fill"
-        android:textSize="@dimen/shopelia_font_size_small"
-        android:gravity="center" />
+        android:textSize="@dimen/shopelia_font_size_small" />
 
     <com.shopelia.android.widget.FormEditText
         android:id="@+id/card_numer"
