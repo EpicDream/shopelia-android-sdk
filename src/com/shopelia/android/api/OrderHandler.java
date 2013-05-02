@@ -33,6 +33,8 @@ public final class OrderHandler {
 
         public void onError(int step, JSONObject response, Exception e);
 
+        public void onOrderConfirmation(boolean succeed);
+
     }
 
     public static final int STEP_ACCOUNT_CREATION = 1;
@@ -62,6 +64,12 @@ public final class OrderHandler {
     }
 
     public void createAccount(final User user, final Address address) {
+
+        if (true) {
+            mCallback.onAccountCreationSucceed(user, address);
+            return;
+        }
+
         JSONObject params = new JSONObject();
 
         try {
@@ -161,6 +169,7 @@ public final class OrderHandler {
                             mCallback.onOrderBegin(order);
                         }
                         OrderState state = OrderState.inflate(object.getJSONObject(OrderState.Api.ORDER));
+                        mOrderState = state;
                         if (mCallback != null) {
                             mCallback.onOrderStateUpdate(state);
                         }
@@ -203,6 +212,19 @@ public final class OrderHandler {
                 paymentCard.put(PaymentCard.Api.PAYMENT_CARD_ID, mPaymentCard.id);
                 params.put(OrderState.Api.VERB, OrderState.Verb.CONFIRM.toString());
                 params.put(OrderState.Api.CONTENT, paymentCard);
+
+                ShopeliaRestClient.put(Command.V1.Orders.Order(mOrderState.uuid), params, new AsyncCallback() {
+
+                    @Override
+                    public void onComplete(HttpResponse httpResponse) {
+                        if (httpResponse.getStatus() == 200) {
+
+                        } else {
+
+                        }
+                    }
+                });
+
                 return true;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -211,8 +233,30 @@ public final class OrderHandler {
         return false;
     }
 
+    public void cancel() {
+        if (mOrderState == null) {
+            return;
+        }
+        JSONObject params = new JSONObject();
+        try {
+            params.put(OrderState.Api.VERB, OrderState.Verb.CANCEL.toString());
+
+            ShopeliaRestClient.put(Command.V1.Orders.Order(mOrderState.uuid), params, new AsyncCallback() {
+
+                @Override
+                public void onComplete(HttpResponse httpResponse) {
+
+                }
+            });
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+    }
+
     public boolean canConfirm() {
-        return mOrderState.state == State.PENDING_CONFIRMATION && mPaymentCard != null && mPaymentCard.id != PaymentCard.INVALID_ID;
+        return mOrderState != null && mOrderState.state == State.PENDING_CONFIRMATION && mPaymentCard != null
+                && mPaymentCard.id != PaymentCard.INVALID_ID;
     }
 
     public void stopOrderForError() {
@@ -249,6 +293,9 @@ public final class OrderHandler {
                     mOrderState = state;
                     if (mCallback != null) {
                         mCallback.onOrderStateUpdate(state);
+                        if (canConfirm()) {
+                            sHttpPoller.end();
+                        }
                     }
                 } catch (JSONException e) {
                     fireError(STEP_ORDERING, null, e);
