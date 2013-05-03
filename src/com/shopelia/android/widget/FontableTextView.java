@@ -31,7 +31,7 @@ public class FontableTextView extends TextView {
     private static final String ASAP_BOLD_ITALIC = FONT_PATH + "Asap-BoldItalic.otf";
     @SuppressWarnings("unused")
     private static final String ASAP_ITALIC = FONT_PATH + "Asap-Italic.otf";
-    private static final String ASAP_REGULAR = FONT_PATH + "Asap-Regular.otf";
+    private static final String ASAP_REGULAR = FONT_PATH + "Asap-Regular.ttf";
 
     private static final SparseArray<SparseArray<Typeface>> sTypefaces = new SparseArray<SparseArray<Typeface>>(3);
 

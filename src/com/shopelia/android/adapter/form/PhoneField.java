@@ -46,7 +46,7 @@ public class PhoneField extends EditTextField {
 
     @Override
     public Object getResult() {
-        return ((String) super.getResult()).replace(" ", "");
+        return super.getResult() != null ? ((String) super.getResult()).replace(" ", "") : "";
     }
 
 }

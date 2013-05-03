@@ -15,6 +15,8 @@ import android.widget.ListView;
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.form.AddressField;
+import com.shopelia.android.adapter.form.EditTextField;
+import com.shopelia.android.adapter.form.EditTextField.OnValidateListener;
 import com.shopelia.android.adapter.form.EmailField;
 import com.shopelia.android.adapter.form.HeaderField;
 import com.shopelia.android.adapter.form.PaymentCardField;
@@ -106,6 +108,15 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                 JSONObject result = mAdapter.toJson();
                 getContract().onSignUp(result);
             }
+        }
+    };
+
+    private OnValidateListener mPhoneOnValidateListener = new OnValidateListener() {
+
+        @Override
+        public boolean onValidate(EditTextField editTextField, boolean shouldFireError) {
+
+            return editTextField.isValid();
         }
     };
 

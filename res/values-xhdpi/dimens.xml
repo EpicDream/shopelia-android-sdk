@@ -1,34 +1,5 @@
 <resources>
 
-    <!-- Default screen margins, per the Android Design guidelines. -->
-    <dimen name="shopelia_activity_horizontal_margin">16dp</dimen>
-    <dimen name="shopelia_activity_vertical_margin">16dp</dimen>
-    <dimen name="shopelia_margin_none">0px</dimen>
-    <dimen name="shopelia_margin_extra_small">2dp</dimen>
-    <dimen name="shopelia_margin_small">4dp</dimen>
-    <dimen name="shopelia_margin_normal">8dp</dimen>
-    <dimen name="shopelia_margin_large">16dp</dimen>
-    <dimen name="shopelia_margin_extra_large">24dp</dimen>
-    <dimen name="shopelia_app_menu_shadow_width">5dp</dimen>
-    <dimen name="shopelia_font_size_extra_small">12sp</dimen>
-    <dimen name="shopelia_font_size_small">14sp</dimen>
-    <dimen name="shopelia_font_size_medium">16sp</dimen>
-    <dimen name="shopelia_font_size_normal">18sp</dimen>
-    <dimen name="shopelia_font_size_mid_large">19sp</dimen>
-    <dimen name="shopelia_font_size_large">22sp</dimen>
-    <dimen name="shopelia_font_size_extra_large">24sp</dimen>
-    <dimen name="shopelia_font_size_huge">42sp</dimen>
-    <dimen name="shopelia_logo_size">75dp</dimen>
-    <dimen name="shopelia_logo_size_big">120dp</dimen>
-    <dimen name="shopelia_logo_size_small">50dp</dimen>
-    <dimen name="shopelia_logo_size_extra_small">18dp</dimen>
-    <dimen name="shopelia_divider_small">1px</dimen>
-    <dimen name="shopelia_divider_normal">1dp</dimen>
-    <dimen name="shopelia_divider_large">2dp</dimen>
-    <dimen name="shopelia_list_divider">@dimen/shopelia_divider_normal</dimen>
-    <dimen name="shopelia_list_item_view_min_height">48dp</dimen>
-    <dimen name="shopelia_list_item_view_min_height_large">64dp</dimen>
-    <dimen name="shopelia_title_bar_height">48dp</dimen>
-    <dimen name="shopelia_popup_menu_prefered_width">320dp</dimen>
+     <dimen name="shopelia_icon_size">40px</dimen>
 
 </resources>

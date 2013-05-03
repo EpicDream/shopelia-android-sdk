@@ -101,6 +101,7 @@ public final class PlacesAutoCompleteClient {
         params.add(Command.Autocomplete.LONGITUDE, String.valueOf(location.getLongitude()));
         HttpResponse httpResponse = ShopeliaRestClient.get(Command.Autocomplete.$, params);
         try {
+            Log.d(null, httpResponse.getBodyAsString());
             List<Address> addresses = inflatesAutocompletionAddresses(new JSONArray(httpResponse.getBodyAsString()));
             return addresses;
         } catch (JSONException e) {

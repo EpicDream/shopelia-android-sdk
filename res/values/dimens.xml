@@ -30,5 +30,5 @@
     <dimen name="shopelia_list_item_view_min_height_large">64dp</dimen>
     <dimen name="shopelia_title_bar_height">48dp</dimen>
     <dimen name="shopelia_popup_menu_prefered_width">320dp</dimen>
-
+	<dimen name="shopelia_icon_size">20dp</dimen>
 </resources>

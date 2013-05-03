@@ -19,6 +19,7 @@
 	    You order will be automatically prepared on <b>%s</b> by <b>Shopelia</b>
 	    ]]>
 	</string>
+	<string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
     
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Name</string>
