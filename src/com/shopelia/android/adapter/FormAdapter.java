@@ -188,6 +188,9 @@ public class FormAdapter extends BaseAdapter {
          * @return
          */
         public View getBoundedView() {
+            if (mAdapter == null) {
+                return null;
+            }
             int index = mAdapter.mFieldList.indexOf(this);
             return mAdapter.getViewByIndex(index);
         }
