@@ -1,5 +1,7 @@
 package com.shopelia.android.adapter.form;
 
+import java.util.Locale;
+
 import org.json.JSONException;
 
 import android.app.Activity;
@@ -9,6 +11,7 @@ import android.os.Bundle;
 import android.widget.Button;
 
 import com.shopelia.android.CreateAddressActivity;
+import com.shopelia.android.R;
 import com.shopelia.android.model.Address;
 
 public class AddressField extends ButtonField {
@@ -59,7 +62,12 @@ public class AddressField extends ButtonField {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ADDRESS && resultCode == Activity.RESULT_OK) {
             mAddress = data.getParcelableExtra(CreateAddressActivity.EXTRA_ADDRESS_OBJECT);
-            setContentText(mAddress.toString());
+            if (mAddress.reference == null) {
+                setContentText(getContext().getString(R.string.shopelia_form_address_display_format, mAddress.address, mAddress.city,
+                        new Locale("", mAddress.country).getDisplayCountry()));
+            } else {
+                setContentText(mAddress.toString());
+            }
             setValid(true);
             setChecked(true);
             getAdapter().notifyDataSetChanged();
