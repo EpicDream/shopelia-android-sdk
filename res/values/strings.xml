@@ -52,4 +52,11 @@
     <!-- Shopelia footer -->
     <string name="shopelia_footer">Secured by</string>
     
+    <!-- Taxes -->
+    <string name="shopelia_tax_et">ET</string>
+    <string name="shopelia_tax_ati">ATI</string>
+    
+    <!-- Product sheet -->
+    <string name="shopelia_product_shipping_fees" formatted="false">Shipping fees %s</string>
+    
 </resources>

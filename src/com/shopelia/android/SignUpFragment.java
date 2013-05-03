@@ -31,6 +31,7 @@ import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
 import com.shopelia.android.widget.FormListFooter;
 import com.shopelia.android.widget.FormListHeader;
+import com.shopelia.android.widget.ProductSheetWrapper;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -43,6 +44,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     private ListView mListView;
     private FormAdapter mAdapter;
     private FormListFooter mFooter;
+    @SuppressWarnings("unused")
+    private ProductSheetWrapper mProductSheetWrapper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -58,6 +61,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         mListView = (ListView) view.findViewById(R.id.form);
         mListView.addHeaderView(new FormListHeader(getActivity()).getView(), null, false);
         mListView.addFooterView(mFooter.getView(), null, false);
+
+        mProductSheetWrapper = new ProductSheetWrapper(view.findViewById(R.id.product_sheet), getActivity().getIntent().getExtras());
 
         mAdapter = new FormAdapter(mListView);
 

@@ -211,10 +211,9 @@ public class AddPaymentCardActivity extends HostActivity {
     private boolean checkIfExpiryDateIsValid(String month, String year) {
         boolean isValid = true;
         try {
-            int M = Integer.valueOf(month);
+            int M = Integer.valueOf(month) - 1;
             int Y = Integer.valueOf(year);
             Calendar calendar = Calendar.getInstance();
-
             if (calendar.get(Calendar.YEAR) % 100 == Y && calendar.get(Calendar.MONTH) > M) {
                 // Fire error
                 isValid = false;
@@ -380,7 +379,7 @@ public class AddPaymentCardActivity extends HostActivity {
             mHeaderIcon.setImageResource(R.drawable.shopelia_check_ok);
         } else {
             mHeaderIcon.setImageResource(R.drawable.shopelia_card);
-            mHeaderTitle.setText(R.string.shopelia_form_main_payment_method);
+            mHeaderTitle.setTextColor(getResources().getColor(R.color.shopelia_headerTitleSectionRegularColor));
         }
     }
 

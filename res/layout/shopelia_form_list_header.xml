@@ -20,4 +20,12 @@
         android:text="@string/shopelia_form_main_header_text"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    <include
+        android:id="@+id/product_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        layout="@layout/shopelia_product_sheet" />
+
 </LinearLayout>

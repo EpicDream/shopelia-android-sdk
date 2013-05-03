@@ -48,4 +48,8 @@
     <!-- Shopelia footer -->
     <string name="shopelia_footer">PAIEMENT SECURISE PAR</string>
     
+     <!-- Taxes -->
+    <string name="shopelia_tax_et">HT</string>
+    <string name="shopelia_tax_ati">TTC</string>
+    
 </resources>
