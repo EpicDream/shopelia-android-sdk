@@ -1,6 +1,7 @@
 package com.shopelia.android.model;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -28,8 +29,8 @@ public final class Address implements JsonData, Parcelable {
 
         String ADDRESS_NAME = "name";
 
-        String NAME = "owner_name";
-        String FIRSTNAME = "owner_firstname";
+        String NAME = "last_name";
+        String FIRSTNAME = "first_name";
 
         String REFERENCE = "reference";
 
@@ -114,7 +115,10 @@ public final class Address implements JsonData, Parcelable {
         address.city = object.optString(Api.CITY);
         address.country = object.optString(Api.COUNTRY);
         address.zipcode = object.optString(Api.ZIP);
-        address.reference = object.optString(Api.REFERENCE);
+        address.reference = object.optString(Api.REFERENCE, null);
+        if (TextUtils.isEmpty(address.country)) {
+            address.country = Locale.getDefault().getCountry();
+        }
         return address;
     }
 
@@ -134,6 +138,13 @@ public final class Address implements JsonData, Parcelable {
     @Override
     public String toString() {
         return address;
+    }
+
+    public boolean isValid() {
+        return !TextUtils.isEmpty(firstname)
+                && !TextUtils.isEmpty(name)
+                && (!TextUtils.isEmpty(reference) || (!TextUtils.isEmpty(address) && !TextUtils.isEmpty(country)
+                        && !TextUtils.isEmpty(city) && !TextUtils.isEmpty(zipcode)));
     };
 
 }

@@ -57,20 +57,27 @@ public class AddressField extends ButtonField {
         }
     }
 
+    public void setAddress(Address address) {
+        if (!address.isValid()) {
+            return;
+        }
+        mAddress = address;
+        if (mAddress.reference == null) {
+            setContentText(getContext().getString(R.string.shopelia_form_address_display_format, mAddress.address, mAddress.city,
+                    new Locale("", mAddress.country).getDisplayCountry()));
+        } else {
+            setContentText(mAddress.toString());
+        }
+        setValid(true);
+        setChecked(true);
+        getAdapter().notifyDataSetChanged();
+    }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ADDRESS && resultCode == Activity.RESULT_OK) {
-            mAddress = data.getParcelableExtra(CreateAddressActivity.EXTRA_ADDRESS_OBJECT);
-            if (mAddress.reference == null) {
-                setContentText(getContext().getString(R.string.shopelia_form_address_display_format, mAddress.address, mAddress.city,
-                        new Locale("", mAddress.country).getDisplayCountry()));
-            } else {
-                setContentText(mAddress.toString());
-            }
-            setValid(true);
-            setChecked(true);
-            getAdapter().notifyDataSetChanged();
+            setAddress((Address) data.getParcelableExtra(CreateAddressActivity.EXTRA_ADDRESS_OBJECT));
         }
     }
 

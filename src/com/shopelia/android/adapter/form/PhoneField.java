@@ -10,7 +10,7 @@ public class PhoneField extends EditTextField {
 
     public static final int TYPE = 3;
 
-    private static final Pattern PHONE_PATTERN = Pattern.compile("^[+]?[0-9]{10,13}$");
+    public static final Pattern PHONE_PATTERN = Pattern.compile("^[+]?[0-9]{10,13}$");
 
     private PhoneNumberFormattingTextWatcher mPhoneNumberFormattingTextWatcher = new PhoneNumberFormattingTextWatcher();
 

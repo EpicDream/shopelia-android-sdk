@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -294,7 +295,7 @@ public class FormAdapter extends BaseAdapter {
             return null;
         }
         for (Field field : mFieldList) {
-            if (jsonPath.equals(field.getJsonPath())) {
+            if (TextUtils.equals(field.getJsonPath(), jsonPath)) {
                 return field;
             }
         }
