@@ -3,6 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center"
+    android:paddingTop="@dimen/shopelia_margin_large"
+    android:paddingBottom="@dimen/shopelia_margin_large"
     android:orientation="vertical" >
 
     <com.shopelia.android.widget.FontableTextView
@@ -10,16 +12,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_extra_small"
-        android:layout_marginTop="@dimen/shopelia_margin_large"
         android:text="@string/shopelia_footer"
         android:textColor="#cccccc"
+        android:visibility="gone"
         android:textSize="@dimen/shopelia_font_size_extra_small" />
 
     <ImageView
         android:id="@+id/lock"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/shopelia_margin_large"
         android:src="@drawable/shopelia_logo_bottom" />
 
 </LinearLayout>

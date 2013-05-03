@@ -15,7 +15,12 @@
 	    Votre commande va être préparée automatiquement sur le site <b>%s</b> avec le service <b>Shopelia</b>
 	    ]]>
     </string>
-
+<string name="shopelia_form_main_footer_text">
+	    <![CDATA[
+	   En cliquant sur ce bouton vous certifiez avoir lu et accepté les <font color="#0098ce">Conditions d\'utilisation</font>
+	    ]]>
+	</string>
+	
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Nom</string>
     <string name="shopelia_form_account_first_name">Prénom</string>

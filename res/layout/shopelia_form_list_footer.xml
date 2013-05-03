@@ -7,14 +7,27 @@
     android:clickable="false"
     android:focusable="false"
     
-     >
+     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.shopelia.android.widget.ValidationButton
         android:id="@+id/validate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/shopelia_margin_large"
+        android:layout_marginTop="@dimen/shopelia_margin_small"
         android:text="@string/shopelia_form_main_validate" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/cgu"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginLeft="@dimen/shopelia_margin_large"
+        android:layout_marginRight="@dimen/shopelia_margin_large"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
+       app:fontFamily="normal" 
+       app:fontStyle="normal"
+       
+        android:text="@string/shopelia_form_main_footer_text" />
 
     <include
         android:layout_width="match_parent"

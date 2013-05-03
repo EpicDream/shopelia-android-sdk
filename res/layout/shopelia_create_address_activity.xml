@@ -32,7 +32,7 @@
                 android:layout_weight="50"
                 android:ems="10"
                 android:hint="@string/shopelia_form_address_first_name"
-                android:inputType="textPersonName|textCapSentences"
+                android:inputType="textCapSentences|textNoSuggestions|textPersonName"
                 android:nextFocusDown="@+id/name" >
             </com.shopelia.android.widget.FormEditText>
 
@@ -45,7 +45,7 @@
                 android:layout_weight="50"
                 android:ems="10"
                 android:hint="@string/shopelia_form_address_name"
-                android:inputType="textPersonName|textCapSentences"
+                android:inputType="textCapSentences|textNoSuggestions|textPersonName"
                 android:nextFocusDown="@+id/address" />
         </LinearLayout>
 

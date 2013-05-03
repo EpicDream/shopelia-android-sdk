@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <string name="app_name">ShopeliaSDK</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
@@ -17,6 +16,11 @@
 	<string name="shopelia_form_main_header_text" formatted="false">
 	    <![CDATA[
 	    You order will be automatically prepared on <b>%s</b> by <b>Shopelia</b>
+	    ]]>
+	</string>
+	<string name="shopelia_form_main_footer_text">
+	    <![CDATA[
+	    En cliquant sur ce bouton vous certifiez avoir lu et accepté les <font color="#0098ce">Conditions d\'utilisation</font>
 	    ]]>
 	</string>
 	<string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
