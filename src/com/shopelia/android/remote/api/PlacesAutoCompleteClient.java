@@ -1,4 +1,4 @@
-package com.shopelia.android.api;
+package com.shopelia.android.remote.api;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -25,10 +25,10 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.shopelia.android.api.PlacesAutoCompleteClient;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
+import com.shopelia.android.remote.api.PlacesAutoCompleteClient;
 import com.shopelia.android.utils.LocaleUtils;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormEditText;

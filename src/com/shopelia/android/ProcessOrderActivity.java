@@ -5,8 +5,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
 
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
-import com.shopelia.android.api.OrderHandler;
 import com.shopelia.android.app.HostActivity;
+import com.shopelia.android.remote.api.OrderHandler;
 
 public class ProcessOrderActivity extends HostActivity implements OrderHandlerHolder {
 

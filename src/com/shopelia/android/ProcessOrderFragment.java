@@ -10,7 +10,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
-import com.shopelia.android.api.OrderHandler;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
@@ -18,6 +17,7 @@ import com.shopelia.android.model.OrderState;
 import com.shopelia.android.model.OrderState.State;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
+import com.shopelia.android.remote.api.OrderHandler;
 
 public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> implements OrderHandler.Callback {
 

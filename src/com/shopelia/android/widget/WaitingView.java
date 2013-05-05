@@ -1,14 +1,19 @@
 package com.shopelia.android.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.Paint.Align;
 import android.graphics.Paint.Style;
 import android.graphics.RectF;
+import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.View;
-import android.view.animation.LinearInterpolator;
+import android.view.animation.AccelerateDecelerateInterpolator;
+import android.view.animation.Interpolator;
 
 /**
  * A special view drawing a loader with evolution displayed in percent. Note
@@ -23,9 +28,9 @@ public class WaitingView extends View {
     private static final long FRAMERATE = 40;
     private static final long FREQUENCY = 1000L / FRAMERATE;
 
-    private long mExpectedTime = 10000L;
+    private long mExpectedTime = 30000L;
 
-    private LinearInterpolator mInterpolator;
+    private Interpolator mInterpolator;
 
     private Handler mHandler = new Handler();
 
@@ -35,12 +40,15 @@ public class WaitingView extends View {
     // Draw properties
     private float mProgressThickness = 40;
     private RectF mOval = new RectF();
-
+    private Typeface mTypeface;
+    
     // Render objects
     private Paint mProgressPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mCenterCircleBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-
+    private Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
+    
+    
     public WaitingView(Context context) {
         this(context, null);
     }
@@ -51,13 +59,27 @@ public class WaitingView extends View {
 
     public WaitingView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        init();
+        
         setProgressColor(0xFF2d9f35);
         setBackgroundColor(0xFFd2d2d2);
         setCenterCircleBackgroundColor(0xFFe5e5e5);
+        setTextColor(0xFF737373);
     }
 
+    public void init() {
+    	if (!isInEditMode()) {
+    		mTypeface = FontableTextView.tryCreateTypefaceFromAsset(getContext().getAssets(), FontableTextView.ASAP_BOLD);
+    	} 
+
+    	if (mTypeface == null) {
+    		mTypeface = Typeface.DEFAULT_BOLD;
+    	}
+    }
+    
     public void start() {
-        mInterpolator = new LinearInterpolator();
+        mInterpolator = new AccelerateDecelerateInterpolator();
         mHandler.removeCallbacks(mAnimationRunnable);
         mHandler.post(mAnimationRunnable);
     }
@@ -78,24 +100,57 @@ public class WaitingView extends View {
         invalidate();
     }
 
+    @SuppressLint("NewApi") 
     public void setCenterCircleBackgroundColor(int color) {
         mCenterCircleBackgroundPaint.setColor(color);
         mCenterCircleBackgroundPaint.setStyle(Style.FILL);
+        mCenterCircleBackgroundPaint.setShadowLayer(1.f, 1, 1.0f, 0x80000000);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            setLayerType(LAYER_TYPE_SOFTWARE, mCenterCircleBackgroundPaint);
+        }
         invalidate();
     }
 
-    int angle = 0;
-
+    public void setTextColor(int color) {
+    	mTextPaint.setColor(color);
+    	mTextPaint.setTypeface(mTypeface);
+    	mTextPaint.setTextAlign(Align.CENTER);
+    }
+    
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        mOval.set(0, 0, getWidth(), getHeight());
-        // int angle = (int) (MAX_ANGLE *
-        // mInterpolator.getInterpolation(mCurrentTime / mExpectedTime));
-        canvas.drawCircle(getWidth() / 2.f, getHeight() / 2.f, getWidth() / 2.f, mBackgroundPaint);
+        float radius = getWidth() < getHeight() ? getWidth() / 2.f : getHeight() / 2.f;
+        mProgressThickness = radius - radius * 0.80f;
+        float x = getWidth() / 2.f;
+        float y = getHeight() / 2.f;
+        mOval.set(x - radius, y - radius, x + radius, y + radius);
+        float progress = 0.f;
+        if (!isInEditMode()) {
+        	progress = mCurrentTime < mExpectedTime ? mInterpolator.getInterpolation((float)mCurrentTime / (float)mExpectedTime) : 1.f;
+        } else {
+        	progress = 0.45f;
+        }
+        
+        int angle = (int) (MAX_ANGLE * progress);
+      
+        // Draw background "grey" circle
+        canvas.drawCircle(x, y, radius, mBackgroundPaint);
+        
+        // Draw progress "green" indicator 
         canvas.drawArc(mOval, -90, angle, true, mProgressPaint);
-        canvas.drawCircle(getWidth() / 2.f, getHeight() / 2.f, getWidth() / 2.f - mProgressThickness, mCenterCircleBackgroundPaint);
-
+        
+        // Draw center circle
+        canvas.drawCircle(x, y, radius - mProgressThickness, mCenterCircleBackgroundPaint);
+      
+        String text = String.valueOf((int) (progress * 100));
+        float textSize = radius * 0.40f;
+        mTextPaint.setTextSize(textSize);
+        float textX = x;
+        float textY = y - (mTextPaint.ascent() + mTextPaint.descent()) / 2;
+        text += "%";
+        canvas.drawText(text, textX, textY, mTextPaint);
+        
     }
 
     private Runnable mAnimationRunnable = new Runnable() {
@@ -103,9 +158,11 @@ public class WaitingView extends View {
         @Override
         public void run() {
             mCurrentTime += FREQUENCY;
-            angle++;
             invalidate();
             mHandler.postDelayed(this, FREQUENCY);
+            if (mCurrentTime > mExpectedTime + FREQUENCY) {
+            	stop();
+            }
         }
     };
 

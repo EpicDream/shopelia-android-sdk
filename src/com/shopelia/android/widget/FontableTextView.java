@@ -27,11 +27,11 @@ public class FontableTextView extends TextView {
     private static final String FONT_PATH = "shopelia/style/fonts/";
 
     @SuppressWarnings("unused")
-    private static final String ASAP_BOLD = FONT_PATH + "Asap-Bold.otf";
-    private static final String ASAP_BOLD_ITALIC = FONT_PATH + "Asap-BoldItalic.otf";
+    public static final String ASAP_BOLD = FONT_PATH + "Asap-Bold.otf";
+    public static final String ASAP_BOLD_ITALIC = FONT_PATH + "Asap-BoldItalic.otf";
     @SuppressWarnings("unused")
-    private static final String ASAP_ITALIC = FONT_PATH + "Asap-Italic.otf";
-    private static final String ASAP_REGULAR = FONT_PATH + "Asap-Regular.ttf";
+    public static final String ASAP_ITALIC = FONT_PATH + "Asap-Italic.otf";
+    public static final String ASAP_REGULAR = FONT_PATH + "Asap-Regular.ttf";
 
     private static final SparseArray<SparseArray<Typeface>> sTypefaces = new SparseArray<SparseArray<Typeface>>(3);
 
@@ -161,7 +161,7 @@ public class FontableTextView extends TextView {
         return typeface;
     }
 
-    private Typeface tryCreateTypefaceFromAsset(AssetManager assetManager, String path) {
+    public static Typeface tryCreateTypefaceFromAsset(AssetManager assetManager, String path) {
         try {
             return Typeface.createFromAsset(assetManager, path);
         } catch (Exception e) {

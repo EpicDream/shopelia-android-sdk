@@ -8,7 +8,7 @@ import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
 
-import com.shopelia.android.api.ShopeliaRestClient;
+import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.turbomanage.httpclient.HttpResponse;
 
 public class HttpPoller extends HandlerThread {
