@@ -115,7 +115,9 @@ public class HttpPoller extends HandlerThread {
                         message.obj = response != null ? response : exception;
                         handler.sendMessage(message);
                     }
-                    sendPollingRequest(mRequest);
+                    if (isPolling()) {
+                        sendPollingRequest(mRequest);
+                    }
                     break;
 
                 default:
