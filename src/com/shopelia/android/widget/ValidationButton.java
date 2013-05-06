@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -37,16 +36,14 @@ public class ValidationButton extends FrameLayout {
         LayoutInflater.from(getContext()).inflate(R.layout.shopelia_validation_button, this, true);
         mIcon = (ImageView) findViewById(R.id.icon);
         mLabel = (TextView) findViewById(R.id.text);
-        Log.d(null, "ATTR = " + attrs);
         if (attrs != null) {
-            int[] attrsArray = new int[] {
-                    android.R.attr.text, // 0
-                    android.R.attr.icon, // 1
-            };
-            TypedArray ta = getContext().obtainStyledAttributes(attrs, attrsArray);
-            setText(ta.getText(0));
-            setIcon(ta.getDrawable(1));
-            ta.recycle();
+            TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.ValidationButton, 0, 0);
+            try {
+                setText(ta.getText(R.styleable.ValidationButton_text));
+                setIcon(ta.getDrawable(R.styleable.ValidationButton_icon));
+            } finally {
+                ta.recycle();
+            }
         }
     }
 

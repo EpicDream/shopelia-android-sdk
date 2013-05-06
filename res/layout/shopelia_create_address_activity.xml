@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView 
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-   >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -115,14 +116,15 @@
             android:hint="@string/shopelia_form_address_country"
             android:inputType="textPersonName|textCapSentences" >
         </com.shopelia.android.widget.FormEditText>
-
+        
         <com.shopelia.android.widget.ValidationButton
             android:id="@+id/validate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/shopelia_margin_extra_large"
-            android:text="@string/shopelia_form_address_validate"
-            android:icon="@drawable/shopelia_pin_white" />
+            app:text="@string/shopelia_form_address_validate"
+            app:icon="@drawable/shopelia_pin_white"
+             />
 
         <include
             android:layout_width="match_parent"
