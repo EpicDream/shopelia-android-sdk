@@ -2,6 +2,8 @@ package com.shopelia.android;
 
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
 import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.OrderState;
@@ -22,7 +25,7 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getContract().getOrderHandler().setCallback(this);
+        // getContract().getOrderHandler().setCallback(this);
     }
 
     @Override
@@ -30,11 +33,17 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
         return inflater.inflate(R.layout.shopelia_order_confirmation_fragment, container, false);
     }
 
+    @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.confirm).setOnClickListener(mOnConfirmClickListener);
-
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+            view.findViewById(R.id.ticket).setBackground(new TicketDrawable());
+        } else {
+            view.findViewById(R.id.ticket).setBackgroundDrawable(new TicketDrawable());
+        }
     }
 
     private OnClickListener mOnConfirmClickListener = new OnClickListener() {

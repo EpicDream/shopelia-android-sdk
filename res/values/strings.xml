@@ -64,6 +64,7 @@
     <string name="shopelia_waiting_with_shopelia_order_with_1_click">1-Click Ordering with Shopelia</string>
     
     <!-- Order confirmation -->
-    <string name="shopelia_confirmation_confirm">Confirmer</string>
+    <string name="shopelia_confirmation_confirm">Order now</string>
+     <string name="shopelia_confirmation_title">Order summary</string>
     
 </resources>

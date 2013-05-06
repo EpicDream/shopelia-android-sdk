@@ -58,5 +58,9 @@
     <!-- Waiting process -->
     <string name="shopelia_waiting_shopelia_is_preparing_your_order">Shopelia prépare votre commande</string>
     <string name="shopelia_waiting_with_shopelia_order_with_1_click">Avec Shopelia commandez facilement en 1-click</string>
+
+    <!-- Order confirmation -->
+    <string name="shopelia_confirmation_confirm">Commander</string>
+    <string name="shopelia_confirmation_title">Récapitulatif de votre achat</string>
     
 </resources>
