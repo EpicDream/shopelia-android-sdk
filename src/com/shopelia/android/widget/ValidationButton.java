@@ -61,7 +61,9 @@ public class ValidationButton extends FrameLayout {
     }
 
     public void setIcon(Drawable drawable) {
-        mIcon.setImageDrawable(drawable);
+        if (mIcon != null) {
+            mIcon.setImageDrawable(drawable);
+        }
     }
 
     public void setIcon(int resId) {

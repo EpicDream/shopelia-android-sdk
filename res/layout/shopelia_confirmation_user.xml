@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="@dimen/shopelia_margin_extra_small"
+        android:src="@drawable/shopelia_user" />
+
+    <ImageButton
+        android:id="@+id/imageButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:background="@drawable/shopelia_grey_button_background"
+        android:padding="@dimen/shopelia_margin_normal"
+        android:scaleType="centerInside"
+        android:src="@drawable/shopelia_pen" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/shopelia_margin_normal"
+        android:layout_marginRight="@dimen/shopelia_margin_normal"
+        android:layout_toLeftOf="@+id/imageButton1"
+        android:layout_toRightOf="@+id/imageView1"
+        android:orientation="vertical" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="01 08 93 89 12"
+            android:textSize="@dimen/shopelia_font_size_normal"
+            app:fontStyle="normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="super_mail@supermail.fr"
+            android:textSize="@dimen/shopelia_font_size_normal"
+            app:fontStyle="normal" />
+    </LinearLayout>
+
+</RelativeLayout>
