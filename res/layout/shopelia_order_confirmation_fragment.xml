@@ -1,14 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView 
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="bottom"
     android:orientation="vertical" >
 
-    <com.shopelia.android.widget.ValidationButton
-        android:id="@+id/confirm"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Confirmer" />
+        android:layout_margin="@dimen/shopelia_margin_small"
+        android:orientation="vertical" >
 
-</LinearLayout>
+        <LinearLayout
+            android:id="@+id/ticket"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/shopelia_margin_large" >
+
+            <include
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                layout="@layout/shopelia_product_sheet" />
+
+            <com.shopelia.android.widget.ValidationButton
+                android:id="@+id/confirm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:text="@string/shopelia_confirmation_confirm"
+                app:icon="@drawable/shopelia_bill_white" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

@@ -5,6 +5,7 @@ import io.card.payment.CreditCard;
 
 import java.util.Calendar;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -321,7 +323,9 @@ public class AddPaymentCardActivity extends HostActivity {
         public void afterTextChanged(Editable s) {
             if (s.length() == 3) {
                 if (checkCvv(null, false)) {
-
+                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                    imm.hideSoftInputFromWindow(mCvvField.getWindowToken(), 0);
+                    findViewById(R.id.validate).requestFocus();
                 }
             } else {
                 mCvvField.setChecked(false);

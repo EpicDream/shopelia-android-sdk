@@ -54,6 +54,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         mOrder = getBaseActivity().getOrder();
 
         if (mOrder.user.id == User.NO_ID) {
+            // getContract().askForConfirmation();
             mOrderHandler.createAccount(mOrder.user, mOrder.address);
         } else {
             mOrderHandler.order(mOrder);
@@ -101,6 +102,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         if (response != null) {
             Log.w(null, response.toString());
         }
+        mWaitingView.pause();
         mOrderHandler.cancel();
     }
 
@@ -114,6 +116,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     public void onOrderStateUpdate(OrderState newState) {
         Log.d(null, "NEW STATE = " + newState.uuid + " " + newState.message + " " + newState.state);
         if (newState.state == State.ERROR) {
+            mWaitingView.pause();
             mOrderHandler.stopOrderForError();
         }
 

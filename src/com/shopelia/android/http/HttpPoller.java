@@ -37,7 +37,7 @@ public class HttpPoller extends HandlerThread {
             return;
         } else {
             mRequest = request;
-            mState.set(STATE_STOPPED);
+            mState.set(STATE_POLLING);
             sendPollingRequest(mRequest);
         }
     }
