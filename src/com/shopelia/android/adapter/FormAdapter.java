@@ -8,14 +8,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
@@ -302,6 +305,16 @@ public class FormAdapter extends BaseAdapter {
         return null;
     }
 
+    public int indexOf(Field field) {
+        final int count = mFieldList.size();
+        for (int index = 0; index < count; index++) {
+            if (field == mFieldList.get(index)) {
+                return index;
+            }
+        }
+        return -1;
+    }
+
     @Override
     public int getViewTypeCount() {
         return mFieldTypes == null ? 1 : mFieldTypes.size();
@@ -355,7 +368,11 @@ public class FormAdapter extends BaseAdapter {
     public boolean validate() {
         boolean out = true;
         for (Field field : mFieldList) {
+            boolean before = out;
             out = out & field.validate();
+            if (before != out) {
+                requestFocus(field);
+            }
         }
         return out;
     }
@@ -425,4 +442,16 @@ public class FormAdapter extends BaseAdapter {
         }
     }
 
+    @SuppressLint("NewApi")
+    public void requestFocus(Field field) {
+        int index = indexOf(field);
+        if (index != -1) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO && mAdapterView instanceof AbsListView) {
+                ((AbsListView) mAdapterView).smoothScrollToPositionFromTop(index, 0);
+            } else {
+                mAdapterView.setSelection(index);
+                mAdapterView.setSelection(index);
+            }
+        }
+    }
 }

@@ -7,6 +7,7 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -140,6 +141,7 @@ public class EditTextField extends Field implements Errorable {
         setViewStyle(holder);
         holder.editText.setHint(mHint);
         holder.editText.setText(mContentText);
+        // holder.editText.setOnClickListener(mOnClickListener);
         holder.editText.setChecked(isValid());
         holder.editText.setError(hasError());
         if (holder.boundedField != null) {
@@ -232,6 +234,14 @@ public class EditTextField extends Field implements Errorable {
         }
     };
 
+    private OnClickListener mOnClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            getAdapter().requestFocus(EditTextField.this);
+        }
+    };
+
     private OnFocusChangeListener mOnFocusChangeListener = new OnFocusChangeListener() {
 
         @Override
@@ -244,6 +254,8 @@ public class EditTextField extends Field implements Errorable {
                 } else {
                     editText.setChecked(false);
                 }
+            } else {
+                getAdapter().requestFocus(EditTextField.this);
             }
         }
     };
