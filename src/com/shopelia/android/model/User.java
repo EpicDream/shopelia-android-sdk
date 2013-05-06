@@ -20,6 +20,8 @@ public class User implements JsonData, Parcelable {
         String LAST_NAME = "last_name";
         String ADDRESSES_ATTRIBUTES = "addresses_attributes";
 
+        String PINCODE = "pincode";
+
         String PHONES = "phones";
         String PHONE = "phone";
 
@@ -36,6 +38,7 @@ public class User implements JsonData, Parcelable {
     public String firstName;
     public String lastName;
     public String phone;
+    public String pincode;
 
     public User() {
 

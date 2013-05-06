@@ -33,7 +33,6 @@ public final class Address implements JsonData, Parcelable {
         String FIRSTNAME = "first_name";
 
         String REFERENCE = "reference";
-
     }
 
     private static final long INVALID_ID = -1;

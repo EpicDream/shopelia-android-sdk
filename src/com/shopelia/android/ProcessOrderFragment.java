@@ -7,7 +7,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
 import com.shopelia.android.app.ShopeliaFragment;
@@ -18,6 +17,7 @@ import com.shopelia.android.model.OrderState.State;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.OrderHandler;
+import com.shopelia.android.widget.WaitingView;
 
 public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> implements OrderHandler.Callback {
 
@@ -34,7 +34,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
     }
 
-    private TextView mStateView;
+    private WaitingView mWaitingView;
     private OrderHandler mOrderHandler;
     private Order mOrder;
 
@@ -76,7 +76,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mStateView = (TextView) view.findViewById(R.id.state);
+        mWaitingView = (WaitingView) view.findViewById(R.id.waitingView);
 
     }
 
@@ -88,7 +88,6 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
     @Override
     public void onPaymentInformationSent(PaymentCard paymentInformation) {
-        mStateView.setText("Payment card sent");
         if (mOrderHandler.canConfirm()) {
             getContract().askForConfirmation();
         }
@@ -102,19 +101,19 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         if (response != null) {
             Log.w(null, response.toString());
         }
+        mOrderHandler.cancel();
     }
 
     @Override
     public void onOrderBegin(Order order) {
         Log.d(null, "ORDER BEGIN " + order.uuid);
-        mStateView.setText("Order began");
+        mWaitingView.start();
     }
 
     @Override
     public void onOrderStateUpdate(OrderState newState) {
         Log.d(null, "NEW STATE = " + newState.uuid + " " + newState.message + " " + newState.state);
         if (newState.state == State.ERROR) {
-            mStateView.setText("Vulcain fatal error");
             mOrderHandler.stopOrderForError();
         }
 
