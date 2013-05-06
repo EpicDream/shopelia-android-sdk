@@ -52,4 +52,11 @@
     <string name="shopelia_tax_et">HT</string>
     <string name="shopelia_tax_ati">TTC</string>
     
+        <!-- Product sheet -->
+    <string name="shopelia_product_shipping_fees" formatted="false">Frais de livraison : %s</string>
+    
+    <!-- Waiting process -->
+    <string name="shopelia_waiting_shopelia_is_preparing_your_order">Shopelia prépare votre commande</string>
+    <string name="shopelia_waiting_with_shopelia_order_with_1_click">Avec Shopelia commandez facilement en 1-click</string>
+    
 </resources>

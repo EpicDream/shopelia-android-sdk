@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center|clip_horizontal"
-    android:orientation="vertical"
     android:clickable="false"
     android:focusable="false"
-    
-     xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:gravity="center|clip_horizontal"
+    android:orientation="vertical" >
 
     <com.shopelia.android.widget.ValidationButton
         android:id="@+id/validate"
@@ -24,10 +23,10 @@
         android:layout_marginLeft="@dimen/shopelia_margin_large"
         android:layout_marginRight="@dimen/shopelia_margin_large"
         android:layout_marginTop="@dimen/shopelia_margin_large"
-       app:fontFamily="normal" 
-       app:fontStyle="normal"
-       
-        android:text="@string/shopelia_form_main_footer_text" />
+        android:text="@string/shopelia_form_main_footer_text"
+        app:fontFamily="normal"
+        app:fontStyle="normal"
+        android:icon="@drawable/shopelia_cart_white" />
 
     <include
         android:layout_width="match_parent"

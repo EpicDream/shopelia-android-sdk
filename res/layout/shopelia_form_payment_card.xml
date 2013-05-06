@@ -84,6 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/shopelia_margin_large"
+            android:icon="@drawable/shopelia_card_white"
             android:text="@string/shopelia_form_payment_card_validate" />
 
         <include

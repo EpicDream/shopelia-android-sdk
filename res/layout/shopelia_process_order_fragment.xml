@@ -1,21 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center_horizontal|center_vertical"
     android:orientation="vertical" >
 
-    <ProgressBar
-        android:id="@+id/progressBar1"
-        style="?android:attr/progressBarStyleLarge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+    <com.shopelia.android.widget.FontableTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/shopelia_waiting_shopelia_is_preparing_your_order"
+        android:textSize="@dimen/shopelia_font_size_normal"
+        app:fontStyle="bold" />
 
-    <TextView
-        android:id="@+id/state"
+    <com.shopelia.android.widget.FontableTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:layout_marginLeft="@dimen/shopelia_margin_normal"
+        android:layout_marginRight="@dimen/shopelia_margin_normal"
+        android:gravity="center"
+        android:text="@string/shopelia_waiting_with_shopelia_order_with_1_click"
+        android:textSize="@dimen/shopelia_font_size_small"
+        app:fontStyle="normal" />
+
+    <com.shopelia.android.widget.WaitingView
+        android:id="@+id/waitingView"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginTop="@dimen/shopelia_margin_large" />
+
+    <include
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="TextView" />
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        layout="@layout/shopelia_include_footer" />
 
 </LinearLayout>
