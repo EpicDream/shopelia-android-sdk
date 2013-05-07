@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.provider.ContactsContract.CommonDataKinds.Phone;
 import android.text.TextUtils;
 
 public final class Address implements JsonData, Parcelable {
@@ -23,6 +22,7 @@ public final class Address implements JsonData, Parcelable {
         String ZIP = "zip";
         String CITY = "city";
         String PHONES_ATTRIBUTES = "phones_attributes";
+        String PHONES = "phones";
         String COUNTRY = "country";
         String EXTRAS = "address2";
 
@@ -36,14 +36,14 @@ public final class Address implements JsonData, Parcelable {
         String REFERENCE = "reference";
     }
 
-    private static final long INVALID_ID = -1;
+    public static final long NO_ID = -1;
 
-    public long id = INVALID_ID;
+    public long id = NO_ID;
     public String address;
     public String zipcode;
     public String city;
     public String country;
-    public ArrayList<Phone> phones;
+    public ArrayList<Phone> phones = new ArrayList<Phone>();
 
     public String reference;
 
@@ -55,6 +55,7 @@ public final class Address implements JsonData, Parcelable {
 
     }
 
+    @SuppressWarnings("unchecked")
     private Address(Parcel source) {
         id = source.readLong();
         address = source.readString();
@@ -65,12 +66,13 @@ public final class Address implements JsonData, Parcelable {
         name = source.readString();
         firstname = source.readString();
         extras = source.readString();
+        phones = source.readArrayList(Phone.class.getClassLoader());
     }
 
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
-        if (id != INVALID_ID) {
+        if (id != NO_ID) {
             json.put(Api.ID, id);
         }
         json.put(Api.NAME, name);
@@ -105,6 +107,7 @@ public final class Address implements JsonData, Parcelable {
         dest.writeString(name);
         dest.writeString(firstname);
         dest.writeString(extras);
+        dest.writeTypedList(phones);
     }
 
     public static Address inflate(JSONObject object) throws JSONException {
@@ -118,6 +121,9 @@ public final class Address implements JsonData, Parcelable {
         address.reference = object.optString(Api.REFERENCE, null);
         if (TextUtils.isEmpty(address.country)) {
             address.country = Locale.getDefault().getCountry();
+        }
+        if (object.has(Api.PHONES)) {
+            address.phones = Phone.inflate(object.getJSONArray(Api.PHONES));
         }
         return address;
     }

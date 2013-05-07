@@ -1,5 +1,8 @@
 package com.shopelia.android.model;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -33,18 +36,6 @@ public class PaymentCard implements JsonData, Parcelable {
     public String cvv;
 
     public PaymentCard() {
-
-    }
-
-    public PaymentCard(JSONObject json) throws JSONException {
-        id = json.optLong(Api.ID, INVALID_ID);
-        number = json.getString(Api.NUMBER);
-        expMonth = json.getString(Api.EXP_MONTH);
-        expYear = json.getString(Api.EXP_YEAR);
-        cvv = json.optString(Api.CVV);
-        if (expYear != null && expYear.length() > 2) {
-            expYear = expYear.substring(expYear.length() - 2);
-        }
 
     }
 
@@ -97,7 +88,26 @@ public class PaymentCard implements JsonData, Parcelable {
     };
 
     public static PaymentCard inflate(JSONObject object) throws JSONException {
-        return new PaymentCard(object);
+        PaymentCard card = new PaymentCard();
+
+        card.id = object.optLong(Api.ID, INVALID_ID);
+        card.number = object.getString(Api.NUMBER);
+        card.expMonth = object.getString(Api.EXP_MONTH);
+        card.expYear = object.getString(Api.EXP_YEAR);
+        card.cvv = object.optString(Api.CVV);
+        if (card.expYear != null && card.expYear.length() > 2) {
+            card.expYear = card.expYear.substring(card.expYear.length() - 2);
+        }
+        return card;
+    }
+
+    public static ArrayList<PaymentCard> inflate(JSONArray array) throws JSONException {
+        ArrayList<PaymentCard> cards = new ArrayList<PaymentCard>(array.length());
+        final int size = array.length();
+        for (int index = 0; index < size; index++) {
+            cards.add(PaymentCard.inflate(array.getJSONObject(index)));
+        }
+        return cards;
     }
 
 }

@@ -23,6 +23,8 @@ public class User implements JsonData, Parcelable {
         String ADDRESSES_ATTRIBUTES = "addresses_attributes";
         String ADDRESSES = "addresses";
 
+        String PAYMENT_CARDS = "payment_cards";
+
         String PINCODE = "pincode";
 
         String PHONES = "phones";
@@ -44,6 +46,7 @@ public class User implements JsonData, Parcelable {
     public String pincode;
 
     public ArrayList<Address> addresses = new ArrayList<Address>();
+    public ArrayList<PaymentCard> paymentCards = new ArrayList<PaymentCard>();
 
     public User() {
 
@@ -65,6 +68,7 @@ public class User implements JsonData, Parcelable {
         lastName = source.readString();
         phone = source.readString();
         addresses = source.readArrayList(Address.class.getClassLoader());
+        paymentCards = source.readArrayList(PaymentCard.class.getClassLoader());
     }
 
     @Override
@@ -89,6 +93,13 @@ public class User implements JsonData, Parcelable {
                 user.addresses = Address.inflate(json.getJSONArray(Api.ADDRESSES));
             } catch (JSONException e) {
                 user.addresses = new ArrayList<Address>();
+            }
+        }
+        if (json.has(Api.PAYMENT_CARDS)) {
+            try {
+                user.paymentCards = PaymentCard.inflate(json.getJSONArray(Api.PAYMENT_CARDS));
+            } catch (JSONException e) {
+
             }
         }
         return user;
@@ -136,10 +147,8 @@ public class User implements JsonData, Parcelable {
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeString(phone);
-
-        Address[] addresses = new Address[this.addresses.size()];
-        this.addresses.toArray(addresses);
-        dest.writeParcelableArray(addresses, flags);
+        dest.writeTypedList(addresses);
+        dest.writeTypedList(paymentCards);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Creator<User>() {
