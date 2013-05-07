@@ -34,6 +34,8 @@ public final class OrderHandler {
 
         public void onOrderConfirmation(boolean succeed);
 
+        public void onUserRetrieved(User user);
+
     }
 
     public static final int STEP_DEAD = 0;
@@ -43,6 +45,7 @@ public final class OrderHandler {
     public static final int STEP_ORDERING = 4;
     public static final int STEP_CONFIRM = 5;
     public static final int STEP_WAITING_CONFIRMATION = 6;
+    public static final int STEP_RETRIEVE_USER = 7;
 
     private Context mContext;
     private Callback mCallback;
@@ -70,10 +73,6 @@ public final class OrderHandler {
 
     public void createAccount(final User user, final Address address) {
 
-        // if (UserManager.get(mContext).isLogged()) {
-        // mCallback.onAccountCreationSucceed(user, address);
-        // return;
-        // }
         mCurrentStep = STEP_ACCOUNT_CREATION;
         JSONObject params = new JSONObject();
 
@@ -115,9 +114,46 @@ public final class OrderHandler {
 
     }
 
+    public void retrieveUser(long id) {
+        if (id == User.NO_ID) {
+            throw new IllegalAccessError("Cannot retrieve invalid user");
+        }
+        ShopeliaRestClient.authenticate(mContext);
+        ShopeliaRestClient.get(Command.V1.Users.Retrieve(id), null, new JsonAsyncCallback() {
+
+            @Override
+            public void onComplete(HttpResponse response, JSONObject object) {
+                try {
+                    User user = User.inflate(object.getJSONObject(User.Api.USER));
+                    mUser = user;
+                    if (mCallback != null) {
+                        mCallback.onUserRetrieved(user);
+                    }
+                } catch (JSONException e) {
+                    onError(e);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+                fireError(STEP_RETRIEVE_USER, null, e);
+            }
+
+        });
+    }
+
     public void sendPaymentInformation(User user, PaymentCard card) {
         JSONObject params = new JSONObject();
         mCurrentStep = STEP_SEND_PAYMENT_INFORMATION;
+        if (mUser == null) {
+            mUser = user;
+        }
+
+        if (mOrder != null) {
+            mOrder.user = mUser;
+        }
+
         try {
             JSONObject cardObject = card.toJson();
             cardObject.put(PaymentCard.Api.NAME, user.lastName);
@@ -157,6 +193,9 @@ public final class OrderHandler {
     public void order(final Order order) {
         mOrder = order;
         mOrder.user = mUser;
+        if (mOrder.address != null && mOrder.card != null && mOrder.card.id != PaymentCard.INVALID_ID) {
+            mPaymentCard = mOrder.card;
+        }
         JSONObject params = new JSONObject();
         mCurrentStep = STEP_ORDER;
         try {
@@ -306,6 +345,9 @@ public final class OrderHandler {
             if (response.getStatus() == 200) {
                 try {
                     OrderState state = OrderState.inflate(new JSONObject(response.getBodyAsString()).getJSONObject(OrderState.Api.ORDER));
+                    if (!state.uuid.equals(mOrder.uuid)) {
+                        return;
+                    }
                     mOrderState = state;
                     mOrder.state = state;
                     if (mCallback != null) {

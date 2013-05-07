@@ -9,7 +9,7 @@ import android.util.Log;
 
 public class OrderState implements Parcelable {
 
-    public static final float NO_PRICE = -1.f;
+    public static final float NO_PRICE = 0.f;
 
     public enum State {
         ERROR("error"), PENDING_CONFIRMATION("pending_confirmation"), ORDERING("ordering"), SUCCESS("success"), FINALIZING("finalizing");
@@ -76,9 +76,11 @@ public class OrderState implements Parcelable {
         String URL = Order.Api.PRODUCT_URL;
         String STATE = "state";
         String MESSAGE = "message";
-        String PRICE_PRODUCT = "price_product";
+        String PRICE_PRODUCT = "price_total";
         String PRICE_DELIVERY = "price_delivery";
         String PRICE_TOTAL = "price_total";
+
+        String PRODUCTS = "products";
 
         String CONTENT = "content";
         String VERB = "verb";
@@ -115,6 +117,9 @@ public class OrderState implements Parcelable {
         state.productPrice = (float) object.optDouble(Api.PRICE_PRODUCT, NO_PRICE);
         state.deliveryPrice = (float) object.optDouble(Api.PRICE_DELIVERY, NO_PRICE);
         state.totalPrice = (float) object.optDouble(Api.PRICE_TOTAL, NO_PRICE);
+        if (state.productPrice != NO_PRICE) {
+            state.totalPrice = state.productPrice + state.deliveryPrice;
+        }
         return state;
     }
 

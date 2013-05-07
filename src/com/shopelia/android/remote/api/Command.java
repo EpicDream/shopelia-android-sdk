@@ -1,6 +1,5 @@
 package com.shopelia.android.remote.api;
 
-
 /**
  * This class contains every command of the ShopeliaAPI
  * 
@@ -49,6 +48,10 @@ public final class Command {
 
             public static final class SignIn {
                 public static final String $ = Users.$ + "/sign_in";
+            }
+
+            public static String Retrieve(long id) {
+                return $ + "/" + id;
             }
 
         }

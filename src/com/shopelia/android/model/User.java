@@ -8,8 +8,13 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import com.shopelia.android.config.Config;
 
 public class User implements JsonData, Parcelable {
+
+    private static final String LOG_TAG = "Model$User";
 
     public interface Api {
         String USER = "user";
@@ -92,6 +97,9 @@ public class User implements JsonData, Parcelable {
             try {
                 user.addresses = Address.inflate(json.getJSONArray(Api.ADDRESSES));
             } catch (JSONException e) {
+                if (Config.ERROR_LOGS_ENABLED) {
+                    Log.w(LOG_TAG, "", e);
+                }
                 user.addresses = new ArrayList<Address>();
             }
         }
@@ -99,7 +107,10 @@ public class User implements JsonData, Parcelable {
             try {
                 user.paymentCards = PaymentCard.inflate(json.getJSONArray(Api.PAYMENT_CARDS));
             } catch (JSONException e) {
-
+                if (Config.ERROR_LOGS_ENABLED) {
+                    Log.w(LOG_TAG, "", e);
+                }
+                user.paymentCards = new ArrayList<PaymentCard>();
             }
         }
         return user;

@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
 import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.OrderState;
@@ -52,12 +53,10 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         }
 
         mOrder = getBaseActivity().getOrder();
-
-        if (mOrder.user.id == User.NO_ID) {
-            // getContract().askForConfirmation();
+        if (!UserManager.get(getActivity()).isLogged()) {
             mOrderHandler.createAccount(mOrder.user, mOrder.address);
         } else {
-            mOrderHandler.order(mOrder);
+            mOrderHandler.retrieveUser(UserManager.get(getActivity()).getUser().id);
         }
 
     }
@@ -84,7 +83,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onAccountCreationSucceed(User user, Address address) {
         mOrderHandler.order(mOrder);
-        mOrderHandler.sendPaymentInformation(mOrder.user, mOrder.card);
+        mOrderHandler.sendPaymentInformation(user, mOrder.card);
     }
 
     @Override
@@ -129,6 +128,13 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onOrderConfirmation(boolean succeed) {
 
+    }
+
+    @Override
+    public void onUserRetrieved(User user) {
+        mOrder.card = user.paymentCards.get(0);
+        mOrder.address = user.addresses.get(0);
+        mOrderHandler.order(mOrder);
     }
 
 }

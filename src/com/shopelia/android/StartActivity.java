@@ -91,6 +91,25 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
     public void onSignUp(JSONObject result) {
         Order order = Order.inflate(result);
         order.product.url = getIntent().getStringExtra(EXTRA_PRODUCT_URL);
+        order.product.name = getIntent().getStringExtra(EXTRA_PRODUCT_TITLE);
+        order.product.image = getIntent().getParcelableExtra(EXTRA_PRODUCT_IMAGE);
+        order.product.currency = Currency.EUR;
+        order.product.tax = Tax.ATI;
+        order.product.description = getIntent().getStringExtra(EXTRA_PRODUCT_DESCRIPTION);
+        // TODO REMOVE THIS ONLY FOR TESTING
+        order.product.vendor = Vendor.AMAZON;
+        Bundle extras = getIntent().getExtras();
+        if (extras.containsKey(StartActivity.EXTRA_CURRENCY)) {
+            order.product.currency = extras.getParcelable(StartActivity.EXTRA_CURRENCY);
+        }
+
+        if (extras.containsKey(StartActivity.EXTRA_VENDOR)) {
+            order.product.vendor = extras.getParcelable(StartActivity.EXTRA_VENDOR);
+        }
+
+        if (extras.containsKey(StartActivity.EXTRA_TAX)) {
+            order.product.tax = extras.getParcelable(StartActivity.EXTRA_TAX);
+        }
         Intent intent = new Intent(this, ProcessOrderActivity.class);
         intent.putExtra(HostActivity.EXTRA_ORDER, order);
         startActivityForResult(intent, Config.REQUEST_ORDER);

@@ -8,7 +8,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+       >
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/price_product_name"
@@ -29,8 +30,9 @@
     </LinearLayout>
 
      <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="@dimen/shopelia_margin_small" >
 
         <com.shopelia.android.widget.FontableTextView
             android:layout_width="wrap_content"
@@ -50,8 +52,9 @@
     </LinearLayout>
     
       <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/shopelia_margin_normal" >
 
         <com.shopelia.android.widget.FontableTextView
             android:layout_width="wrap_content"

@@ -162,4 +162,8 @@ public final class Address implements JsonData, Parcelable {
                         && !TextUtils.isEmpty(city) && !TextUtils.isEmpty(zipcode)));
     };
 
+    public String getDisplayCountry() {
+        return new Locale("", country).getDisplayCountry();
+    }
+
 }

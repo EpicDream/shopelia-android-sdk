@@ -61,20 +61,14 @@
             app:fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/address_city"
+            android:id="@+id/address_city_and_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="75001, Paris"
+            android:text="75001, Paris, France"
             android:textSize="@dimen/shopelia_font_size_normal"
             app:fontStyle="normal" />
 
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/address_country"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="France"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            app:fontStyle="normal" />
+       
     </LinearLayout>
 
 </RelativeLayout>

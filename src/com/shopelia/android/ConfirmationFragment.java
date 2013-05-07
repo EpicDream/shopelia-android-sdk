@@ -5,10 +5,13 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
 import com.shopelia.android.app.ShopeliaFragment;
@@ -53,6 +56,10 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @SuppressWarnings("unchecked")
     private <T extends View> T findViewById(int id) {
         return (T) getView().findViewById(id);
+    }
+
+    private <T extends View> T findViewById(int id, Class<T> clazz) {
+        return (T) findViewById(id);
     }
 
     private OnClickListener mOnConfirmClickListener = new OnClickListener() {
@@ -105,6 +112,50 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
     // ////////////////////////////////////////////////////////////////
 
     private void setupUi() {
+        setupAddressUi();
+        setupPaymentCardUi();
+        setupPriceUi();
+        setupProductUi();
+        setupUserUi();
+    }
+
+    private void setupProductUi() {
+        findViewById(R.id.product_name, TextView.class).setText(mOrder.product.name);
+        findViewById(R.id.product_description, TextView.class).setText(mOrder.product.description);
+        findViewById(R.id.product_image, ImageView.class).setImageURI(mOrder.product.image);
+        findViewById(R.id.product_vendor_icon, ImageView.class).setImageResource(mOrder.product.vendor.getImageResId());
+    }
+
+    private void setupAddressUi() {
+        findViewById(R.id.address_user_name, TextView.class).setText(mOrder.user.firstName + " " + mOrder.user.lastName);
+        findViewById(R.id.address_address, TextView.class).setText(mOrder.address.address);
+        findViewById(R.id.address_extras, TextView.class).setText(mOrder.address.extras);
+        if (TextUtils.isEmpty(mOrder.address.extras)) {
+            findViewById(R.id.address_extras).setVisibility(View.GONE);
+        }
+        findViewById(R.id.address_city_and_country, TextView.class).setText(
+                mOrder.address.zipcode + ", " + mOrder.address.city + ", " + mOrder.address.getDisplayCountry());
+    }
+
+    private void setupPaymentCardUi() {
+        findViewById(R.id.payment_card_number, TextView.class).setText(mOrder.card.number);
+    }
+
+    private void setupUserUi() {
+        findViewById(R.id.user_email, TextView.class).setText(mOrder.user.email);
+    }
+
+    private void setupPriceUi() {
+        findViewById(R.id.price_product_name, TextView.class).setText(mOrder.product.name);
+        findViewById(R.id.price_value_no_shipping, TextView.class).setText(mOrder.product.currency.format(mOrder.state.productPrice));
+        findViewById(R.id.price_value_shipping, TextView.class).setText(mOrder.product.currency.format(mOrder.state.deliveryPrice));
+        findViewById(R.id.price_value_total, TextView.class).setText(mOrder.product.currency.format(mOrder.state.totalPrice));
+
+    }
+
+    @Override
+    public void onUserRetrieved(User user) {
+        // TODO Auto-generated method stub
 
     }
 
