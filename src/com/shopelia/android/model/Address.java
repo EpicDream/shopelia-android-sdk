@@ -3,6 +3,7 @@ package com.shopelia.android.model;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -119,6 +120,15 @@ public final class Address implements JsonData, Parcelable {
             address.country = Locale.getDefault().getCountry();
         }
         return address;
+    }
+
+    public static ArrayList<Address> inflate(JSONArray array) throws JSONException {
+        ArrayList<Address> out = new ArrayList<Address>(array.length());
+        final int size = array.length();
+        for (int index = 0; index < size; index++) {
+            out.add(Address.inflate(array.getJSONObject(index)));
+        }
+        return out;
     }
 
     public static final Creator<Address> CREATOR = new Creator<Address>() {
