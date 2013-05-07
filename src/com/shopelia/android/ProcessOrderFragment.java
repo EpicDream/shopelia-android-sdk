@@ -116,6 +116,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     public void onOrderStateUpdate(OrderState newState) {
         Log.d(null, "NEW STATE = " + newState.uuid + " " + newState.message + " " + newState.state);
         if (newState.state == State.ERROR) {
+            mWaitingView.setProgressColor(getResources().getColor(R.color.shopelia_red));
             mWaitingView.pause();
             mOrderHandler.stopOrderForError();
         }
