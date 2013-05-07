@@ -35,6 +35,9 @@ public class Order implements Parcelable {
     // User
     public User user;
 
+    // Current state
+    public OrderState state;
+
     public Order() {
 
     }
@@ -45,6 +48,7 @@ public class Order implements Parcelable {
         address = source.readParcelable(Address.class.getClassLoader());
         card = source.readParcelable(PaymentCard.class.getClassLoader());
         user = source.readParcelable(User.class.getClassLoader());
+        state = source.readParcelable(OrderState.class.getClassLoader());
     }
 
     @Override
@@ -59,6 +63,7 @@ public class Order implements Parcelable {
         dest.writeParcelable(address, flags);
         dest.writeParcelable(card, flags);
         dest.writeParcelable(user, flags);
+        dest.writeParcelable(state, flags);
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {

@@ -3,9 +3,13 @@ package com.shopelia.android.model;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
-public class OrderState {
+public class OrderState implements Parcelable {
+
+    public static final float NO_PRICE = -1.f;
 
     public enum State {
         ERROR("error"), PENDING_CONFIRMATION("pending_confirmation"), ORDERING("ordering"), SUCCESS("success"), FINALIZING("finalizing");
@@ -85,8 +89,21 @@ public class OrderState {
     public State state;
     public Message message;
 
+    public float productPrice;
+    public float deliveryPrice;
+    public float totalPrice;
+
     public OrderState() {
 
+    }
+
+    private OrderState(Parcel source) {
+        uuid = source.readString();
+        state = State.fromLabel(source.readString());
+        message = Message.fromLabel(source.readString());
+        productPrice = source.readFloat();
+        deliveryPrice = source.readFloat();
+        totalPrice = source.readFloat();
     }
 
     public static OrderState inflate(JSONObject object) throws JSONException {
@@ -95,7 +112,38 @@ public class OrderState {
         state.uuid = object.getString(Api.UUID);
         state.state = State.fromLabel(object.getString(Api.STATE));
         state.message = Message.fromLabel(object.optString(Api.MESSAGE));
+        state.productPrice = (float) object.optDouble(Api.PRICE_PRODUCT, NO_PRICE);
+        state.deliveryPrice = (float) object.optDouble(Api.PRICE_DELIVERY, NO_PRICE);
+        state.totalPrice = (float) object.optDouble(Api.PRICE_TOTAL, NO_PRICE);
         return state;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(uuid);
+        dest.writeString(state.mLabel);
+        dest.writeString(message.mLabel);
+        dest.writeFloat(productPrice);
+        dest.writeFloat(deliveryPrice);
+        dest.writeFloat(totalPrice);
+    }
+
+    public static final Parcelable.Creator<OrderState> CREATOR = new Creator<OrderState>() {
+
+        @Override
+        public OrderState[] newArray(int size) {
+            return new OrderState[size];
+        }
+
+        @Override
+        public OrderState createFromParcel(Parcel source) {
+            return new OrderState(source);
+        }
+    };
 
 }
