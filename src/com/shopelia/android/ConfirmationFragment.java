@@ -45,9 +45,9 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
         super.onViewCreated(view, savedInstanceState);
         view.findViewById(R.id.confirm).setOnClickListener(mOnConfirmClickListener);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            view.findViewById(R.id.ticket).setBackground(new TicketDrawable());
+            view.findViewById(R.id.ticket).setBackground(new TicketDrawable(getActivity()));
         } else {
-            view.findViewById(R.id.ticket).setBackgroundDrawable(new TicketDrawable());
+            view.findViewById(R.id.ticket).setBackgroundDrawable(new TicketDrawable(getActivity()));
         }
         mOrder = getBaseActivity().getOrder();
         setupUi();

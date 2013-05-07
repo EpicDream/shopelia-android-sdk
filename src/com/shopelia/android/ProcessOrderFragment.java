@@ -101,6 +101,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         if (response != null) {
             Log.w(null, response.toString());
         }
+        mWaitingView.setProgressColor(getResources().getColor(R.color.shopelia_red));
         mWaitingView.pause();
         mOrderHandler.cancel();
     }

@@ -1,5 +1,6 @@
 package com.shopelia.android.drawable;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.ColorFilter;
@@ -9,6 +10,8 @@ import android.graphics.Path;
 import android.graphics.Path.FillType;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
+
+import com.shopelia.android.R;
 
 public class TicketDrawable extends Drawable {
 
@@ -26,13 +29,16 @@ public class TicketDrawable extends Drawable {
     private Paint mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mBorderPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
-    public TicketDrawable() {
+    public TicketDrawable(Context context) {
         mBackgroundPaint.setStyle(Style.FILL);
         mBackgroundPaint.setColor(COLOR_BACKGROUND);
 
         mBorderPaint.setStyle(Style.STROKE);
         mBorderPaint.setStrokeWidth(1);
         mBorderPaint.setColor(COLOR_BORDER);
+
+        mTriangleHeight = context.getResources().getDimensionPixelSize(R.dimen.shopelia_ticket_triangle_height);
+        mRectCornerRadius = context.getResources().getDimensionPixelSize(R.dimen.shopelia_ticket_border_radius);
     }
 
     @Override
