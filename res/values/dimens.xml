@@ -7,7 +7,7 @@
     <dimen name="shopelia_margin_extra_small">2dp</dimen>
     <dimen name="shopelia_margin_small">4dp</dimen>
     <dimen name="shopelia_margin_normal">8dp</dimen>
-     <dimen name="shopelia_margin_mid_large">12dp</dimen>
+     <dimen name="shopelia_margin_mid_large">14dp</dimen>
     <dimen name="shopelia_margin_large">16dp</dimen>
     <dimen name="shopelia_margin_extra_large">24dp</dimen>
     <dimen name="shopelia_app_menu_shadow_width">5dp</dimen>

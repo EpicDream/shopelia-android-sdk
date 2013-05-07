@@ -16,13 +16,13 @@
         android:src="@drawable/shopelia_pin" />
 
     <ImageButton
-        android:id="@+id/imageButton1"
+        android:id="@+id/user_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/shopelia_grey_button_background"
-        android:padding="@dimen/shopelia_margin_normal"
+        android:padding="@dimen/shopelia_margin_small"
         android:scaleType="centerInside"
         android:src="@drawable/shopelia_pen" />
 
@@ -32,11 +32,12 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/shopelia_margin_normal"
         android:layout_marginRight="@dimen/shopelia_margin_normal"
-        android:layout_toLeftOf="@+id/imageButton1"
+        android:layout_toLeftOf="@+id/user_edit"
         android:layout_toRightOf="@+id/imageView1"
         android:orientation="vertical" >
 
         <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/address_user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Prénom Nom"
@@ -44,6 +45,7 @@
             app:fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/address_address"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12 rue du test"
@@ -51,6 +53,7 @@
             app:fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/address_extras"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="esc de droite"
@@ -58,6 +61,7 @@
             app:fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/address_city"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="75001, Paris"
@@ -65,6 +69,7 @@
             app:fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/address_country"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="France"

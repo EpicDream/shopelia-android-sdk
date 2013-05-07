@@ -36,8 +36,8 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/shopelia_divider_normal"
-                android:layout_marginTop="@dimen/shopelia_margin_normal"
-                android:layout_marginBottom="@dimen/shopelia_margin_normal"
+                android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
+                android:layout_marginTop="@dimen/shopelia_margin_mid_large"
                 android:background="@color/shopelia_dividerColor" />
 
             <include
@@ -46,11 +46,11 @@
                 layout="@layout/shopelia_confirmation_address" />
 
               <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/shopelia_divider_normal"
-                android:layout_marginTop="@dimen/shopelia_margin_normal"
-                android:layout_marginBottom="@dimen/shopelia_margin_normal"
-                android:background="@color/shopelia_dividerColor" />
+                  android:layout_width="match_parent"
+                  android:layout_height="@dimen/shopelia_divider_normal"
+                  android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
+                  android:layout_marginTop="@dimen/shopelia_margin_mid_large"
+                  android:background="@color/shopelia_dividerColor" />
             
             <include
                 android:layout_width="wrap_content"
@@ -58,22 +58,34 @@
                 layout="@layout/shopelia_confirmation_user" />
 
              <View
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/shopelia_divider_normal"
-                android:layout_marginTop="@dimen/shopelia_margin_normal"
-                android:layout_marginBottom="@dimen/shopelia_margin_normal"
-                android:background="@color/shopelia_dividerColor" />
+                 android:layout_width="match_parent"
+                 android:layout_height="@dimen/shopelia_divider_normal"
+                 android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
+                 android:layout_marginTop="@dimen/shopelia_margin_mid_large"
+                 android:background="@color/shopelia_dividerColor" />
 
+             <include
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 layout="@layout/shopelia_confirmation_payment_card" />
+
+              <View
+                 android:layout_width="match_parent"
+                 android:layout_height="@dimen/shopelia_divider_normal"
+                 android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
+                 android:layout_marginTop="@dimen/shopelia_margin_mid_large"
+                 android:background="@color/shopelia_dividerColor" />
+             
                <include
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    layout="@layout/shopelia_confirmation_payment_card" />
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content"
+                   layout="@layout/shopelia_confirmation_price" />
              
             <com.shopelia.android.widget.ValidationButton
                 android:id="@+id/confirm"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/shopelia_margin_large"
+                android:layout_marginTop="@dimen/shopelia_margin_extra_large"
                 app:icon="@drawable/shopelia_bill_white"
                 app:text="@string/shopelia_confirmation_confirm" />
 

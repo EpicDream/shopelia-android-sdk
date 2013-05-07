@@ -7,4 +7,5 @@
 	<color name="shopelia_headerTitleSectionOkColor">#2d9f35</color>
 	<color name="shopelia_headerTitleSectionRegularColor">#000000</color>
 	<color name="shopelia_dividerColor">#e5e5e5</color>
+	<color name="shopelia_red">#cc0000</color>	
 </resources>

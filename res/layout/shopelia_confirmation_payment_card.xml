@@ -16,13 +16,13 @@
         android:src="@drawable/shopelia_card" />
 
     <ImageButton
-        android:id="@+id/imageButton1"
+        android:id="@+id/payment_card_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:padding="@dimen/shopelia_margin_normal"
         android:background="@drawable/shopelia_grey_button_background"
+        android:padding="@dimen/shopelia_margin_small"
         android:scaleType="centerInside"
         android:src="@drawable/shopelia_pen" />
 
@@ -32,16 +32,17 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/shopelia_margin_normal"
         android:layout_marginRight="@dimen/shopelia_margin_normal"
-        android:layout_toLeftOf="@+id/imageButton1"
+        android:layout_toLeftOf="@+id/payment_card_edit"
         android:layout_toRightOf="@+id/imageView1"
         android:orientation="vertical" >
 
         <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/payment_card_number"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:fontStyle="normal"
+            android:text="**** **** **** 1234"
             android:textSize="@dimen/shopelia_font_size_normal"
-            android:text="**** **** **** 1234" />
+            app:fontStyle="normal" />
 
     </LinearLayout>
 

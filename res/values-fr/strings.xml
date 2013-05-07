@@ -62,5 +62,7 @@
     <!-- Order confirmation -->
     <string name="shopelia_confirmation_confirm">Commander</string>
     <string name="shopelia_confirmation_title">Récapitulatif de votre achat</string>
+    <string name="shopelia_confirmation_shipping_fees">Frais de livraison</string>
+    <string name="shopelia_confirmation_total_price">TOTAL</string>
     
 </resources>

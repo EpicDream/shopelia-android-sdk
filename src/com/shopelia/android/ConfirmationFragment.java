@@ -22,6 +22,8 @@ import com.shopelia.android.remote.api.OrderHandler;
 
 public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> implements OrderHandler.Callback {
 
+    private Order mOrder;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,6 +46,13 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
         } else {
             view.findViewById(R.id.ticket).setBackgroundDrawable(new TicketDrawable());
         }
+        mOrder = getBaseActivity().getOrder();
+        setupUi();
+    }
+
+    @SuppressWarnings("unchecked")
+    private <T extends View> T findViewById(int id) {
+        return (T) getView().findViewById(id);
     }
 
     private OnClickListener mOnConfirmClickListener = new OnClickListener() {
@@ -87,6 +96,16 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
         } else {
             getContract().onCheckoutFailed();
         }
+    }
+
+    // ////////////////////////////////////////////////////////////////
+    //
+    // UI SETUP
+    //
+    // ////////////////////////////////////////////////////////////////
+
+    private void setupUi() {
+
     }
 
 }
