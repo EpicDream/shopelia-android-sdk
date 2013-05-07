@@ -90,7 +90,7 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
     @Override
     public void onSignUp(JSONObject result) {
         Order order = Order.inflate(result);
-        order.productUrl = getIntent().getStringExtra(EXTRA_PRODUCT_URL);
+        order.product.url = getIntent().getStringExtra(EXTRA_PRODUCT_URL);
         Intent intent = new Intent(this, ProcessOrderActivity.class);
         intent.putExtra(HostActivity.EXTRA_ORDER, order);
         startActivityForResult(intent, Config.REQUEST_ORDER);
