@@ -5,7 +5,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.shopelia.android.http.HttpPoller;
 import com.shopelia.android.http.HttpPoller.PollerCalback;
@@ -51,6 +50,8 @@ public final class OrderHandler {
     private static HttpPoller sHttpPoller;
 
     private PaymentCard mPaymentCard;
+    private Order mOrder;
+    private User mUser;
     private OrderState mOrderState;
 
     private int mCurrentStep = STEP_DEAD;
@@ -69,10 +70,10 @@ public final class OrderHandler {
 
     public void createAccount(final User user, final Address address) {
 
-        if (UserManager.get(mContext).isLogged()) {
-            mCallback.onAccountCreationSucceed(user, address);
-            return;
-        }
+        // if (UserManager.get(mContext).isLogged()) {
+        // mCallback.onAccountCreationSucceed(user, address);
+        // return;
+        // }
         mCurrentStep = STEP_ACCOUNT_CREATION;
         JSONObject params = new JSONObject();
 
@@ -89,10 +90,16 @@ public final class OrderHandler {
             @Override
             public void onComplete(HttpResponse response, JSONObject object) {
                 if (mCallback != null && object.has(User.Api.USER) && object.has(User.Api.AUTH_TOKEN)) {
+                    User user = User.inflate(object.optJSONObject(User.Api.USER));
+                    mUser = user;
                     UserManager.get(mContext).login(user);
                     UserManager.get(mContext).setAuthToken(object.optString(User.Api.AUTH_TOKEN));
                     UserManager.get(mContext).saveUser();
-                    mCallback.onAccountCreationSucceed(user, address);
+                    if (user.addresses.size() > 0) {
+                        mCallback.onAccountCreationSucceed(user, user.addresses.get(0));
+                    } else {
+                        fireError(STEP_ACCOUNT_CREATION, null, new IllegalStateException("No address registered"));
+                    }
                 } else {
                     fireError(STEP_ACCOUNT_CREATION, object, null);
                 }
@@ -120,7 +127,6 @@ public final class OrderHandler {
             fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
             return;
         }
-        Log.d(null, "SEND " + params);
         ShopeliaRestClient.authenticate(mContext);
         ShopeliaRestClient.post(Command.V1.PaymentCards.$, params, new JsonAsyncCallback() {
 
@@ -128,6 +134,7 @@ public final class OrderHandler {
             public void onComplete(HttpResponse response, JSONObject object) {
                 try {
                     PaymentCard card = PaymentCard.inflate(object.getJSONObject(PaymentCard.Api.PAYMENT_CARD));
+                    mUser.paymentCards.add(card);
                     if (mCallback != null) {
                         mPaymentCard = card;
                         mCallback.onPaymentInformationSent(card);
@@ -148,12 +155,14 @@ public final class OrderHandler {
     }
 
     public void order(final Order order) {
+        mOrder = order;
+        mOrder.user = mUser;
         JSONObject params = new JSONObject();
         mCurrentStep = STEP_ORDER;
         try {
             JSONObject orderObject = new JSONObject();
             JSONArray urls = new JSONArray();
-            urls.put(order.productUrl);
+            urls.put(order.product.url);
             orderObject.put(Order.Api.PRODUCT_URLS, urls);
             params.put(Order.Api.ORDER, orderObject);
         } catch (JSONException e) {
@@ -174,6 +183,7 @@ public final class OrderHandler {
                             mCallback.onOrderBegin(order);
                         }
                         OrderState state = OrderState.inflate(object.getJSONObject(OrderState.Api.ORDER));
+                        mOrder.state = state;
                         mOrderState = state;
                         if (mCallback != null) {
                             mCallback.onOrderStateUpdate(state);
@@ -297,6 +307,7 @@ public final class OrderHandler {
                 try {
                     OrderState state = OrderState.inflate(new JSONObject(response.getBodyAsString()).getJSONObject(OrderState.Api.ORDER));
                     mOrderState = state;
+                    mOrder.state = state;
                     if (mCallback != null) {
                         mCallback.onOrderStateUpdate(state);
                         if (mCurrentStep == STEP_WAITING_CONFIRMATION) {
