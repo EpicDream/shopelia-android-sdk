@@ -16,6 +16,7 @@
         app:fontStyle="bold" />
 
     <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_normal"

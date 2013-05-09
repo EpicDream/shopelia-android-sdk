@@ -1,5 +1,8 @@
 package com.shopelia.android.widget;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -34,7 +37,7 @@ public class WaitingView extends View {
     private static int STATE_PAUSED = 1;
     private static int STATE_STOPPED = 2;
 
-    private long mExpectedTime = 45000L;
+    private long mExpectedTime = 15000L;
 
     private Interpolator mInterpolator = new AccelerateDecelerateInterpolator();
 
@@ -54,6 +57,9 @@ public class WaitingView extends View {
     private Paint mBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mCenterCircleBackgroundPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private Paint mTextPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.DEV_KERN_TEXT_FLAG | Paint.SUBPIXEL_TEXT_FLAG);
+
+    private int mTotalSteps;
+    private int mCurrentStep;
 
     public WaitingView(Context context) {
         this(context, null);
@@ -82,6 +88,11 @@ public class WaitingView extends View {
         if (mTypeface == null) {
             mTypeface = Typeface.DEFAULT_BOLD;
         }
+        
+        mCurrentStep = 1;
+        mTotalSteps = 7;
+        
+        mCurrentTime = 500L;
     }
 
     public void restart() {
@@ -132,6 +143,27 @@ public class WaitingView extends View {
         mTextPaint.setTypeface(mTypeface);
         mTextPaint.setTextAlign(Align.CENTER);
     }
+    
+    public void setTotalSteps(int steps) {
+        mTotalSteps = steps;
+    }
+    
+    public void newStep(String message) {
+        mCurrentStep++;
+        mCurrentTime = 0;
+        
+        mExpectedTime = 10000L;
+        if (message != null) {
+            Pattern p = Pattern.compile("_([0-9]+)$");
+            Matcher m = p.matcher(message);
+            if (m.find()) {
+                try {
+                    mExpectedTime = Integer.valueOf(m.group(1)) * 1000L;
+                } catch (NumberFormatException e) {
+                }
+            }
+        }
+    }
 
     @Override
     protected Parcelable onSaveInstanceState() {
@@ -167,9 +199,16 @@ public class WaitingView extends View {
         mOval.set(x - radius, y - radius, x + radius, y + radius);
         float progress = 0.f;
         if (!isInEditMode()) {
-            progress = mCurrentTime < mExpectedTime ? mInterpolator.getInterpolation((float) mCurrentTime / (float) mExpectedTime) : 1.f;
+            float progressStep = (mCurrentTime < mExpectedTime ? mInterpolator.getInterpolation((float) mCurrentTime / (float) mExpectedTime) : 1.f);
+            if (progressStep > 1.0f) {
+                progressStep = 1.0f;
+            }
+            progress = (progressStep + (float) (mCurrentStep - 1f)) / (float) mTotalSteps;
         } else {
             progress = 0.45f;
+        }
+        if (progress > 1.0f) {
+            progress = 1.0f;
         }
 
         int angle = (int) (MAX_ANGLE * progress);
@@ -200,7 +239,7 @@ public class WaitingView extends View {
             mCurrentTime += FREQUENCY;
             invalidate();
             mHandler.postDelayed(this, FREQUENCY);
-            if (mCurrentTime > mExpectedTime + FREQUENCY) {
+            if (mCurrentTime > mExpectedTime * mTotalSteps + FREQUENCY) {
                 stop();
             }
         }
@@ -211,12 +250,16 @@ public class WaitingView extends View {
         private long mCurrentTime;
         private long mExpectedTime;
         private int mState;
+        private int mTotalSteps;
+        private int mCurrentStep;
 
         public SavedState(Parcel source) {
             super(source);
             mCurrentTime = source.readLong();
             mExpectedTime = source.readLong();
             mState = source.readInt();
+            mTotalSteps = source.readInt();
+            mCurrentStep = source.readInt();
         }
 
         public SavedState(Parcelable parcelable) {
@@ -229,6 +272,8 @@ public class WaitingView extends View {
             dest.writeLong(mCurrentTime);
             dest.writeLong(mExpectedTime);
             dest.writeInt(mState);
+            dest.writeInt(mTotalSteps);
+            dest.writeInt(mCurrentStep);
         }
 
     }

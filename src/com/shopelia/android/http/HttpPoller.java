@@ -14,7 +14,7 @@ import com.turbomanage.httpclient.HttpResponse;
 public class HttpPoller extends HandlerThread {
 
     private static final String THREAD_NAME = "HttpPoller";
-    private static final long DEFAULT_POLLING_FREQUENCY = 1000;
+    private static final long DEFAULT_POLLING_FREQUENCY = 200;
 
     public static final int MESSAGE_POLL = 0x1;
     public static final int STATE_STOPPED = 0;
@@ -79,6 +79,7 @@ public class HttpPoller extends HandlerThread {
     @Override
     public synchronized void start() {
         super.start();
+        mRequest = null;
         mPollerHandler = new PollerHandler(getLooper());
     }
 
@@ -105,6 +106,7 @@ public class HttpPoller extends HandlerThread {
                     HttpResponse response = null;
                     Exception exception = null;
                     try {
+                        Thread.sleep(DEFAULT_POLLING_FREQUENCY / 2);
                         response = ShopeliaRestClient.get((String) msg.obj, null);
                     } catch (Exception e) {
                         exception = e;
@@ -115,7 +117,7 @@ public class HttpPoller extends HandlerThread {
                         message.obj = response != null ? response : exception;
                         handler.sendMessage(message);
                     }
-                    if (isPolling()) {
+                    if (isPolling() && mRequest !=null) {
                         sendPollingRequest(mRequest);
                     }
                     break;

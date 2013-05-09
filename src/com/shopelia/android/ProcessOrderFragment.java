@@ -1,8 +1,12 @@
 package com.shopelia.android;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import org.json.JSONObject;
 
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +22,7 @@ import com.shopelia.android.model.OrderState.State;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.OrderHandler;
+import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.WaitingView;
 
 public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> implements OrderHandler.Callback {
@@ -36,9 +41,12 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     }
 
     private WaitingView mWaitingView;
+    private FontableTextView mMessageTextView;
     private OrderHandler mOrderHandler;
     private Order mOrder;
-
+    
+    private String mCurrentMessage;
+    
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.shopelia_process_order_fragment, container, false);
@@ -77,7 +85,8 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mWaitingView = (WaitingView) view.findViewById(R.id.waitingView);
-
+        mMessageTextView = (FontableTextView) view.findViewById(R.id.message);
+        mWaitingView.start();
     }
 
     @Override
@@ -109,7 +118,6 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onOrderBegin(Order order) {
         Log.d(null, "ORDER BEGIN " + order.uuid);
-        mWaitingView.start();
     }
 
     @Override
@@ -120,7 +128,27 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
             mWaitingView.pause();
             mOrderHandler.stopOrderForError();
         }
-
+        
+        if (!TextUtils.isEmpty(newState.message)) {
+            if (newState.message.startsWith("expect_")) {
+                try {
+                    mWaitingView.setTotalSteps(Integer.parseInt(newState.message.substring(7)));
+                } catch (NumberFormatException e) {
+                }
+            } else if (!TextUtils.equals(newState.message, mCurrentMessage)){
+                mCurrentMessage = newState.message; 
+                mWaitingView.newStep(mCurrentMessage);
+                
+                Pattern p = Pattern.compile("$(.*)_([0-9]+)$");
+                Matcher m = p.matcher(mCurrentMessage);
+                if (m.find()) {
+                    mMessageTextView.setText(m.group(1));
+                } else {
+                    mMessageTextView.setText(mCurrentMessage);                    
+                }
+            }
+        }
+ 
         if (mOrderHandler.canConfirm()) {
             getContract().askForConfirmation();
         }

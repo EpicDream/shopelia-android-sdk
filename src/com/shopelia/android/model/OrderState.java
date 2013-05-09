@@ -48,27 +48,6 @@ public class OrderState implements Parcelable {
 
     }
 
-    public enum Message {
-        LOGGED("logged"), EMPTY_CART("empty_cart"), NOTHING("");
-
-        private String mLabel;
-
-        Message(String label) {
-            mLabel = label;
-        }
-
-        public static Message fromLabel(String label) {
-            Message[] messages = values();
-            for (Message message : messages) {
-                if (message.mLabel.equals(label)) {
-                    return message;
-                }
-            }
-            return NOTHING;
-        }
-
-    }
-
     public interface Api {
         String ORDER = Order.Api.ORDER;
 
@@ -89,7 +68,7 @@ public class OrderState implements Parcelable {
 
     public String uuid = Order.NO_ID;
     public State state;
-    public Message message;
+    public String message;
 
     public float productPrice;
     public float deliveryPrice;
@@ -102,7 +81,7 @@ public class OrderState implements Parcelable {
     private OrderState(Parcel source) {
         uuid = source.readString();
         state = State.fromLabel(source.readString());
-        message = Message.fromLabel(source.readString());
+        message = source.readString();
         productPrice = source.readFloat();
         deliveryPrice = source.readFloat();
         totalPrice = source.readFloat();
@@ -113,7 +92,7 @@ public class OrderState implements Parcelable {
         OrderState state = new OrderState();
         state.uuid = object.getString(Api.UUID);
         state.state = State.fromLabel(object.getString(Api.STATE));
-        state.message = Message.fromLabel(object.optString(Api.MESSAGE));
+        state.message = object.optString(Api.MESSAGE);
         state.productPrice = (float) object.optDouble(Api.PRICE_PRODUCT, NO_PRICE);
         state.deliveryPrice = (float) object.optDouble(Api.PRICE_DELIVERY, NO_PRICE);
         state.totalPrice = (float) object.optDouble(Api.PRICE_TOTAL, NO_PRICE);
@@ -132,7 +111,7 @@ public class OrderState implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(uuid);
         dest.writeString(state.mLabel);
-        dest.writeString(message.mLabel);
+        dest.writeString(message);
         dest.writeFloat(productPrice);
         dest.writeFloat(deliveryPrice);
         dest.writeFloat(totalPrice);

@@ -60,8 +60,8 @@
     <string name="shopelia_product_shipping_fees" formatted="false">Shipping fees %s</string>
     
     <!-- Waiting process -->
-    <string name="shopelia_waiting_shopelia_is_preparing_your_order">Shopelia is preparing you order</string>
-    <string name="shopelia_waiting_with_shopelia_order_with_1_click">1-Click Ordering with Shopelia</string>
+    <string name="shopelia_waiting_shopelia_is_preparing_your_order">Shopelia prépare votre commande</string>
+    <string name="shopelia_waiting_with_shopelia_order_with_1_click">Initialisation&#8230;</string>
     
     <!-- Order confirmation -->
     <string name="shopelia_confirmation_confirm">Order now</string>
