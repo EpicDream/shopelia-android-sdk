@@ -61,7 +61,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
             mOrderHandler = getContract().getOrderHandler();
         }
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState == null) {
             mOrder = getBaseActivity().getOrder();
             if (!UserManager.get(getActivity()).isLogged()) {
                 mOrderHandler.createAccount(mOrder.user, mOrder.address);

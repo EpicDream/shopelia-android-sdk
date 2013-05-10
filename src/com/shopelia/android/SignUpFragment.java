@@ -16,6 +16,7 @@ import android.widget.ListView;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.adapter.FormAdapter;
+import com.shopelia.android.adapter.FormAdapter.Field;
 import com.shopelia.android.adapter.form.AddressField;
 import com.shopelia.android.adapter.form.EditTextField;
 import com.shopelia.android.adapter.form.EditTextField.OnValidateListener;
@@ -117,10 +118,10 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             // FIXME: for testing
-            //if (mAdapter.validate()) {
-                JSONObject result = mAdapter.toJson();
-                getContract().onSignUp(result);
-            //}
+            // if (mAdapter.validate()) {
+            JSONObject result = mAdapter.toJson();
+            getContract().onSignUp(result);
+            // }
         }
     };
 
@@ -148,6 +149,10 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                             AddressField field = (AddressField) mAdapter.getField(Order.Api.ADDRESS);
                             if (field != null) {
                                 field.setAddress(Address.inflate(address));
+                                Field phoneField = mAdapter.getField(1);
+                                if (phoneField != null) {
+                                    mAdapter.nextField(phoneField);
+                                }
                             }
                         } catch (JSONException e) {
                             onError(e);
