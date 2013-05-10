@@ -11,6 +11,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
 import com.shopelia.android.app.ShopeliaFragment;
@@ -89,6 +90,8 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         mWaitingView = (WaitingView) view.findViewById(R.id.waitingView);
         mMessageTextView = (FontableTextView) view.findViewById(R.id.message);
         mWaitingView.start();
+        TextView title = (TextView) view.findViewById(R.id.title);
+        title.setText(getString(R.string.shopelia_waiting_shopelia_is_preparing_your_order, mOrder.product.vendor.getName()));
     }
 
     @Override

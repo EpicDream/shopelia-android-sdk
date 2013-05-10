@@ -27,6 +27,8 @@
         android:text="@string/shopelia_form_main_footer_text"
         app:fontFamily="normal"
         app:fontStyle="normal"
+        android:gravity="center"
+        android:textSize="@dimen/shopelia_font_size_small"
         android:icon="@drawable/shopelia_cart_white" />
 
     <include

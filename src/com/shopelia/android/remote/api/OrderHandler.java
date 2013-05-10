@@ -5,10 +5,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.shopelia.android.http.HttpPoller;
-import com.shopelia.android.http.HttpPoller.PollerCalback;
+import com.shopelia.android.http.HttpPoller.PollerCallback;
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
@@ -223,7 +222,7 @@ public final class OrderHandler {
                     try {
                         JSONObject object = new JSONObject(httpResponse.getBodyAsString());
                         order.uuid = object.getJSONObject(Order.Api.ORDER).getString(Order.Api.UUID);
-                        
+
                         OrderState state = OrderState.inflate(object.getJSONObject(OrderState.Api.ORDER));
                         mOrder.state = state;
                         mOrderState = state;
@@ -341,7 +340,7 @@ public final class OrderHandler {
         }
     }
 
-    private HttpPoller.PollerCalback mPollerCalback = new PollerCalback() {
+    private HttpPoller.PollerCallback mPollerCalback = new PollerCallback() {
 
         @Override
         protected void onComplete(HttpResponse response) {
