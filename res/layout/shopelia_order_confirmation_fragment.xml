@@ -141,10 +141,6 @@
                 android:layout_marginBottom="@dimen/shopelia_margin_large"
                 layout="@layout/shopelia_include_footer" />
 
-            <android.support.v7.widget.Space
-                android:id="@+id/space1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
         </LinearLayout>
 
         <View
