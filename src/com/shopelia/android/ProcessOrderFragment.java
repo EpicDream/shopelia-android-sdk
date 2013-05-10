@@ -130,19 +130,18 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         }
         
         if (!TextUtils.isEmpty(newState.message)) {
-            if (newState.message.startsWith("expect_")) {
-                try {
-                    mWaitingView.setTotalSteps(Integer.parseInt(newState.message.substring(7)));
-                } catch (NumberFormatException e) {
-                }
+            Pattern p1 = Pattern.compile("^expect_([0-9]+)$");
+            Matcher m1 = p1.matcher(newState.message);
+            if (m1.find()) {
+                mWaitingView.setTotalSteps(Integer.parseInt(m1.group(1)));
             } else if (!TextUtils.equals(newState.message, mCurrentMessage)){
                 mCurrentMessage = newState.message; 
                 mWaitingView.newStep(mCurrentMessage);
                 
-                Pattern p = Pattern.compile("$(.*)_([0-9]+)$");
-                Matcher m = p.matcher(mCurrentMessage);
-                if (m.find()) {
-                    mMessageTextView.setText(m.group(1));
+                Pattern p2 = Pattern.compile("^(.*)_([0-9]+)$");
+                Matcher m2 = p2.matcher(mCurrentMessage);
+                if (m2.find()) {
+                    mMessageTextView.setText(m2.group(1));
                 } else {
                     mMessageTextView.setText(mCurrentMessage);                    
                 }
