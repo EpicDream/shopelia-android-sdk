@@ -41,6 +41,8 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
     }
 
+    private static final String SAVE_ORDER = "save:order";
+
     private WaitingView mWaitingView;
     private FontableTextView mMessageTextView;
     private OrderHandler mOrderHandler;
@@ -50,6 +52,9 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        if (getView() != null) {
+            return getView();
+        }
         return inflater.inflate(R.layout.shopelia_process_order_fragment, container, false);
     }
 
@@ -68,20 +73,35 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
             } else {
                 mOrderHandler.retrieveUser(UserManager.get(getActivity()).getUser().id);
             }
+        } else {
+            mOrder = savedInstanceState.getParcelable(SAVE_ORDER);
         }
 
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable(SAVE_ORDER, mOrder);
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
-        mOrderHandler.resume();
+        if (mOrderHandler != null) {
+            mOrderHandler.resume();
+        } else {
+            // If the handler is dead here, the order is probably dead too. We
+            // just need to notify the user and quit this activity
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mOrderHandler.pause();
+        if (mOrderHandler != null) {
+            mOrderHandler.pause();
+        }
     }
 
     @Override
@@ -131,7 +151,9 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     public void onOrderStateUpdate(OrderState newState) {
         Log.d(null, "NEW STATE = " + newState.uuid + " " + newState.message + " " + newState.state);
         if (newState.state == State.ERROR) {
-            mWaitingView.setProgressColor(getResources().getColor(R.color.shopelia_red));
+            if (!isDetached()) {
+                mWaitingView.setProgressColor(getResources().getColor(R.color.shopelia_red));
+            }
             mWaitingView.pause();
             mOrderHandler.stopOrderForError();
         }

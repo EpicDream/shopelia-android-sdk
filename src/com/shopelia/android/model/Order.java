@@ -6,6 +6,8 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.shopelia.android.utils.ParcelUtils;
+
 public class Order implements Parcelable {
 
     public interface Api {
@@ -44,11 +46,15 @@ public class Order implements Parcelable {
 
     private Order(Parcel source) {
         uuid = source.readString();
-        address = source.readParcelable(Address.class.getClassLoader());
-        card = source.readParcelable(PaymentCard.class.getClassLoader());
-        user = source.readParcelable(User.class.getClassLoader());
-        state = source.readParcelable(OrderState.class.getClassLoader());
-        product = source.readParcelable(Product.class.getClassLoader());
+        // address = ParcelUtils.readParcelable(source,
+        // Address.class.getClassLoader());
+        // card = ParcelUtils.readParcelable(source,
+        // PaymentCard.class.getClassLoader());
+        // user = ParcelUtils.readParcelable(source,
+        // User.class.getClassLoader());
+        // state = ParcelUtils.readParcelable(source,
+        // OrderState.class.getClassLoader());
+        product = ParcelUtils.readParcelable(source, Product.class.getClassLoader());
     }
 
     @Override
@@ -59,11 +65,11 @@ public class Order implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(uuid);
-        dest.writeParcelable(address, flags);
-        dest.writeParcelable(card, flags);
-        dest.writeParcelable(user, flags);
-        dest.writeParcelable(state, flags);
-        dest.writeParcelable(product, flags);
+        // ParcelUtils.writeParcelable(dest, address, flags);
+        // ParcelUtils.writeParcelable(dest, card, flags);
+        // ParcelUtils.writeParcelable(dest, user, flags);
+        // ParcelUtils.writeParcelable(dest, state, flags);
+        ParcelUtils.writeParcelable(dest, product, flags);
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {

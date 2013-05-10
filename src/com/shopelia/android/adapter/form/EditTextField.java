@@ -242,6 +242,11 @@ public class EditTextField extends Field implements Errorable {
             if (mOnValidateListener != null) {
                 mOnValidateListener.afterTextChanged(s);
             }
+            setValid(onValidation(false));
+            if (getBoundedView() != null) {
+                ViewHolder holder = (ViewHolder) getBoundedView().getTag();
+                holder.editText.setChecked(isValid());
+            }
         }
     };
 

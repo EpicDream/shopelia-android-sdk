@@ -12,10 +12,12 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -88,10 +90,10 @@ public class WaitingView extends View {
         if (mTypeface == null) {
             mTypeface = Typeface.DEFAULT_BOLD;
         }
-        
+
         mCurrentStep = 1;
         mTotalSteps = 7;
-        
+
         mCurrentTime = 500L;
     }
 
@@ -143,15 +145,15 @@ public class WaitingView extends View {
         mTextPaint.setTypeface(mTypeface);
         mTextPaint.setTextAlign(Align.CENTER);
     }
-    
+
     public void setTotalSteps(int steps) {
         mTotalSteps = steps;
     }
-    
+
     public void newStep(String message) {
         mCurrentStep++;
         mCurrentTime = 0;
-        
+
         mExpectedTime = 10000L;
         if (message != null) {
             Pattern p = Pattern.compile("_([0-9]+)$");
@@ -168,24 +170,45 @@ public class WaitingView extends View {
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable parcelable = super.onSaveInstanceState();
-        SavedState savedState = new SavedState(parcelable);
-        savedState.mCurrentTime = mCurrentTime;
-        savedState.mExpectedTime = mExpectedTime;
-        savedState.mState = mState;
-        return savedState;
+        // SavedState savedState = new SavedState(parcelable);
+        // savedState.mCurrentTime = mCurrentTime;
+        // savedState.mExpectedTime = mExpectedTime;
+        // savedState.mState = mState;
+        // Log.d(null, "SAVE STATE");
+        // return savedState;
+        Bundle test = new Bundle();
+        test.putParcelable("test", parcelable);
+        test.putLong("1", mCurrentTime);
+        test.putLong("2", mExpectedTime);
+        test.putInt("3", mState);
+        return test;
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        super.onRestoreInstanceState(state);
+        if (true) {
+            Bundle bundle = (Bundle) state;
+            super.onRestoreInstanceState(bundle.getParcelable("test"));
+            mCurrentTime = bundle.getLong("1");
+            mExpectedTime = bundle.getLong("2");
+            mState = bundle.getInt("3");
+            if (mState == STATE_STARTED) {
+                start();
+            }
+            return;
+        }
+        Log.d(null, "RESTORE STATE");
         if (state instanceof SavedState) {
             SavedState savedState = (SavedState) state;
+            super.onRestoreInstanceState(savedState.getSuperState());
             mCurrentTime = savedState.mCurrentTime;
             mExpectedTime = savedState.mExpectedTime;
             mState = savedState.mState;
             if (mState == STATE_STARTED) {
                 start();
             }
+        } else {
+            super.onRestoreInstanceState(((BaseSavedState) state).getSuperState());
         }
     }
 
@@ -199,7 +222,8 @@ public class WaitingView extends View {
         mOval.set(x - radius, y - radius, x + radius, y + radius);
         float progress = 0.f;
         if (!isInEditMode()) {
-            float progressStep = (mCurrentTime < mExpectedTime ? mInterpolator.getInterpolation((float) mCurrentTime / (float) mExpectedTime) : 1.f);
+            float progressStep = (mCurrentTime < mExpectedTime ? mInterpolator.getInterpolation((float) mCurrentTime
+                    / (float) mExpectedTime) : 1.f);
             if (progressStep > 1.0f) {
                 progressStep = 1.0f;
             }
@@ -245,7 +269,7 @@ public class WaitingView extends View {
         }
     };
 
-    private static class SavedState extends View.BaseSavedState {
+    public static class SavedState extends View.BaseSavedState {
 
         private long mCurrentTime;
         private long mExpectedTime;
