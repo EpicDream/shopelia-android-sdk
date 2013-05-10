@@ -25,8 +25,8 @@ public final class ShopeliaRestClient {
     private static final String ROOT = "http://zola.epicdream.fr:4444";
     public final static String API_KEY = "52953f1868a7545011d979a8c1d0acbc310dcb5a262981bd1a75c1c6f071ffb4";
 
-    private static final int CONNECTION_TIMEOUT = 10000;
-    private static final int READ_TINEOUT = 100000;
+    private static final int CONNECTION_TIMEOUT = 3000;
+    private static final int READ_TIMEOUT = 100000;
     private static final int MAX_RETRIES = 1;
 
     private static final AndroidHttpClient sHttpClient;
@@ -48,7 +48,7 @@ public final class ShopeliaRestClient {
          */
 
         sHttpClient.setConnectionTimeout(CONNECTION_TIMEOUT);
-        sHttpClient.setReadTimeout(READ_TINEOUT);
+        sHttpClient.setReadTimeout(READ_TIMEOUT);
         sHttpClient.setMaxRetries(MAX_RETRIES);
 
         /*
