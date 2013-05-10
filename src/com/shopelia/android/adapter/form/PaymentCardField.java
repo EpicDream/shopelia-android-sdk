@@ -61,10 +61,10 @@ public class PaymentCardField extends ButtonField {
 
     private void setPaymentCard(PaymentCard card) {
         mPaymentCard = card;
+        setValid(mPaymentCard != null);
+        setChecked(mPaymentCard != null);
         setDisplayableCardNumber();
         getAdapter().updateSections();
-        setValid(true);
-        setChecked(true);
         getAdapter().notifyDataSetChanged();
     }
 

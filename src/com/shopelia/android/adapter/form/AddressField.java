@@ -58,7 +58,7 @@ public class AddressField extends ButtonField {
     }
 
     public void setAddress(Address address) {
-        if (!address.isValid()) {
+        if (address == null || !address.isValid()) {
             return;
         }
         mAddress = address;
@@ -70,7 +70,6 @@ public class AddressField extends ButtonField {
         }
         setValid(true);
         setChecked(true);
-        getAdapter().notifyDataSetChanged();
     }
 
     @Override

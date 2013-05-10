@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,6 +13,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.TextView.OnEditorActionListener;
 
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter;
@@ -141,7 +143,7 @@ public class EditTextField extends Field implements Errorable {
         setViewStyle(holder);
         holder.editText.setHint(mHint);
         holder.editText.setText(mContentText);
-        // holder.editText.setOnClickListener(mOnClickListener);
+        holder.editText.setOnEditorActionListener(mOnEditorActionListener);
         holder.editText.setChecked(isValid());
         holder.editText.setError(hasError());
         if (holder.boundedField != null) {
@@ -170,6 +172,15 @@ public class EditTextField extends Field implements Errorable {
         // Here for extension purpose so we can later create PasswordField,
         // EmailField... just by extending EditTextField and overriding this
         // method.
+    }
+
+    @Override
+    public void onNextField() {
+        super.onNextField();
+        if (getBoundedView() != null) {
+            ViewHolder holder = (ViewHolder) getBoundedView().getTag();
+            holder.editText.requestFocus();
+        }
     }
 
     @Override
@@ -257,6 +268,14 @@ public class EditTextField extends Field implements Errorable {
             } else {
                 getAdapter().requestFocus(EditTextField.this);
             }
+        }
+    };
+
+    private OnEditorActionListener mOnEditorActionListener = new OnEditorActionListener() {
+
+        @Override
+        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+            return getAdapter().nextField(EditTextField.this);
         }
     };
 

@@ -129,4 +129,10 @@ public abstract class ButtonField extends Field implements Errorable, Checkable 
         }
     }
 
+    @Override
+    public void onNextField() {
+        super.onNextField();
+        mOnClickListener.onClick(null);
+    }
+
 }

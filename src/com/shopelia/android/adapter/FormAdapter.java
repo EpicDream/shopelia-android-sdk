@@ -199,6 +199,13 @@ public class FormAdapter extends BaseAdapter {
             return mAdapter.getViewByIndex(index);
         }
 
+        /**
+         * Called when {@link FormAdapter#nextField(Field)} is called
+         */
+        public void onNextField() {
+
+        }
+
     }
 
     private List<Field> mFieldList = new ArrayList<FormAdapter.Field>();
@@ -453,5 +460,18 @@ public class FormAdapter extends BaseAdapter {
                 mAdapterView.setSelection(index);
             }
         }
+    }
+
+    public boolean nextField(Field field) {
+        int index = indexOf(field) + 1;
+        final int size = mFieldList.size();
+        for (; index < size; index++) {
+            Field f = mFieldList.get(index);
+            if (!f.isValid() && !f.isSectionHeader()) {
+                f.onNextField();
+                return true;
+            }
+        }
+        return false;
     }
 }
