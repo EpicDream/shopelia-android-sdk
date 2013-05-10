@@ -11,6 +11,11 @@ import android.os.Message;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.turbomanage.httpclient.HttpResponse;
 
+/**
+ * An {@link HandlerThread} polling at a fixed rate a given remote resource.
+ * 
+ * @author Pierre Pollastri
+ */
 public class HttpPoller extends HandlerThread {
 
     private static final String THREAD_NAME = "HttpPoller";
@@ -31,6 +36,11 @@ public class HttpPoller extends HandlerThread {
         super(THREAD_NAME, Thread.NORM_PRIORITY);
     }
 
+    /**
+     * Start polling the remote resource
+     * 
+     * @param request
+     */
     public synchronized void poll(String request) {
         if (isPaused() && mRequest != null && mRequest.equals(request)) {
             resumePolling();
@@ -42,21 +52,38 @@ public class HttpPoller extends HandlerThread {
         }
     }
 
+    /**
+     * Set the {@link Handler} to use as callback. Use {@link PollerCallback} to
+     * ease callback management.
+     * 
+     * @param handler
+     */
     public void setPollerCallback(Handler handler) {
         mHandler = handler;
     }
 
+    /**
+     * Stop polling the resource definitively
+     */
     public synchronized void end() {
         mState.set(STATE_STOPPED);
         mRequest = null;
         mPollerHandler.removeMessages(MESSAGE_POLL);
     }
 
+    /**
+     * Stop polling the resource without reset the poller. You can still call
+     * {@link HttpPoller#resumePolling()} in order to continue polling on the
+     * same resource.
+     */
     public synchronized void pause() {
         mState.set(STATE_PAUSED);
         mPollerHandler.removeMessages(MESSAGE_POLL);
     }
 
+    /**
+     * Resume a paused polling session.
+     */
     public synchronized void resumePolling() {
         if (mRequest != null && isPaused()) {
             mState.set(STATE_POLLING);
@@ -64,14 +91,30 @@ public class HttpPoller extends HandlerThread {
         }
     }
 
+    /**
+     * Checks if {@link HttpPoller} is polling right now.
+     * 
+     * @return true if it is polling, false otherwise
+     */
     public boolean isPolling() {
         return mState.get() == STATE_POLLING;
     }
 
+    /**
+     * Checks if the poller is paused or not
+     * 
+     * @return
+     */
     public boolean isPaused() {
         return mState.get() == STATE_PAUSED;
     }
 
+    /**
+     * Checks if the poller is stopped or not. Not that stopped means that it
+     * has not current polling session.
+     * 
+     * @return
+     */
     public boolean isStopped() {
         return mState.get() == STATE_STOPPED;
     }
@@ -117,7 +160,7 @@ public class HttpPoller extends HandlerThread {
                         message.obj = response != null ? response : exception;
                         handler.sendMessage(message);
                     }
-                    if (isPolling() && mRequest !=null) {
+                    if (isPolling() && mRequest != null) {
                         sendPollingRequest(mRequest);
                     }
                     break;
@@ -129,7 +172,12 @@ public class HttpPoller extends HandlerThread {
 
     }
 
-    public static abstract class PollerCalback extends Handler {
+    /**
+     * Helper class in order to handle {@link HttpPoller} callbacks.
+     * 
+     * @author Pierre Pollastri
+     */
+    public static abstract class PollerCallback extends Handler {
 
         protected abstract void onComplete(HttpResponse response);
 
