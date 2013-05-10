@@ -52,7 +52,7 @@ public class AddressField extends ButtonField {
         if (savedInstanceState != null) {
             mAddress = savedInstanceState.getParcelable(getJsonPath());
             if (mAddress != null) {
-                setContentText(mAddress.toString());
+                setAddress(mAddress);
             }
         }
     }

@@ -55,12 +55,17 @@ public class PaymentCardField extends ButtonField {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CARD && resultCode == Activity.RESULT_OK) {
             mPaymentCard = data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD);
-            setDisplayableCardNumber();
-            getAdapter().updateSections();
-            setValid(true);
-            setChecked(true);
-            getAdapter().notifyDataSetChanged();
+            setPaymentCard(mPaymentCard);
         }
+    }
+
+    private void setPaymentCard(PaymentCard card) {
+        mPaymentCard = card;
+        setDisplayableCardNumber();
+        getAdapter().updateSections();
+        setValid(true);
+        setChecked(true);
+        getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -72,6 +77,7 @@ public class PaymentCardField extends ButtonField {
     public void onCreate(Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             mPaymentCard = savedInstanceState.getParcelable(getJsonPath());
+            setPaymentCard(mPaymentCard);
         }
     }
 
