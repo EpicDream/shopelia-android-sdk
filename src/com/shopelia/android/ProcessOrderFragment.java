@@ -44,9 +44,9 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     private FontableTextView mMessageTextView;
     private OrderHandler mOrderHandler;
     private Order mOrder;
-    
+
     private String mCurrentMessage;
-    
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.shopelia_process_order_fragment, container, false);
@@ -60,11 +60,13 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
             mOrderHandler = getContract().getOrderHandler();
         }
 
-        mOrder = getBaseActivity().getOrder();
-        if (!UserManager.get(getActivity()).isLogged()) {
-            mOrderHandler.createAccount(mOrder.user, mOrder.address);
-        } else {
-            mOrderHandler.retrieveUser(UserManager.get(getActivity()).getUser().id);
+        if (savedInstanceState != null) {
+            mOrder = getBaseActivity().getOrder();
+            if (!UserManager.get(getActivity()).isLogged()) {
+                mOrderHandler.createAccount(mOrder.user, mOrder.address);
+            } else {
+                mOrderHandler.retrieveUser(UserManager.get(getActivity()).getUser().id);
+            }
         }
 
     }
@@ -110,14 +112,16 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         if (response != null) {
             Log.w(null, response.toString());
         }
-        mWaitingView.setProgressColor(getResources().getColor(R.color.shopelia_red));
+        if (!isDetached()) {
+            mWaitingView.setProgressColor(getResources().getColor(R.color.shopelia_red));
+        }
         mWaitingView.pause();
         mOrderHandler.cancel();
     }
 
     @Override
     public void onOrderBegin(Order order) {
-        Log.d(null, "ORDER BEGIN " + order.uuid);
+
     }
 
     @Override
@@ -128,27 +132,28 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
             mWaitingView.pause();
             mOrderHandler.stopOrderForError();
         }
-        
+
         if (!TextUtils.isEmpty(newState.message)) {
             if (newState.message.startsWith("expect_")) {
                 try {
                     mWaitingView.setTotalSteps(Integer.parseInt(newState.message.substring(7)));
                 } catch (NumberFormatException e) {
+                    // Do nothing, actually not possible
                 }
-            } else if (!TextUtils.equals(newState.message, mCurrentMessage)){
-                mCurrentMessage = newState.message; 
+            } else if (!TextUtils.equals(newState.message, mCurrentMessage)) {
+                mCurrentMessage = newState.message;
                 mWaitingView.newStep(mCurrentMessage);
-                
+
                 Pattern p = Pattern.compile("$(.*)_([0-9]+)$");
                 Matcher m = p.matcher(mCurrentMessage);
                 if (m.find()) {
                     mMessageTextView.setText(m.group(1));
                 } else {
-                    mMessageTextView.setText(mCurrentMessage);                    
+                    mMessageTextView.setText(mCurrentMessage);
                 }
             }
         }
- 
+
         if (mOrderHandler.canConfirm()) {
             getContract().askForConfirmation();
         }
@@ -162,6 +167,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
     @Override
     public void onUserRetrieved(User user) {
+        // TODO : Just for beta version
         mOrder.card = user.paymentCards.get(0);
         mOrder.address = user.addresses.get(0);
         mOrderHandler.order(mOrder);
