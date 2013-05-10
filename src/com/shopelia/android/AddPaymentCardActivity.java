@@ -9,10 +9,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnFocusChangeListener;
@@ -108,8 +111,7 @@ public class AddPaymentCardActivity extends HostActivity {
         card.cvv = mCvvField.getText().toString();
         String date = mExpiryField.getText().toString();
         if (date.length() == 5) {
-            // card.expMonth = date.substring(0, 2);
-            card.expYear = date.substring(3);
+            card.expMonth = date.substring(0, 2);
             card.expYear = date.substring(3);
         }
         outState.putParcelable(EXTRA_PAYMENT_CARD, card);
@@ -368,10 +370,17 @@ public class AddPaymentCardActivity extends HostActivity {
                 if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                     CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                     mCardNumberField.setText(scanResult.cardNumber);
-                    // mCvvField.setText(scanResult.cvv);
-                    // mExpiryField.setText(String.format("%02d/%02d",
-                    // scanResult.expiryMonth, scanResult.expiryYear % 100));
                     mExpiryField.requestFocus();
+                    (new Handler()).postDelayed(new Runnable() {
+
+                        public void run() {
+                            mExpiryField.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+                                    MotionEvent.ACTION_DOWN, 0, 0, 0));
+                            mExpiryField.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+                                    MotionEvent.ACTION_UP, 0, 0, 0));
+
+                        }
+                    }, 200);
                 }
                 break;
         }
