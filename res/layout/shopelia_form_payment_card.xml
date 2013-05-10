@@ -90,6 +90,34 @@
             app:text="@string/shopelia_form_payment_card_validate"
             app:icon="@drawable/shopelia_card_white" />
 
+         <LinearLayout
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:layout_gravity="center"
+             android:layout_marginLeft="@dimen/shopelia_margin_normal"
+             android:layout_marginRight="@dimen/shopelia_margin_normal"
+             android:layout_marginTop="@dimen/shopelia_margin_large"
+             android:gravity="center" >
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/shopelia_logos_visa" />
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/shopelia_logos_mc" />
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/shopelia_logos_norton" />
+            </LinearLayout>
+        
         <include
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
