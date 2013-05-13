@@ -58,6 +58,7 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
         return (T) getView().findViewById(id);
     }
 
+    @SuppressWarnings("unchecked")
     private <T extends View> T findViewById(int id, Class<T> clazz) {
         return (T) findViewById(id);
     }

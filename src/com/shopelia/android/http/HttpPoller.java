@@ -133,9 +133,9 @@ public class HttpPoller extends HandlerThread {
         mPollerHandler.sendMessageDelayed(msg, DEFAULT_POLLING_FREQUENCY);
     }
 
+    @SuppressLint("HandlerLeak")
     private class PollerHandler extends Handler {
 
-        @SuppressLint("HandlerLeak")
         public PollerHandler(Looper looper) {
             super(looper);
         }

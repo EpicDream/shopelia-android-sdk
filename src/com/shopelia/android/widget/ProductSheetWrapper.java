@@ -22,6 +22,7 @@ public class ProductSheetWrapper {
     private FontableTextView mProductDescription;
     private FontableTextView mShippingFees;
     private ImageView mProductImage;
+    @SuppressWarnings("unused")
     private FontableTextView mVendorText;
     private ImageView mVendorLogo;
     private FontableTextView mProductPrice;

@@ -114,6 +114,7 @@ public class WaitingView extends View {
     }
 
     public void pause() {
+        mState = STATE_PAUSED;
         mHandler.removeCallbacks(mAnimationRunnable);
     }
 

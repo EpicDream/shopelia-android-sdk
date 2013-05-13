@@ -26,10 +26,8 @@ public class FontableTextView extends TextView {
 
     private static final String FONT_PATH = "shopelia/style/fonts/";
 
-    @SuppressWarnings("unused")
     public static final String ASAP_BOLD = FONT_PATH + "Asap-Bold.otf";
     public static final String ASAP_BOLD_ITALIC = FONT_PATH + "Asap-BoldItalic.otf";
-    @SuppressWarnings("unused")
     public static final String ASAP_ITALIC = FONT_PATH + "Asap-Italic.otf";
     public static final String ASAP_REGULAR = FONT_PATH + "Asap-Regular.ttf";
 

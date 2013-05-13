@@ -53,7 +53,6 @@ public class FormAdapter extends BaseAdapter {
         private final int mType;
         private boolean mIsValid = false;
         private FormAdapter mAdapter;
-        private String mJSonPath;
 
         protected Field(int type) {
             mType = type;

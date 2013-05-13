@@ -257,6 +257,7 @@ public class CreateAddressActivity extends HostActivity {
                 return results;
             }
 
+            @SuppressWarnings("unchecked")
             @Override
             protected void publishResults(CharSequence constraints, FilterResults results) {
                 mAddressList = (List<Address>) results.values;

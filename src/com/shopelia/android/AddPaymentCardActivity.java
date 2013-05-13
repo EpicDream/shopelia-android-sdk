@@ -374,11 +374,14 @@ public class AddPaymentCardActivity extends HostActivity {
                     (new Handler()).postDelayed(new Runnable() {
 
                         public void run() {
-                            mExpiryField.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
-                                    MotionEvent.ACTION_DOWN, 0, 0, 0));
-                            mExpiryField.dispatchTouchEvent(MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
-                                    MotionEvent.ACTION_UP, 0, 0, 0));
-
+                            MotionEvent event = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(),
+                                    MotionEvent.ACTION_DOWN, 0, 0, 0);
+                            mExpiryField.dispatchTouchEvent(event);
+                            event.recycle();
+                            event = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0,
+                                    0);
+                            mExpiryField.dispatchTouchEvent(event);
+                            event.recycle();
                         }
                     }, 200);
                 }
