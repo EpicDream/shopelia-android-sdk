@@ -20,6 +20,10 @@
 		<attr name="textSize" format="integer" />
     </declare-styleable>
     
+    <declare-styleable name="NumberInput">
+		<attr name="number_background" format="integer" />
+    </declare-styleable>
+    
     <declare-styleable name="FormState">
         <attr name="state_error" format="boolean" />
     </declare-styleable>
