@@ -106,7 +106,8 @@
                 android:layout_marginRight="@dimen/shopelia_margin_large"
                 android:layout_marginTop="@dimen/shopelia_margin_extra_large"
                 app:icon="@drawable/shopelia_bill_white"
-                app:text="@string/shopelia_confirmation_confirm" >
+                app:text="@string/shopelia_confirmation_confirm"
+                app:textSize="@dimen/shopelia_font_size_normal" >
             </com.shopelia.android.widget.ValidationButton>
 
             <LinearLayout

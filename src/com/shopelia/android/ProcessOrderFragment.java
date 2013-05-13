@@ -47,7 +47,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     private FontableTextView mMessageTextView;
     private OrderHandler mOrderHandler;
     private Order mOrder;
-
+    private boolean mAuthentified = false;
     private String mCurrentMessage;
 
     @Override

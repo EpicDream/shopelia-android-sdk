@@ -17,6 +17,7 @@
     <declare-styleable name="ValidationButton">
         <attr name="text" format="string" />
 		<attr name="icon" format="integer" />
+		<attr name="textSize" format="integer" />
     </declare-styleable>
     
     <declare-styleable name="FormState">
