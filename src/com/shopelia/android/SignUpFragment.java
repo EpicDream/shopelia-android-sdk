@@ -117,11 +117,10 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             view.requestFocus();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            // FIXME: for testing
-            // if (mAdapter.validate()) {
-            JSONObject result = mAdapter.toJson();
-            getContract().onSignUp(result);
-            // }
+            if (mAdapter.validate()) {
+                JSONObject result = mAdapter.toJson();
+                getContract().onSignUp(result);
+            }
         }
     };
 
