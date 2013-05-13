@@ -14,10 +14,8 @@ import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Interpolator;
@@ -30,6 +28,13 @@ import android.view.animation.Interpolator;
  * @author Pierre Pollastri
  */
 public class WaitingView extends View {
+
+    private static final String SAVE_SUPER = "save:super";
+    private static final String SAVE_EXPECTED_TIME = "save:expected_time";
+    private static final String SAVE_CURRENT_TIME = "save:current_time";
+    private static final String SAVE_STATE = "save:state";
+    private static final String SAVE_TOTAL_STEPS = "save:total_steps";
+    private static final String SAVE_CURRENT_STEP = "save:current_step";
 
     private static final int MAX_ANGLE = 360;
     private static final long FRAMERATE = 40;
@@ -170,40 +175,26 @@ public class WaitingView extends View {
     @Override
     protected Parcelable onSaveInstanceState() {
         Parcelable parcelable = super.onSaveInstanceState();
-        // SavedState savedState = new SavedState(parcelable);
-        // savedState.mCurrentTime = mCurrentTime;
-        // savedState.mExpectedTime = mExpectedTime;
-        // savedState.mState = mState;
-        // Log.d(null, "SAVE STATE");
-        // return savedState;
-        Bundle test = new Bundle();
-        test.putParcelable("test", parcelable);
-        test.putLong("1", mCurrentTime);
-        test.putLong("2", mExpectedTime);
-        test.putInt("3", mState);
-        return test;
+        Bundle saveState = new Bundle();
+        saveState.putParcelable(SAVE_SUPER, parcelable);
+        saveState.putLong(SAVE_CURRENT_TIME, mCurrentTime);
+        saveState.putLong(SAVE_EXPECTED_TIME, mExpectedTime);
+        saveState.putInt(SAVE_STATE, mState);
+        saveState.putInt(SAVE_CURRENT_STEP, mCurrentStep);
+        saveState.putInt(SAVE_TOTAL_STEPS, mTotalSteps);
+        return saveState;
     }
 
     @Override
     protected void onRestoreInstanceState(Parcelable state) {
-        if (true) {
+        if (state instanceof Bundle) {
             Bundle bundle = (Bundle) state;
-            super.onRestoreInstanceState(bundle.getParcelable("test"));
-            mCurrentTime = bundle.getLong("1");
-            mExpectedTime = bundle.getLong("2");
-            mState = bundle.getInt("3");
-            if (mState == STATE_STARTED) {
-                start();
-            }
-            return;
-        }
-        Log.d(null, "RESTORE STATE");
-        if (state instanceof SavedState) {
-            SavedState savedState = (SavedState) state;
-            super.onRestoreInstanceState(savedState.getSuperState());
-            mCurrentTime = savedState.mCurrentTime;
-            mExpectedTime = savedState.mExpectedTime;
-            mState = savedState.mState;
+            super.onRestoreInstanceState(bundle.getParcelable(SAVE_SUPER));
+            mCurrentTime = bundle.getLong(SAVE_CURRENT_TIME);
+            mExpectedTime = bundle.getLong(SAVE_EXPECTED_TIME);
+            mState = bundle.getInt(SAVE_STATE);
+            mTotalSteps = bundle.getInt(SAVE_TOTAL_STEPS);
+            mCurrentStep = bundle.getInt(SAVE_CURRENT_STEP);
             if (mState == STATE_STARTED) {
                 start();
             }
@@ -268,38 +259,5 @@ public class WaitingView extends View {
             }
         }
     };
-
-    public static class SavedState extends View.BaseSavedState {
-
-        private long mCurrentTime;
-        private long mExpectedTime;
-        private int mState;
-        private int mTotalSteps;
-        private int mCurrentStep;
-
-        public SavedState(Parcel source) {
-            super(source);
-            mCurrentTime = source.readLong();
-            mExpectedTime = source.readLong();
-            mState = source.readInt();
-            mTotalSteps = source.readInt();
-            mCurrentStep = source.readInt();
-        }
-
-        public SavedState(Parcelable parcelable) {
-            super(parcelable);
-        }
-
-        @Override
-        public void writeToParcel(Parcel dest, int flags) {
-            super.writeToParcel(dest, flags);
-            dest.writeLong(mCurrentTime);
-            dest.writeLong(mExpectedTime);
-            dest.writeInt(mState);
-            dest.writeInt(mTotalSteps);
-            dest.writeInt(mCurrentStep);
-        }
-
-    }
 
 }
