@@ -32,6 +32,9 @@
         android:id="@+id/fontableTextView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FontableTextView" />
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:gravity="center"
+        android:textSize="@dimen/shopelia_font_size_small"
+        android:text="@string/shopelia_pincode_description_create" />
 
 </LinearLayout>

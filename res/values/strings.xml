@@ -69,4 +69,9 @@
     <string name="shopelia_confirmation_shipping_fees">Shipping fees</string>
     <string name="shopelia_confirmation_total_price">TOTAL</string>
     
+    <!-- Pin code -->
+    <string name="shopelia_pincode_create">Create your pin code</string>
+    <string name="shopelia_pincode_re_enter">Type your pin code again</string>
+   	<string name="shopelia_pincode_enter">Type your pin code</string>
+    <string name="shopelia_pincode_description_create">Votre code PIN vous permet de sécuriser toutes les transactions.</string>
 </resources>

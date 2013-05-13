@@ -13,11 +13,13 @@ import android.widget.EditText;
 
 import com.shopelia.android.R;
 
-public class NumberInput extends EditText {
+public class NumberInput extends EditText implements Errorable {
 
     private int mMaxLength = 4;
     private Drawable mDrawable;
     private Paint mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+    private boolean mHasError = false;
 
     public NumberInput(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -66,7 +68,7 @@ public class NumberInput extends EditText {
             textLength = 2;
         }
 
-        float radius = inputWidth / 6.f;
+        float radius = inputWidth / 8.f;
         for (int index = 0; index < maxLength; index++) {
             int left = index * (inputWidth + space) + paddingLeft;
             int top = paddingTop;
@@ -84,7 +86,11 @@ public class NumberInput extends EditText {
     protected Drawable getDrawable(final int index, final int length) {
         if (mDrawable instanceof StateListDrawable) {
             StateListDrawable drawable = (StateListDrawable) mDrawable;
-            if (index == length) {
+            if (hasError()) {
+                drawable.setState(new int[] {
+                    R.attr.state_error
+                });
+            } else if (index == length && hasFocus()) {
                 drawable.setState(new int[] {
                     android.R.attr.state_focused
                 });
@@ -105,6 +111,17 @@ public class NumberInput extends EditText {
     protected void onSelectionChanged(int selStart, int selEnd) {
         super.onSelectionChanged(selStart, selEnd);
         setSelection(getText().length(), getText().length());
+    }
+
+    @Override
+    public void setError(boolean hasError) {
+        mHasError = hasError;
+        invalidate();
+    }
+
+    @Override
+    public boolean hasError() {
+        return mHasError;
     }
 
 }

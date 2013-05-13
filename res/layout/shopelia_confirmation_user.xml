@@ -24,6 +24,7 @@
         android:background="@drawable/shopelia_grey_button_background"
         android:padding="@dimen/shopelia_margin_small"
         android:scaleType="centerInside"
+        android:visibility="gone"
         android:src="@drawable/shopelia_pen" />
 
     <LinearLayout

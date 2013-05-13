@@ -30,7 +30,7 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // getContract().getOrderHandler().setCallback(this);
+        getContract().getOrderHandler().setCallback(this);
     }
 
     @Override

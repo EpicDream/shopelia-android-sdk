@@ -46,14 +46,10 @@ public class Order implements Parcelable {
 
     private Order(Parcel source) {
         uuid = source.readString();
-        // address = ParcelUtils.readParcelable(source,
-        // Address.class.getClassLoader());
-        // card = ParcelUtils.readParcelable(source,
-        // PaymentCard.class.getClassLoader());
-        // user = ParcelUtils.readParcelable(source,
-        // User.class.getClassLoader());
-        // state = ParcelUtils.readParcelable(source,
-        // OrderState.class.getClassLoader());
+        address = ParcelUtils.readParcelable(source, Address.class.getClassLoader());
+        card = ParcelUtils.readParcelable(source, PaymentCard.class.getClassLoader());
+        user = ParcelUtils.readParcelable(source, User.class.getClassLoader());
+        state = ParcelUtils.readParcelable(source, OrderState.class.getClassLoader());
         product = ParcelUtils.readParcelable(source, Product.class.getClassLoader());
     }
 
@@ -65,10 +61,10 @@ public class Order implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(uuid);
-        // ParcelUtils.writeParcelable(dest, address, flags);
-        // ParcelUtils.writeParcelable(dest, card, flags);
-        // ParcelUtils.writeParcelable(dest, user, flags);
-        // ParcelUtils.writeParcelable(dest, state, flags);
+        ParcelUtils.writeParcelable(dest, address, flags);
+        ParcelUtils.writeParcelable(dest, card, flags);
+        ParcelUtils.writeParcelable(dest, user, flags);
+        ParcelUtils.writeParcelable(dest, state, flags);
         ParcelUtils.writeParcelable(dest, product, flags);
     }
 

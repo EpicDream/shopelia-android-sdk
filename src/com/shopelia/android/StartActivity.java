@@ -92,7 +92,7 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
         Order order = Order.inflate(result);
         order.product.url = getIntent().getStringExtra(EXTRA_PRODUCT_URL);
         order.product.name = getIntent().getStringExtra(EXTRA_PRODUCT_TITLE);
-        //order.product.image = getIntent().getParcelableExtra(EXTRA_PRODUCT_IMAGE);
+        order.product.image = getIntent().getParcelableExtra(EXTRA_PRODUCT_IMAGE);
         order.product.currency = Currency.EUR;
         order.product.tax = Tax.ATI;
         order.product.description = getIntent().getStringExtra(EXTRA_PRODUCT_DESCRIPTION);

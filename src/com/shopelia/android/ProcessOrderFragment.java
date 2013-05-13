@@ -5,6 +5,8 @@ import java.util.regex.Pattern;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,7 +43,8 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
     }
 
-    private static final String SAVE_ORDER = "save:order";
+    private static final int RESULT_CHECK_PINCODE = 0xbeef;
+    private static final int RESULT_CREATE_PINCODE = 0xcafe;
 
     private WaitingView mWaitingView;
     private FontableTextView mMessageTextView;
@@ -66,23 +69,42 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
             mOrderHandler = getContract().getOrderHandler();
         }
 
+        mOrder = getBaseActivity().getOrder();
+
         if (savedInstanceState == null) {
-            mOrder = getBaseActivity().getOrder();
+
+            if (mOrder.user == null) {
+                mOrder.user = UserManager.get(getActivity()).getUser();
+            }
+
+            if (mOrder.user != null && TextUtils.isEmpty(mOrder.user.pincode)) {
+                Intent intent = new Intent(getActivity(), PincodeActivity.class);
+                intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, true);
+                startActivityForResult(intent, RESULT_CREATE_PINCODE);
+            } else {
+                Intent intent = new Intent(getActivity(), PincodeActivity.class);
+                intent.putExtra(PincodeActivity.EXTRA_PINCODE, mOrder.user.pincode);
+                startActivityForResult(intent, RESULT_CHECK_PINCODE);
+            }
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            if (mOrderHandler == null) {
+                mOrderHandler = getContract().getOrderHandler();
+            }
+            mWaitingView.start();
             if (!UserManager.get(getActivity()).isLogged()) {
                 mOrderHandler.createAccount(mOrder.user, mOrder.address);
             } else {
                 mOrderHandler.retrieveUser(UserManager.get(getActivity()).getUser().id);
             }
         } else {
-            mOrder = savedInstanceState.getParcelable(SAVE_ORDER);
+            getActivity().finish();
         }
-
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVE_ORDER, mOrder);
     }
 
     @Override
@@ -109,7 +131,6 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         super.onViewCreated(view, savedInstanceState);
         mWaitingView = (WaitingView) view.findViewById(R.id.waitingView);
         mMessageTextView = (FontableTextView) view.findViewById(R.id.message);
-        mWaitingView.start();
         TextView title = (TextView) view.findViewById(R.id.title);
         title.setText(getString(R.string.shopelia_waiting_shopelia_is_preparing_your_order, mOrder.product.vendor.getName()));
     }
@@ -191,6 +212,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onUserRetrieved(User user) {
         // TODO : Just for beta version
+        Log.d(null, "ORDER " + mOrder + " " + user);
         mOrder.card = user.paymentCards.get(0);
         mOrder.address = user.addresses.get(0);
         mOrderHandler.order(mOrder);
