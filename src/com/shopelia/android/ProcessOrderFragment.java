@@ -92,9 +92,13 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (mOrderHandler == null) {
+            mOrderHandler = getContract().getOrderHandler();
+        }
+        mOrderHandler.setCallback(this);
         if (resultCode == Activity.RESULT_OK) {
-            if (mOrderHandler == null) {
-                mOrderHandler = getContract().getOrderHandler();
+            if (requestCode == RESULT_CREATE_PINCODE) {
+                mOrder.user.pincode = data.getStringExtra(PincodeActivity.EXTRA_PINCODE);
             }
             mWaitingView.start();
             if (!UserManager.get(getActivity()).isLogged()) {
@@ -129,6 +133,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mOrder = getBaseActivity().getOrder();
         mWaitingView = (WaitingView) view.findViewById(R.id.waitingView);
         mMessageTextView = (FontableTextView) view.findViewById(R.id.message);
         TextView title = (TextView) view.findViewById(R.id.title);
@@ -172,7 +177,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     public void onOrderStateUpdate(OrderState newState) {
         Log.d(null, "NEW STATE = " + newState.uuid + " " + newState.message + " " + newState.state);
         if (newState.state == State.ERROR) {
-            if (!isDetached()) {
+            if (getActivity() != null) {
                 mWaitingView.setProgressColor(getResources().getColor(R.color.shopelia_red));
             }
             mWaitingView.pause();
@@ -212,7 +217,6 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     @Override
     public void onUserRetrieved(User user) {
         // TODO : Just for beta version
-        Log.d(null, "ORDER " + mOrder + " " + user);
         mOrder.card = user.paymentCards.get(0);
         mOrder.address = user.addresses.get(0);
         mOrderHandler.order(mOrder);

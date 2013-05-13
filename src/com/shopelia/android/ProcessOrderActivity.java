@@ -21,7 +21,7 @@ public class ProcessOrderActivity extends HostActivity implements OrderHandlerHo
 
         if (saveState == null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.add(R.id.fragment_container, mProcessOrderFragment);
+            ft.replace(R.id.fragment_container, mProcessOrderFragment);
             ft.commit();
         }
 

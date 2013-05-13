@@ -75,9 +75,20 @@ public class HostActivity extends FragmentActivity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         mOrder = savedInstanceState.getParcelable(EXTRA_ORDER);
+        if (isPartOfOrderWorkFlow() && mOrder == null) {
+            throw new UnsupportedOperationException("Activity should hold an order at this point");
+        }
     }
 
     public Order getOrder() {
+        if (mOrder == null) {
+            if (isPartOfOrderWorkFlow()) {
+                recoverOrder(getIntent().getExtras());
+                if (mOrder == null) {
+                    throw new UnsupportedOperationException("Activity should hold an order at this point");
+                }
+            }
+        }
         return mOrder;
     }
 
