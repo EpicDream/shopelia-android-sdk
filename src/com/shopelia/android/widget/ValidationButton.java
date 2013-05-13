@@ -1,9 +1,11 @@
 package com.shopelia.android.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -11,6 +13,7 @@ import android.widget.TextView;
 
 import com.shopelia.android.R;
 
+@SuppressLint("DefaultLocale")
 public class ValidationButton extends FrameLayout {
 
     private ImageView mIcon;
@@ -41,6 +44,8 @@ public class ValidationButton extends FrameLayout {
             try {
                 setText(ta.getText(R.styleable.ValidationButton_text));
                 setIcon(ta.getDrawable(R.styleable.ValidationButton_icon));
+                setTextSize(ta.getDimension(R.styleable.ValidationButton_textSize,
+                        getResources().getDimension(R.dimen.shopelia_font_size_small)));
             } finally {
                 ta.recycle();
             }
@@ -54,6 +59,10 @@ public class ValidationButton extends FrameLayout {
         if (mLabel != null) {
             mLabel.setText(text);
         }
+    }
+
+    public void setTextSize(float textSize) {
+        mLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 
     public void setText(int resId) {
