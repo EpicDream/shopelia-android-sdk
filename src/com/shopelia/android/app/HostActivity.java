@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
+import com.shopelia.android.api.ShopeliaActivityPath;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
 
@@ -16,13 +17,14 @@ import com.shopelia.android.model.Order;
  * 
  * @author Pierre Pollastri
  */
-public class HostActivity extends FragmentActivity {
+public abstract class HostActivity extends FragmentActivity {
 
     public static final String EXTRA_ORDER = Config.EXTRA_PREFIX + "ORDER";
     protected static final String EXTRA_INIT_ORDER = Config.EXTRA_PREFIX + "INIT_ORDER";
     public static final String EXTRA_USER = Config.EXTRA_PREFIX + "USER";
 
     private Order mOrder;
+    private ShopeliaActivityPath mCurrentActivity;
     private FrameLayout mRootView;
 
     @Override
@@ -38,6 +40,13 @@ public class HostActivity extends FragmentActivity {
                 throw new UnsupportedOperationException("Activity should hold an order at this point");
             }
         }
+
+        if (saveState == null) {
+            mCurrentActivity = new ShopeliaActivityPath();
+            mCurrentActivity.setActivityName(getActivityName());
+            mCurrentActivity.startRecording();
+        }
+
     }
 
     protected void setHostContentView(int resId) {
@@ -92,8 +101,14 @@ public class HostActivity extends FragmentActivity {
         return mOrder;
     }
 
+    public void stopRecording() {
+        mCurrentActivity.stopRecording();
+    }
+
     protected boolean isPartOfOrderWorkFlow() {
         return true;
     }
+
+    public abstract String getActivityName();
 
 }

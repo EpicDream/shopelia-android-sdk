@@ -3,6 +3,7 @@ package com.shopelia.android;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.Activity;
@@ -24,9 +25,13 @@ import com.shopelia.android.model.OrderState;
 import com.shopelia.android.model.OrderState.State;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
+import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.OrderHandler;
+import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.WaitingView;
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
 
 public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> implements OrderHandler.Callback {
 
@@ -50,7 +55,6 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     private FontableTextView mMessageTextView;
     private OrderHandler mOrderHandler;
     private Order mOrder;
-    private boolean mAuthentified = false;
     private String mCurrentMessage;
 
     @Override
@@ -84,6 +88,7 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
             } else {
                 Intent intent = new Intent(getActivity(), PincodeActivity.class);
                 intent.putExtra(PincodeActivity.EXTRA_PINCODE, mOrder.user.pincode);
+                intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, false);
                 startActivityForResult(intent, RESULT_CHECK_PINCODE);
             }
         }
@@ -97,6 +102,24 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         }
         mOrderHandler.setCallback(this);
         if (resultCode == Activity.RESULT_OK) {
+            if (UserManager.get(getActivity()).isLogged() && UserManager.get(getActivity()).getUser().pincode == null) {
+                User user = UserManager.get(getActivity()).getUser();
+                JSONObject object = new JSONObject();
+                try {
+                    JSONObject userObject = new JSONObject();
+                    userObject.put(User.Api.PINCODE, data.getStringExtra(PincodeActivity.EXTRA_PINCODE));
+                    object.put(User.Api.USER, userObject);
+                    ShopeliaRestClient.put(Command.V1.Users.Retrieve(user.id), object, new AsyncCallback() {
+
+                        @Override
+                        public void onComplete(HttpResponse httpResponse) {
+                            // Do not care
+                        }
+                    });
+                } catch (JSONException e) {
+                    // Do not care
+                }
+            }
             if (requestCode == RESULT_CREATE_PINCODE) {
                 mOrder.user.pincode = data.getStringExtra(PincodeActivity.EXTRA_PINCODE);
             }

@@ -21,8 +21,8 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="Large Text"
-        app:fontStyle="bold"
-        app:fontFamily="normal"
+        app:shopelia_fontStyle="bold"
+        app:shopelia_fontFamily="normal"
         android:textAppearance="@style/Theme.Shopelia.TextAppearance.Header"
          />
 

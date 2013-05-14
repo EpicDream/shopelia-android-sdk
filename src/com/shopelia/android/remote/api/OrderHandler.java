@@ -126,6 +126,7 @@ public final class OrderHandler {
                 try {
                     User user = User.inflate(object.getJSONObject(User.Api.USER));
                     mUser = user;
+                    UserManager.get(mContext).login(mUser);
                     if (mCallback != null) {
                         mCallback.onUserRetrieved(user);
                     }

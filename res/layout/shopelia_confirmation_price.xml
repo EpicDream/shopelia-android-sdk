@@ -62,7 +62,7 @@
             android:layout_marginRight="@dimen/shopelia_margin_normal"
             android:text="@string/shopelia_confirmation_total_price"
             android:textSize="@dimen/shopelia_font_size_large"
-            app:fontStyle="bold" />
+            app:shopelia_fontStyle="bold" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/price_value_total"
@@ -71,7 +71,7 @@
             android:gravity="right"
             android:text="15.68€"
             android:textColor="@color/shopelia_red"
-            app:fontStyle="bold"
+            app:shopelia_fontStyle="bold"
             android:textSize="@dimen/shopelia_font_size_large" />
 
     </LinearLayout>

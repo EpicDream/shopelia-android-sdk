@@ -10,6 +10,8 @@ import com.shopelia.android.remote.api.OrderHandler;
 
 public class ProcessOrderActivity extends HostActivity implements OrderHandlerHolder {
 
+    public static final String ACTIVITY_NAME = "ProcessOrder";
+
     private OrderHandler mOrderHandler;
 
     ProcessOrderFragment mProcessOrderFragment = new ProcessOrderFragment();
@@ -69,6 +71,11 @@ public class ProcessOrderActivity extends HostActivity implements OrderHandlerHo
     public void onCheckoutFailed() {
         // TODO Display failure screen
         Toast.makeText(this, "Order failed", Toast.LENGTH_LONG).show();
+    }
+
+    @Override
+    public String getActivityName() {
+        return ACTIVITY_NAME;
     }
 
 }

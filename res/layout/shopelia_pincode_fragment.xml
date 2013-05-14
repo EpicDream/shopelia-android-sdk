@@ -33,22 +33,22 @@
         android:layout_height="60dp"
         android:layout_marginLeft="@dimen/shopelia_margin_extra_small"
         android:layout_marginRight="@dimen/shopelia_margin_extra_small"
-        android:layout_marginTop="@dimen/shopelia_margin_large"
-        android:textIsSelectable="false"
+        android:layout_marginTop="@dimen/shopelia_margin_extra_large"
         android:background="@android:color/transparent"
-        app:number_background="@drawable/shopelia_field"
         android:inputType="number"
         android:maxLength="4"
-        >
+        android:textIsSelectable="false"
+        app:shopelia_number_background="@drawable/shopelia_field" >
+
     </com.shopelia.android.widget.NumberInput>
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/fontableTextView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:layout_marginTop="@dimen/shopelia_margin_extra_large"
         android:gravity="center"
-        android:textSize="@dimen/shopelia_font_size_small"
-        android:text="@string/shopelia_pincode_description_create" />
+        android:text="@string/shopelia_pincode_description_create"
+        android:textSize="@dimen/shopelia_font_size_small" />
 
 </LinearLayout>

@@ -42,9 +42,9 @@ public class ValidationButton extends FrameLayout {
         if (attrs != null) {
             TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.ValidationButton, 0, 0);
             try {
-                setText(ta.getText(R.styleable.ValidationButton_text));
-                setIcon(ta.getDrawable(R.styleable.ValidationButton_icon));
-                setTextSize(ta.getDimension(R.styleable.ValidationButton_textSize,
+                setText(ta.getText(R.styleable.ValidationButton_shopelia_text));
+                setIcon(ta.getDrawable(R.styleable.ValidationButton_shopelia_icon));
+                setTextSize(ta.getDimension(R.styleable.ValidationButton_shopelia_textSize,
                         getResources().getDimension(R.dimen.shopelia_font_size_small)));
             } finally {
                 ta.recycle();

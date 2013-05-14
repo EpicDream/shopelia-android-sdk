@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="**** **** **** 1234"
             android:textSize="@dimen/shopelia_font_size_normal"
-            app:fontStyle="normal" />
+            app:shopelia_fontStyle="normal" />
 
     </LinearLayout>
 

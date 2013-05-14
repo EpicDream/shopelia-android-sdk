@@ -8,6 +8,7 @@
         android:minSdkVersion="7"
         android:targetSdkVersion="17" />
 
+    <!-- Permission to access coarse location - required -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <!-- Permission to access network state - required -->

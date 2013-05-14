@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
+ 
     <declare-styleable name="FontableTextView">
-        <attr name="fontStyle">
+        <attr name="shopelia_fontStyle">
             <flag name="normal" value="0" />
             <flag name="bold" value="1" />
             <flag name="italic" value="2" />
         </attr>
-        <attr name="fontFamily">
+        <attr name="shopelia_fontFamily">
             <enum name="normal" value="0" />
             <enum name="condensed" value="1" />
             <enum name="light" value="2" />
         </attr>
     </declare-styleable>
-
+ 
     <declare-styleable name="ValidationButton">
-        <attr name="text" format="string" />
-		<attr name="icon" format="integer" />
-		<attr name="textSize" format="integer" />
+        <attr name="shopelia_text" format="string" />
+        <attr name="shopelia_icon" format="integer" />
+        <attr name="shopelia_textSize" format="integer" />
     </declare-styleable>
-    
+     
     <declare-styleable name="NumberInput">
-		<attr name="number_background" format="integer" />
+        <attr name="shopelia_number_background" format="integer" />
     </declare-styleable>
-    
+     
     <declare-styleable name="FormState">
         <attr name="state_error" format="boolean" />
     </declare-styleable>
-    
+     
 </resources>

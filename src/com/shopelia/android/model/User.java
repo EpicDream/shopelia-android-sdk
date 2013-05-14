@@ -11,6 +11,7 @@ import android.os.Parcelable;
 import android.util.Log;
 
 import com.shopelia.android.config.Config;
+import com.shopelia.android.utils.JsonUtils;
 
 public class User implements JsonData, Parcelable {
 
@@ -83,6 +84,9 @@ public class User implements JsonData, Parcelable {
         json.put(Api.EMAIL, email);
         json.put(Api.FIRST_NAME, firstName);
         json.put(Api.LAST_NAME, lastName);
+        json.put(Api.PINCODE, pincode);
+        json.put(Api.ADDRESSES, JsonUtils.toJson(addresses));
+        json.put(Api.PAYMENT_CARDS, JsonUtils.toJson(paymentCards));
         return json;
     }
 
@@ -93,6 +97,7 @@ public class User implements JsonData, Parcelable {
         user.firstName = json.optString(Api.FIRST_NAME);
         user.lastName = json.optString(Api.LAST_NAME);
         user.phone = json.optString(Api.PHONE);
+        user.pincode = json.optString(Api.PINCODE);
         if (json.has(Api.ADDRESSES)) {
             try {
                 user.addresses = Address.inflate(json.getJSONArray(Api.ADDRESSES));

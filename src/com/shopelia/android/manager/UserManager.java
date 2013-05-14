@@ -31,7 +31,7 @@ public class UserManager {
         final String json = mPreferences.getString(PREFS_USER_JSON, null);
         if (json != null) {
             try {
-                login(new User(new JSONObject(json)));
+                login(User.inflate(new JSONObject(json)));
             } catch (JSONException e) {
                 Log.e("Shopelia", "Impossible to restore user from\n" + json, e);
             }

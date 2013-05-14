@@ -114,4 +114,10 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
         intent.putExtra(HostActivity.EXTRA_ORDER, order);
         startActivityForResult(intent, Config.REQUEST_ORDER);
     }
+
+    @Override
+    public String getActivityName() {
+        // TODO Auto-generated method stub
+        return null;
+    }
 }

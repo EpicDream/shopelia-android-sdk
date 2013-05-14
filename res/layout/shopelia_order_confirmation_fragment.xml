@@ -30,7 +30,7 @@
                 android:text="@string/shopelia_confirmation_title"
                 android:textColor="#333333"
                 android:textSize="@dimen/shopelia_font_size_large"
-                app:fontStyle="bold" />
+                app:shopelia_fontStyle="bold" />
 
             <include
                 android:layout_width="wrap_content"
@@ -105,9 +105,9 @@
                 android:layout_marginLeft="@dimen/shopelia_margin_large"
                 android:layout_marginRight="@dimen/shopelia_margin_large"
                 android:layout_marginTop="@dimen/shopelia_margin_extra_large"
-                app:icon="@drawable/shopelia_bill_white"
-                app:text="@string/shopelia_confirmation_confirm"
-                app:textSize="@dimen/shopelia_font_size_normal" >
+                app:shopelia_icon="@drawable/shopelia_bill_white"
+                app:shopelia_text="@string/shopelia_confirmation_confirm"
+                app:shopelia_textSize="@dimen/shopelia_font_size_normal" >
             </com.shopelia.android.widget.ValidationButton>
 
             <LinearLayout

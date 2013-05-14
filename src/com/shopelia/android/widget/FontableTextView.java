@@ -46,8 +46,8 @@ public class FontableTextView extends TextView {
 
         TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FontableTextView, defStyle, 0);
 
-        final int fontFamily = a.getInt(R.styleable.FontableTextView_fontFamily, FAMILY_NORMAL);
-        final int fontStyle = a.getInt(R.styleable.FontableTextView_fontStyle, STYLE_NORMAL);
+        final int fontFamily = a.getInt(R.styleable.FontableTextView_shopelia_fontFamily, FAMILY_NORMAL);
+        final int fontStyle = a.getInt(R.styleable.FontableTextView_shopelia_fontStyle, STYLE_NORMAL);
 
         setTypeface(getTypeface(fontFamily, fontStyle));
 

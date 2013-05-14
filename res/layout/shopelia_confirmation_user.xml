@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="01 08 93 89 12"
             android:textSize="@dimen/shopelia_font_size_normal"
-            app:fontStyle="normal" />
+            app:shopelia_fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/user_email"
@@ -52,7 +52,7 @@
             android:layout_marginTop="@dimen/shopelia_margin_normal"
             android:text="super_mail@supermail.fr"
             android:textSize="@dimen/shopelia_font_size_normal"
-            app:fontStyle="normal" />
+            app:shopelia_fontStyle="normal" />
 
     </LinearLayout>
 

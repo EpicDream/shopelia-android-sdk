@@ -27,7 +27,7 @@
             android:text="Canard ultra vibrant"
             android:textSize="@dimen/shopelia_font_size_normal"
             android:textStyle="bold"
-            app:fontStyle="bold" />
+            app:shopelia_fontStyle="bold" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/product_description"
@@ -50,7 +50,7 @@
                 android:layout_height="wrap_content"
                 android:text="chez"
                 android:textSize="@dimen/shopelia_font_size_small"
-                app:fontStyle="bold" />
+                app:shopelia_fontStyle="bold" />
 
             <ImageView
                 android:id="@+id/product_vendor_icon"

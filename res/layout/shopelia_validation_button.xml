@@ -39,6 +39,6 @@
         android:textColor="@color/shopelia_validation_button_text_color"
         android:textSize="@dimen/shopelia_font_size_normal"
         android:textStyle="bold"
-        app:fontStyle="bold" />
+        app:shopelia_fontStyle="bold" />
 
 </RelativeLayout>

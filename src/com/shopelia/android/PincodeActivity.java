@@ -4,12 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
 
 public class PincodeActivity extends HostActivity implements PincodeHandler {
+
+    public static final String ACTIVITY_NAME = "Pincode";
 
     /**
      * An optional boolean value. If this field is not set and
@@ -53,6 +56,7 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
             }
         }
         mCreatePincode = TextUtils.isEmpty(mPincode);
+        Log.d(null, "PINCODE = " + mPincode);
     }
 
     @Override
@@ -64,7 +68,9 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(EXTRA_CREATE_PINCODE, mCreatePincode);
-        outState.putString(EXTRA_PINCODE, mPincode);
+        if (mPincode != null) {
+            outState.putString(EXTRA_PINCODE, mPincode);
+        }
         outState.putInt(EXTRA_NUMBER_OF_TRY, mMaxTry);
     }
 
@@ -120,6 +126,11 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, PincodeFragment.newInstance(step, errorMessage));
         ft.commit();
+    }
+
+    @Override
+    public String getActivityName() {
+        return ACTIVITY_NAME;
     }
 
 }

@@ -26,7 +26,7 @@ public class NumberInput extends EditText implements Errorable {
         if (attrs != null) {
             TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.NumberInput, 0, 0);
             try {
-                mDrawable = ta.getDrawable(R.styleable.NumberInput_number_background);
+                mDrawable = ta.getDrawable(R.styleable.NumberInput_shopelia_number_background);
             } finally {
                 ta.recycle();
             }

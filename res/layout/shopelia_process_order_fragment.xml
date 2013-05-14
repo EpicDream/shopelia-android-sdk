@@ -16,7 +16,7 @@
         android:gravity="center"
         android:text="@string/shopelia_waiting_shopelia_is_preparing_your_order"
         android:textSize="@dimen/shopelia_font_size_normal"
-        app:fontStyle="bold" />
+        app:shopelia_fontStyle="bold" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/message"
@@ -28,7 +28,7 @@
         android:gravity="center"
         android:text="@string/shopelia_waiting_with_shopelia_order_with_1_click"
         android:textSize="@dimen/shopelia_font_size_small"
-        app:fontStyle="normal" />
+        app:shopelia_fontStyle="normal" />
 
     <com.shopelia.android.widget.WaitingView
         android:id="@+id/waitingView"

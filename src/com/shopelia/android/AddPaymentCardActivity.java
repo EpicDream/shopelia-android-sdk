@@ -33,6 +33,8 @@ import com.shopelia.android.widget.FormEditText;
 
 public class AddPaymentCardActivity extends HostActivity {
 
+    public static final String ACTIVITY_NAME = "PaymentCardCreation";
+
     public static final String EXTRA_PAYMENT_CARD = Config.EXTRA_PREFIX + "PAYMENT_CARD";
 
     private static final int MAX_CARD_VALIDITY_YEAR = 15;
@@ -411,5 +413,10 @@ public class AddPaymentCardActivity extends HostActivity {
             }
         }
     };
+
+    @Override
+    public String getActivityName() {
+        return ACTIVITY_NAME;
+    }
 
 }

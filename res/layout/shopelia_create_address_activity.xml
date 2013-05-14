@@ -122,8 +122,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/shopelia_margin_extra_large"
-            app:text="@string/shopelia_form_address_validate"
-            app:icon="@drawable/shopelia_pin_white"
+            app:shopelia_text="@string/shopelia_form_address_validate"
+            app:shopelia_icon="@drawable/shopelia_pin_white"
              />
 
         <include

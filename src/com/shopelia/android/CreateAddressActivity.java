@@ -39,6 +39,8 @@ import com.shopelia.android.widget.FormEditText;
 
 public class CreateAddressActivity extends HostActivity {
 
+    public static final String ACTIVITY_NAME = "AddressCreation";
+
     /*
      * Form informations extras/saves
      */
@@ -197,6 +199,11 @@ public class CreateAddressActivity extends HostActivity {
     @Override
     protected boolean isPartOfOrderWorkFlow() {
         return false;
+    }
+
+    @Override
+    public String getActivityName() {
+        return ACTIVITY_NAME;
     }
 
     private class AutocompletionAdapter extends BaseAdapter implements Filterable {

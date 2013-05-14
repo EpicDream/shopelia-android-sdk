@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="Prénom Nom"
             android:textSize="@dimen/shopelia_font_size_normal"
-            app:fontStyle="normal" />
+            app:shopelia_fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/address_address"
@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:text="12 rue du test"
             android:textSize="@dimen/shopelia_font_size_normal"
-            app:fontStyle="normal" />
+            app:shopelia_fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/address_extras"
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:text="esc de droite"
             android:textSize="@dimen/shopelia_font_size_normal"
-            app:fontStyle="normal" />
+            app:shopelia_fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/address_city_and_country"
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:text="75001, Paris, France"
             android:textSize="@dimen/shopelia_font_size_normal"
-            app:fontStyle="normal" />
+            app:shopelia_fontStyle="normal" />
 
        
     </LinearLayout>
