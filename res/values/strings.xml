@@ -74,4 +74,6 @@
     <string name="shopelia_pincode_re_enter">Type your pin code again</string>
    	<string name="shopelia_pincode_enter">Type your pin code</string>
     <string name="shopelia_pincode_description_create">Votre code PIN vous permet de sécuriser toutes les transactions.</string>
+    <string name="shopelia_pincode_do_not_match">PIN codes do not match</string>
+    <string name="shopelia_pincode_wrong">Wrong PIN code</string>
 </resources>

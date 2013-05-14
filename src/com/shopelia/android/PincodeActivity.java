@@ -41,7 +41,7 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
         init(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
 
         if (savedInstanceState == null) {
-            handleFragment();
+            handleFragment(null);
         }
     }
 
@@ -91,13 +91,13 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
                 setResult(RESULT_OK, intent);
                 finish();
             } else {
-                handleFragment();
+                handleFragment(null);
             }
             return true;
         } else {
             if (isCreatingPincode() && hadPincode) {
                 mPincode = null;
-                handleFragment();
+                handleFragment(getString(R.string.shopelia_pincode_do_not_match));
             } else {
                 mAttemptNumber++;
             }
@@ -112,13 +112,13 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
         }
     }
 
-    private void handleFragment() {
+    private void handleFragment(String errorMessage) {
         int step = isCreatingPincode() ? PincodeFragment.STEP_CREATION : PincodeFragment.STEP_VERIFICATION;
         if (step == PincodeFragment.STEP_CREATION && !TextUtils.isEmpty(mPincode)) {
             step = PincodeFragment.STEP_CONFIRMATION;
         }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.fragment_container, PincodeFragment.newInstance(step));
+        ft.replace(R.id.fragment_container, PincodeFragment.newInstance(step, errorMessage));
         ft.commit();
     }
 

@@ -30,6 +30,7 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
     }
 
     public static final String ARGS_STEP = "args:step";
+    public static final String ARGS_ERROR_MESSAGE = "args:error_message";
 
     public static final int STEP_CREATION = 0;
     public static final int STEP_VERIFICATION = 1;
@@ -37,10 +38,12 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
     private TextView mHeaderTitle;
     private NumberInput mNumberInput;
+    private TextView mErrorMessage;
 
-    public static PincodeFragment newInstance(int step) {
+    public static PincodeFragment newInstance(int step, String error) {
         Bundle arguments = new Bundle();
         arguments.putInt(ARGS_STEP, step);
+        arguments.putString(ARGS_ERROR_MESSAGE, error);
         PincodeFragment fragment = new PincodeFragment();
         fragment.setArguments(arguments);
         return fragment;
@@ -80,6 +83,10 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
         mNumberInput.setOnEditorActionListener(mOnEditorActionListener);
         mNumberInput.requestFocus();
         mNumberInput.addTextChangedListener(mTextWatcher);
+        mErrorMessage = (TextView) view.findViewById(R.id.error);
+        if (getArguments().containsKey(ARGS_ERROR_MESSAGE)) {
+            setError(getArguments().getString(ARGS_ERROR_MESSAGE));
+        }
     }
 
     private OnEditorActionListener mOnEditorActionListener = new OnEditorActionListener() {
@@ -89,6 +96,9 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
             String pincode = v.getText().toString();
             if (pincode.length() == 4 && TextUtils.isDigitsOnly(pincode)) {
                 ((Errorable) v).setError(!getContract().sendPincode(v.getText().toString()));
+                if (((Errorable) v).hasError() && getActivity() != null) {
+                    setError(getResources().getString(R.string.shopelia_pincode_wrong));
+                }
             } else {
                 ((Errorable) v).setError(true);
             }
@@ -113,5 +123,14 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
             mNumberInput.setError(false);
         }
     };
+
+    private void setError(String message) {
+        mErrorMessage.setText(message);
+        if (message == null) {
+            mErrorMessage.setVisibility(View.GONE);
+        } else {
+            mErrorMessage.setVisibility(View.VISIBLE);
+        }
+    }
 
 }

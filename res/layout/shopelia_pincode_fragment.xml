@@ -6,12 +6,26 @@
     android:orientation="vertical"
     android:paddingLeft="@dimen/shopelia_margin_large"
     android:paddingRight="@dimen/shopelia_margin_large"
-    
+    android:animateLayoutChanges="true"
      >
 
     <include
         android:id="@+id/header_frame"
         layout="@layout/shopelia_form_field_title_header" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/shopelia_margin_extra_small"
+        android:layout_marginRight="@dimen/shopelia_margin_extra_small"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
+        android:layout_marginBottom="@dimen/shopelia_margin_none"
+        android:textSize="@dimen/shopelia_font_size_small"
+        android:textColor="@color/shopelia_red"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="FontableTextView" />
 
     <com.shopelia.android.widget.NumberInput
         android:id="@+id/numberInput"
@@ -19,8 +33,8 @@
         android:layout_height="60dp"
         android:layout_marginLeft="@dimen/shopelia_margin_extra_small"
         android:layout_marginRight="@dimen/shopelia_margin_extra_small"
-        android:textIsSelectable="false"
         android:layout_marginTop="@dimen/shopelia_margin_large"
+        android:textIsSelectable="false"
         android:background="@android:color/transparent"
         app:number_background="@drawable/shopelia_field"
         android:inputType="number"
