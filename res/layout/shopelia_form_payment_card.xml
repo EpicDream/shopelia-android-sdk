@@ -35,6 +35,7 @@
             android:layout_marginTop="@dimen/shopelia_margin_large"
             android:gravity="center"
             android:text="@string/shopelia_form_payment_card_scan_or_fill"
+            android:textColor="@color/shopelia_dark"
             android:textSize="@dimen/shopelia_font_size_small" />
 
         <com.shopelia.android.widget.FormEditText

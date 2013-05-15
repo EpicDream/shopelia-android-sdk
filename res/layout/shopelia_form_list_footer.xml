@@ -24,12 +24,13 @@
         android:layout_marginLeft="@dimen/shopelia_margin_large"
         android:layout_marginRight="@dimen/shopelia_margin_large"
         android:layout_marginTop="@dimen/shopelia_margin_large"
-        android:text="@string/shopelia_form_main_footer_text"
-        app:shopelia_fontFamily="normal"
-        app:shopelia_fontStyle="normal"
         android:gravity="center"
+        android:icon="@drawable/shopelia_cart_white"
+        android:text="@string/shopelia_form_main_footer_text"
+        android:textColor="@color/shopelia_dark"
         android:textSize="@dimen/shopelia_font_size_small"
-        android:icon="@drawable/shopelia_cart_white" />
+        app:shopelia_fontFamily="normal"
+        app:shopelia_fontStyle="normal" />
 
     <include
         android:layout_width="match_parent"

@@ -64,12 +64,14 @@ public class ProcessOrderActivity extends HostActivity implements OrderHandlerHo
     @Override
     public void onCheckoutSucceed() {
         // TODO Display success screen
+        setResult(RESULT_OK);
         Toast.makeText(this, "Order succeed", Toast.LENGTH_LONG).show();
     }
 
     @Override
     public void onCheckoutFailed() {
         // TODO Display failure screen
+        setResult(RESULT_FAILURE);
         Toast.makeText(this, "Order failed", Toast.LENGTH_LONG).show();
     }
 

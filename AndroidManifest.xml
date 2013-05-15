@@ -81,6 +81,13 @@
             android:screenOrientation="sensorPortrait"
             android:windowSoftInputMode="adjustPan" />
 
+        <activity
+            android:name="com.shopelia.android.CloseCheckoutActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:theme="@style/Theme.Shopelia"
+            android:screenOrientation="sensorPortrait"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        
         <!-- Activities responsible for gathering payment info -->
         <activity
             android:name="io.card.payment.CardIOActivity"

@@ -37,8 +37,12 @@ public class ValidationButton extends FrameLayout {
 
     private void init(AttributeSet attrs) {
         LayoutInflater.from(getContext()).inflate(R.layout.shopelia_validation_button, this, true);
-        mIcon = (ImageView) findViewById(R.id.icon);
-        mLabel = (TextView) findViewById(R.id.text);
+        try {
+            mIcon = (ImageView) findViewById(R.id.icon);
+            mLabel = (TextView) findViewById(R.id.text);
+        } catch (Exception e) {
+
+        }
         if (attrs != null) {
             TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.ValidationButton, 0, 0);
             try {

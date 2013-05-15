@@ -26,7 +26,7 @@ public class Order implements Parcelable {
 
     public String uuid = NO_ID;
 
-    public Product product;
+    public Product product = new Product();
 
     // Shipping
     public Address address;

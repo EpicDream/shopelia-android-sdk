@@ -82,10 +82,10 @@ public final class Shopelia {
         if (data == null) {
             data = new Intent();
         }
+        data.setClass(context, StartActivity.class);
         if (productUrl != null) {
             data.putExtra(EXTRA_PRODUCT_URL, productUrl);
         }
-        data.setClass(context, StartActivity.class);
         context.startActivity(data);
     }
 

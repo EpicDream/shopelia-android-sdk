@@ -1,36 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">ShopeliaSDK</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
 
     <!-- Main form -->
     <string name="shopelia_form_main_phone">Phone number</string>
-	<string name="shopelia_form_main_email">Email</string>
-	<string name="shopelia_form_main_validate">Continue my order</string>
+    <string name="shopelia_form_main_email">Email</string>
+    <string name="shopelia_form_main_validate">Continue my order</string>
     <string name="shopelia_form_main_personal_info">Personal informations</string>
     <string name="shopelia_form_main_shipping_address">Shipping address</string>
     <string name="shopelia_form_main_payment_method">Payment method</string>
     <string name="shopelia_form_main_card_number">Payment card number</string>
-	<string name="shopelia_form_main_address">Address</string>
-	<string name="shopelia_form_main_header_text" formatted="false">
-	    <![CDATA[
+    <string name="shopelia_form_main_address">Address</string>
+    <string name="shopelia_form_main_header_text" formatted="false">
+<![CDATA[
 	    You order will be automatically prepared on <b>%s</b> by <b>Shopelia</b>
 	    ]]>
-	</string>
-	<string name="shopelia_form_main_footer_text">
-	    <![CDATA[
+    </string>
+    <string name="shopelia_form_main_footer_text">
+<![CDATA[
 	    En cliquant sur ce bouton vous certifiez avoir lu et accepté les <font color="#0098ce">Conditions d\'utilisation</font>
 	    ]]>
-	</string>
-	<string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
-    
+    </string>
+    <string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
+
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Name</string>
     <string name="shopelia_form_account_first_name">First name</string>
     <string name="shopelia_form_account_card_number">Card number</string>
     <string name="shopelia_form_account_validate">Continue</string>
-    
+
     <!-- Address creation form -->
     <string name="shopelia_form_address_name">Name</string>
     <string name="shopelia_form_address_first_name">First name</string>
@@ -40,7 +41,7 @@
     <string name="shopelia_form_address_zipcode">Zip code</string>
     <string name="shopelia_form_address_country">Country</string>
     <string name="shopelia_form_address_validate">Add address</string>
-    
+
     <!-- Payment card creation form -->
     <string name="shopelia_form_payment_card_number">Card number</string>
     <string name="shopelia_form_payment_card_expiry_date">Expiry date</string>
@@ -48,32 +49,38 @@
     <string name="shopelia_form_payment_card_scan">Scan card number</string>
     <string name="shopelia_form_payment_card_validate">Add this card</string>
     <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saississez manuellement les informations</string>
-    
+
     <!-- Shopelia footer -->
     <string name="shopelia_footer">Secured by</string>
-    
+
     <!-- Taxes -->
     <string name="shopelia_tax_et">ET</string>
     <string name="shopelia_tax_ati">ATI</string>
-    
+
     <!-- Product sheet -->
     <string name="shopelia_product_shipping_fees" formatted="false">Shipping fees %s</string>
-    
+
     <!-- Waiting process -->
-    <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false" >Shopelia prépare votre commande sur %s</string>
+    <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
     <string name="shopelia_waiting_with_shopelia_order_with_1_click">Initialisation&#8230;</string>
-    
+
     <!-- Order confirmation -->
     <string name="shopelia_confirmation_confirm">Order now</string>
     <string name="shopelia_confirmation_title">Order summary</string>
     <string name="shopelia_confirmation_shipping_fees">Shipping fees</string>
     <string name="shopelia_confirmation_total_price">TOTAL</string>
-    
+
     <!-- Pin code -->
     <string name="shopelia_pincode_create">Create your pin code</string>
     <string name="shopelia_pincode_re_enter">Type your pin code again</string>
-   	<string name="shopelia_pincode_enter">Type your pin code</string>
+    <string name="shopelia_pincode_enter">Type your pin code</string>
     <string name="shopelia_pincode_description_create">Votre code PIN vous permet de sécuriser toutes les transactions.</string>
     <string name="shopelia_pincode_do_not_match">PIN codes do not match</string>
     <string name="shopelia_pincode_wrong">Wrong PIN code</string>
+
+    <!-- Close checkout -->
+    <string name="shopelia_close_checkout_main_text">Votre achat vient d\'être effectué !</string>
+    <string name="shopelia_close_checkout_sub_text">Vous allez recevoir la confirmation de la transaction dans votre boîte mail.\n Merci d\'avoir utilisé le service Shopelia !</string>
+    <string name="shopelia_close_checkout_validation">OK</string>
+
 </resources>

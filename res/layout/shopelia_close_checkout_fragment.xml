@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal|center_vertical"
+    android:gravity="center"
     android:orientation="vertical" >
 
     <com.shopelia.android.widget.FontableTextView
@@ -14,9 +13,9 @@
         android:layout_marginLeft="@dimen/shopelia_margin_large"
         android:layout_marginRight="@dimen/shopelia_margin_large"
         android:gravity="center"
-        android:text="@string/shopelia_waiting_shopelia_is_preparing_your_order"
-        android:textSize="@dimen/shopelia_font_size_normal"
+        android:text="@string/shopelia_close_checkout_main_text"
         android:textColor="@color/shopelia_dark"
+        android:textSize="@dimen/shopelia_font_size_normal"
         app:shopelia_fontStyle="bold" />
 
     <com.shopelia.android.widget.FontableTextView
@@ -27,21 +26,27 @@
         android:layout_marginRight="@dimen/shopelia_margin_large"
         android:layout_marginTop="@dimen/shopelia_margin_large"
         android:gravity="center"
+        android:text="@string/shopelia_close_checkout_sub_text"
         android:textColor="@color/shopelia_dark"
-        android:text="@string/shopelia_waiting_with_shopelia_order_with_1_click"
         android:textSize="@dimen/shopelia_font_size_small"
         app:shopelia_fontStyle="normal" />
 
-    <com.shopelia.android.widget.WaitingView
-        android:id="@+id/waitingView"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginTop="@dimen/shopelia_margin_large" />
+    <com.shopelia.android.widget.ValidationButton
+        android:id="@+id/validationButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_extra_large"
+        android:layout_marginLeft="@dimen/shopelia_margin_large"
+        android:layout_marginRight="@dimen/shopelia_margin_large"
+        android:layout_marginTop="@dimen/shopelia_margin_extra_large"
+        app:shopelia_text="@string/shopelia_close_checkout_validation"
+        app:shopelia_icon="@drawable/shopelia_check_white" >
+
+    </com.shopelia.android.widget.ValidationButton>
 
     <include
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/shopelia_margin_normal"
         layout="@layout/shopelia_include_footer" />
 
 </LinearLayout>

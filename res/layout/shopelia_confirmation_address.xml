@@ -42,6 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Prénom Nom"
+            android:textColor="@color/shopelia_dark"
             android:textSize="@dimen/shopelia_font_size_normal"
             app:shopelia_fontStyle="normal" />
 
@@ -50,6 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="12 rue du test"
+            android:textColor="@color/shopelia_dark"
             android:textSize="@dimen/shopelia_font_size_normal"
             app:shopelia_fontStyle="normal" />
 
@@ -58,6 +60,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="esc de droite"
+            android:textColor="@color/shopelia_dark"
             android:textSize="@dimen/shopelia_font_size_normal"
             app:shopelia_fontStyle="normal" />
 
@@ -66,9 +69,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="75001, Paris, France"
+            android:textColor="@color/shopelia_dark"
             android:textSize="@dimen/shopelia_font_size_normal"
             app:shopelia_fontStyle="normal" />
-
        
     </LinearLayout>
 

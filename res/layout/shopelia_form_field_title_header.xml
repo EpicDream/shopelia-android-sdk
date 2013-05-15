@@ -21,10 +21,10 @@
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
         android:text="Large Text"
-        app:shopelia_fontStyle="bold"
-        app:shopelia_fontFamily="normal"
         android:textAppearance="@style/Theme.Shopelia.TextAppearance.Header"
-         />
+        android:textColor="@color/shopelia_dark"
+        app:shopelia_fontFamily="normal"
+        app:shopelia_fontStyle="bold" />
 
     <ImageView
         android:id="@+id/lock"

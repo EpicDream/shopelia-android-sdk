@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
@@ -71,9 +72,13 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
         setHostContentView(R.layout.shopelia_start_activity);
 
         if (savedInstanceState == null) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_container, new SignUpFragment());
-            ft.commit();
+            if (!UserManager.get(this).isLogged()) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, new SignUpFragment());
+                ft.commit();
+            } else {
+                checkoutOrder(getOrder());
+            }
         }
 
     }
@@ -82,6 +87,14 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        if (requestCode == HostActivity.REQUEST_CHECKOUT) {
+            if (resultCode != RESULT_OK && fragment == null) {
+                finish();
+                return;
+            }
+        }
+
         if (fragment != null) {
             fragment.onActivityResult(requestCode, resultCode, data);
         }
@@ -90,6 +103,10 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
     @Override
     public void onSignUp(JSONObject result) {
         Order order = Order.inflate(result);
+        checkoutOrder(order);
+    }
+
+    private void checkoutOrder(Order order) {
         order.product.url = getIntent().getStringExtra(EXTRA_PRODUCT_URL);
         order.product.name = getIntent().getStringExtra(EXTRA_PRODUCT_TITLE);
         order.product.image = getIntent().getParcelableExtra(EXTRA_PRODUCT_IMAGE);
@@ -112,12 +129,11 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
         }
         Intent intent = new Intent(this, ProcessOrderActivity.class);
         intent.putExtra(HostActivity.EXTRA_ORDER, order);
-        startActivityForResult(intent, Config.REQUEST_ORDER);
+        startActivityForResult(intent, HostActivity.REQUEST_CHECKOUT);
     }
 
     @Override
     public String getActivityName() {
-        // TODO Auto-generated method stub
         return null;
     }
 }

@@ -49,6 +49,7 @@
         android:layout_marginTop="@dimen/shopelia_margin_extra_large"
         android:gravity="center"
         android:text="@string/shopelia_pincode_description_create"
+        android:textColor="@color/shopelia_dark"
         android:textSize="@dimen/shopelia_font_size_small" />
 
 </LinearLayout>

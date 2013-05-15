@@ -18,7 +18,8 @@
         android:layout_marginTop="5dp"
         android:gravity="center"
         android:text="@string/shopelia_form_main_header_text"
-        android:textSize="@dimen/shopelia_font_size_small"/>
+        android:textColor="@color/shopelia_dark"
+        android:textSize="@dimen/shopelia_font_size_small" />
 
     <include
         android:id="@+id/product_sheet"

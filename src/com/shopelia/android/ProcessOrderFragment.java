@@ -74,7 +74,6 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
         }
 
         mOrder = getBaseActivity().getOrder();
-
         if (savedInstanceState == null) {
 
             if (mOrder.user == null) {

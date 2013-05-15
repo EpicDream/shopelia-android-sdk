@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.OrderState;
@@ -50,6 +51,7 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
             view.findViewById(R.id.ticket).setBackgroundDrawable(new TicketDrawable(getActivity()));
         }
         mOrder = getBaseActivity().getOrder();
+        mOrder.user = UserManager.get(getActivity()).getUser();
         setupUi();
     }
 

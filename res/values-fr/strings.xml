@@ -73,4 +73,9 @@
     <string name="shopelia_pincode_do_not_match">Les codes PIN ne sont pas identiques</string>
     <string name="shopelia_pincode_wrong">Code PIN incorrect</string>
     
+    <!-- Close checkout -->
+    <string name="shopelia_close_checkout_main_text">Votre achat vient d\'être effectué !</string>
+    <string name="shopelia_close_checkout_sub_text">Vous allez recevoir la confirmation de la transaction dans votre boîte mail.\n \n Merci d\'avoir utilisé le service Shopelia !</string>
+    <string name="shopelia_close_checkout_validation">REVENIR SUR PRIXING</string>
+    
 </resources>

@@ -1,6 +1,5 @@
 package com.shopelia.android.widget;
 
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -78,15 +77,12 @@ public class ProductSheetWrapper {
 
         mProductName.setText(mArguments.getString(StartActivity.EXTRA_PRODUCT_TITLE));
         mProductDescription.setText(mArguments.getString(StartActivity.EXTRA_PRODUCT_DESCRIPTION));
+        mProductDescription.setVisibility(mArguments.containsKey(StartActivity.EXTRA_PRODUCT_DESCRIPTION) ? View.VISIBLE : View.GONE);
         mProductPrice.setText(currency.format(mArguments.getFloat(StartActivity.EXTRA_PRICE)));
         mTax.setText(tax.getResId());
         mVendorLogo.setImageResource(vendor.getImageResId());
         Object image = mArguments.get(StartActivity.EXTRA_PRODUCT_IMAGE);
-        if (image instanceof Integer) {
-            mProductImage.setImageResource(((Integer) image).intValue());
-        } else if (image instanceof Bitmap) {
-            mProductImage.setImageBitmap((Bitmap) image);
-        } else if (image instanceof Uri) {
+        if (image != null && image instanceof Uri) {
             mProductImage.setImageURI((Uri) image);
         }
     }

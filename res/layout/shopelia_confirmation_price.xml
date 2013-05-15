@@ -17,15 +17,17 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/shopelia_margin_normal"
             android:text="Produit"
+            android:textColor="@color/shopelia_dark"
             android:textSize="@dimen/shopelia_font_size_normal" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/price_value_no_shipping"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:text="12.89€"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            android:gravity="right" />
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
 
     </LinearLayout>
 
@@ -38,16 +40,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/shopelia_margin_normal"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            android:text="@string/shopelia_confirmation_shipping_fees" />
+            android:text="@string/shopelia_confirmation_shipping_fees"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/price_value_shipping"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:gravity="right"
             android:text="2,79€"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            android:gravity="right" />
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
 
     </LinearLayout>
     
@@ -61,6 +65,7 @@
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/shopelia_margin_normal"
             android:text="@string/shopelia_confirmation_total_price"
+            android:textColor="@color/shopelia_dark"
             android:textSize="@dimen/shopelia_font_size_large"
             app:shopelia_fontStyle="bold" />
 

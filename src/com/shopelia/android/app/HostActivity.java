@@ -23,6 +23,9 @@ public abstract class HostActivity extends FragmentActivity {
     protected static final String EXTRA_INIT_ORDER = Config.EXTRA_PREFIX + "INIT_ORDER";
     public static final String EXTRA_USER = Config.EXTRA_PREFIX + "USER";
 
+    public static int REQUEST_CHECKOUT = 0x1602;
+    public static int RESULT_FAILURE = 0xfa15e;
+
     private Order mOrder;
     private ShopeliaActivityPath mCurrentActivity;
     private FrameLayout mRootView;

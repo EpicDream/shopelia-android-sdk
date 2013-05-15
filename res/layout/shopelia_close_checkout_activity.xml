@@ -1,17 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center_horizontal"
+    android:background="@android:color/transparent"
+    android:gravity="center|center_horizontal"
     android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/address"
+    <fragment
+        android:id="@+id/fragment1"
+        android:name="com.shopelia.android.CloseCheckoutFragment"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="20dp"
-        android:text="TextView"
-        android:textColor="@color/shopelia_dark" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
