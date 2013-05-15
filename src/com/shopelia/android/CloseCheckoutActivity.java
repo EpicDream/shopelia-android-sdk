@@ -19,4 +19,9 @@ public class CloseCheckoutActivity extends HostActivity {
         return ACTIVITY_NAME;
     }
 
+    @Override
+    protected boolean isPartOfOrderWorkFlow() {
+        return false;
+    }
+
 }

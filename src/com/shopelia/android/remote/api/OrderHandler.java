@@ -367,22 +367,17 @@ public final class OrderHandler {
                     if (!state.uuid.equals(mOrder.uuid)) {
                         return;
                     }
-                    if (mCurrentStep == STEP_ORDERING)
-                        state.state = State.PENDING_CONFIRMATION;
-                    else {
-                        state.state = State.SUCCESS;
-                    }
                     mOrderState = state;
                     mOrder.state = state;
                     if (mCallback != null) {
                         mCallback.onOrderStateUpdate(state);
                         if (mCurrentStep == STEP_WAITING_CONFIRMATION) {
                             if (state.state == State.SUCCESS) {
+                                sHttpPoller.pause();
                                 mCallback.onOrderConfirmation(true);
-                                sHttpPoller.pause();
                             } else if (state.state == State.ERROR) {
-                                mCallback.onOrderConfirmation(false);
                                 sHttpPoller.pause();
+                                mCallback.onOrderConfirmation(false);
                             }
                         }
                         if (canConfirm() && mCurrentStep == STEP_ORDERING) {
