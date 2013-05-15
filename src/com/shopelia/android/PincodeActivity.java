@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.app.HostActivity;
@@ -56,7 +55,6 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
             }
         }
         mCreatePincode = TextUtils.isEmpty(mPincode);
-        Log.d(null, "PINCODE = " + mPincode);
     }
 
     @Override
@@ -116,6 +114,7 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
         if (isCreatingPincode()) {
             mPincode = null;
         }
+        mAttemptNumber = 0;
     }
 
     private void handleFragment(String errorMessage) {

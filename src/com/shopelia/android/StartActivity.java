@@ -89,7 +89,7 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
         if (requestCode == HostActivity.REQUEST_CHECKOUT) {
-            if (resultCode != RESULT_OK && fragment == null) {
+            if ((resultCode == RESULT_OK || resultCode == HostActivity.RESULT_FAILURE) || fragment == null) {
                 finish();
                 return;
             }

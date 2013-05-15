@@ -63,7 +63,9 @@
     <!-- Waiting process -->
     <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
     <string name="shopelia_waiting_with_shopelia_order_with_1_click">Initialisation&#8230;</string>
-
+	<string name="shopelia_waiting_shopelia_is_finalizing_your_order" formatted="false">Shopelia finalise votre commande sur %s</string>
+    <string name="shopelia_waiting_with_shopelia_order_sub_text"></string>
+    
     <!-- Order confirmation -->
     <string name="shopelia_confirmation_confirm">Order now</string>
     <string name="shopelia_confirmation_title">Order summary</string>

@@ -46,16 +46,28 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
         public void onCheckoutFailed();
 
+        public void finalizeOrder();
+
     }
 
     private static final int RESULT_CHECK_PINCODE = 0xbeef;
     private static final int RESULT_CREATE_PINCODE = 0xcafe;
+
+    private static final String ARGS_FINALIZATION = "args:finalization";
 
     private WaitingView mWaitingView;
     private FontableTextView mMessageTextView;
     private OrderHandler mOrderHandler;
     private Order mOrder;
     private String mCurrentMessage;
+
+    public static ProcessOrderFragment createFinalization() {
+        ProcessOrderFragment fragment = new ProcessOrderFragment();
+        Bundle arguments = new Bundle();
+        arguments.putBoolean(ARGS_FINALIZATION, true);
+        fragment.setArguments(arguments);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -71,6 +83,12 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
         if (mOrderHandler == null) {
             mOrderHandler = getContract().getOrderHandler();
+        }
+
+        if (getArguments() != null && getArguments().getBoolean(ARGS_FINALIZATION, false)) {
+            mOrderHandler.setCallback(this);
+            mOrderHandler.confirm();
+            return;
         }
 
         mOrder = getBaseActivity().getOrder();
@@ -134,32 +152,24 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        if (mOrderHandler != null) {
-            mOrderHandler.resume();
-        } else {
-            // If the handler is dead here, the order is probably dead too. We
-            // just need to notify the user and quit this activity
-        }
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        if (mOrderHandler != null) {
-            mOrderHandler.pause();
-        }
-    }
-
-    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mOrder = getBaseActivity().getOrder();
         mWaitingView = (WaitingView) view.findViewById(R.id.waitingView);
         mMessageTextView = (FontableTextView) view.findViewById(R.id.message);
         TextView title = (TextView) view.findViewById(R.id.title);
-        title.setText(getString(R.string.shopelia_waiting_shopelia_is_preparing_your_order, mOrder.product.vendor.getName()));
+        if (isFinalizationScreen()) {
+            mWaitingView.setExpectedTime(30000L);
+            mWaitingView.start();
+            title.setText(getString(R.string.shopelia_waiting_shopelia_is_finalizing_your_order, mOrder.product.vendor.getName()));
+            mMessageTextView.setVisibility(View.GONE);
+        } else {
+            title.setText(getString(R.string.shopelia_waiting_shopelia_is_preparing_your_order, mOrder.product.vendor.getName()));
+        }
+    }
+
+    public boolean isFinalizationScreen() {
+        return getArguments() != null && getArguments().getBoolean(ARGS_FINALIZATION, false);
     }
 
     @Override
@@ -233,7 +243,11 @@ public class ProcessOrderFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
     @Override
     public void onOrderConfirmation(boolean succeed) {
-
+        if (succeed) {
+            getContract().onCheckoutSucceed();
+        } else {
+            getContract().onCheckoutFailed();
+        }
     }
 
     @Override

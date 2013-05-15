@@ -160,7 +160,7 @@ public class WaitingView extends View {
         mCurrentStep++;
         mCurrentTime = 0;
 
-        mExpectedTime = 10000L;
+        setExpectedTime(10000L);
         if (message != null) {
             Pattern p = Pattern.compile("_([0-9]+)$");
             Matcher m = p.matcher(message);
@@ -171,6 +171,10 @@ public class WaitingView extends View {
                 }
             }
         }
+    }
+
+    public void setExpectedTime(long expectedTime) {
+        mExpectedTime = expectedTime;
     }
 
     @Override
@@ -256,7 +260,7 @@ public class WaitingView extends View {
             invalidate();
             mHandler.postDelayed(this, FREQUENCY);
             if (mCurrentTime > mExpectedTime * mTotalSteps + FREQUENCY) {
-                stop();
+                pause();
             }
         }
     };

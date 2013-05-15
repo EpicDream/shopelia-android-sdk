@@ -7,11 +7,12 @@
     android:orientation="horizontal" >
 
      <com.shopelia.android.widget.AsyncImageView
-        android:id="@+id/product_image"
-        android:layout_width="130dp"
-        android:layout_height="match_parent"
-        android:scaleType="centerInside"
-        android:src="@drawable/shopelia_default_product" />
+         android:id="@+id/product_image"
+         android:layout_width="130dp"
+         android:layout_height="match_parent"
+         android:layout_marginRight="@dimen/shopelia_margin_normal"
+         android:scaleType="centerInside"
+         android:src="@drawable/shopelia_default_product" />
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -28,6 +29,8 @@
             android:textColor="@color/shopelia_dark"
             android:textSize="@dimen/shopelia_font_size_normal"
             android:textStyle="bold"
+            android:ellipsize="end"
+			android:maxLines="2"
             app:shopelia_fontStyle="bold" />
 
         <com.shopelia.android.widget.FontableTextView

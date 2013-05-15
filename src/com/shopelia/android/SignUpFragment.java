@@ -95,7 +95,6 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         mListView.setAdapter(mAdapter);
 
         mFooter.getView().findViewById(R.id.validate).setOnClickListener(mOnClickListener);
-
     }
 
     @Override

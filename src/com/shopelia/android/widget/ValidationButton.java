@@ -7,6 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -81,6 +82,16 @@ public class ValidationButton extends FrameLayout {
 
     public void setIcon(int resId) {
         mIcon.setImageResource(resId);
+    }
+
+    @Override
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        final int count = getChildCount();
+        for (int index = 0; index < count; index++) {
+            getChildAt(index).setEnabled(enabled);
+        }
+        mIcon.setVisibility(!enabled ? View.INVISIBLE : View.VISIBLE);
     }
 
 }

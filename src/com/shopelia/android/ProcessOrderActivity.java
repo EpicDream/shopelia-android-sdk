@@ -1,5 +1,6 @@
 package com.shopelia.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.widget.Toast;
@@ -51,6 +52,22 @@ public class ProcessOrderActivity extends HostActivity implements OrderHandlerHo
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        if (mOrderHandler != null) {
+            mOrderHandler.resume();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mOrderHandler != null) {
+            mOrderHandler.pause();
+        }
+    }
+
+    @Override
     public void confirm() {
         getOrderHandler().confirm();
     }
@@ -59,13 +76,16 @@ public class ProcessOrderActivity extends HostActivity implements OrderHandlerHo
     public void onBackPressed() {
         super.onBackPressed();
         getOrderHandler().cancel();
+        getOrderHandler().recycle();
     }
 
     @Override
     public void onCheckoutSucceed() {
         // TODO Display success screen
+        startActivity(new Intent(this, CloseCheckoutActivity.class));
+        getOrderHandler().recycle();
         setResult(RESULT_OK);
-        Toast.makeText(this, "Order succeed", Toast.LENGTH_LONG).show();
+        finish();
     }
 
     @Override
@@ -78,6 +98,14 @@ public class ProcessOrderActivity extends HostActivity implements OrderHandlerHo
     @Override
     public String getActivityName() {
         return ACTIVITY_NAME;
+    }
+
+    @Override
+    public void finalizeOrder() {
+        mProcessOrderFragment = ProcessOrderFragment.createFinalization();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, mProcessOrderFragment);
+        ft.commit();
     }
 
 }

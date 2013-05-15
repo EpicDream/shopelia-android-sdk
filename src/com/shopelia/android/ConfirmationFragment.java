@@ -69,7 +69,7 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
         @Override
         public void onClick(View v) {
-            getContract().getOrderHandler().confirm();
+            getContract().finalizeOrder();
         }
     };
 
@@ -125,6 +125,9 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
     private void setupProductUi() {
         findViewById(R.id.product_name, TextView.class).setText(mOrder.product.name);
         findViewById(R.id.product_description, TextView.class).setText(mOrder.product.description);
+        if (TextUtils.isEmpty(mOrder.product.description)) {
+            findViewById(R.id.product_description, TextView.class).setVisibility(View.GONE);
+        }
         findViewById(R.id.product_image, ImageView.class).setImageURI(mOrder.product.image);
         findViewById(R.id.product_vendor_icon, ImageView.class).setImageResource(mOrder.product.vendor.getImageResId());
     }

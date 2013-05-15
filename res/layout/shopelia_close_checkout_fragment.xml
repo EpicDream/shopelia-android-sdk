@@ -32,7 +32,7 @@
         app:shopelia_fontStyle="normal" />
 
     <com.shopelia.android.widget.ValidationButton
-        android:id="@+id/validationButton1"
+        android:id="@+id/validate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_extra_large"

@@ -47,6 +47,10 @@ public final class OrderHandler {
     public static final int STEP_WAITING_CONFIRMATION = 6;
     public static final int STEP_RETRIEVE_USER = 7;
 
+    public static final int STATE_RUNNING = 0;
+    public static final int STATE_PAUSED = 1;
+    public static final int STATE_RECYCLED = 2;
+
     private Context mContext;
     private Callback mCallback;
 
@@ -58,6 +62,7 @@ public final class OrderHandler {
     private OrderState mOrderState;
 
     private int mCurrentStep = STEP_DEAD;
+    private int mInternalState = STATE_RUNNING;
 
     public OrderHandler(Context context, Callback callback) {
         this.mContext = context;
@@ -327,11 +332,22 @@ public final class OrderHandler {
         if (sHttpPoller != null) {
             sHttpPoller.pause();
         }
+        mInternalState = STATE_PAUSED;
     }
 
     public void resume() {
-        if (sHttpPoller != null) {
+        if (sHttpPoller != null && (mCurrentStep == STEP_ORDERING || mCurrentStep == STEP_WAITING_CONFIRMATION)) {
             sHttpPoller.resumePolling();
+        }
+        mInternalState = STATE_RUNNING;
+    }
+
+    public void recycle() {
+        mInternalState = STATE_RECYCLED;
+        if (sHttpPoller != null) {
+            sHttpPoller.end();
+            sHttpPoller.setPollerCallback(null);
+            sHttpPoller = null;
         }
     }
 
@@ -351,6 +367,11 @@ public final class OrderHandler {
                     if (!state.uuid.equals(mOrder.uuid)) {
                         return;
                     }
+                    if (mCurrentStep == STEP_ORDERING)
+                        state.state = State.PENDING_CONFIRMATION;
+                    else {
+                        state.state = State.SUCCESS;
+                    }
                     mOrderState = state;
                     mOrder.state = state;
                     if (mCallback != null) {
@@ -358,8 +379,10 @@ public final class OrderHandler {
                         if (mCurrentStep == STEP_WAITING_CONFIRMATION) {
                             if (state.state == State.SUCCESS) {
                                 mCallback.onOrderConfirmation(true);
+                                sHttpPoller.pause();
                             } else if (state.state == State.ERROR) {
                                 mCallback.onOrderConfirmation(false);
+                                sHttpPoller.pause();
                             }
                         }
                         if (canConfirm() && mCurrentStep == STEP_ORDERING) {
