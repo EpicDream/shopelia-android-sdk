@@ -2,15 +2,12 @@ package com.shopelia.android;
 
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.TextView.OnEditorActionListener;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.app.ShopeliaFragment;
@@ -80,7 +77,6 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
                 break;
         }
         mNumberInput = (NumberInput) view.findViewById(R.id.numberInput);
-        mNumberInput.setOnEditorActionListener(mOnEditorActionListener);
         mNumberInput.requestFocus();
         mNumberInput.addTextChangedListener(mTextWatcher);
         mErrorMessage = (TextView) view.findViewById(R.id.error);
@@ -88,23 +84,6 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
             setError(getArguments().getString(ARGS_ERROR_MESSAGE));
         }
     }
-
-    private OnEditorActionListener mOnEditorActionListener = new OnEditorActionListener() {
-
-        @Override
-        public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            String pincode = v.getText().toString();
-            if (pincode.length() == 4 && TextUtils.isDigitsOnly(pincode)) {
-                ((Errorable) v).setError(!getContract().sendPincode(v.getText().toString()));
-                if (((Errorable) v).hasError() && getActivity() != null) {
-                    setError(getResources().getString(R.string.shopelia_pincode_wrong));
-                }
-            } else {
-                ((Errorable) v).setError(true);
-            }
-            return true;
-        }
-    };
 
     private TextWatcher mTextWatcher = new TextWatcher() {
 
@@ -120,7 +99,9 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
         @Override
         public void afterTextChanged(Editable s) {
+            setError(null);
             mNumberInput.setError(false);
+            checkPincode();
         }
     };
 
@@ -133,4 +114,17 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
         }
     }
 
+    
+    private void checkPincode() {
+        String pincode = mNumberInput.getText().toString();
+        if (pincode.length() == 4) {
+            ((Errorable) mNumberInput).setError(!getContract().sendPincode(mNumberInput.getText().toString()));
+            if (((Errorable) mNumberInput).hasError() && getActivity() != null) {
+                setError(getResources().getString(R.string.shopelia_pincode_wrong));
+                mNumberInput.removeTextChangedListener(mTextWatcher);
+                mNumberInput.setText(null);
+                mNumberInput.addTextChangedListener(mTextWatcher);
+            }
+        } 
+    }
 }
