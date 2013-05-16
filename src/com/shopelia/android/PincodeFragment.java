@@ -124,6 +124,7 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
                 mNumberInput.removeTextChangedListener(mTextWatcher);
                 mNumberInput.setText(null);
                 mNumberInput.addTextChangedListener(mTextWatcher);
+                mNumberInput.requestFocus();
             }
         } 
     }
