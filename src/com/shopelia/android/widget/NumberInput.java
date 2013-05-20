@@ -86,7 +86,9 @@ public class NumberInput extends EditText implements Errorable {
     protected Drawable getDrawable(final int index, final int length) {
         if (mDrawable instanceof StateListDrawable) {
             StateListDrawable drawable = (StateListDrawable) mDrawable;
-            if (hasError()) {
+            if (!isEnabled()) {
+                drawable.setState(new int[] {});
+            } else if (hasError()) {
                 drawable.setState(new int[] {
                     R.attr.state_error
                 });
