@@ -1,11 +1,17 @@
 package com.shopelia.android;
 
+import java.util.Timer;
+
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
+import com.shopelia.android.algorithm.Fibonacci;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
 
@@ -30,21 +36,44 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
      */
     public static final String EXTRA_NUMBER_OF_TRY = Config.EXTRA_PREFIX + "NUMBER_OF_TRY";
 
+    private static final long MIN_ERROR_DELAY = 5 * 1000;
+    private static final long MAX_ERROR_DELAY = 1 * 60 * 60 * 1000;
+
+    private static final String PREF_TIME_TO_BLOCK = "SPH_LAST_ATTEMPT";
+    private static final String PREF_FAILURE_COUNT = "SPH_FAILURE_COUNT";
+    private static final String PREF_ATTEMPTS = "SPH_ATTEMPTS";
+
     private boolean mCreatePincode = true;
     private String mPincode = null;
     private int mMaxTry = 5;
     private int mAttemptNumber = 0;
+    private long mTimeToBlock;
+    private int mFailureCount = 0;
+
+    private Timer mTimer = new Timer();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHostContentView(R.layout.shopelia_process_order_activity);
 
+        mTimeToBlock = getSharedPreferences().getLong(PREF_TIME_TO_BLOCK, 0L);
+        mFailureCount = getSharedPreferences().getInt(PREF_FAILURE_COUNT, 0);
+
         init(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
 
         if (savedInstanceState == null) {
             handleFragment(null);
         }
+
+        if (mTimeToBlock + MAX_ERROR_DELAY < System.currentTimeMillis()) {
+            releaseOrder();
+        }
+
+    }
+
+    private SharedPreferences getSharedPreferences() {
+        return getSharedPreferences(PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 
     private void init(Bundle bundle) {
@@ -84,12 +113,16 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
 
     @Override
     public boolean sendPincode(String pincode) {
+        if (!isServiceAvailable()) {
+            return false;
+        }
         boolean hadPincode = mPincode != null;
         if (isCreatingPincode() && mPincode == null) {
             mPincode = pincode;
         }
         if (pincode.equals(mPincode)) {
             if (!isCreatingPincode() || hadPincode) {
+                releaseOrder();
                 Intent intent = new Intent();
                 intent.putExtra(EXTRA_PINCODE, pincode);
                 setResult(RESULT_OK, intent);
@@ -103,10 +136,37 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
                 mPincode = null;
                 handleFragment(getString(R.string.shopelia_pincode_do_not_match));
             } else {
-                mAttemptNumber++;
+                setAttemptsNumber(mAttemptNumber + 1);
+                Log.d(null, "ATTEMPTS " + mAttemptNumber + " MAX " + mMaxTry);
+                if (mAttemptNumber >= mMaxTry) {
+                    forbidOrder();
+                }
             }
             return false;
         }
+    }
+
+    private void setAttemptsNumber(int n) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        mAttemptNumber = n;
+        editor.putInt(PREF_ATTEMPTS, mAttemptNumber);
+        editor.commit();
+    }
+
+    public void forbidOrder() {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putInt(PREF_FAILURE_COUNT, mFailureCount++);
+        mTimeToBlock = System.currentTimeMillis() + Math.min(Fibonacci.get(mFailureCount) * MIN_ERROR_DELAY, MAX_ERROR_DELAY);
+        editor.putLong(PREF_TIME_TO_BLOCK, mTimeToBlock);
+        mAttemptNumber = 0;
+        editor.commit();
+    }
+
+    public void releaseOrder() {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        editor.putInt(PREF_FAILURE_COUNT, mFailureCount = 0);
+        setAttemptsNumber(0);
+        editor.commit();
     }
 
     @Override
@@ -114,7 +174,6 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
         if (isCreatingPincode()) {
             mPincode = null;
         }
-        mAttemptNumber = 0;
     }
 
     private void handleFragment(String errorMessage) {
@@ -130,6 +189,33 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
     @Override
     public String getActivityName() {
         return ACTIVITY_NAME;
+    }
+
+    @Override
+    public int getAttemptNumber() {
+        return mAttemptNumber;
+    }
+
+    @Override
+    public int getMaxAttemptNumber() {
+        return mMaxTry;
+    }
+
+    @Override
+    public boolean isServiceAvailable() {
+        return mTimeToBlock < System.currentTimeMillis();
+    }
+
+    @Override
+    public long getUnlockDate() {
+        return mTimeToBlock;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        mTimer.cancel();
+        mTimer = null;
     }
 
 }
