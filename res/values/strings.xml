@@ -78,8 +78,24 @@
     <string name="shopelia_pincode_enter">Type your pin code</string>
     <string name="shopelia_pincode_description_create">Votre code PIN vous permet de sécuriser toutes les transactions.</string>
     <string name="shopelia_pincode_do_not_match">PIN codes do not match</string>
-    <string name="shopelia_pincode_wrong">Wrong PIN code</string>
-
+    <string name="shopelia_pincode_wrong">Wrong PIN</string>
+	<string name="shopelia_pincode_retry" formatted="false">Try again in %s</string>
+    
+	<!-- Time -->
+	<plurals name="hour">
+	    <item quantity="one" formatted="false">%d hour</item>
+	    <item quantity="other">%d hours</item>
+	</plurals>
+	<plurals name="minute">
+	    <item quantity="one" formatted="false">%d minute</item>
+	    <item quantity="other">%d minutes</item>
+	</plurals>
+	<plurals name="second">
+	    <item quantity="one" formatted="false">%d second</item>
+	    <item quantity="other">%d seconds</item>
+	</plurals>
+	
+	
     <!-- Close checkout -->
     <string name="shopelia_close_checkout_main_text">Votre achat vient d\'être effectué !</string>
     <string name="shopelia_close_checkout_sub_text">Vous allez recevoir la confirmation de la transaction dans votre boîte mail.\n Merci d\'avoir utilisé le service Shopelia !</string>

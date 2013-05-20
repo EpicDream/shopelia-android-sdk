@@ -15,12 +15,12 @@
 	    Votre commande va être préparée automatiquement sur le site <b>%s</b> avec le service <b>Shopelia</b>
 	    ]]>
     </string>
-<string name="shopelia_form_main_footer_text">
-	    <![CDATA[
+    <string name="shopelia_form_main_footer_text">
+<![CDATA[
 	   En cliquant sur ce bouton vous certifiez avoir lu et accepté les <font color="#0098ce">Conditions d\'utilisation</font>
 	    ]]>
-	</string>
-	
+    </string>
+
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Nom</string>
     <string name="shopelia_form_account_first_name">Prénom</string>
@@ -47,16 +47,16 @@
 
     <!-- Shopelia footer -->
     <string name="shopelia_footer">PAIEMENT SECURISE PAR</string>
-    
-     <!-- Taxes -->
+
+    <!-- Taxes -->
     <string name="shopelia_tax_et">HT</string>
     <string name="shopelia_tax_ati">TTC</string>
-    
-        <!-- Product sheet -->
+
+    <!-- Product sheet -->
     <string name="shopelia_product_shipping_fees" formatted="false">Frais de livraison : %s</string>
-    
+
     <!-- Waiting process -->
-    <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false" >Shopelia prépare votre commande sur %s</string>
+    <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
     <string name="shopelia_waiting_with_shopelia_order_with_1_click">Avec Shopelia, commandez facilement en 1-clic avec votre mobile sur n\'importe quel site e-commerce !</string>
 
     <!-- Order confirmation -->
@@ -64,18 +64,33 @@
     <string name="shopelia_confirmation_title">Récapitulatif de votre achat</string>
     <string name="shopelia_confirmation_shipping_fees">Frais de livraison</string>
     <string name="shopelia_confirmation_total_price">TOTAL</string>
-    
-     <!-- Pin code -->
+
+    <!-- Pin code -->
     <string name="shopelia_pincode_create">CREEZ VOTRE CODE PIN</string>
     <string name="shopelia_pincode_re_enter">VERIFIEZ VOTRE CODE PIN</string>
-   	<string name="shopelia_pincode_enter">ENTREZ VOTRE CODE PIN</string>
+    <string name="shopelia_pincode_enter">ENTREZ VOTRE CODE PIN</string>
     <string name="shopelia_pincode_description_create">Votre code PIN vous permet de sécuriser toutes les transactions.</string>
     <string name="shopelia_pincode_do_not_match">Les codes PIN ne sont pas identiques</string>
     <string name="shopelia_pincode_wrong">Code PIN incorrect</string>
-    
+    <string name="shopelia_pincode_retry" formatted="false">Réessayer dans %s</string>
+
+    <!-- Time -->
+    <plurals name="hour">
+        <item formatted="false" quantity="one">%d heure</item>
+        <item formatted="false" quantity="other">%d heures</item>
+    </plurals>
+    <plurals name="minute">
+        <item formatted="false" quantity="one">%d minute</item>
+        <item formatted="false" quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="second">
+        <item formatted="false" quantity="one">%d seconde</item>
+        <item formatted="false" quantity="other">%d secondes</item>
+    </plurals>
+
     <!-- Close checkout -->
     <string name="shopelia_close_checkout_main_text">Votre achat vient d\'être effectué !</string>
     <string name="shopelia_close_checkout_sub_text">Vous allez recevoir la confirmation de la transaction dans votre boîte mail.\n \n Merci d\'avoir utilisé le service Shopelia !</string>
     <string name="shopelia_close_checkout_validation">REVENIR SUR PRIXING</string>
-    
+
 </resources>
