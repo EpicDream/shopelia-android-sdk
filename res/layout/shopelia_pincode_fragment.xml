@@ -18,7 +18,7 @@
         android:layout_height="60dp"
         android:layout_marginLeft="@dimen/shopelia_margin_extra_small"
         android:layout_marginRight="@dimen/shopelia_margin_extra_small"
-        android:layout_marginTop="@dimen/shopelia_margin_extra_large"
+        android:layout_marginTop="60dp"
         android:background="@android:color/transparent"
         android:inputType="numberPassword"
         android:maxLength="4"
@@ -38,7 +38,7 @@
         android:text="FontableTextView"
         android:textColor="@color/shopelia_red"
         android:textSize="@dimen/shopelia_font_size_small"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/fontableTextView1"
