@@ -1,9 +1,12 @@
 package com.shopelia.android;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -11,6 +14,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
+import com.shopelia.android.PincodeFragment.PincodeHandler.Callback;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.concurent.ScheduledTask;
 import com.shopelia.android.widget.Errorable;
@@ -19,6 +23,10 @@ import com.shopelia.android.widget.NumberInput;
 public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
     public interface PincodeHandler {
+
+        public interface Callback {
+            public void onPincodeCheckDone(boolean succeed);
+        }
 
         public String PREFERENCE_NAME = "ShopeliaPincodeHandler";
 
@@ -37,6 +45,8 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
         public boolean isServiceAvailable();
 
         public long getUnlockDate();
+
+        public void setPincodeCallback(PincodeHandler.Callback callback);
 
     }
 
@@ -67,6 +77,7 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getContract().setPincodeCallback(mCallback);
     }
 
     @Override
@@ -105,6 +116,8 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
         mNumberInput.setEnabled(getContract().isServiceAvailable());
         if (!getContract().isServiceAvailable()) {
             mRefreshTask.scheduleAtFixedRate(mRefreshUiRunnable, getUnlockDelay() % 1000, REFRESH_PERIOD);
+        } else {
+            requestNumberInputFocus();
         }
     }
 
@@ -147,7 +160,72 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
     private void checkPincode() {
         String pincode = mNumberInput.getText().toString();
         if (pincode.length() == 4) {
-            ((Errorable) mNumberInput).setError(!getContract().sendPincode(mNumberInput.getText().toString()));
+            getContract().sendPincode(mNumberInput.getText().toString());
+        }
+
+    }
+
+    private long getUnlockDelay() {
+        return getContract().getUnlockDate() - System.currentTimeMillis();
+    }
+
+    private void requestNumberInputFocus() {
+        mNumberInput.requestFocus();
+        (new Handler()).postDelayed(new Runnable() {
+
+            public void run() {
+                MotionEvent event = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0,
+                        0, 0);
+                mNumberInput.dispatchTouchEvent(event);
+                event.recycle();
+                event = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_UP, 0, 0, 0);
+                mNumberInput.dispatchTouchEvent(event);
+                event.recycle();
+            }
+        }, 200);
+    }
+
+    private Runnable mRefreshUiRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            if (getActivity() == null) {
+                return;
+            }
+
+            if (getContract().isServiceAvailable()) {
+                mNumberInput.setEnabled(true);
+                mNumberInput.setError(false);
+                requestNumberInputFocus();
+                setError(null);
+                mRefreshTask.stop();
+            } else {
+                mNumberInput.setEnabled(false);
+                mNumberInput.clearFocus();
+                String errorMessage;
+                long delay = getUnlockDelay();
+                if (delay >= 60 * 60 * 1000) {
+                    errorMessage = getString(R.string.shopelia_pincode_retry,
+                            getResources().getQuantityString(R.plurals.hour, (int) delay / (60 * 60 * 1000), delay / (60 * 60 * 1000)));
+                } else if (delay >= 60 * 1000) {
+                    errorMessage = getString(R.string.shopelia_pincode_retry,
+                            getResources().getQuantityString(R.plurals.minute, (int) delay / (60 * 1000), delay / (60 * 1000)));
+                } else if (delay >= 1000) {
+                    errorMessage = getString(R.string.shopelia_pincode_retry,
+                            getResources().getQuantityString(R.plurals.second, (int) delay / (1000), delay / (1000)));
+                } else {
+                    errorMessage = null;
+                }
+                setError(errorMessage, false);
+            }
+        }
+    };
+
+    private PincodeHandler.Callback mCallback = new Callback() {
+
+        @Override
+        public void onPincodeCheckDone(boolean succeed) {
+            ((Errorable) mNumberInput).setError(succeed);
             if (((Errorable) mNumberInput).hasError() && getActivity() != null) {
                 setError(getResources().getString(R.string.shopelia_pincode_wrong));
                 mNumberInput.removeTextChangedListener(mTextWatcher);
@@ -155,31 +233,10 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
                 mNumberInput.addTextChangedListener(mTextWatcher);
                 mNumberInput.requestFocus();
             }
-        }
-        mNumberInput.setEnabled(getContract().isServiceAvailable());
+            mNumberInput.setEnabled(getContract().isServiceAvailable());
 
-        if (!getContract().isServiceAvailable()) {
-            mRefreshTask.scheduleAtFixedRate(mRefreshUiRunnable, getUnlockDelay() % 1000, REFRESH_PERIOD);
-        }
-    }
-
-    private long getUnlockDelay() {
-        return getContract().getUnlockDate() - System.currentTimeMillis();
-    }
-
-    private Runnable mRefreshUiRunnable = new Runnable() {
-
-        @Override
-        public void run() {
-            if (getContract().isServiceAvailable()) {
-                mNumberInput.setEnabled(true);
-                mNumberInput.setError(false);
-                mNumberInput.requestFocus();
-                setError(null);
-            } else {
-                mNumberInput.setEnabled(false);
-                mNumberInput.clearFocus();
-                setError("Yo " + getUnlockDelay(), false);
+            if (!getContract().isServiceAvailable()) {
+                mRefreshTask.scheduleAtFixedRate(mRefreshUiRunnable, getUnlockDelay() % 1000, REFRESH_PERIOD);
             }
         }
     };

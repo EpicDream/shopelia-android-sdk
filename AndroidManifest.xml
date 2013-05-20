@@ -72,7 +72,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Shopelia"
             android:screenOrientation="sensorPortrait" 
-            android:windowSoftInputMode="stateAlwaysVisible" /> 
+            android:windowSoftInputMode="adjustResize|stateHidden" /> 
                    
         <activity
             android:name="com.shopelia.android.ProcessOrderActivity"

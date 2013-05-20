@@ -53,6 +53,7 @@ public class ScheduledTask {
 
     public void stop() {
         if (mHandler != null) {
+            mPeriod = SINGLE_SHOT;
             mHandler.removeCallbacksAndMessages(mToken);
         }
     }

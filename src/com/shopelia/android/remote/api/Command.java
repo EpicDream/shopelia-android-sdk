@@ -50,6 +50,10 @@ public final class Command {
                 public static final String $ = Users.$ + "/sign_in";
             }
 
+            public static final class Verify {
+                public static final String $ = Users.$ + "/verify";
+            }
+
             public static String Retrieve(long id) {
                 return $ + "/" + id;
             }

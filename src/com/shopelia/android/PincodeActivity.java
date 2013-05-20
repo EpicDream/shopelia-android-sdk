@@ -2,6 +2,9 @@ package com.shopelia.android;
 
 import java.util.Timer;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -14,6 +17,12 @@ import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.algorithm.Fibonacci;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.http.JsonAsyncCallback;
+import com.shopelia.android.model.User;
+import com.shopelia.android.remote.api.Command;
+import com.shopelia.android.remote.api.ShopeliaRestClient;
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
 
 public class PincodeActivity extends HostActivity implements PincodeHandler {
 
@@ -51,6 +60,8 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
     private int mFailureCount = 0;
 
     private Timer mTimer = new Timer();
+
+    private PincodeHandler.Callback mPincodeHandlerCallback;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,34 +127,19 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
         if (!isServiceAvailable()) {
             return false;
         }
-        boolean hadPincode = mPincode != null;
         if (isCreatingPincode() && mPincode == null) {
             mPincode = pincode;
         }
-        if (pincode.equals(mPincode)) {
-            if (!isCreatingPincode() || hadPincode) {
-                releaseOrder();
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_PINCODE, pincode);
-                setResult(RESULT_OK, intent);
-                finish();
-            } else {
-                handleFragment(null);
-            }
-            return true;
-        } else {
-            if (isCreatingPincode() && hadPincode) {
-                mPincode = null;
-                handleFragment(getString(R.string.shopelia_pincode_do_not_match));
-            } else {
-                setAttemptsNumber(mAttemptNumber + 1);
-                Log.d(null, "ATTEMPTS " + mAttemptNumber + " MAX " + mMaxTry);
-                if (mAttemptNumber >= mMaxTry) {
-                    forbidOrder();
-                }
-            }
-            return false;
+        ShopeliaRestClient.authenticate(this);
+
+        JSONObject params = new JSONObject();
+        try {
+            params.put(User.Api.PINCODE, pincode);
+        } catch (JSONException e) {
+
         }
+        ShopeliaRestClient.post(Command.V1.Users.Verify.$, params, mAsyncCallback);
+        return true;
     }
 
     private void setAttemptsNumber(int n) {
@@ -217,5 +213,48 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
         mTimer.cancel();
         mTimer = null;
     }
+
+    @Override
+    public void setPincodeCallback(Callback callback) {
+        mPincodeHandlerCallback = callback;
+    }
+
+    private AsyncCallback mAsyncCallback = new JsonAsyncCallback() {
+
+        @Override
+        public void onComplete(HttpResponse response, JSONObject object) {
+            try {
+                Log.d(null, object.toString(2));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            String pincode = "yo";
+            if (pincode.equals(mPincode)) {
+                releaseOrder();
+                Intent intent = new Intent();
+                intent.putExtra(EXTRA_PINCODE, pincode);
+                setResult(RESULT_OK, intent);
+                finish();
+                if (mPincodeHandlerCallback != null) {
+                    mPincodeHandlerCallback.onPincodeCheckDone(true);
+                }
+            } else {
+                setAttemptsNumber(mAttemptNumber + 1);
+                if (mAttemptNumber >= mMaxTry) {
+                    forbidOrder();
+                }
+
+                if (mPincodeHandlerCallback != null) {
+                    mPincodeHandlerCallback.onPincodeCheckDone(true);
+                }
+            }
+        }
+
+        @Override
+        public void onError(Exception e) {
+
+        };
+
+    };
 
 }
