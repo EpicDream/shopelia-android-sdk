@@ -1,5 +1,7 @@
 package com.shopelia.android;
 
+import java.util.Locale;
+
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,6 +13,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.manager.UserManager;
@@ -90,12 +96,34 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     }
 
     private void setupPaymentCardUi() {
-        findViewById(R.id.payment_card_number, TextView.class).setText(mOrder.card.number);
+        StringBuilder number = new StringBuilder(mOrder.card.number);
+        int relativeIndex = 0;
+        for (int index = 0; index < number.length(); index++) {
+            if (index < number.length() - 4) {
+                number.replace(index, index + 1, "*");
+            }
+            if (index > 0 && relativeIndex % 4 == 0) {
+                number.insert(index, " ");
+                index++;
+                relativeIndex = 0;
+            }
+            relativeIndex++;
+        }
+        findViewById(R.id.payment_card_number, TextView.class).setText(number);
     }
 
     private void setupUserUi() {
         findViewById(R.id.user_email, TextView.class).setText(mOrder.user.email);
-        findViewById(R.id.user_phone_number, TextView.class).setText(mOrder.address.phones.get(0).number);
+        String number = mOrder.address.phones.get(0).number;
+        try {
+            PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+            PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
+            number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
+        } catch (NumberParseException e) {
+            e.printStackTrace();
+        }
+
+        findViewById(R.id.user_phone_number, TextView.class).setText(number);
     }
 
     private void setupPriceUi() {
