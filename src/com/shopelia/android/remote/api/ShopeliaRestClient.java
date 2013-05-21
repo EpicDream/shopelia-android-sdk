@@ -145,6 +145,28 @@ public final class ShopeliaRestClient {
         sHttpClient.post(path, "application/json", object.toString().getBytes(), callback);
     }
 
+    /**
+     * Execute a POST request with parameter map and return the response.
+     * 
+     * @param path
+     * @param params
+     */
+    public static HttpResponse post(String path, byte[] object) {
+        return sHttpClient.post(path, "application/json", object);
+    }
+
+    /**
+     * Execute a POST request with parameter map and invoke the callback on
+     * completion.
+     * 
+     * @param path
+     * @param params
+     * @param callback
+     */
+    public static void post(String path, byte[] object, AsyncCallback callback) {
+        sHttpClient.post(path, "application/json", object, callback);
+    }
+
     public static void put(String path, JSONObject object, AsyncCallback callback) {
         sHttpClient.put(path, "application/json", object.toString().getBytes(), callback);
     }
