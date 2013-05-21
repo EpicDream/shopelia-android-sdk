@@ -45,6 +45,9 @@ public class AsyncImageView extends ImageView {
     @SuppressLint("NewApi")
     @Override
     public void setImageURI(Uri uri) {
+        if (uri == null) {
+            return;
+        }
         if (uri.getScheme().contains("http") && mDownloadTask == null) {
             mDownloadTask = new DownloadImage();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {

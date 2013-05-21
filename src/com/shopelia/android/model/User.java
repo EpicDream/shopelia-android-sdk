@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.shopelia.android.config.Config;
 import com.shopelia.android.utils.JsonUtils;
+import com.shopelia.android.utils.ParcelUtils;
 
 public class User implements JsonData, Parcelable {
 
@@ -33,6 +34,7 @@ public class User implements JsonData, Parcelable {
         String PAYMENT_CARDS = "payment_cards";
 
         String PINCODE = "pincode";
+        String HAS_PINCODE = "has_pincode";
 
         String PHONES = "phones";
         String PHONE = "phone";
@@ -50,7 +52,7 @@ public class User implements JsonData, Parcelable {
     public String firstName;
     public String lastName;
     public String phone;
-    public String pincode;
+    public boolean hasPincode = false;
 
     public ArrayList<Address> addresses = new ArrayList<Address>();
     public ArrayList<PaymentCard> paymentCards = new ArrayList<PaymentCard>();
@@ -74,8 +76,21 @@ public class User implements JsonData, Parcelable {
         firstName = source.readString();
         lastName = source.readString();
         phone = source.readString();
-        addresses = source.readArrayList(Address.class.getClassLoader());
-        paymentCards = source.readArrayList(PaymentCard.class.getClassLoader());
+        hasPincode = source.readByte() == 1;
+        ParcelUtils.readParcelableList(source, addresses, Address.class.getClassLoader());
+        ParcelUtils.readParcelableList(source, paymentCards, PaymentCard.class.getClassLoader());
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeLong(id);
+        dest.writeString(email);
+        dest.writeString(firstName);
+        dest.writeString(lastName);
+        dest.writeString(phone);
+        dest.writeByte((byte) (hasPincode ? 1 : 0));
+        ParcelUtils.writeParcelableList(dest, addresses, flags);
+        ParcelUtils.writeParcelableList(dest, paymentCards, flags);
     }
 
     @Override
@@ -85,7 +100,7 @@ public class User implements JsonData, Parcelable {
         json.put(Api.EMAIL, email);
         json.put(Api.FIRST_NAME, firstName);
         json.put(Api.LAST_NAME, lastName);
-        json.put(Api.PINCODE, pincode);
+        json.put(Api.HAS_PINCODE, hasPincode);
         json.put(Api.ADDRESSES, JsonUtils.toJson(addresses));
         json.put(Api.PAYMENT_CARDS, JsonUtils.toJson(paymentCards));
         return json;
@@ -98,7 +113,7 @@ public class User implements JsonData, Parcelable {
         user.firstName = json.optString(Api.FIRST_NAME);
         user.lastName = json.optString(Api.LAST_NAME);
         user.phone = json.optString(Api.PHONE);
-        user.pincode = json.optString(Api.PINCODE);
+        user.hasPincode = json.optBoolean(Api.HAS_PINCODE);
         if (json.has(Api.ADDRESSES)) {
             try {
                 user.addresses = Address.inflate(json.getJSONArray(Api.ADDRESSES));
@@ -106,7 +121,6 @@ public class User implements JsonData, Parcelable {
                 if (Config.ERROR_LOGS_ENABLED) {
                     Log.w(LOG_TAG, "", e);
                 }
-                user.addresses = new ArrayList<Address>();
             }
         }
         if (json.has(Api.PAYMENT_CARDS)) {
@@ -116,8 +130,13 @@ public class User implements JsonData, Parcelable {
                 if (Config.ERROR_LOGS_ENABLED) {
                     Log.w(LOG_TAG, "", e);
                 }
-                user.paymentCards = new ArrayList<PaymentCard>();
             }
+        }
+        if (user.addresses == null) {
+            user.addresses = new ArrayList<Address>();
+        }
+        if (user.paymentCards == null) {
+            user.paymentCards = new ArrayList<PaymentCard>();
         }
         return user;
     }
@@ -155,17 +174,6 @@ public class User implements JsonData, Parcelable {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeLong(id);
-        dest.writeString(email);
-        dest.writeString(firstName);
-        dest.writeString(lastName);
-        dest.writeString(phone);
-        dest.writeTypedList(addresses);
-        dest.writeTypedList(paymentCards);
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Creator<User>() {

@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Order;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
@@ -41,6 +42,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             view.findViewById(R.id.ticket).setBackgroundDrawable(new TicketDrawable(getActivity()));
         }
         mOrder = getBaseActivity().getOrder();
+        mOrder.user = UserManager.get(getActivity()).getUser();
         setupUi();
     }
 
@@ -59,10 +61,10 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     // ////////////////////////////////////////////////////////////////
 
     private void setupUi() {
+        setupProductUi();
         setupAddressUi();
         setupPaymentCardUi();
         setupPriceUi();
-        setupProductUi();
         setupUserUi();
     }
 
@@ -93,6 +95,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     private void setupUserUi() {
         findViewById(R.id.user_email, TextView.class).setText(mOrder.user.email);
+        findViewById(R.id.user_phone_number, TextView.class).setText(mOrder.address.phones.get(0).number);
     }
 
     private void setupPriceUi() {

@@ -43,7 +43,7 @@ public class ShopeliaFragment<Contract> extends Fragment {
             return null;
         }
         View view = getView().findViewById(id);
-        return clazz.isInstance(view) ? (T) view : null;
+        return (T) view;
     }
 
 }

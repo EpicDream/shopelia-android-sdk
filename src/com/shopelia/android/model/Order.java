@@ -43,10 +43,10 @@ public class Order implements Parcelable {
 
     private Order(Parcel source) {
         uuid = source.readString();
-        address = ParcelUtils.readParcelable(source, Address.class.getClassLoader());
+        product = ParcelUtils.readParcelable(source, Product.class.getClassLoader());
         card = ParcelUtils.readParcelable(source, PaymentCard.class.getClassLoader());
         user = ParcelUtils.readParcelable(source, User.class.getClassLoader());
-        product = ParcelUtils.readParcelable(source, Product.class.getClassLoader());
+        address = ParcelUtils.readParcelable(source, Address.class.getClassLoader());
     }
 
     @Override
@@ -57,10 +57,10 @@ public class Order implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(uuid);
-        ParcelUtils.writeParcelable(dest, address, flags);
+        ParcelUtils.writeParcelable(dest, product, flags);
         ParcelUtils.writeParcelable(dest, card, flags);
         ParcelUtils.writeParcelable(dest, user, flags);
-        ParcelUtils.writeParcelable(dest, product, flags);
+        ParcelUtils.writeParcelable(dest, address, flags);
     }
 
     public static final Creator<Order> CREATOR = new Creator<Order>() {
@@ -79,7 +79,6 @@ public class Order implements Parcelable {
     public static Order inflate(JSONObject object) {
         Order order = new Order();
         order.uuid = object.optString(Api.UUID, NO_ID);
-        order.product = new Product();
         order.product.url = object.optString(Api.PRODUCT_URL);
         if (object.has(Api.ADDRESS)) {
             try {

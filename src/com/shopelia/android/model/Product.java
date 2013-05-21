@@ -5,6 +5,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.shopelia.android.utils.Currency;
+import com.shopelia.android.utils.ParcelUtils;
 import com.shopelia.android.utils.Tax;
 
 public class Product implements Parcelable {
@@ -26,11 +27,11 @@ public class Product implements Parcelable {
     private Product(Parcel source) {
         url = source.readString();
         name = source.readString();
-        image = source.readParcelable(Uri.class.getClassLoader());
+        image = ParcelUtils.readParcelable(source, Uri.class.getClassLoader());
         description = source.readString();
-        vendor = source.readParcelable(Vendor.class.getClassLoader());
-        tax = source.readParcelable(Tax.class.getClassLoader());
-        currency = source.readParcelable(Currency.class.getClassLoader());
+        vendor = ParcelUtils.readParcelable(source, Vendor.class.getClassLoader());
+        tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
+        currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
     }
 
     @Override
@@ -42,11 +43,11 @@ public class Product implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);
         dest.writeString(name);
-        dest.writeParcelable(image, flags);
+        ParcelUtils.writeParcelable(dest, image, flags);
         dest.writeString(description);
-        dest.writeParcelable(vendor, flags);
-        dest.writeParcelable(tax, flags);
-        dest.writeParcelable(currency, flags);
+        ParcelUtils.writeParcelable(dest, vendor, flags);
+        ParcelUtils.writeParcelable(dest, tax, flags);
+        ParcelUtils.writeParcelable(dest, currency, flags);
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Creator<Product>() {

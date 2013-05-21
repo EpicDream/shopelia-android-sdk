@@ -49,7 +49,7 @@
         android:theme="@style/Theme.Shopelia" >
         
         <activity
-            android:name="com.shopelia.android.PrepareCheckoutActivity"
+            android:name="com.shopelia.android.PrepareOrderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Shopelia"
             android:screenOrientation="sensorPortrait"

@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Phone implements Parcelable {
+public class Phone implements Parcelable, JsonData {
 
     public static final long NO_ID = -1l;
 
@@ -82,5 +82,15 @@ public class Phone implements Parcelable {
             return new Phone(source);
         }
     };
+
+    @Override
+    public JSONObject toJson() throws JSONException {
+        JSONObject object = new JSONObject();
+        object.put(Api.NUMBER, number);
+        object.put(Api.LINE_TYPE, type);
+        object.put(Api.ADDRESS_ID, addressId);
+        object.put(Api.ID, id);
+        return object;
+    }
 
 }

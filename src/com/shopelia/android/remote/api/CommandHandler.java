@@ -158,7 +158,6 @@ public final class CommandHandler {
                 super.onError(e);
                 fireError(STEP_RETRIEVE_USER, null, e);
             }
-
         });
     }
 

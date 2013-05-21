@@ -11,6 +11,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
+import com.shopelia.android.utils.JsonUtils;
+
 public final class Address implements JsonData, Parcelable {
 
     public interface Api {
@@ -66,7 +68,7 @@ public final class Address implements JsonData, Parcelable {
         name = source.readString();
         firstname = source.readString();
         extras = source.readString();
-        phones = source.readArrayList(Phone.class.getClassLoader());
+        source.readTypedList(phones, Phone.CREATOR);
     }
 
     @Override
@@ -88,6 +90,7 @@ public final class Address implements JsonData, Parcelable {
         if (!TextUtils.isEmpty(extras)) {
             json.put(Api.EXTRAS, extras);
         }
+        json.put(Api.PHONES, JsonUtils.toJson(phones));
         return json;
     }
 

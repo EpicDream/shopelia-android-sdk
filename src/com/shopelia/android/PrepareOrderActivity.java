@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.app.ShopeliaActivity;
@@ -14,13 +15,15 @@ import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.model.Vendor;
 import com.shopelia.android.remote.api.CommandHandler;
+import com.shopelia.android.remote.api.CommandHandler.CallbackAdapter;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 
-public class PrepareCheckoutActivity extends ShopeliaActivity implements OnSignUpListener {
+public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpListener {
 
     /**
      * Url of the product to purchase
@@ -68,6 +71,8 @@ public class PrepareCheckoutActivity extends ShopeliaActivity implements OnSignU
      */
     public static final String EXTRA_CURRENCY = Config.EXTRA_PREFIX + "CURRENCY";
 
+    private static final int REQUEST_ADD_PAYMENT_CARD = 0x0113;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getIntent().putExtra(EXTRA_INIT_ORDER, true);
@@ -75,7 +80,6 @@ public class PrepareCheckoutActivity extends ShopeliaActivity implements OnSignU
         setHostContentView(R.layout.shopelia_start_activity);
 
         if (savedInstanceState == null) {
-            UserManager.get(this).logout();
             if (!UserManager.get(this).isLogged()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, new SignUpFragment());
@@ -92,15 +96,24 @@ public class PrepareCheckoutActivity extends ShopeliaActivity implements OnSignU
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-        if (requestCode == ShopeliaActivity.REQUEST_CHECKOUT) {
-            if ((resultCode == RESULT_OK || resultCode == ShopeliaActivity.RESULT_FAILURE) || fragment == null) {
-                finish();
-                return;
-            }
-        }
-
-        if (fragment != null) {
-            fragment.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case REQUEST_CHECKOUT:
+                if ((resultCode == RESULT_OK || resultCode == ShopeliaActivity.RESULT_FAILURE) || fragment == null) {
+                    finish();
+                    return;
+                }
+            case REQUEST_ADD_PAYMENT_CARD:
+                if (resultCode == RESULT_OK) {
+                    sendPaymentInformations((PaymentCard) data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD), getOrder());
+                } else {
+                    finish();
+                }
+                break;
+            default:
+                if (fragment != null) {
+                    fragment.onActivityResult(requestCode, resultCode, data);
+                }
+                break;
         }
     }
 
@@ -110,13 +123,27 @@ public class PrepareCheckoutActivity extends ShopeliaActivity implements OnSignU
         new CommandHandler(this, new CommandHandler.CallbackAdapter() {
 
             @Override
-            public void onAccountCreationSucceed(User user, Address address) {
+            public void onAccountCreationSucceed(final User user, Address address) {
                 super.onAccountCreationSucceed(user, address);
-                UserManager.get(PrepareCheckoutActivity.this).login(user);
-                checkoutOrder(order);
+                UserManager.get(PrepareOrderActivity.this).login(user);
+                order.user = user;
+                sendPaymentInformations(order.card, order);
             }
 
         }).createAccount(order.user, order.address);
+    }
+
+    private void sendPaymentInformations(PaymentCard card, final Order order) {
+        new CommandHandler(PrepareOrderActivity.this, new CallbackAdapter() {
+            @Override
+            public void onPaymentInformationSent(PaymentCard paymentInformation) {
+                super.onPaymentInformationSent(paymentInformation);
+                User user = UserManager.get(PrepareOrderActivity.this).getUser();
+                user.paymentCards.add(paymentInformation);
+                UserManager.get(PrepareOrderActivity.this).login(user);
+                checkoutOrder(order);
+            }
+        }).sendPaymentInformation(UserManager.get(PrepareOrderActivity.this).getUser(), card);
     }
 
     private void checkoutOrder(Order order) {
@@ -131,27 +158,34 @@ public class PrepareCheckoutActivity extends ShopeliaActivity implements OnSignU
         order.product.vendor = Vendor.AMAZON;
 
         Bundle extras = getIntent().getExtras();
-        if (extras.containsKey(PrepareCheckoutActivity.EXTRA_CURRENCY)) {
-            order.product.currency = extras.getParcelable(PrepareCheckoutActivity.EXTRA_CURRENCY);
+        if (extras.containsKey(PrepareOrderActivity.EXTRA_CURRENCY)) {
+            order.product.currency = extras.getParcelable(PrepareOrderActivity.EXTRA_CURRENCY);
         }
 
-        if (extras.containsKey(PrepareCheckoutActivity.EXTRA_VENDOR)) {
-            order.product.vendor = extras.getParcelable(PrepareCheckoutActivity.EXTRA_VENDOR);
+        if (extras.containsKey(PrepareOrderActivity.EXTRA_VENDOR)) {
+            order.product.vendor = extras.getParcelable(PrepareOrderActivity.EXTRA_VENDOR);
         }
 
-        if (extras.containsKey(PrepareCheckoutActivity.EXTRA_TAX)) {
-            order.product.tax = extras.getParcelable(PrepareCheckoutActivity.EXTRA_TAX);
+        if (extras.containsKey(PrepareOrderActivity.EXTRA_TAX)) {
+            order.product.tax = extras.getParcelable(PrepareOrderActivity.EXTRA_TAX);
         }
 
         order.user = UserManager.get(this).getUser();
 
         // TODO REMOVE THIS ONLY FOR TESTING
         order.address = order.user.addresses.get(0);
-        order.card = order.user.paymentCards.get(0);
 
-        Intent intent = new Intent(this, ProcessOrderActivity.class);
-        intent.putExtra(ShopeliaActivity.EXTRA_ORDER, order);
-        startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
+        if (order.user.paymentCards.size() > 0) {
+            order.card = order.user.paymentCards.get(0);
+        }
+        Log.d(null, "ADDRESS " + order.address);
+        if (order.card == null) {
+            startActivityForResult(new Intent(this, AddPaymentCardActivity.class), REQUEST_ADD_PAYMENT_CARD);
+        } else {
+            Intent intent = new Intent(this, ProcessOrderActivity.class);
+            intent.putExtra(ShopeliaActivity.EXTRA_ORDER, order);
+            startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
+        }
     }
 
     @Override
