@@ -54,7 +54,7 @@ public final class Command {
                 public static final String $ = Users.$ + "/verify";
             }
 
-            public static String Retrieve(long id) {
+            public static String User(long id) {
                 return $ + "/" + id;
             }
 

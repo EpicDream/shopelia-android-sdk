@@ -24,14 +24,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shopelia.android.algorithm.Luhn;
-import com.shopelia.android.app.HostActivity;
+import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.pretty.CardNumberFormattingTextWatcher;
 import com.shopelia.android.pretty.DateFormattingTextWatcher;
 import com.shopelia.android.widget.FormEditText;
 
-public class AddPaymentCardActivity extends HostActivity {
+public class AddPaymentCardActivity extends ShopeliaActivity {
 
     public static final String ACTIVITY_NAME = "PaymentCardCreation";
 

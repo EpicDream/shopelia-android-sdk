@@ -6,9 +6,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
+import com.shopelia.android.PrepareCheckoutActivity;
 import com.shopelia.android.R;
-import com.shopelia.android.StartActivity;
-import com.shopelia.android.utils.Vendor;
+import com.shopelia.android.model.Vendor;
 
 public class FormListHeader {
 
@@ -25,8 +25,8 @@ public class FormListHeader {
             mView = inflater.inflate(R.layout.shopelia_form_list_header, null);
             TextView introductionText = (TextView) mView.findViewById(R.id.introduction_text);
             String vendor = "";
-            if (mContext.getIntent().hasExtra(StartActivity.EXTRA_VENDOR)) {
-                Vendor v = mContext.getIntent().getParcelableExtra(StartActivity.EXTRA_VENDOR);
+            if (mContext.getIntent().hasExtra(PrepareCheckoutActivity.EXTRA_VENDOR)) {
+                Vendor v = mContext.getIntent().getParcelableExtra(PrepareCheckoutActivity.EXTRA_VENDOR);
                 vendor = v.getName();
             }
             introductionText.setText(Html.fromHtml(mContext.getString(R.string.shopelia_form_main_header_text, vendor)));

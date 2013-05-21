@@ -6,7 +6,6 @@ import android.os.Parcelable;
 
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
-import com.shopelia.android.utils.Vendor;
 
 public class Product implements Parcelable {
 

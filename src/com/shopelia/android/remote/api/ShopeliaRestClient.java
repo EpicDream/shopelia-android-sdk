@@ -171,4 +171,16 @@ public final class ShopeliaRestClient {
         sHttpClient.put(path, "application/json", object.toString().getBytes(), callback);
     }
 
+    /**
+     * Execute a DELETE request and invoke the callback on completion. The
+     * supplied parameters are URL encoded and sent as the query string.
+     * 
+     * @param path
+     * @param params
+     * @param callback
+     */
+    public static void delete(String path, ParameterMap params, AsyncCallback callback) {
+        sHttpClient.delete(path, params, callback);
+    }
+
 }

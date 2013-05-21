@@ -1,7 +1,5 @@
 package com.shopelia.android;
 
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,25 +11,17 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.shopelia.android.ProcessOrderFragment.OrderHandlerHolder;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
-import com.shopelia.android.manager.UserManager;
-import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
-import com.shopelia.android.model.OrderState;
-import com.shopelia.android.model.PaymentCard;
-import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.OrderHandler;
 
-public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> implements OrderHandler.Callback {
+public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     private Order mOrder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getContract().getOrderHandler().setCallback(this);
     }
 
     @Override
@@ -51,62 +41,16 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
             view.findViewById(R.id.ticket).setBackgroundDrawable(new TicketDrawable(getActivity()));
         }
         mOrder = getBaseActivity().getOrder();
-        mOrder.user = UserManager.get(getActivity()).getUser();
         setupUi();
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends View> T findViewById(int id) {
-        return (T) getView().findViewById(id);
-    }
-
-    @SuppressWarnings("unchecked")
-    private <T extends View> T findViewById(int id, Class<T> clazz) {
-        return (T) findViewById(id);
     }
 
     private OnClickListener mOnConfirmClickListener = new OnClickListener() {
 
         @Override
         public void onClick(View v) {
-            getContract().finalizeOrder();
+
         }
     };
-
-    @Override
-    public void onAccountCreationSucceed(User user, Address address) {
-        // Useless
-    }
-
-    @Override
-    public void onPaymentInformationSent(PaymentCard paymentInformation) {
-        // Useless
-    }
-
-    @Override
-    public void onOrderBegin(Order order) {
-        // Useless
-    }
-
-    @Override
-    public void onOrderStateUpdate(OrderState newState) {
-        // Useless
-    }
-
-    @Override
-    public void onError(int step, JSONObject response, Exception e) {
-
-    }
-
-    @Override
-    public void onOrderConfirmation(boolean succeed) {
-        getContract().getOrderHandler().done();
-        if (succeed) {
-            getContract().onCheckoutSucceed();
-        } else {
-            getContract().onCheckoutFailed();
-        }
-    }
 
     // ////////////////////////////////////////////////////////////////
     //
@@ -153,15 +97,12 @@ public class ConfirmationFragment extends ShopeliaFragment<OrderHandlerHolder> i
 
     private void setupPriceUi() {
         findViewById(R.id.price_product_name, TextView.class).setText(mOrder.product.name);
-        findViewById(R.id.price_value_no_shipping, TextView.class).setText(mOrder.product.currency.format(mOrder.state.productPrice));
-        findViewById(R.id.price_value_shipping, TextView.class).setText(mOrder.product.currency.format(mOrder.state.deliveryPrice));
-        findViewById(R.id.price_value_total, TextView.class).setText(mOrder.product.currency.format(mOrder.state.totalPrice));
-
-    }
-
-    @Override
-    public void onUserRetrieved(User user) {
-        // TODO Auto-generated method stub
+        // findViewById(R.id.price_value_no_shipping,
+        // TextView.class).setText(mOrder.product.currency.format(mOrder.state.productPrice));
+        // findViewById(R.id.price_value_shipping,
+        // TextView.class).setText(mOrder.product.currency.format(mOrder.state.deliveryPrice));
+        // findViewById(R.id.price_value_total,
+        // TextView.class).setText(mOrder.product.currency.format(mOrder.state.totalPrice));
 
     }
 

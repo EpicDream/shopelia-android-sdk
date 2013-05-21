@@ -5,10 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Parcelable;
 
-import com.shopelia.android.StartActivity;
+import com.shopelia.android.PrepareCheckoutActivity;
+import com.shopelia.android.model.Vendor;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
-import com.shopelia.android.utils.Vendor;
 
 /**
  * This class ease the use of the Shopelia service and should be the only one
@@ -21,48 +21,48 @@ public final class Shopelia {
     /**
      * Url of the product to purchase
      */
-    public static final String EXTRA_PRODUCT_URL = StartActivity.EXTRA_PRODUCT_URL;
+    public static final String EXTRA_PRODUCT_URL = PrepareCheckoutActivity.EXTRA_PRODUCT_URL;
 
     /**
      * A resource ID or {@link Uri} representing the image of product to
      * purchase
      */
-    public static final String EXTRA_PRODUCT_IMAGE = StartActivity.EXTRA_PRODUCT_IMAGE;
+    public static final String EXTRA_PRODUCT_IMAGE = PrepareCheckoutActivity.EXTRA_PRODUCT_IMAGE;
 
     /**
      * Title of the product to purchase
      */
-    public static final String EXTRA_PRODUCT_TITLE = StartActivity.EXTRA_PRODUCT_TITLE;
+    public static final String EXTRA_PRODUCT_TITLE = PrepareCheckoutActivity.EXTRA_PRODUCT_TITLE;
 
     /**
      * Description of the product to purchase
      */
-    public static final String EXTRA_PRODUCT_DESCRIPTION = StartActivity.EXTRA_PRODUCT_DESCRIPTION;
+    public static final String EXTRA_PRODUCT_DESCRIPTION = PrepareCheckoutActivity.EXTRA_PRODUCT_DESCRIPTION;
 
     /**
      * The {@link Vendor} of the product to purchase
      */
-    public static final String EXTRA_VENDOR = StartActivity.EXTRA_VENDOR;
+    public static final String EXTRA_VENDOR = PrepareCheckoutActivity.EXTRA_VENDOR;
 
     /**
      * The price of the product to purchase
      */
-    public static final String EXTRA_PRICE = StartActivity.EXTRA_PRICE;
+    public static final String EXTRA_PRICE = PrepareCheckoutActivity.EXTRA_PRICE;
 
     /**
      * The shipping fees of the product to purchase
      */
-    public static final String EXTRA_SHIPMENT_FEES = StartActivity.EXTRA_SHIPMENT_FEES;
+    public static final String EXTRA_SHIPMENT_FEES = PrepareCheckoutActivity.EXTRA_SHIPMENT_FEES;
 
     /**
      * A {@link Tax} object
      */
-    public static final String EXTRA_TAX = StartActivity.EXTRA_TAX;
+    public static final String EXTRA_TAX = PrepareCheckoutActivity.EXTRA_TAX;
 
     /**
      * The {@link Currency} of the price
      */
-    public static final String EXTRA_CURRENCY = StartActivity.EXTRA_CURRENCY;
+    public static final String EXTRA_CURRENCY = PrepareCheckoutActivity.EXTRA_CURRENCY;
 
     private Intent mData;
 
@@ -82,7 +82,7 @@ public final class Shopelia {
         if (data == null) {
             data = new Intent();
         }
-        data.setClass(context, StartActivity.class);
+        data.setClass(context, PrepareCheckoutActivity.class);
         if (productUrl != null) {
             data.putExtra(EXTRA_PRODUCT_URL, productUrl);
         }

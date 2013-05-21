@@ -13,7 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.algorithm.Fibonacci;
-import com.shopelia.android.app.HostActivity;
+import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
@@ -21,7 +21,7 @@ import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class PincodeActivity extends HostActivity implements PincodeHandler {
+public class PincodeActivity extends ShopeliaActivity implements PincodeHandler {
 
     public static final String ACTIVITY_NAME = "Pincode";
 

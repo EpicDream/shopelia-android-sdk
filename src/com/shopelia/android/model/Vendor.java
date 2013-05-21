@@ -1,4 +1,4 @@
-package com.shopelia.android.utils;
+package com.shopelia.android.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

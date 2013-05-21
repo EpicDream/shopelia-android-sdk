@@ -5,11 +5,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 
+import com.shopelia.android.PrepareCheckoutActivity;
 import com.shopelia.android.R;
-import com.shopelia.android.StartActivity;
+import com.shopelia.android.model.Vendor;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
-import com.shopelia.android.utils.Vendor;
 
 public class ProductSheetWrapper {
 
@@ -56,32 +56,32 @@ public class ProductSheetWrapper {
         Currency currency = Currency.EUR;
         Tax tax = Tax.ATI;
         Vendor vendor = Vendor.AMAZON;
-        if (mArguments.containsKey(StartActivity.EXTRA_CURRENCY)) {
-            currency = mArguments.getParcelable(StartActivity.EXTRA_CURRENCY);
+        if (mArguments.containsKey(PrepareCheckoutActivity.EXTRA_CURRENCY)) {
+            currency = mArguments.getParcelable(PrepareCheckoutActivity.EXTRA_CURRENCY);
         }
 
-        if (mArguments.containsKey(StartActivity.EXTRA_VENDOR)) {
-            vendor = mArguments.getParcelable(StartActivity.EXTRA_VENDOR);
+        if (mArguments.containsKey(PrepareCheckoutActivity.EXTRA_VENDOR)) {
+            vendor = mArguments.getParcelable(PrepareCheckoutActivity.EXTRA_VENDOR);
         }
 
-        if (mArguments.containsKey(StartActivity.EXTRA_TAX)) {
-            tax = mArguments.getParcelable(StartActivity.EXTRA_TAX);
+        if (mArguments.containsKey(PrepareCheckoutActivity.EXTRA_TAX)) {
+            tax = mArguments.getParcelable(PrepareCheckoutActivity.EXTRA_TAX);
         }
-        if (mArguments.containsKey(StartActivity.EXTRA_SHIPMENT_FEES)) {
+        if (mArguments.containsKey(PrepareCheckoutActivity.EXTRA_SHIPMENT_FEES)) {
             mShippingFees.setText(getString(R.string.shopelia_product_shipping_fees,
-                    currency.format(mArguments.getFloat(StartActivity.EXTRA_SHIPMENT_FEES))));
+                    currency.format(mArguments.getFloat(PrepareCheckoutActivity.EXTRA_SHIPMENT_FEES))));
             mShippingFees.setVisibility(View.VISIBLE);
         } else {
             mShippingFees.setVisibility(View.GONE);
         }
 
-        mProductName.setText(mArguments.getString(StartActivity.EXTRA_PRODUCT_TITLE));
-        mProductDescription.setText(mArguments.getString(StartActivity.EXTRA_PRODUCT_DESCRIPTION));
-        mProductDescription.setVisibility(mArguments.containsKey(StartActivity.EXTRA_PRODUCT_DESCRIPTION) ? View.VISIBLE : View.GONE);
-        mProductPrice.setText(currency.format(mArguments.getFloat(StartActivity.EXTRA_PRICE)));
+        mProductName.setText(mArguments.getString(PrepareCheckoutActivity.EXTRA_PRODUCT_TITLE));
+        mProductDescription.setText(mArguments.getString(PrepareCheckoutActivity.EXTRA_PRODUCT_DESCRIPTION));
+        mProductDescription.setVisibility(mArguments.containsKey(PrepareCheckoutActivity.EXTRA_PRODUCT_DESCRIPTION) ? View.VISIBLE : View.GONE);
+        mProductPrice.setText(currency.format(mArguments.getFloat(PrepareCheckoutActivity.EXTRA_PRICE)));
         mTax.setText(tax.getResId());
         mVendorLogo.setImageResource(vendor.getImageResId());
-        Object image = mArguments.get(StartActivity.EXTRA_PRODUCT_IMAGE);
+        Object image = mArguments.get(PrepareCheckoutActivity.EXTRA_PRODUCT_IMAGE);
         if (image != null && image instanceof Uri) {
             mProductImage.setImageURI((Uri) image);
         }

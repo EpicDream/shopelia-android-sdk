@@ -29,7 +29,7 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.shopelia.android.app.HostActivity;
+import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.remote.api.PlacesAutoCompleteClient;
@@ -37,7 +37,7 @@ import com.shopelia.android.utils.LocaleUtils;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormEditText;
 
-public class CreateAddressActivity extends HostActivity {
+public class CreateAddressActivity extends ShopeliaActivity {
 
     public static final String ACTIVITY_NAME = "AddressCreation";
 

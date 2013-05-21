@@ -9,15 +9,18 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
-import com.shopelia.android.app.HostActivity;
+import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.model.User;
+import com.shopelia.android.model.Vendor;
+import com.shopelia.android.remote.api.CommandHandler;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
-import com.shopelia.android.utils.Vendor;
 
-public class StartActivity extends HostActivity implements OnSignUpListener {
+public class PrepareCheckoutActivity extends ShopeliaActivity implements OnSignUpListener {
 
     /**
      * Url of the product to purchase
@@ -72,6 +75,7 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
         setHostContentView(R.layout.shopelia_start_activity);
 
         if (savedInstanceState == null) {
+            UserManager.get(this).logout();
             if (!UserManager.get(this).isLogged()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, new SignUpFragment());
@@ -88,8 +92,8 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
 
-        if (requestCode == HostActivity.REQUEST_CHECKOUT) {
-            if ((resultCode == RESULT_OK || resultCode == HostActivity.RESULT_FAILURE) || fragment == null) {
+        if (requestCode == ShopeliaActivity.REQUEST_CHECKOUT) {
+            if ((resultCode == RESULT_OK || resultCode == ShopeliaActivity.RESULT_FAILURE) || fragment == null) {
                 finish();
                 return;
             }
@@ -102,8 +106,17 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
 
     @Override
     public void onSignUp(JSONObject result) {
-        Order order = Order.inflate(result);
-        checkoutOrder(order);
+        final Order order = Order.inflate(result);
+        new CommandHandler(this, new CommandHandler.CallbackAdapter() {
+
+            @Override
+            public void onAccountCreationSucceed(User user, Address address) {
+                super.onAccountCreationSucceed(user, address);
+                UserManager.get(PrepareCheckoutActivity.this).login(user);
+                checkoutOrder(order);
+            }
+
+        }).createAccount(order.user, order.address);
     }
 
     private void checkoutOrder(Order order) {
@@ -113,23 +126,32 @@ public class StartActivity extends HostActivity implements OnSignUpListener {
         order.product.currency = Currency.EUR;
         order.product.tax = Tax.ATI;
         order.product.description = getIntent().getStringExtra(EXTRA_PRODUCT_DESCRIPTION);
+
         // TODO REMOVE THIS ONLY FOR TESTING
         order.product.vendor = Vendor.AMAZON;
+
         Bundle extras = getIntent().getExtras();
-        if (extras.containsKey(StartActivity.EXTRA_CURRENCY)) {
-            order.product.currency = extras.getParcelable(StartActivity.EXTRA_CURRENCY);
+        if (extras.containsKey(PrepareCheckoutActivity.EXTRA_CURRENCY)) {
+            order.product.currency = extras.getParcelable(PrepareCheckoutActivity.EXTRA_CURRENCY);
         }
 
-        if (extras.containsKey(StartActivity.EXTRA_VENDOR)) {
-            order.product.vendor = extras.getParcelable(StartActivity.EXTRA_VENDOR);
+        if (extras.containsKey(PrepareCheckoutActivity.EXTRA_VENDOR)) {
+            order.product.vendor = extras.getParcelable(PrepareCheckoutActivity.EXTRA_VENDOR);
         }
 
-        if (extras.containsKey(StartActivity.EXTRA_TAX)) {
-            order.product.tax = extras.getParcelable(StartActivity.EXTRA_TAX);
+        if (extras.containsKey(PrepareCheckoutActivity.EXTRA_TAX)) {
+            order.product.tax = extras.getParcelable(PrepareCheckoutActivity.EXTRA_TAX);
         }
+
+        order.user = UserManager.get(this).getUser();
+
+        // TODO REMOVE THIS ONLY FOR TESTING
+        order.address = order.user.addresses.get(0);
+        order.card = order.user.paymentCards.get(0);
+
         Intent intent = new Intent(this, ProcessOrderActivity.class);
-        intent.putExtra(HostActivity.EXTRA_ORDER, order);
-        startActivityForResult(intent, HostActivity.REQUEST_CHECKOUT);
+        intent.putExtra(ShopeliaActivity.EXTRA_ORDER, order);
+        startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
     }
 
     @Override

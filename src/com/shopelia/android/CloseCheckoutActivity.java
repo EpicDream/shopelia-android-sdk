@@ -2,9 +2,9 @@ package com.shopelia.android;
 
 import android.os.Bundle;
 
-import com.shopelia.android.app.HostActivity;
+import com.shopelia.android.app.ShopeliaActivity;
 
-public class CloseCheckoutActivity extends HostActivity {
+public class CloseCheckoutActivity extends ShopeliaActivity {
 
     public static final String ACTIVITY_NAME = "CloseCheckout";
 

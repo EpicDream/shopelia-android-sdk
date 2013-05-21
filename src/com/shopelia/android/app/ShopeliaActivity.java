@@ -17,7 +17,7 @@ import com.shopelia.android.model.Order;
  * 
  * @author Pierre Pollastri
  */
-public abstract class HostActivity extends FragmentActivity {
+public abstract class ShopeliaActivity extends FragmentActivity {
 
     public static final String EXTRA_ORDER = Config.EXTRA_PREFIX + "ORDER";
     protected static final String EXTRA_INIT_ORDER = Config.EXTRA_PREFIX + "INIT_ORDER";
