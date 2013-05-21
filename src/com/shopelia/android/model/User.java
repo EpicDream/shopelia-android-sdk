@@ -18,6 +18,7 @@ public class User implements JsonData, Parcelable {
     private static final String LOG_TAG = "Model$User";
 
     public interface Api {
+        String DATA = "data";
         String USER = "user";
         String AUTH_TOKEN = "auth_token";
 

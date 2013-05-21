@@ -32,11 +32,7 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
         public boolean isCreatingPincode();
 
-        public String getPincode();
-
         public boolean sendPincode(String pincode);
-
-        public void reset();
 
         public int getAttemptNumber();
 
@@ -161,6 +157,7 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
         String pincode = mNumberInput.getText().toString();
         if (pincode.length() == 4) {
             getContract().sendPincode(mNumberInput.getText().toString());
+            mNumberInput.setEnabled(false);
         }
 
     }
@@ -225,7 +222,7 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
         @Override
         public void onPincodeCheckDone(boolean succeed) {
-            ((Errorable) mNumberInput).setError(succeed);
+            ((Errorable) mNumberInput).setError(!succeed);
             if (((Errorable) mNumberInput).hasError() && getActivity() != null) {
                 setError(getResources().getString(R.string.shopelia_pincode_wrong));
                 mNumberInput.removeTextChangedListener(mTextWatcher);

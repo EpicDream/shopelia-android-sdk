@@ -10,14 +10,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.algorithm.Fibonacci;
 import com.shopelia.android.app.HostActivity;
 import com.shopelia.android.config.Config;
-import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
@@ -45,7 +42,7 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
      */
     public static final String EXTRA_NUMBER_OF_TRY = Config.EXTRA_PREFIX + "NUMBER_OF_TRY";
 
-    private static final long MIN_ERROR_DELAY = 5 * 1000;
+    private static final long MIN_ERROR_DELAY = 5 * 60 * 1000;
     private static final long MAX_ERROR_DELAY = 1 * 60 * 60 * 1000;
 
     private static final String PREF_TIME_TO_BLOCK = "SPH_LAST_ATTEMPT";
@@ -53,7 +50,6 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
     private static final String PREF_ATTEMPTS = "SPH_ATTEMPTS";
 
     private boolean mCreatePincode = true;
-    private String mPincode = null;
     private int mMaxTry = 5;
     private int mAttemptNumber = 0;
     private long mTimeToBlock;
@@ -90,11 +86,7 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
     private void init(Bundle bundle) {
         if (bundle != null) {
             mCreatePincode = bundle.getBoolean(EXTRA_CREATE_PINCODE);
-            if (bundle.containsKey(EXTRA_PINCODE)) {
-                mPincode = bundle.get(EXTRA_PINCODE).toString();
-            }
         }
-        mCreatePincode = TextUtils.isEmpty(mPincode);
     }
 
     @Override
@@ -106,9 +98,6 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(EXTRA_CREATE_PINCODE, mCreatePincode);
-        if (mPincode != null) {
-            outState.putString(EXTRA_PINCODE, mPincode);
-        }
         outState.putInt(EXTRA_NUMBER_OF_TRY, mMaxTry);
     }
 
@@ -118,23 +107,25 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
     }
 
     @Override
-    public String getPincode() {
-        return mPincode;
-    }
-
-    @Override
-    public boolean sendPincode(String pincode) {
+    public boolean sendPincode(final String pincode) {
         if (!isServiceAvailable()) {
             return false;
         }
-        if (isCreatingPincode() && mPincode == null) {
-            mPincode = pincode;
+        if (isCreatingPincode()) {
+            Intent data = new Intent();
+            data.putExtra(EXTRA_CREATE_PINCODE, true);
+            data.putExtra(EXTRA_PINCODE, pincode);
+            setResult(RESULT_OK, data);
+            finish();
+            return true;
         }
         ShopeliaRestClient.authenticate(this);
 
         JSONObject params = new JSONObject();
         try {
-            params.put(User.Api.PINCODE, pincode);
+            JSONObject object = new JSONObject();
+            object.put(User.Api.PINCODE, pincode);
+            params.put(User.Api.DATA, object);
         } catch (JSONException e) {
 
         }
@@ -165,18 +156,8 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
         editor.commit();
     }
 
-    @Override
-    public void reset() {
-        if (isCreatingPincode()) {
-            mPincode = null;
-        }
-    }
-
     private void handleFragment(String errorMessage) {
         int step = isCreatingPincode() ? PincodeFragment.STEP_CREATION : PincodeFragment.STEP_VERIFICATION;
-        if (step == PincodeFragment.STEP_CREATION && !TextUtils.isEmpty(mPincode)) {
-            step = PincodeFragment.STEP_CONFIRMATION;
-        }
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.fragment_container, PincodeFragment.newInstance(step, errorMessage));
         ft.commit();
@@ -219,20 +200,13 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
         mPincodeHandlerCallback = callback;
     }
 
-    private AsyncCallback mAsyncCallback = new JsonAsyncCallback() {
+    private AsyncCallback mAsyncCallback = new AsyncCallback() {
 
         @Override
-        public void onComplete(HttpResponse response, JSONObject object) {
-            try {
-                Log.d(null, object.toString(2));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            String pincode = "yo";
-            if (pincode.equals(mPincode)) {
+        public void onComplete(HttpResponse response) {
+            if (response.getStatus() == 200) {
                 releaseOrder();
                 Intent intent = new Intent();
-                intent.putExtra(EXTRA_PINCODE, pincode);
                 setResult(RESULT_OK, intent);
                 finish();
                 if (mPincodeHandlerCallback != null) {
@@ -243,7 +217,6 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
                 if (mAttemptNumber >= mMaxTry) {
                     forbidOrder();
                 }
-
                 if (mPincodeHandlerCallback != null) {
                     mPincodeHandlerCallback.onPincodeCheckDone(true);
                 }
@@ -252,7 +225,7 @@ public class PincodeActivity extends HostActivity implements PincodeHandler {
 
         @Override
         public void onError(Exception e) {
-
+            e.printStackTrace();
         };
 
     };

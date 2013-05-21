@@ -22,7 +22,7 @@ public abstract class JsonAsyncCallback extends AsyncCallback {
         try {
             object = new JSONObject(httpResponse.getBodyAsString());
         } catch (JSONException e) {
-            Log.e(null, httpResponse.getBodyAsString());
+            Log.e(null, "RESPONSE : " + httpResponse.getBodyAsString());
             onError(e);
         }
         if (object != null) {
