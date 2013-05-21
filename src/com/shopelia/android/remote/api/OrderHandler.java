@@ -6,8 +6,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.shopelia.android.http.HttpPoller;
-import com.shopelia.android.http.HttpPoller.PollerCallback;
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
@@ -53,8 +51,6 @@ public final class OrderHandler {
 
     private Context mContext;
     private Callback mCallback;
-
-    private static HttpPoller sHttpPoller;
 
     private PaymentCard mPaymentCard;
     private Order mOrder;
@@ -236,17 +232,6 @@ public final class OrderHandler {
                             mCallback.onOrderStateUpdate(state);
                         }
                         mCurrentStep = STEP_ORDERING;
-                        if (sHttpPoller == null) {
-                            sHttpPoller = new HttpPoller();
-                            sHttpPoller.start();
-                        }
-
-                        if (!sHttpPoller.isStopped()) {
-                            sHttpPoller.end();
-                        }
-
-                        sHttpPoller.setPollerCallback(mPollerCalback);
-                        sHttpPoller.poll(Command.V1.Orders.Order(order.uuid));
 
                     } catch (JSONException e) {
                         fireError(STEP_ORDER, null, e);
@@ -283,7 +268,6 @@ public final class OrderHandler {
 
                     }
                 });
-                sHttpPoller.resumePolling();
                 return true;
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -293,7 +277,7 @@ public final class OrderHandler {
     }
 
     public void done() {
-        sHttpPoller.end();
+
     }
 
     public void cancel() {
@@ -323,32 +307,19 @@ public final class OrderHandler {
     }
 
     public void stopOrderForError() {
-        if (sHttpPoller != null) {
-            sHttpPoller.end();
-        }
+
     }
 
     public void pause() {
-        if (sHttpPoller != null) {
-            sHttpPoller.pause();
-        }
         mInternalState = STATE_PAUSED;
     }
 
     public void resume() {
-        if (sHttpPoller != null && (mCurrentStep == STEP_ORDERING || mCurrentStep == STEP_WAITING_CONFIRMATION)) {
-            sHttpPoller.resumePolling();
-        }
         mInternalState = STATE_RUNNING;
     }
 
     public void recycle() {
         mInternalState = STATE_RECYCLED;
-        if (sHttpPoller != null) {
-            sHttpPoller.end();
-            sHttpPoller.setPollerCallback(null);
-            sHttpPoller = null;
-        }
     }
 
     private void fireError(int step, JSONObject response, Exception e) {
@@ -356,47 +327,5 @@ public final class OrderHandler {
             mCallback.onError(step, response, e);
         }
     }
-
-    private HttpPoller.PollerCallback mPollerCalback = new PollerCallback() {
-
-        @Override
-        protected void onComplete(HttpResponse response) {
-            if (response.getStatus() == 200) {
-                try {
-                    OrderState state = OrderState.inflate(new JSONObject(response.getBodyAsString()).getJSONObject(OrderState.Api.ORDER));
-                    if (!state.uuid.equals(mOrder.uuid)) {
-                        return;
-                    }
-                    mOrderState = state;
-                    mOrder.state = state;
-                    if (mCallback != null) {
-                        mCallback.onOrderStateUpdate(state);
-                        if (mCurrentStep == STEP_WAITING_CONFIRMATION) {
-                            if (state.state == State.SUCCESS) {
-                                sHttpPoller.pause();
-                                mCallback.onOrderConfirmation(true);
-                            } else if (state.state == State.ERROR) {
-                                sHttpPoller.pause();
-                                mCallback.onOrderConfirmation(false);
-                            }
-                        }
-                        if (canConfirm() && mCurrentStep == STEP_ORDERING) {
-                            sHttpPoller.pause();
-                        }
-                    }
-                } catch (JSONException e) {
-                    fireError(mCurrentStep, null, e);
-                }
-            } else {
-                fireError(mCurrentStep, null, null);
-            }
-        }
-
-        @Override
-        protected void onError(Exception e) {
-            fireError(mCurrentStep, null, e);
-        };
-
-    };
 
 }
