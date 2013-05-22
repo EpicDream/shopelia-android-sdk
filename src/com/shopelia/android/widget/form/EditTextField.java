@@ -312,12 +312,6 @@ public class EditTextField extends FormField implements Errorable {
     }
 
     @Override
-    public void notifyDataChanged(View view) {
-        super.notifyDataChanged(view);
-
-    }
-
-    @Override
     public void setError(boolean hasError) {
         if (hasError() != hasError) {
             mError = hasError;

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.app.ShopeliaActivity;
@@ -197,5 +198,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     @Override
     public String getActivityName() {
         return null;
+    }
+
+    @Override
+    public View getValidationView() {
+        return findViewById(R.id.footer).findViewById(R.id.validate);
     }
 }

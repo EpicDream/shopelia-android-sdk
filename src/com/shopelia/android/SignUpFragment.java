@@ -24,6 +24,7 @@ import com.shopelia.android.widget.form.EditTextField;
 import com.shopelia.android.widget.form.EditTextField.OnValidateListener;
 import com.shopelia.android.widget.form.EmailField;
 import com.shopelia.android.widget.form.FormLinearLayout;
+import com.shopelia.android.widget.form.HeaderField;
 import com.shopelia.android.widget.form.PaymentCardField;
 import com.shopelia.android.widget.form.PhoneField;
 import com.turbomanage.httpclient.AsyncCallback;
@@ -33,6 +34,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 
     public interface OnSignUpListener {
         public void onSignUp(JSONObject result);
+
+        public View getValidationView();
     }
 
     private FormLinearLayout mFormContainer;
@@ -46,49 +49,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFormContainer = findViewById(R.id.form);
-        // mFooter = new FormListFooter(getActivity());
-        //
-        // mListView = (ListView) view.findViewById(R.id.form);
-        // mListView.addHeaderView(new FormListHeader(getActivity()).getView(),
-        // null, false);
-        // mListView.addFooterView(mFooter.getView(), null, false);
-        //
-        // mProductSheetWrapper = new
-        // ProductSheetWrapper(view.findViewById(R.id.product_sheet),
-        // getActivity().getIntent().getExtras());
-        //
-        // mAdapter = new FormAdapter(mListView);
-        //
-//        //@formatter:off
-//        mAdapter
-//             
-//            /*
-//             * User informations
-//             */
-//            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_personal_info, R.drawable.shopelia_user).displayLock())
-//            .add(new PhoneField(getActivity(), null, R.string.shopelia_form_main_phone).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener))
-//            .add(new EmailField(getActivity(), null, R.string.shopelia_form_main_email).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory())
-//             
-            /*
-             * Shipment details
-             */
-//            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_shipping_address, R.drawable.shopelia_pin))
-//            .add(new AddressField(getActivity(), R.string.shopelia_form_main_address).setJsonPath(Order.Api.ADDRESS))
-//             
-            /*
-             * Payment methods
-             */
-//            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_payment_method, R.drawable.shopelia_card).displayLock().addPictures(R.drawable.shopelia_logos_visa, R.drawable.shopelia_logos_mc, R.drawable.shopelia_logos_norton))
-//            .add(new PaymentCardField(getActivity(), R.string.shopelia_form_main_card_number).setJsonPath(Order.Api.PAYMENT_CARD))
-//             
-//            .commit(savedInstanceState);
-//        //@formatter:on
-        //
-        // mListView.setAdapter(mAdapter);
-        //
-        // mFooter.getView().findViewById(R.id.validate).setOnClickListener(mOnClickListener);
-        //@formatter:off
 
+        //@formatter:off
         /*
          * User informations
          */
@@ -103,10 +65,13 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         /*
          * Payment methods
          */
+        mFormContainer.findFieldById(R.id.header_payment_method, HeaderField.class).addPictures(R.drawable.shopelia_logos_visa, R.drawable.shopelia_logos_mc, R.drawable.shopelia_logos_norton);
         mFormContainer.findFieldById(R.id.payment_card, PaymentCardField.class).setJsonPath(Order.Api.PAYMENT_CARD);
         
         mFormContainer.onCreate(savedInstanceState);
         //@formatter:on
+
+        getContract().getValidationView().setOnClickListener(mOnClickListener);
 
     }
 

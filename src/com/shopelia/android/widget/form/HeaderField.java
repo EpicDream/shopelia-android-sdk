@@ -94,13 +94,14 @@ public class HeaderField extends FormField {
         }
         holder.lock.setVisibility(mHasLock ? View.VISIBLE : View.INVISIBLE);
         holder.scroller.removeAllViews();
-        mImagesIds = new int[0];
-        for (int resId : mImagesIds) {
-            ImageView image = new ImageView(getContext());
-            image.setImageResource(resId);
-            image.setScaleType(ScaleType.CENTER_INSIDE);
-            image.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            holder.scroller.addView(image);
+        if (mImagesIds != null && mImagesIds.length > 0) {
+            for (int resId : mImagesIds) {
+                ImageView image = new ImageView(getContext());
+                image.setImageResource(resId);
+                image.setScaleType(ScaleType.CENTER_INSIDE);
+                image.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+                holder.scroller.addView(image);
+            }
         }
     }
 
@@ -134,14 +135,6 @@ public class HeaderField extends FormField {
     @Override
     public boolean validate() {
         return isValid();
-    }
-
-    @Override
-    public void notifyDataChanged(View view) {
-        super.notifyDataChanged(view);
-        if (view != null) {
-            bindView(view);
-        }
     }
 
 }

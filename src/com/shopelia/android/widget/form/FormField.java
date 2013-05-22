@@ -10,7 +10,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.adapter.FormAdapter;
@@ -150,14 +149,6 @@ public abstract class FormField extends FrameLayout {
      */
     public FormContainer getFormContainer() {
         return mFormContainer;
-    }
-
-    /**
-     * Called each time that data changed and adapter do not want to notify its
-     * {@link AdapterView}
-     */
-    public void notifyDataChanged(View view) {
-
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
