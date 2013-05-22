@@ -22,15 +22,14 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        commit();
         for (FormField field : mFields) {
             field.onCreate(savedInstanceState);
         }
     }
 
-    @Override
-    protected boolean addViewInLayout(View child, int index, android.view.ViewGroup.LayoutParams params, boolean preventRequestLayout) {
+    public void commit() {
         refreshFieldCache();
-        return super.addViewInLayout(child, index, params, preventRequestLayout);
     }
 
     @Override
