@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.shopelia.android.widget.FormEditText
+        android:id="@+id/formEditText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="email" >
+
+        <requestFocus />
+    </com.shopelia.android.widget.FormEditText>
+
+    <com.shopelia.android.widget.FormEditText
+        android:id="@+id/formEditText2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="password" />
+
+    <com.shopelia.android.widget.ValidationButton
+        android:id="@+id/validationButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:shopelia_text="CONNEXION" >
+
+    </com.shopelia.android.widget.ValidationButton>
+
+    <com.shopelia.android.widget.ValidationButton
+        android:id="@+id/validationButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:shopelia_text="C&apos;est ma première fois" >
+
+    </com.shopelia.android.widget.ValidationButton>
+
+</LinearLayout>

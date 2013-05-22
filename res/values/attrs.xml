@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
- 
+
     <declare-styleable name="FontableTextView">
         <attr name="shopelia_fontStyle">
             <flag name="normal" value="0" />
@@ -13,19 +13,30 @@
             <enum name="light" value="2" />
         </attr>
     </declare-styleable>
- 
+
+    <attr name="shopelia_text" format="string" />
+    <attr name="shopelia_hint" format="string" />
+    <attr name="shopelia_icon" format="integer" />
+    <attr name="shopelia_textSize" format="integer" />
+
     <declare-styleable name="ValidationButton">
-        <attr name="shopelia_text" format="string" />
-        <attr name="shopelia_icon" format="integer" />
-        <attr name="shopelia_textSize" format="integer" />
+        <attr name="shopelia_text" />
+        <attr name="shopelia_icon" />
+        <attr name="shopelia_textSize" />
     </declare-styleable>
-     
+    <declare-styleable name="HeaderField">
+        <attr name="shopelia_text" />
+        <attr name="shopelia_icon" />
+    </declare-styleable>
+     <declare-styleable name="EditTextField">
+        <attr name="shopelia_text" />
+        <attr name="shopelia_hint" />
+    </declare-styleable>
     <declare-styleable name="NumberInput">
         <attr name="shopelia_number_background" format="integer" />
     </declare-styleable>
-     
     <declare-styleable name="FormState">
         <attr name="state_error" format="boolean" />
     </declare-styleable>
-     
+
 </resources>

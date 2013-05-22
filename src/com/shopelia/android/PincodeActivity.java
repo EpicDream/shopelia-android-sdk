@@ -112,6 +112,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
             return false;
         }
         if (isCreatingPincode()) {
+
             Intent data = new Intent();
             data.putExtra(EXTRA_CREATE_PINCODE, true);
             data.putExtra(EXTRA_PINCODE, pincode);

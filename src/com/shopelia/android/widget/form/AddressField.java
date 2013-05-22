@@ -1,4 +1,4 @@
-package com.shopelia.android.adapter.form;
+package com.shopelia.android.widget.form;
 
 import java.util.Locale;
 
@@ -8,6 +8,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
 import android.widget.Button;
 
 import com.shopelia.android.CreateAddressActivity;
@@ -21,8 +22,16 @@ public class AddressField extends ButtonField {
 
     private Address mAddress = null;
 
-    public AddressField(Context context, int resId) {
-        super(context, resId);
+    public AddressField(Context context) {
+        this(context, null);
+    }
+
+    public AddressField(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public AddressField(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
     }
 
     @Override

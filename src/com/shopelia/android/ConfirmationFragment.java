@@ -3,6 +3,7 @@ package com.shopelia.android;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -19,7 +20,6 @@ import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
-import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Order;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
@@ -48,7 +48,6 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             view.findViewById(R.id.ticket).setBackgroundDrawable(new TicketDrawable(getActivity()));
         }
         mOrder = getBaseActivity().getOrder();
-        mOrder.user = UserManager.get(getActivity()).getUser();
         setupUi();
     }
 
@@ -56,7 +55,9 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
         @Override
         public void onClick(View v) {
-
+            Intent intent = new Intent(getActivity(), PincodeActivity.class);
+            intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, !mOrder.user.hasPincode);
+            getActivity().startActivityForResult(intent, ProcessOrderActivity.REQUEST_AUTHENTICATE);
         }
     };
 

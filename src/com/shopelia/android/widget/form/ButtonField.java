@@ -1,19 +1,19 @@
-package com.shopelia.android.adapter.form;
+package com.shopelia.android.widget.form;
 
 import android.content.Context;
+import android.content.res.TypedArray;
+import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Checkable;
 
 import com.shopelia.android.R;
-import com.shopelia.android.adapter.FormAdapter.Field;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormEditTextButton;
 
-public abstract class ButtonField extends Field implements Errorable, Checkable {
+public abstract class ButtonField extends FormField implements Errorable, Checkable {
 
     public static final int TYPE = 2;
     public static int REQUEST_ADDRESS = 0x16;
@@ -25,9 +25,25 @@ public abstract class ButtonField extends Field implements Errorable, Checkable 
     private boolean mChecked = false;
     private boolean mError = false;
 
-    public ButtonField(Context context, int resId) {
-        super(TYPE);
-        mHint = context.getString(resId);
+    public ButtonField(Context context) {
+        this(context, null);
+    }
+
+    public ButtonField(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public ButtonField(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        if (attrs != null) {
+            TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.EditTextField, 0, 0);
+            try {
+                mContentText = ta.getString(R.styleable.EditTextField_shopelia_text);
+                mHint = ta.getString(R.styleable.EditTextField_shopelia_hint);
+            } finally {
+                ta.recycle();
+            }
+        }
     }
 
     @Override

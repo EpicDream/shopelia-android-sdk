@@ -20,8 +20,12 @@ import com.shopelia.android.model.User;
 import com.shopelia.android.model.Vendor;
 import com.shopelia.android.remote.api.CommandHandler;
 import com.shopelia.android.remote.api.CommandHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.UserCommandHandler;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
+import com.shopelia.android.widget.FormListFooter;
+import com.shopelia.android.widget.FormListHeader;
+import com.shopelia.android.widget.ProductSheetWrapper;
 
 public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpListener {
 
@@ -77,7 +81,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     protected void onCreate(Bundle savedInstanceState) {
         getIntent().putExtra(EXTRA_INIT_ORDER, true);
         super.onCreate(savedInstanceState);
-        setHostContentView(R.layout.shopelia_start_activity);
+        setHostContentView(R.layout.shopelia_prepare_order_activity);
 
         if (savedInstanceState == null) {
             if (!UserManager.get(this).isLogged()) {
@@ -88,7 +92,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 checkoutOrder(getOrder());
             }
         }
-
+        new FormListHeader(this).setView(findViewById(R.id.header));
+        new FormListFooter(this).setView(findViewById(R.id.footer));
+        new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getIntent().getExtras());
     }
 
     @Override
@@ -120,7 +126,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     @Override
     public void onSignUp(JSONObject result) {
         final Order order = Order.inflate(result);
-        new CommandHandler(this, new CommandHandler.CallbackAdapter() {
+        new UserCommandHandler(this, new CommandHandler.CallbackAdapter() {
 
             @Override
             public void onAccountCreationSucceed(final User user, Address address) {
@@ -134,7 +140,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     }
 
     private void sendPaymentInformations(PaymentCard card, final Order order) {
-        new CommandHandler(PrepareOrderActivity.this, new CallbackAdapter() {
+        new UserCommandHandler(PrepareOrderActivity.this, new CallbackAdapter() {
             @Override
             public void onPaymentInformationSent(PaymentCard paymentInformation) {
                 super.onPaymentInformationSent(paymentInformation);

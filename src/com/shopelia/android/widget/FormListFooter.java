@@ -26,4 +26,11 @@ public class FormListFooter {
         }
         return mView;
     }
+
+    public void setView(View view) {
+        mView = view;
+        mFooterText = (FontableTextView) mView.findViewById(R.id.cgu);
+        mFooterText.setText(Html.fromHtml(mContext.getString(R.string.shopelia_form_main_footer_text)));
+    }
+
 }

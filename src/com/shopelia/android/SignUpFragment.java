@@ -12,27 +12,20 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ListView;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
-import com.shopelia.android.adapter.FormAdapter;
-import com.shopelia.android.adapter.FormAdapter.Field;
-import com.shopelia.android.adapter.form.AddressField;
-import com.shopelia.android.adapter.form.EditTextField;
-import com.shopelia.android.adapter.form.EditTextField.OnValidateListener;
-import com.shopelia.android.adapter.form.EmailField;
-import com.shopelia.android.adapter.form.HeaderField;
-import com.shopelia.android.adapter.form.PaymentCardField;
-import com.shopelia.android.adapter.form.PhoneField;
 import com.shopelia.android.app.ShopeliaFragment;
-import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
-import com.shopelia.android.widget.FormListFooter;
-import com.shopelia.android.widget.FormListHeader;
-import com.shopelia.android.widget.ProductSheetWrapper;
+import com.shopelia.android.widget.form.AddressField;
+import com.shopelia.android.widget.form.EditTextField;
+import com.shopelia.android.widget.form.EditTextField.OnValidateListener;
+import com.shopelia.android.widget.form.EmailField;
+import com.shopelia.android.widget.form.FormLinearLayout;
+import com.shopelia.android.widget.form.PaymentCardField;
+import com.shopelia.android.widget.form.PhoneField;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -42,11 +35,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         public void onSignUp(JSONObject result);
     }
 
-    private ListView mListView;
-    private FormAdapter mAdapter;
-    private FormListFooter mFooter;
-    @SuppressWarnings("unused")
-    private ProductSheetWrapper mProductSheetWrapper;
+    private FormLinearLayout mFormContainer;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,57 +45,85 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        mFooter = new FormListFooter(getActivity());
-
-        mListView = (ListView) view.findViewById(R.id.form);
-        mListView.addHeaderView(new FormListHeader(getActivity()).getView(), null, false);
-        mListView.addFooterView(mFooter.getView(), null, false);
-
-        mProductSheetWrapper = new ProductSheetWrapper(view.findViewById(R.id.product_sheet), getActivity().getIntent().getExtras());
-
-        mAdapter = new FormAdapter(mListView);
-
-        //@formatter:off
-        mAdapter
-            
-            /*
-             * User informations
-             */
-            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_personal_info, R.drawable.shopelia_user).displayLock())
-            .add(new PhoneField(getActivity(), null, R.string.shopelia_form_main_phone).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener))
-            .add(new EmailField(getActivity(), null, R.string.shopelia_form_main_email).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory())
-            
+        mFormContainer = findViewById(R.id.form);
+        // mFooter = new FormListFooter(getActivity());
+        //
+        // mListView = (ListView) view.findViewById(R.id.form);
+        // mListView.addHeaderView(new FormListHeader(getActivity()).getView(),
+        // null, false);
+        // mListView.addFooterView(mFooter.getView(), null, false);
+        //
+        // mProductSheetWrapper = new
+        // ProductSheetWrapper(view.findViewById(R.id.product_sheet),
+        // getActivity().getIntent().getExtras());
+        //
+        // mAdapter = new FormAdapter(mListView);
+        //
+//        //@formatter:off
+//        mAdapter
+//             
+//            /*
+//             * User informations
+//             */
+//            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_personal_info, R.drawable.shopelia_user).displayLock())
+//            .add(new PhoneField(getActivity(), null, R.string.shopelia_form_main_phone).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener))
+//            .add(new EmailField(getActivity(), null, R.string.shopelia_form_main_email).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory())
+//             
             /*
              * Shipment details
              */
-            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_shipping_address, R.drawable.shopelia_pin))
-            .add(new AddressField(getActivity(), R.string.shopelia_form_main_address).setJsonPath(Order.Api.ADDRESS))
-            
+//            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_shipping_address, R.drawable.shopelia_pin))
+//            .add(new AddressField(getActivity(), R.string.shopelia_form_main_address).setJsonPath(Order.Api.ADDRESS))
+//             
             /*
              * Payment methods
              */
-            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_payment_method, R.drawable.shopelia_card).displayLock().addPictures(R.drawable.shopelia_logos_visa, R.drawable.shopelia_logos_mc, R.drawable.shopelia_logos_norton))
-            .add(new PaymentCardField(getActivity(), R.string.shopelia_form_main_card_number).setJsonPath(Order.Api.PAYMENT_CARD))
-            
-            .commit(savedInstanceState);
+//            .add(new HeaderField(getActivity(), R.string.shopelia_form_main_payment_method, R.drawable.shopelia_card).displayLock().addPictures(R.drawable.shopelia_logos_visa, R.drawable.shopelia_logos_mc, R.drawable.shopelia_logos_norton))
+//            .add(new PaymentCardField(getActivity(), R.string.shopelia_form_main_card_number).setJsonPath(Order.Api.PAYMENT_CARD))
+//             
+//            .commit(savedInstanceState);
+//        //@formatter:on
+        //
+        // mListView.setAdapter(mAdapter);
+        //
+        // mFooter.getView().findViewById(R.id.validate).setOnClickListener(mOnClickListener);
+        //@formatter:off
+
+        /*
+         * User informations
+         */
+        mFormContainer.findFieldById(R.id.phone, PhoneField.class).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener);
+        mFormContainer.findFieldById(R.id.email, EmailField.class).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory();
+        
+        /*
+         * Shipment details
+         */
+        mFormContainer.findFieldById(R.id.address, AddressField.class).setJsonPath(Order.Api.ADDRESS);
+        
+        /*
+         * Payment methods
+         */
+        mFormContainer.findFieldById(R.id.payment_card, PaymentCardField.class).setJsonPath(Order.Api.PAYMENT_CARD);
+        
+        mFormContainer.onCreate(savedInstanceState);
         //@formatter:on
 
-        mListView.setAdapter(mAdapter);
+    }
 
-        mFooter.getView().findViewById(R.id.validate).setOnClickListener(mOnClickListener);
+    public void initWithGoodUI(Bundle bundle) {
+
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mAdapter.onActivityResult(requestCode, resultCode, data);
+        mFormContainer.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mAdapter.onSaveInstanceState(outState);
+        mFormContainer.onSaveInstanceState(outState);
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {
@@ -116,8 +133,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             view.requestFocus();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            if (mAdapter.validate()) {
-                JSONObject result = mAdapter.toJson();
+            if (mFormContainer.validate()) {
+                JSONObject result = mFormContainer.toJson();
                 getContract().onSignUp(result);
             }
         }
@@ -144,14 +161,15 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                     public void onComplete(HttpResponse httpResponse) {
                         try {
                             JSONObject address = new JSONObject(httpResponse.getBodyAsString());
-                            AddressField field = (AddressField) mAdapter.getField(Order.Api.ADDRESS);
-                            if (field != null) {
-                                field.setAddress(Address.inflate(address));
-                                Field phoneField = mAdapter.getField(1);
-                                if (phoneField != null) {
-                                    mAdapter.nextField(phoneField);
-                                }
-                            }
+                            // AddressField field = (AddressField)
+                            // mAdapter.getField(Order.Api.ADDRESS);
+                            // if (field != null) {
+                            // / field.setAddress(Address.inflate(address));
+                            // Field phoneField = mAdapter.getField(1);
+                            // if (phoneField != null) {
+                            // mAdapter.nextField(phoneField);
+                            // }
+                            // }
                         } catch (JSONException e) {
                             onError(e);
                         }

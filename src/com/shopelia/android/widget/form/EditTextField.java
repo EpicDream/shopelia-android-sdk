@@ -1,14 +1,15 @@
-package com.shopelia.android.adapter.form;
+package com.shopelia.android.widget.form;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.AttributeSet;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,11 +17,10 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter;
-import com.shopelia.android.adapter.FormAdapter.Field;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormEditText;
 
-public class EditTextField extends Field implements Errorable {
+public class EditTextField extends FormField implements Errorable {
 
     public abstract static class OnValidateListener implements TextWatcher {
 
@@ -57,14 +57,25 @@ public class EditTextField extends Field implements Errorable {
 
     private EditText mBoundedEditText;
 
-    public EditTextField(String defaultText, String hint) {
-        super(TYPE);
-        mContentText = defaultText;
-        mHint = hint;
+    public EditTextField(Context context) {
+        this(context, null);
     }
 
-    public EditTextField(Context context, String defaultText, int hintResId) {
-        this(null, context.getString(hintResId));
+    public EditTextField(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public EditTextField(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
+        if (attrs != null) {
+            TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.EditTextField, 0, 0);
+            try {
+                mContentText = ta.getString(R.styleable.EditTextField_shopelia_text);
+                mHint = ta.getString(R.styleable.EditTextField_shopelia_hint);
+            } finally {
+                ta.recycle();
+            }
+        }
     }
 
     public EditTextField setOnValidateListener(OnValidateListener listener) {
@@ -150,7 +161,7 @@ public class EditTextField extends Field implements Errorable {
         }
         holder.boundedField = this;
         mBoundedEditText = holder.editText;
-        if (mTextWatcher != null) {
+        if (mTextWatcher != null && !isInEditMode()) {
             holder.editText.addTextChangedListener(mTextWatcher);
         }
     }
@@ -262,7 +273,9 @@ public class EditTextField extends Field implements Errorable {
                     editText.setChecked(false);
                 }
             } else {
-                getAdapter().requestFocus(EditTextField.this);
+                if (getFormContainer() != null) {
+                    getFormContainer().requestFocus(EditTextField.this);
+                }
             }
         }
     };
@@ -271,7 +284,7 @@ public class EditTextField extends Field implements Errorable {
 
         @Override
         public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-            return getAdapter().nextField(EditTextField.this);
+            return getFormContainer().nextField(EditTextField.this);
         }
     };
 

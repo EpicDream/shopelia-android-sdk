@@ -34,4 +34,15 @@ public class FormListHeader {
         return mView;
     }
 
+    public void setView(View view) {
+        mView = view;
+        TextView introductionText = (TextView) mView.findViewById(R.id.introduction_text);
+        String vendor = "";
+        if (mContext.getIntent().hasExtra(PrepareOrderActivity.EXTRA_VENDOR)) {
+            Vendor v = mContext.getIntent().getParcelableExtra(PrepareOrderActivity.EXTRA_VENDOR);
+            vendor = v.getName();
+        }
+        introductionText.setText(Html.fromHtml(mContext.getString(R.string.shopelia_form_main_header_text, vendor)));
+    }
+
 }

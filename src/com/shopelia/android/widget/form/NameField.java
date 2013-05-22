@@ -1,16 +1,21 @@
-package com.shopelia.android.adapter.form;
+package com.shopelia.android.widget.form;
 
 import android.content.Context;
 import android.text.InputType;
+import android.util.AttributeSet;
 
 public class NameField extends EditTextField {
 
-    public NameField(String defaultText, String hint) {
-        super(defaultText, hint);
+    public NameField(Context context) {
+        this(context, null);
     }
 
-    public NameField(Context context, String defaultText, int hintResId) {
-        super(context, defaultText, hintResId);
+    public NameField(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public NameField(Context context, AttributeSet attrs, int defStyle) {
+        super(context, attrs, defStyle);
     }
 
     @Override

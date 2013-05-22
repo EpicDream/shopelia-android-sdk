@@ -1,21 +1,14 @@
 package com.shopelia.android.remote.api;
 
-import org.json.JSONArray;
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.shopelia.android.http.JsonAsyncCallback;
-import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
-import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
-import com.turbomanage.httpclient.AsyncCallback;
-import com.turbomanage.httpclient.HttpResponse;
 
-public final class CommandHandler {
+public class CommandHandler {
 
     public interface Callback {
         public void onAccountCreationSucceed(User user, Address address);
@@ -92,177 +85,34 @@ public final class CommandHandler {
 
     public void setCallback(Callback callback) {
         mCallback = callback;
-        if (mCallback == null) {
-            throw new NullPointerException("Callback cannot be null");
-        }
     }
 
-    public void createAccount(final User user, final Address address) {
-
-        mCurrentStep = STEP_ACCOUNT_CREATION;
-        JSONObject params = new JSONObject();
-
-        try {
-            params.put(Order.Api.USER, User.createObjectForAccountCreation(user, address));
-
-        } catch (JSONException e) {
-            fireError(STEP_ACCOUNT_CREATION, null, e);
-            return;
-        }
-
-        ShopeliaRestClient.post(Command.V1.Users.$, params, new JsonAsyncCallback() {
-
-            @Override
-            public void onComplete(HttpResponse response, JSONObject object) {
-                if (mCallback != null && object.has(User.Api.USER) && object.has(User.Api.AUTH_TOKEN)) {
-                    User user = User.inflate(object.optJSONObject(User.Api.USER));
-                    UserManager.get(mContext).login(user);
-                    UserManager.get(mContext).setAuthToken(object.optString(User.Api.AUTH_TOKEN));
-                    UserManager.get(mContext).saveUser();
-                    if (user.addresses.size() > 0) {
-                        mCallback.onAccountCreationSucceed(user, user.addresses.get(0));
-                    } else {
-                        fireError(STEP_ACCOUNT_CREATION, null, new IllegalStateException("No address registered"));
-                    }
-                } else {
-                    fireError(STEP_ACCOUNT_CREATION, object, null);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                super.onError(e);
-                fireError(STEP_ACCOUNT_CREATION, null, e);
-            }
-
-        });
-
+    public boolean hasCallback() {
+        return mCallback != null;
     }
 
-    public void destroyUser(final long id) {
-        if (id == User.NO_ID) {
-            throw new IllegalAccessError("Cannot retrieve invalid user");
-        }
-        ShopeliaRestClient.authenticate(mContext);
-        ShopeliaRestClient.delete(Command.V1.Users.User(id), null, new AsyncCallback() {
-
-            @Override
-            public void onComplete(HttpResponse response) {
-                if (mCallback != null) {
-                    mCallback.onUserDestroyed(id);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                super.onError(e);
-                fireError(STEP_RETRIEVE_USER, null, e);
-            }
-        });
+    public Callback getCallback() {
+        return mCallback;
     }
 
-    public void retrieveUser(long id) {
-        if (id == User.NO_ID) {
-            throw new IllegalAccessError("Cannot retrieve invalid user");
-        }
-        ShopeliaRestClient.authenticate(mContext);
-        ShopeliaRestClient.get(Command.V1.Users.User(id), null, new JsonAsyncCallback() {
-
-            @Override
-            public void onComplete(HttpResponse response, JSONObject object) {
-                try {
-                    User user = User.inflate(object.getJSONObject(User.Api.USER));
-                    UserManager.get(mContext).login(user);
-                    if (mCallback != null) {
-                        mCallback.onUserRetrieved(user);
-                    }
-                } catch (JSONException e) {
-                    onError(e);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                super.onError(e);
-                fireError(STEP_RETRIEVE_USER, null, e);
-            }
-
-        });
+    public Context getContext() {
+        return mContext;
     }
 
-    public void sendPaymentInformation(final User user, PaymentCard card) {
-        JSONObject params = new JSONObject();
-        mCurrentStep = STEP_SEND_PAYMENT_INFORMATION;
-        try {
-            JSONObject cardObject = card.toJson();
-            cardObject.put(PaymentCard.Api.NAME, user.lastName);
-            params.put(PaymentCard.Api.PAYMENT_CARD, cardObject);
-
-        } catch (JSONException e) {
-            fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
-            return;
-        }
-        ShopeliaRestClient.authenticate(mContext);
-        ShopeliaRestClient.post(Command.V1.PaymentCards.$, params, new JsonAsyncCallback() {
-
-            @Override
-            public void onComplete(HttpResponse response, JSONObject object) {
-                try {
-                    PaymentCard card = PaymentCard.inflate(object.getJSONObject(PaymentCard.Api.PAYMENT_CARD));
-                    user.paymentCards.add(card);
-                    if (mCallback != null) {
-                        mCallback.onPaymentInformationSent(card);
-                    }
-                } catch (JSONException e) {
-                    fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                super.onError(e);
-                fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
-            }
-
-        });
-
+    public int getCurrentStep() {
+        return mCurrentStep;
     }
 
-    public void order(final Order order) {
+    public int getInternalState() {
+        return mInternalState;
+    }
 
-        JSONObject params = new JSONObject();
-        mCurrentStep = STEP_ORDER;
-        try {
-            JSONObject orderObject = new JSONObject();
-            JSONArray urls = new JSONArray();
-            urls.put(order.product.url);
-            orderObject.put(Order.Api.PRODUCT_URLS, urls);
-            params.put(Order.Api.ORDER, orderObject);
-        } catch (JSONException e) {
-            fireError(STEP_ORDER, null, e);
-            return;
-        }
-        ShopeliaRestClient.authenticate(mContext);
-        ShopeliaRestClient.post(Command.V1.Orders.$, params, new AsyncCallback() {
+    protected void setCurrentStep(int step) {
+        mCurrentStep = step;
+    }
 
-            @Override
-            public void onComplete(HttpResponse httpResponse) {
-
-                if (httpResponse.getStatus() == 201) {
-
-                } else {
-                    fireError(STEP_ORDER, null, new IllegalStateException(httpResponse.getBodyAsString()));
-                }
-
-            }
-
-            @Override
-            public void onError(Exception e) {
-                super.onError(e);
-                fireError(STEP_ORDER, null, e);
-            }
-
-        });
+    protected void setInternalState(int state) {
+        mInternalState = state;
     }
 
     public void stopOrderForError() {
@@ -281,7 +131,7 @@ public final class CommandHandler {
         mInternalState = STATE_RECYCLED;
     }
 
-    private void fireError(int step, JSONObject response, Exception e) {
+    protected void fireError(int step, JSONObject response, Exception e) {
         if (mCallback != null) {
             mCallback.onError(step, response, e);
         }
