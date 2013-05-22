@@ -90,7 +90,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 ft.replace(R.id.fragment_container, new SignUpFragment());
                 ft.commit();
             } else {
-                checkoutOrder(getOrder());
+                new UserCommandHandler(this, null).destroyUser(UserManager.get(this).getUser().id);
+                UserManager.get(this).logout();
+                // checkoutOrder(getOrder());
             }
         }
         new FormListHeader(this).setView(findViewById(R.id.header));

@@ -24,6 +24,11 @@
 	    En cliquant sur ce bouton vous certifiez avoir lu et accepté les <font color="#0098ce">Conditions d\'utilisation</font>
 	    ]]>
     </string>
+     <string name="shopelia_form_main_login">
+<![CDATA[
+	    <font color="#0098ce"><u>Déjà inscrit sur Shopelia ?</u></font>
+	    ]]>
+    </string>
     <string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
 
     <!-- Account creation form -->

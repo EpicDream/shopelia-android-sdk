@@ -17,7 +17,7 @@
         app:shopelia_text="@string/shopelia_form_main_validate" />
 
     <com.shopelia.android.widget.FontableTextView
-        android:id="@+id/cgu"
+        android:id="@+id/login"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_normal"

@@ -29,4 +29,20 @@
         android:layout_marginTop="@dimen/shopelia_margin_normal"
         layout="@layout/shopelia_product_sheet" />
 
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_none"
+        android:layout_marginLeft="@dimen/shopelia_margin_large"
+        android:layout_marginRight="@dimen/shopelia_margin_large"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:gravity="center"
+        android:icon="@drawable/shopelia_cart_white"
+        android:text="@string/shopelia_form_main_login"
+        android:textColor="@color/shopelia_dark"
+        android:textSize="@dimen/shopelia_font_size_small"
+        app:shopelia_fontFamily="normal"
+        app:shopelia_fontStyle="normal" />
+
 </LinearLayout>

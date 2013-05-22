@@ -10,12 +10,31 @@
         android:background="@drawable/shopelia_title_bar_background"
         android:padding="@dimen/shopelia_margin_normal" >
 
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/fontableTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:text="Déjà membre ?"
+            android:textColor="#FFFFFF" />
+
+        <View
+            android:id="@+id/view1"
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/fontableTextView1"
+            android:background="@drawable/shopelia_button_separator" />
+
         <ImageView
             android:id="@+id/lock"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/view1"
             android:src="@drawable/shopelia_logo" />
 
     </RelativeLayout>

@@ -4,6 +4,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
@@ -132,6 +133,9 @@ public class CommandHandler {
     }
 
     protected void fireError(int step, JSONObject response, Exception e) {
+        if (Config.INFO_LOGS_ENABLED && e != null) {
+            e.printStackTrace();
+        }
         if (mCallback != null) {
             mCallback.onError(step, response, e);
         }
