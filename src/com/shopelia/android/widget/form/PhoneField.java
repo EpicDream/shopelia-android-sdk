@@ -33,7 +33,9 @@ public class PhoneField extends EditTextField {
         super.setViewStyle(holder);
         if (!isInEditMode()) {
             holder.editText.setInputType(InputType.TYPE_CLASS_PHONE);
-            // holder.editText.addTextChangedListener(mPhoneNumberFormattingTextWatcher);
+            if (mPhoneNumberFormattingTextWatcher != null) {
+                holder.editText.addTextChangedListener(mPhoneNumberFormattingTextWatcher);
+            }
         }
     }
 
