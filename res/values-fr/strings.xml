@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- ActionBar -->
+    <string name="shopelia_action_bar_sign_in">Déjà inscrit ?</string>
+    <string name="shopelia_action_bar_sign_up">Première commande ?</string>
+
     <!-- Main form -->
     <string name="shopelia_form_main_phone">Numéro de téléphone</string>
     <string name="shopelia_form_main_email">Email</string>

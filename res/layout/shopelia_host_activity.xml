@@ -4,52 +4,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
+    <com.shopelia.android.widget.actionbar.ActionBarWidget
+        android:id="@+id/action_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/shopelia_title_bar_height"
-        android:background="@drawable/shopelia_title_bar_background" >
-
-        <FrameLayout
-            android:id="@+id/test_button"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_alignParentBottom="true"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:foreground="@drawable/shopelia_list_selector" >
-
-            <com.shopelia.android.widget.FontableTextView
-                android:id="@+id/fontableTextView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginLeft="@dimen/shopelia_margin_mid_large"
-                android:layout_marginRight="@dimen/shopelia_margin_large"
-                android:text="Déjà membre ?"
-                android:textColor="#FFFFFF" />
-
-        </FrameLayout>
-
-        <View
-            android:id="@+id/view1"
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_marginBottom="@dimen/shopelia_margin_normal"
-            android:layout_marginTop="@dimen/shopelia_margin_normal"
-            android:layout_toLeftOf="@+id/test_button"
-            android:background="@drawable/shopelia_button_separator" />
-
-        <ImageView
-            android:id="@+id/logo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/shopelia_margin_large"
-            android:src="@drawable/shopelia_logo" />
-
-    </RelativeLayout>
+        android:layout_height="@dimen/shopelia_title_bar_height" />
 
     <FrameLayout
         android:id="@+id/host_container"

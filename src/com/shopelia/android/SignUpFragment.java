@@ -19,6 +19,11 @@ import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
+import com.shopelia.android.widget.FormListFooter;
+import com.shopelia.android.widget.FormListHeader;
+import com.shopelia.android.widget.ProductSheetWrapper;
+import com.shopelia.android.widget.actionbar.ActionBar;
+import com.shopelia.android.widget.actionbar.TextButtonItem;
 import com.shopelia.android.widget.form.AddressField;
 import com.shopelia.android.widget.form.EditTextField;
 import com.shopelia.android.widget.form.EditTextField.OnValidateListener;
@@ -35,7 +40,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     public interface OnSignUpListener {
         public void onSignUp(JSONObject result);
 
-        public View getValidationView();
+        public void requestSignIn();
     }
 
     private FormLinearLayout mFormContainer;
@@ -71,11 +76,18 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         mFormContainer.onCreate(savedInstanceState);
         //@formatter:on
 
-        getContract().getValidationView().setOnClickListener(mOnClickListener);
+        findViewById(R.id.footer).findViewById(R.id.validate).setOnClickListener(mOnClickListener);
+        new FormListHeader(getActivity()).setView(findViewById(R.id.header));
+        new FormListFooter(getActivity()).setView(findViewById(R.id.footer));
+        new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getActivity().getIntent().getExtras());
 
     }
 
-    public void initWithGoodUI(Bundle bundle) {
+    @Override
+    protected void onCreateShopeliaActionBar(ActionBar actionBar) {
+        super.onCreateShopeliaActionBar(actionBar);
+        actionBar.clear();
+        actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_login, getActivity(), R.string.shopelia_action_bar_sign_in));
 
     }
 

@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.shopelia.android.widget.actionbar.ActionBar;
+import com.shopelia.android.widget.actionbar.ActionBar.Item;
+
 /**
  * Base fragment class used by the Shopeliad SDK
  * 
@@ -18,6 +21,15 @@ public class ShopeliaFragment<Contract> extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         mContract = (Contract) activity;
+        onCreateShopeliaActionBar(getBaseActivity().getShopeliaActionBar());
+    }
+
+    protected void onCreateShopeliaActionBar(ActionBar actionBar) {
+
+    }
+
+    protected void onActionItemSelected(Item item) {
+
     }
 
     public Contract getContract() {

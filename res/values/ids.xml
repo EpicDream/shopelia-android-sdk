@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- ActionBar items -->
+    <item name="shopelia_action_bar_login" type="id"/>
+    <item name="shopelia_action_bar_create_account" type="id"/>
+
+</resources>

@@ -1,16 +1,24 @@
 package com.shopelia.android.app;
 
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
 import com.shopelia.android.api.ShopeliaActivityPath;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.widget.actionbar.ActionBar;
+import com.shopelia.android.widget.actionbar.ActionBar.Item;
+import com.shopelia.android.widget.actionbar.ActionBar.OnItemClickListener;
+import com.shopelia.android.widget.actionbar.ActionBarWidget;
 
 /**
  * Base activity of the shopelia SDK. This Activity has a default appearance and
@@ -30,6 +38,9 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     private Order mOrder;
     private ShopeliaActivityPath mCurrentActivity;
     private FrameLayout mRootView;
+    private ActionBar mActionBar;
+    @SuppressWarnings("rawtypes")
+    private List<WeakReference<ShopeliaFragment>> mAttachedFragment = new ArrayList<WeakReference<ShopeliaFragment>>();
 
     @Override
     protected void onCreate(Bundle saveState) {
@@ -37,7 +48,8 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
         setContentView(R.layout.shopelia_host_activity);
         mRootView = (FrameLayout) super.findViewById(R.id.host_container);
-
+        mActionBar = new ActionBar(this, (ActionBarWidget) super.findViewById(R.id.action_bar));
+        mActionBar.setOnItemClickListener(mOnActionBarItemClickListener);
         if (isPartOfOrderWorkFlow()) {
             recoverOrder(saveState == null ? getIntent().getExtras() : saveState);
             if (mOrder == null) {
@@ -50,13 +62,35 @@ public abstract class ShopeliaActivity extends FragmentActivity {
             mCurrentActivity.setActivityName(getActivityName());
             mCurrentActivity.startRecording();
         }
-        super.findViewById(R.id.test_button).setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View arg0) {
+    }
 
+    @SuppressWarnings("rawtypes")
+    @Override
+    public void onAttachFragment(android.support.v4.app.Fragment fragment) {
+        super.onAttachFragment(fragment);
+        Iterator<WeakReference<ShopeliaFragment>> it = mAttachedFragment.iterator();
+        while (it.hasNext()) {
+            if (it.next().get() == null) {
+                it.remove();
             }
-        });
+        }
+        if (fragment instanceof ShopeliaFragment) {
+            mAttachedFragment.add(new WeakReference<ShopeliaFragment>((ShopeliaFragment) fragment));
+        }
+    }
+
+    protected void onCreateShopeliaActionBar(ActionBar actionBar) {
+
+    }
+
+    @SuppressWarnings("rawtypes")
+    protected void onActionItemSelected(Item item) {
+        for (WeakReference<ShopeliaFragment> fragment : mAttachedFragment) {
+            if (fragment.get() != null && !fragment.get().isDetached()) {
+                fragment.get().onActionItemSelected(item);
+            }
+        }
     }
 
     protected void setHostContentView(int resId) {
@@ -115,10 +149,22 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         mCurrentActivity.stopRecording();
     }
 
+    public ActionBar getShopeliaActionBar() {
+        return mActionBar;
+    }
+
     protected boolean isPartOfOrderWorkFlow() {
         return true;
     }
 
     public abstract String getActivityName();
+
+    private OnItemClickListener mOnActionBarItemClickListener = new OnItemClickListener() {
+
+        @Override
+        public void onItemClick(Item item) {
+            onActionItemSelected(item);
+        }
+    };
 
 }

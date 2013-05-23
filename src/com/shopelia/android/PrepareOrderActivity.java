@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.app.ShopeliaActivity;
@@ -24,9 +23,6 @@ import com.shopelia.android.remote.api.CommandHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.UserCommandHandler;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
-import com.shopelia.android.widget.FormListFooter;
-import com.shopelia.android.widget.FormListHeader;
-import com.shopelia.android.widget.ProductSheetWrapper;
 
 public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpListener {
 
@@ -78,6 +74,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     private static final int REQUEST_ADD_PAYMENT_CARD = 0x0113;
 
+    private SignInFragment mSignInFragment = new SignInFragment();
+    private SignUpFragment mSignUpFragment = new SignUpFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getIntent().putExtra(EXTRA_INIT_ORDER, true);
@@ -87,7 +86,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         if (savedInstanceState == null) {
             if (!UserManager.get(this).isLogged()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, new SignUpFragment());
+                ft.replace(R.id.fragment_container, mSignUpFragment);
                 ft.commit();
             } else {
                 new UserCommandHandler(this, null).destroyUser(UserManager.get(this).getUser().id);
@@ -95,9 +94,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 // checkoutOrder(getOrder());
             }
         }
-        new FormListHeader(this).setView(findViewById(R.id.header));
-        new FormListFooter(this).setView(findViewById(R.id.footer));
-        new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getIntent().getExtras());
     }
 
     @Override
@@ -203,7 +199,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     }
 
     @Override
-    public View getValidationView() {
-        return findViewById(R.id.footer).findViewById(R.id.validate);
+    public void requestSignIn() {
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, mSignInFragment);
+        ft.commit();
     }
+
 }

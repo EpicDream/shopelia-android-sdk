@@ -1,59 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.shopelia.android.widget.form.FormLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/form"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent"
-    android:cacheColorHint="@android:color/transparent"
-    android:divider="@null"
-    android:listSelector="@android:color/transparent"
-    android:orientation="vertical"
-    android:scrollbarStyle="outsideOverlay" >
+    android:scrollbarStyle="outsideOverlay"
+    tools:context=".PrepareOrderActivity" >
 
-    <com.shopelia.android.widget.form.HeaderField
-        android:id="@+id/header_personal_informations"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:shopelia_icon="@drawable/shopelia_user"
-        app:shopelia_text="@string/shopelia_form_main_personal_info" />
+        android:orientation="vertical"
+        android:paddingLeft="@dimen/shopelia_activity_horizontal_margin"
+        android:paddingRight="@dimen/shopelia_activity_horizontal_margin" >
 
-    <com.shopelia.android.widget.form.PhoneField
-        android:id="@+id/phone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:shopelia_hint="@string/shopelia_form_main_phone" />
+        <include
+            android:id="@+id/header"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            layout="@layout/shopelia_form_list_header" />
 
-    <com.shopelia.android.widget.form.EmailField
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:shopelia_hint="@string/shopelia_form_main_email" />
+        <com.shopelia.android.widget.form.FormLinearLayout
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/form"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:cacheColorHint="@android:color/transparent"
+            android:divider="@null"
+            android:listSelector="@android:color/transparent"
+            android:orientation="vertical"
+            android:scrollbarStyle="outsideOverlay" >
 
-    <com.shopelia.android.widget.form.HeaderField
-        android:id="@+id/header_address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:shopelia_icon="@drawable/shopelia_pin"
-        app:shopelia_text="@string/shopelia_form_main_shipping_address" />
+            <com.shopelia.android.widget.form.HeaderField
+                android:id="@+id/header_personal_informations"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shopelia_icon="@drawable/shopelia_user"
+                app:shopelia_text="@string/shopelia_form_main_personal_info" />
 
-    <com.shopelia.android.widget.form.AddressField
-        android:id="@+id/address"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:shopelia_hint="@string/shopelia_form_main_address" />
+            <com.shopelia.android.widget.form.PhoneField
+                android:id="@+id/phone"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shopelia_hint="@string/shopelia_form_main_phone" />
 
-    <com.shopelia.android.widget.form.HeaderField
-        android:id="@+id/header_payment_method"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:shopelia_icon="@drawable/shopelia_card"
-        app:shopelia_text="@string/shopelia_form_main_payment_method" />
+            <com.shopelia.android.widget.form.EmailField
+                android:id="@+id/email"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shopelia_hint="@string/shopelia_form_main_email" />
 
-      <com.shopelia.android.widget.form.PaymentCardField
-        android:id="@+id/payment_card"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:shopelia_hint="@string/shopelia_form_main_card_number" />
-    
-</com.shopelia.android.widget.form.FormLinearLayout>
+            <com.shopelia.android.widget.form.HeaderField
+                android:id="@+id/header_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shopelia_icon="@drawable/shopelia_pin"
+                app:shopelia_text="@string/shopelia_form_main_shipping_address" />
+
+            <com.shopelia.android.widget.form.AddressField
+                android:id="@+id/address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shopelia_hint="@string/shopelia_form_main_address" />
+
+            <com.shopelia.android.widget.form.HeaderField
+                android:id="@+id/header_payment_method"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shopelia_icon="@drawable/shopelia_card"
+                app:shopelia_text="@string/shopelia_form_main_payment_method" />
+
+            <com.shopelia.android.widget.form.PaymentCardField
+                android:id="@+id/payment_card"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:shopelia_hint="@string/shopelia_form_main_card_number" />
+        </com.shopelia.android.widget.form.FormLinearLayout>
+
+        <include
+            android:id="@+id/footer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/shopelia_form_list_footer" />
+    </LinearLayout>
+
+</ScrollView>

@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ShopeliaSDK</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
-
+    <!-- ActionBar -->
+    <string name="shopelia_action_bar_sign_in">Sign in</string>
+	<string name="shopelia_action_bar_sign_up">Sign up</string>
+    
     <!-- Main form -->
     <string name="shopelia_form_main_phone">Phone number</string>
     <string name="shopelia_form_main_email">Email</string>
