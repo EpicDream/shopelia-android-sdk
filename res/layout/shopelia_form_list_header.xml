@@ -43,6 +43,7 @@
         android:textColor="@color/shopelia_dark"
         android:textSize="@dimen/shopelia_font_size_small"
         app:shopelia_fontFamily="normal"
-        app:shopelia_fontStyle="normal" />
+        app:shopelia_fontStyle="normal"
+        android:visibility="gone" />
 
 </LinearLayout>

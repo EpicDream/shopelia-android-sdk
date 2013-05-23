@@ -18,7 +18,7 @@
         android:textSize="@dimen/shopelia_font_size_extra_small" />
 
     <ImageView
-        android:id="@+id/lock"
+        android:id="@+id/logo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/shopelia_logo_bottom" />

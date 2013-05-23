@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
@@ -49,7 +50,13 @@ public abstract class ShopeliaActivity extends FragmentActivity {
             mCurrentActivity.setActivityName(getActivityName());
             mCurrentActivity.startRecording();
         }
+        super.findViewById(R.id.test_button).setOnClickListener(new OnClickListener() {
 
+            @Override
+            public void onClick(View arg0) {
+
+            }
+        });
     }
 
     protected void setHostContentView(int resId) {
