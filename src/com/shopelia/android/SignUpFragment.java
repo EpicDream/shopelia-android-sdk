@@ -19,10 +19,9 @@ import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
-import com.shopelia.android.widget.FormListFooter;
-import com.shopelia.android.widget.FormListHeader;
-import com.shopelia.android.widget.ProductSheetWrapper;
+import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.actionbar.ActionBar;
+import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
 import com.shopelia.android.widget.form.AddressField;
 import com.shopelia.android.widget.form.EditTextField;
@@ -41,6 +40,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         public void onSignUp(JSONObject result);
 
         public void requestSignIn();
+
+        public ValidationButton getValidationButton();
     }
 
     private FormLinearLayout mFormContainer;
@@ -76,11 +77,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         mFormContainer.onCreate(savedInstanceState);
         //@formatter:on
 
-        findViewById(R.id.footer).findViewById(R.id.validate).setOnClickListener(mOnClickListener);
-        new FormListHeader(getActivity()).setView(findViewById(R.id.header));
-        new FormListFooter(getActivity()).setView(findViewById(R.id.footer));
-        new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getActivity().getIntent().getExtras());
-
+        getContract().getValidationButton().setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -88,7 +85,15 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         super.onCreateShopeliaActionBar(actionBar);
         actionBar.clear();
         actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_login, getActivity(), R.string.shopelia_action_bar_sign_in));
+        actionBar.commit();
+    }
 
+    @Override
+    protected void onActionItemSelected(Item item) {
+        super.onActionItemSelected(item);
+        if (item.getId() == R.id.shopelia_action_bar_login) {
+            getContract().requestSignIn();
+        }
     }
 
     @Override

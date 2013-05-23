@@ -77,7 +77,7 @@ public class ActionBar {
 
     public void commit() {
         if (mItems.size() > 0) {
-
+            doCommit();
         } else {
             doCommit();
         }

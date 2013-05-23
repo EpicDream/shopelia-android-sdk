@@ -3,12 +3,14 @@
 
     <!-- ActionBar -->
     <string name="shopelia_action_bar_sign_in">Sign in</string>
-	<string name="shopelia_action_bar_sign_up">Sign up</string>
-    
+    <string name="shopelia_action_bar_sign_up">Sign up</string>
+
     <!-- Main form -->
     <string name="shopelia_form_main_phone">Phone number</string>
     <string name="shopelia_form_main_email">Email</string>
+    <string name="shopelia_form_main_password">Password</string>
     <string name="shopelia_form_main_validate">Continue my order</string>
+     <string name="shopelia_form_main_sign_in">Sign in</string>
     <string name="shopelia_form_main_personal_info">Personal informations</string>
     <string name="shopelia_form_main_shipping_address">Shipping address</string>
     <string name="shopelia_form_main_payment_method">Payment method</string>
@@ -24,7 +26,7 @@
 	    En cliquant sur ce bouton vous certifiez avoir lu et accepté les <font color="#0098ce">Conditions d\'utilisation</font>
 	    ]]>
     </string>
-     <string name="shopelia_form_main_login">
+    <string name="shopelia_form_main_login">
 <![CDATA[
 	    <font color="#0098ce"><u>Déjà inscrit sur Shopelia ?</u></font>
 	    ]]>
@@ -68,9 +70,9 @@
     <!-- Waiting process -->
     <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
     <string name="shopelia_waiting_with_shopelia_order_with_1_click">Initialisation&#8230;</string>
-	<string name="shopelia_waiting_shopelia_is_finalizing_your_order" formatted="false">Shopelia finalise votre commande sur %s</string>
+    <string name="shopelia_waiting_shopelia_is_finalizing_your_order" formatted="false">Shopelia finalise votre commande sur %s</string>
     <string name="shopelia_waiting_with_shopelia_order_sub_text"></string>
-    
+
     <!-- Order confirmation -->
     <string name="shopelia_confirmation_confirm">Order now</string>
     <string name="shopelia_confirmation_title">Order summary</string>
@@ -84,23 +86,22 @@
     <string name="shopelia_pincode_description_create">Votre code PIN vous permet de sécuriser toutes les transactions.</string>
     <string name="shopelia_pincode_do_not_match">PIN codes do not match</string>
     <string name="shopelia_pincode_wrong">Wrong PIN</string>
-	<string name="shopelia_pincode_retry" formatted="false">Try again in %s</string>
-    
-	<!-- Time -->
-	<plurals name="hour">
-	    <item quantity="one" formatted="false">%d hour</item>
-	    <item quantity="other">%d hours</item>
-	</plurals>
-	<plurals name="minute">
-	    <item quantity="one" formatted="false">%d minute</item>
-	    <item quantity="other">%d minutes</item>
-	</plurals>
-	<plurals name="second">
-	    <item quantity="one" formatted="false">%d second</item>
-	    <item quantity="other">%d seconds</item>
-	</plurals>
-	
-	
+    <string name="shopelia_pincode_retry" formatted="false">Try again in %s</string>
+
+    <!-- Time -->
+    <plurals name="hour">
+        <item formatted="false" quantity="one">%d hour</item>
+        <item quantity="other">%d hours</item>
+    </plurals>
+    <plurals name="minute">
+        <item formatted="false" quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="second">
+        <item formatted="false" quantity="one">%d second</item>
+        <item quantity="other">%d seconds</item>
+    </plurals>
+
     <!-- Close checkout -->
     <string name="shopelia_close_checkout_main_text">Votre achat vient d\'être effectué !</string>
     <string name="shopelia_close_checkout_sub_text">Vous allez recevoir la confirmation de la transaction dans votre boîte mail.\n Merci d\'avoir utilisé le service Shopelia !</string>
