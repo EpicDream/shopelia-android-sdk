@@ -8,7 +8,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -103,7 +102,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         if (savedInstanceState == null) {
             if (!UserManager.get(this).isLogged()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, mSignUpFragment);
+                ft.add(R.id.fragment_container, mSignInFragment);
+                ft.detach(mSignInFragment);
+                ft.add(R.id.fragment_container, mSignUpFragment);
                 ft.commit();
             } else {
                 Intent intent = new Intent(this, PincodeActivity.class);
@@ -125,7 +126,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         switch (requestCode) {
             case REQUEST_CHECKOUT:
                 if ((resultCode == RESULT_OK || resultCode == ShopeliaActivity.RESULT_FAILURE || resultCode == ShopeliaActivity.RESULT_LOGOUT)
-                        || fragment == null) {
+                        || fragment == null || fragment == mSignInFragment) {
                     finish();
                     return;
                 }
@@ -186,7 +187,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 UserManager.get(PrepareOrderActivity.this).login(user);
                 checkoutOrder(order);
             }
-        }).sendPaymentInformation(UserManager.get(PrepareOrderActivity.this).getUser(), card);
+        }).sendPaymentInformation(getOrder().user, card);
     }
 
     private void checkoutOrder(Order order) {
@@ -221,7 +222,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         if (order.user.paymentCards.size() > 0) {
             order.card = order.user.paymentCards.get(0);
         }
-        Log.d(null, "ADDRESS " + order.address);
         if (order.card == null) {
             startActivityForResult(new Intent(this, AddPaymentCardActivity.class), REQUEST_ADD_PAYMENT_CARD);
         } else {
@@ -238,7 +238,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @Override
     public void requestSignIn() {
-        switchFragments(mSignInFragment);
+        switchFragments(mSignInFragment, mSignUpFragment);
     }
 
     @Override
@@ -273,7 +273,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @Override
     public void requestSignUp() {
-        switchFragments(mSignUpFragment);
+        switchFragments(mSignUpFragment, mSignInFragment);
     }
 
     @Override
@@ -282,7 +282,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     }
 
     @SuppressLint("NewApi")
-    private void switchFragments(final Fragment fragment) {
+    private void switchFragments(final Fragment inFragment, final Fragment outFragment) {
         final Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.shopelia_fade_out_short);
         final Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.shopelia_fade_in_short);
         fadeOut.setAnimationListener(new AnimationListener() {
@@ -299,9 +299,12 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.replace(R.id.fragment_container, fragment);
-                ft.commit();
+                {
+                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                    ft.detach(outFragment);
+                    ft.attach(inFragment);
+                    ft.commit();
+                }
                 findViewById(R.id.fragment_container).startAnimation(fadeIn);
 
             }

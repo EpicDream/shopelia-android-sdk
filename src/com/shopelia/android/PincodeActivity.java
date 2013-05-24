@@ -10,9 +10,9 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
-import com.shopelia.android.algorithm.Fibonacci;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.User;
@@ -37,11 +37,6 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
      */
     public static final String EXTRA_PINCODE = Config.EXTRA_PREFIX + "PINCODE";
 
-    /**
-     * The max number of try before locking the application
-     */
-    public static final String EXTRA_NUMBER_OF_TRY = Config.EXTRA_PREFIX + "NUMBER_OF_TRY";
-
     private static final long MIN_ERROR_DELAY = 5 * 60 * 1000;
     private static final long MAX_ERROR_DELAY = 1 * 60 * 60 * 1000;
 
@@ -50,10 +45,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
     private static final String PREF_ATTEMPTS = "SPH_ATTEMPTS";
 
     private boolean mCreatePincode = true;
-    private int mMaxTry = 5;
-    private int mAttemptNumber = 0;
     private long mTimeToBlock;
-    private int mFailureCount = 0;
 
     private Timer mTimer = new Timer();
 
@@ -65,7 +57,6 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         setHostContentView(R.layout.shopelia_process_order_activity);
 
         mTimeToBlock = getSharedPreferences().getLong(PREF_TIME_TO_BLOCK, 0L);
-        mFailureCount = getSharedPreferences().getInt(PREF_FAILURE_COUNT, 0);
 
         init(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
 
@@ -98,7 +89,6 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBoolean(EXTRA_CREATE_PINCODE, mCreatePincode);
-        outState.putInt(EXTRA_NUMBER_OF_TRY, mMaxTry);
     }
 
     @Override
@@ -134,26 +124,15 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         return true;
     }
 
-    private void setAttemptsNumber(int n) {
-        SharedPreferences.Editor editor = getSharedPreferences().edit();
-        mAttemptNumber = n;
-        editor.putInt(PREF_ATTEMPTS, mAttemptNumber);
-        editor.commit();
-    }
-
     public void forbidOrder() {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putInt(PREF_FAILURE_COUNT, mFailureCount++);
-        mTimeToBlock = System.currentTimeMillis() + Math.min(Fibonacci.get(mFailureCount) * MIN_ERROR_DELAY, MAX_ERROR_DELAY);
+        mTimeToBlock = System.currentTimeMillis() + MIN_ERROR_DELAY;
         editor.putLong(PREF_TIME_TO_BLOCK, mTimeToBlock);
-        mAttemptNumber = 0;
         editor.commit();
     }
 
     public void releaseOrder() {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
-        editor.putInt(PREF_FAILURE_COUNT, mFailureCount = 0);
-        setAttemptsNumber(0);
         editor.commit();
     }
 
@@ -167,16 +146,6 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
     @Override
     public String getActivityName() {
         return ACTIVITY_NAME;
-    }
-
-    @Override
-    public int getAttemptNumber() {
-        return mAttemptNumber;
-    }
-
-    @Override
-    public int getMaxAttemptNumber() {
-        return mMaxTry;
     }
 
     @Override
@@ -205,7 +174,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
 
         @Override
         public void onComplete(HttpResponse response) {
-            if (response.getStatus() == 200) {
+            if (response.getStatus() == 204) {
                 releaseOrder();
                 Intent intent = new Intent();
                 setResult(RESULT_OK, intent);
@@ -214,12 +183,10 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
                     mPincodeHandlerCallback.onPincodeCheckDone(true);
                 }
             } else {
-                setAttemptsNumber(mAttemptNumber + 1);
-                if (mAttemptNumber >= mMaxTry) {
-                    forbidOrder();
-                }
+                Log.d(null, "Status " + response.getStatus());
+                // forbidOrder();
                 if (mPincodeHandlerCallback != null) {
-                    mPincodeHandlerCallback.onPincodeCheckDone(true);
+                    mPincodeHandlerCallback.onPincodeCheckDone(false);
                 }
             }
         }

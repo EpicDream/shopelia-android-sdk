@@ -80,6 +80,9 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         if (fragment instanceof ShopeliaFragment) {
             mAttachedFragment.add(new WeakReference<ShopeliaFragment>((ShopeliaFragment) fragment));
         }
+        if (fragment instanceof ShopeliaFragment<?>) {
+            ((ShopeliaFragment<?>) fragment).onAttach();
+        }
     }
 
     protected void onCreateShopeliaActionBar(ActionBar actionBar) {

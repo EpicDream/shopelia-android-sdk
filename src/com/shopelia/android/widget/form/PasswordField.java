@@ -28,7 +28,7 @@ public class PasswordField extends EditTextField {
 
     @Override
     protected boolean onValidation(boolean fireError) {
-        return ((String) (getResult())).length() >= 4;
+        return getResult() != null && ((String) (getResult())).length() >= 4;
     }
 
 }

@@ -3,6 +3,7 @@ package com.shopelia.android;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -22,6 +23,8 @@ import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.remote.api.CommandHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.OrderCommandHandler;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
@@ -77,7 +80,15 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
         @Override
         public void onClick(View v) {
+            new OrderCommandHandler(getActivity(), new CallbackAdapter() {
 
+                public void onOrderConfirmation(boolean succeed) {
+                    Intent intent = new Intent(getActivity(), CloseCheckoutActivity.class);
+                    intent.putExtra(ShopeliaActivity.EXTRA_ORDER, mOrder);
+                    getActivity().startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
+                };
+
+            }).order(mOrder);
         }
     };
 

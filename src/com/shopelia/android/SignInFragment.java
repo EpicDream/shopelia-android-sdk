@@ -3,6 +3,7 @@ package com.shopelia.android;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +71,18 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
         if (item.getId() == R.id.shopelia_action_bar_create_account) {
             getContract().requestSignUp();
         }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mFormContainer.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mFormContainer.onSaveInstanceState(outState);
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {
