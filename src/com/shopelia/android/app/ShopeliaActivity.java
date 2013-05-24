@@ -34,6 +34,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     public static final int REQUEST_CHECKOUT = 0x1602;
     public static final int RESULT_FAILURE = 0xfa15e;
+    public static final int RESULT_LOGOUT = 0xd04e;
 
     private Order mOrder;
     private ShopeliaActivityPath mCurrentActivity;
@@ -44,11 +45,12 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     @Override
     protected void onCreate(Bundle saveState) {
+        mActionBar = new ActionBar(this);
         super.onCreate(saveState);
 
         setContentView(R.layout.shopelia_host_activity);
         mRootView = (FrameLayout) super.findViewById(R.id.host_container);
-        mActionBar = new ActionBar(this, (ActionBarWidget) super.findViewById(R.id.action_bar));
+        mActionBar.bindWidget((ActionBarWidget) super.findViewById(R.id.action_bar));
         mActionBar.setOnItemClickListener(mOnActionBarItemClickListener);
         if (isPartOfOrderWorkFlow()) {
             recoverOrder(saveState == null ? getIntent().getExtras() : saveState);

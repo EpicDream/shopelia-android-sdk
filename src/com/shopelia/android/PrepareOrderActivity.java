@@ -124,7 +124,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
         switch (requestCode) {
             case REQUEST_CHECKOUT:
-                if ((resultCode == RESULT_OK || resultCode == ShopeliaActivity.RESULT_FAILURE) || fragment == null) {
+                if ((resultCode == RESULT_OK || resultCode == ShopeliaActivity.RESULT_FAILURE || resultCode == ShopeliaActivity.RESULT_LOGOUT)
+                        || fragment == null) {
                     finish();
                     return;
                 }
@@ -147,8 +148,11 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 break;
             case REQUEST_AUTH_PINCODE:
                 if (resultCode == RESULT_OK) {
-                    // checkoutOrder(getOrder());
+                    checkoutOrder(getOrder());
+                } else {
+                    finish();
                 }
+                break;
             case REQUEST_ADD_PAYMENT_CARD:
                 if (resultCode == RESULT_OK) {
                     sendPaymentInformations((PaymentCard) data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD), getOrder());

@@ -4,5 +4,6 @@
     <!-- ActionBar items -->
     <item name="shopelia_action_bar_login" type="id"/>
     <item name="shopelia_action_bar_create_account" type="id"/>
+    <item name="shopelia_action_bar_sign_out" type="id"/>
 
 </resources>

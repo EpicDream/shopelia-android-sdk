@@ -15,10 +15,15 @@ import android.widget.TextView;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.PincodeFragment.PincodeHandler.Callback;
+import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.concurent.ScheduledTask;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.NumberInput;
+import com.shopelia.android.widget.actionbar.ActionBar;
+import com.shopelia.android.widget.actionbar.ActionBar.Item;
+import com.shopelia.android.widget.actionbar.TextButtonItem;
 
 public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
@@ -114,6 +119,24 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
             mRefreshTask.scheduleAtFixedRate(mRefreshUiRunnable, getUnlockDelay() % 1000, REFRESH_PERIOD);
         } else {
             requestNumberInputFocus();
+        }
+    }
+
+    @Override
+    protected void onCreateShopeliaActionBar(ActionBar actionBar) {
+        super.onCreateShopeliaActionBar(actionBar);
+        actionBar.clear();
+        actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_sign_out, getActivity(), R.string.shopelia_action_bar_sign_out));
+        actionBar.commit();
+    }
+
+    @Override
+    protected void onActionItemSelected(Item item) {
+        super.onActionItemSelected(item);
+        if (item.getId() == R.id.shopelia_action_bar_sign_out) {
+            UserManager.get(getActivity()).logout();
+            getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
+            getActivity().finish();
         }
     }
 

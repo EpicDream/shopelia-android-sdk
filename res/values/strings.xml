@@ -4,7 +4,8 @@
     <!-- ActionBar -->
     <string name="shopelia_action_bar_sign_in">Sign in</string>
     <string name="shopelia_action_bar_sign_up">Sign up</string>
-
+	<string name="shopelia_action_bar_sign_out">Logout</string>
+	
     <!-- Main form -->
     <string name="shopelia_form_main_phone">Phone number</string>
     <string name="shopelia_form_main_email">Email</string>
