@@ -34,7 +34,6 @@ public class User implements JsonData, Parcelable {
         String PAYMENT_CARDS = "payment_cards";
 
         String PINCODE = "pincode";
-        String HAS_PINCODE = "has_pincode";
 
         String PHONES = "phones";
         String PHONE = "phone";
@@ -52,7 +51,8 @@ public class User implements JsonData, Parcelable {
     public String firstName;
     public String lastName;
     public String phone;
-    public boolean hasPincode = false;
+    public String password;
+    public String pincode;
 
     public ArrayList<Address> addresses = new ArrayList<Address>();
     public ArrayList<PaymentCard> paymentCards = new ArrayList<PaymentCard>();
@@ -76,7 +76,8 @@ public class User implements JsonData, Parcelable {
         firstName = source.readString();
         lastName = source.readString();
         phone = source.readString();
-        hasPincode = source.readByte() == 1;
+        pincode = source.readString();
+        password = source.readString();
         ParcelUtils.readParcelableList(source, addresses, Address.class.getClassLoader());
         ParcelUtils.readParcelableList(source, paymentCards, PaymentCard.class.getClassLoader());
     }
@@ -88,7 +89,8 @@ public class User implements JsonData, Parcelable {
         dest.writeString(firstName);
         dest.writeString(lastName);
         dest.writeString(phone);
-        dest.writeByte((byte) (hasPincode ? 1 : 0));
+        dest.writeString(pincode);
+        dest.writeString(password);
         ParcelUtils.writeParcelableList(dest, addresses, flags);
         ParcelUtils.writeParcelableList(dest, paymentCards, flags);
     }
@@ -100,7 +102,6 @@ public class User implements JsonData, Parcelable {
         json.put(Api.EMAIL, email);
         json.put(Api.FIRST_NAME, firstName);
         json.put(Api.LAST_NAME, lastName);
-        json.put(Api.HAS_PINCODE, hasPincode);
         json.put(Api.ADDRESSES, JsonUtils.toJson(addresses));
         json.put(Api.PAYMENT_CARDS, JsonUtils.toJson(paymentCards));
         return json;
@@ -113,7 +114,7 @@ public class User implements JsonData, Parcelable {
         user.firstName = json.optString(Api.FIRST_NAME);
         user.lastName = json.optString(Api.LAST_NAME);
         user.phone = json.optString(Api.PHONE);
-        user.hasPincode = json.optBoolean(Api.HAS_PINCODE);
+        user.password = json.optString(Api.PASSWORD);
         if (json.has(Api.ADDRESSES)) {
             try {
                 user.addresses = Address.inflate(json.getJSONArray(Api.ADDRESSES));
@@ -148,6 +149,7 @@ public class User implements JsonData, Parcelable {
         out.put(User.Api.FIRST_NAME, user.firstName);
         out.put(User.Api.LAST_NAME, user.lastName);
         out.put(User.Api.EMAIL, user.email);
+        out.put(Api.PINCODE, user.pincode);
         JSONArray addresses = new JSONArray();
         JSONObject addressObject = address.toJson();
 
