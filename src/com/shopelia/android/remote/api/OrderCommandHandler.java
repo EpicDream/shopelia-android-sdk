@@ -27,7 +27,7 @@ public class OrderCommandHandler extends CommandHandler {
             orderObject.put(Order.Api.PRODUCT_URLS, urls);
             params.put(Order.Api.ORDER, orderObject);
         } catch (JSONException e) {
-            fireError(STEP_ORDER, null, e);
+            fireError(STEP_ORDER, null, null, e);
             return;
         }
         ShopeliaRestClient.authenticate(getContext());
@@ -41,7 +41,7 @@ public class OrderCommandHandler extends CommandHandler {
                         getCallback().onOrderConfirmation(true);
                     }
                 } else {
-                    fireError(STEP_ORDER, null, new IllegalStateException(httpResponse.getBodyAsString()));
+                    fireError(STEP_ORDER, httpResponse, null, new IllegalStateException(httpResponse.getBodyAsString()));
                 }
 
             }
@@ -49,7 +49,7 @@ public class OrderCommandHandler extends CommandHandler {
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_ORDER, null, e);
+                fireError(STEP_ORDER, null, null, e);
             }
 
         });

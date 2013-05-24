@@ -29,7 +29,7 @@ public class UserCommandHandler extends CommandHandler {
             params.put(Order.Api.USER, User.createObjectForAccountCreation(user, address));
 
         } catch (JSONException e) {
-            fireError(STEP_ACCOUNT_CREATION, null, e);
+            fireError(STEP_ACCOUNT_CREATION, null, null, e);
             return;
         }
 
@@ -45,17 +45,17 @@ public class UserCommandHandler extends CommandHandler {
                     if (user.addresses.size() > 0) {
                         getCallback().onAccountCreationSucceed(user, user.addresses.get(0));
                     } else {
-                        fireError(STEP_ACCOUNT_CREATION, null, new IllegalStateException("No address registered"));
+                        fireError(STEP_ACCOUNT_CREATION, response, null, new IllegalStateException("No address registered"));
                     }
                 } else {
-                    fireError(STEP_ACCOUNT_CREATION, object, null);
+                    fireError(STEP_ACCOUNT_CREATION, response, object, null);
                 }
             }
 
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_ACCOUNT_CREATION, null, e);
+                fireError(STEP_ACCOUNT_CREATION, null, null, e);
             }
 
         });
@@ -79,7 +79,7 @@ public class UserCommandHandler extends CommandHandler {
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_RETRIEVE_USER, null, e);
+                fireError(STEP_RETRIEVE_USER, null, null, e);
             }
         });
     }
@@ -107,7 +107,7 @@ public class UserCommandHandler extends CommandHandler {
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_RETRIEVE_USER, null, e);
+                fireError(STEP_RETRIEVE_USER, null, null, e);
             }
 
         });
@@ -122,7 +122,7 @@ public class UserCommandHandler extends CommandHandler {
             params.put(PaymentCard.Api.PAYMENT_CARD, cardObject);
 
         } catch (JSONException e) {
-            fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
+            fireError(STEP_SEND_PAYMENT_INFORMATION, null, null, e);
             return;
         }
         ShopeliaRestClient.authenticate(getContext());
@@ -137,18 +137,58 @@ public class UserCommandHandler extends CommandHandler {
                         getCallback().onPaymentInformationSent(card);
                     }
                 } catch (JSONException e) {
-                    fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
+                    fireError(STEP_SEND_PAYMENT_INFORMATION, response, null, e);
                 }
             }
 
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_SEND_PAYMENT_INFORMATION, null, e);
+                fireError(STEP_SEND_PAYMENT_INFORMATION, null, null, e);
             }
 
         });
 
     }
 
+    public void signIn(User user) {
+        setCurrentStep(STEP_SIGN_IN);
+        JSONObject params = new JSONObject();
+        try {
+            params.put(User.Api.EMAIL, user.email);
+            params.put(User.Api.PASSWORD, user.password);
+        } catch (JSONException e) {
+            fireError(STEP_SIGN_IN, null, null, e);
+            return;
+        }
+        ShopeliaRestClient.post(Command.V1.Users.SignIn.$, params, new AsyncCallback() {
+
+            @Override
+            public void onComplete(HttpResponse httpResponse) {
+                JSONObject object;
+                try {
+                    object = new JSONObject(httpResponse.getBodyAsString());
+                } catch (JSONException e) {
+                    fireError(STEP_SIGN_IN, httpResponse, null, e);
+                    return;
+                }
+                if (httpResponse.getStatus() == 200) {
+                    User user = User.inflate(object.optJSONObject(User.Api.USER));
+                    UserManager.get(getContext()).login(user);
+                    UserManager.get(getContext()).setAuthToken(object.optString(User.Api.AUTH_TOKEN));
+                    UserManager.get(getContext()).saveUser();
+                    getCallback().onSignIn(user);
+                } else {
+                    fireError(STEP_SIGN_IN, httpResponse, ErrorInflater.inflate(httpResponse.getBodyAsString()), null);
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+                fireError(STEP_SIGN_IN, null, null, e);
+            }
+
+        });
+    }
 }

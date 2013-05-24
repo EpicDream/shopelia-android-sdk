@@ -1,5 +1,6 @@
 package com.shopelia.android.remote.api;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -8,6 +9,7 @@ import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
+import com.turbomanage.httpclient.HttpResponse;
 
 public class CommandHandler {
 
@@ -16,13 +18,15 @@ public class CommandHandler {
 
         public void onPaymentInformationSent(PaymentCard paymentInformation);
 
-        public void onError(int step, JSONObject response, Exception e);
+        public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e);
 
         public void onOrderConfirmation(boolean succeed);
 
         public void onUserRetrieved(User user);
 
         public void onUserDestroyed(long userId);
+
+        public void onSignIn(User user);
 
     }
 
@@ -39,7 +43,7 @@ public class CommandHandler {
         }
 
         @Override
-        public void onError(int step, JSONObject response, Exception e) {
+        public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
 
         }
 
@@ -58,6 +62,33 @@ public class CommandHandler {
 
         }
 
+        @Override
+        public void onSignIn(User user) {
+
+        }
+
+    }
+
+    public static class ErrorInflater {
+
+        public interface Api {
+            String ERROR = "error";
+        }
+
+        public static JSONObject inflate(String source) {
+            try {
+                return new JSONObject(source);
+            } catch (JSONException e) {
+                JSONObject object = new JSONObject();
+                try {
+                    object.put(Api.ERROR, source);
+                } catch (JSONException e1) {
+
+                }
+                return object;
+            }
+        }
+
     }
 
     public static final int STEP_DEAD = 0;
@@ -68,6 +99,7 @@ public class CommandHandler {
     public static final int STEP_CONFIRM = 5;
     public static final int STEP_WAITING_CONFIRMATION = 6;
     public static final int STEP_RETRIEVE_USER = 7;
+    public static final int STEP_SIGN_IN = 8;
 
     public static final int STATE_RUNNING = 0;
     public static final int STATE_PAUSED = 1;
@@ -132,12 +164,12 @@ public class CommandHandler {
         mInternalState = STATE_RECYCLED;
     }
 
-    protected void fireError(int step, JSONObject response, Exception e) {
+    protected void fireError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
         if (Config.INFO_LOGS_ENABLED && e != null) {
             e.printStackTrace();
         }
         if (mCallback != null) {
-            mCallback.onError(step, response, e);
+            mCallback.onError(step, httpResponse, response, e);
         }
     }
 
