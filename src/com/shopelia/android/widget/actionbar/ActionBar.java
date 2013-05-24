@@ -64,10 +64,14 @@ public class ActionBar {
     private LayoutInflater mInflater;
     private OnItemClickListener mOnItemClickListener;
 
-    public ActionBar(Context context, ActionBarWidget boundedWidget) {
+    public ActionBar(Context context) {
         mContext = context;
-        mActionBarWidget = boundedWidget;
-        mInflater = LayoutInflater.from(context);
+    }
+
+    public void bindWidget(ActionBarWidget boundWidget) {
+        mInflater = LayoutInflater.from(mContext);
+        mActionBarWidget = boundWidget;
+        invalidate();
     }
 
     public ActionBar addItem(Item item) {
@@ -76,6 +80,10 @@ public class ActionBar {
     }
 
     public void commit() {
+        if (mActionBarWidget == null) {
+            mItems.commit();
+            return;
+        }
         if (mItems.size() > 0) {
             doCommit();
         } else {
@@ -99,12 +107,7 @@ public class ActionBar {
         return mInflater;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) {
-        mOnItemClickListener = listener;
-    }
-
-    private void doCommit() {
-        mItems.commit();
+    public void invalidate() {
         ViewGroup container = mActionBarWidget.getOptionsContainer();
         container.removeAllViews();
         for (Item item : mItems) {
@@ -112,6 +115,15 @@ public class ActionBar {
             view.setOnClickListener(mOnClickListener);
             container.addView(view);
         }
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
+    private void doCommit() {
+        mItems.commit();
+        invalidate();
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {
