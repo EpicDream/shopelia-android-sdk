@@ -145,6 +145,10 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         return mOrder;
     }
 
+    public void setOrder(Order order) {
+        mOrder = order;
+    }
+
     public void stopRecording() {
         mCurrentActivity.stopRecording();
     }
