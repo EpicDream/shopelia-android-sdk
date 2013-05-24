@@ -12,11 +12,15 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
 import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.model.Order;
+import com.shopelia.android.model.User;
 import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
+import com.shopelia.android.widget.form.EmailField;
 import com.shopelia.android.widget.form.FormLinearLayout;
+import com.shopelia.android.widget.form.PasswordField;
 
 public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
 
@@ -40,6 +44,15 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
         super.onViewCreated(view, savedInstanceState);
 
         mFormContainer = findViewById(R.id.form);
+        //@formatter:off
+        /*
+         * User informations
+         */
+        mFormContainer.findFieldById(R.id.email, EmailField.class).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory();
+        mFormContainer.findFieldById(R.id.password, PasswordField.class).setJsonPath(Order.Api.USER, User.Api.PASSWORD).mandatory();
+        
+        mFormContainer.onCreate(savedInstanceState);
+        //@formatter:on
         getContract().getValidationButton().setOnClickListener(mOnClickListener);
     }
 
