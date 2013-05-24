@@ -79,6 +79,7 @@ public class AddressField extends ButtonField {
         }
         setValid(true);
         setChecked(true);
+        invalidate();
     }
 
     @Override

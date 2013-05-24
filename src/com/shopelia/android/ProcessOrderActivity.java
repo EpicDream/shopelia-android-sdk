@@ -5,8 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.app.ShopeliaActivity;
-import com.shopelia.android.remote.api.CommandHandler.CallbackAdapter;
-import com.shopelia.android.remote.api.OrderCommandHandler;
 
 public class ProcessOrderActivity extends ShopeliaActivity {
 
@@ -30,24 +28,8 @@ public class ProcessOrderActivity extends ShopeliaActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_AUTHENTICATE:
-                if (resultCode == RESULT_OK) {
-                    new OrderCommandHandler(this, new CallbackAdapter() {
-
-                        @Override
-                        public void onOrderConfirmation(boolean succeed) {
-                            Intent intent = new Intent(ProcessOrderActivity.this, CloseCheckoutActivity.class);
-                            startActivity(intent);
-                        };
-
-                    }).order(getOrder());
-                }
-                break;
-
-            default:
-                break;
-        }
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override

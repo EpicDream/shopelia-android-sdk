@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
@@ -105,7 +106,9 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mFormContainer.onSaveInstanceState(outState);
+        if (mFormContainer != null) {
+            mFormContainer.onSaveInstanceState(outState);
+        }
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {
@@ -143,15 +146,10 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                     public void onComplete(HttpResponse httpResponse) {
                         try {
                             JSONObject address = new JSONObject(httpResponse.getBodyAsString());
-                            // AddressField field = (AddressField)
-                            // mAdapter.getField(Order.Api.ADDRESS);
-                            // if (field != null) {
-                            // / field.setAddress(Address.inflate(address));
-                            // Field phoneField = mAdapter.getField(1);
-                            // if (phoneField != null) {
-                            // mAdapter.nextField(phoneField);
-                            // }
-                            // }
+                            AddressField field = (AddressField) mFormContainer.findFieldById(R.id.address);
+                            if (field != null) {
+                                field.setAddress(Address.inflate(address));
+                            }
                         } catch (JSONException e) {
                             onError(e);
                         }

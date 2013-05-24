@@ -6,7 +6,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.model.PaymentCard;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -25,8 +27,10 @@ public class OrderCommandHandler extends CommandHandler {
             JSONArray urls = new JSONArray();
             urls.put(order.product.url);
             orderObject.put(Order.Api.PRODUCT_URLS, urls);
+            orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL, order.product.deliveryPrice + order.product.productPrice);
+            orderObject.put(PaymentCard.Api.PAYMENT_CARD_ID, order.card.id);
+            orderObject.put(Address.Api.ADDRESS_ID, order.address.id);
             params.put(Order.Api.ORDER, orderObject);
-            params.put(Order.Api.EXPECTED_PRICE_TOTAL, order.expectedPriceTotal);
         } catch (JSONException e) {
             fireError(STEP_ORDER, null, null, e);
             return;

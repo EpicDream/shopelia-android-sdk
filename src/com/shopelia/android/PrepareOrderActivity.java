@@ -77,7 +77,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     /**
      * The shipping info of the product to purchase
      */
-    public static final String EXTRA_SHIPPING_INFO= Config.EXTRA_PREFIX + "SHIPPING_INFO";
+    public static final String EXTRA_SHIPPING_INFO = Config.EXTRA_PREFIX + "SHIPPING_INFO";
 
     /**
      * A {@link Tax} object
@@ -115,7 +115,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 Intent intent = new Intent(this, PincodeActivity.class);
                 intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, false);
                 startActivityForResult(intent, REQUEST_AUTH_PINCODE);
-                return;
             }
         }
         new FormListHeader(this).setView(findViewById(R.id.header));
@@ -127,11 +126,22 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-
+        if (resultCode == ShopeliaActivity.RESULT_LOGOUT) {
+            if (fragment == mSignUpFragment) {
+                switchFragments(mSignInFragment, mSignUpFragment);
+            } else if (fragment == null) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.add(R.id.fragment_container, mSignUpFragment);
+                ft.detach(mSignUpFragment);
+                ft.add(R.id.fragment_container, mSignInFragment);
+                ft.commit();
+            }
+            return;
+        }
         switch (requestCode) {
             case REQUEST_CHECKOUT:
-                if ((resultCode == RESULT_OK || resultCode == ShopeliaActivity.RESULT_FAILURE || resultCode == ShopeliaActivity.RESULT_LOGOUT)
-                        || fragment == null || fragment == mSignInFragment) {
+                if ((resultCode == RESULT_OK || resultCode == ShopeliaActivity.RESULT_FAILURE) || fragment == null
+                        || fragment == mSignInFragment) {
                     finish();
                     return;
                 }
@@ -196,7 +206,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     }
 
     private void checkoutOrder(Order order) {
-        order.expectedPriceTotal = getIntent().getFloatExtra(EXTRA_PRICE, 0) + getIntent().getFloatExtra(EXTRA_SHIPPING_PRICE, 0);
+        order.product.productPrice = getIntent().getFloatExtra(EXTRA_PRICE, 0);
+        order.product.deliveryPrice = getIntent().getFloatExtra(EXTRA_SHIPPING_PRICE, 0);
+        order.product.shippingExtra = getIntent().getStringExtra(EXTRA_SHIPPING_INFO);
         order.product.url = getIntent().getStringExtra(EXTRA_PRODUCT_URL);
         order.product.name = getIntent().getStringExtra(EXTRA_PRODUCT_TITLE);
         order.product.image = getIntent().getParcelableExtra(EXTRA_PRODUCT_IMAGE);

@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.app.ShopeliaActivity;
@@ -183,8 +182,6 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
                     mPincodeHandlerCallback.onPincodeCheckDone(true);
                 }
             } else {
-                Log.d(null, "Status " + response.getStatus());
-                // forbidOrder();
                 if (mPincodeHandlerCallback != null) {
                     mPincodeHandlerCallback.onPincodeCheckDone(false);
                 }

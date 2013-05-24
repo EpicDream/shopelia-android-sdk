@@ -82,7 +82,9 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        mFormContainer.onSaveInstanceState(outState);
+        if (mFormContainer != null) {
+            mFormContainer.onSaveInstanceState(outState);
+        }
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {

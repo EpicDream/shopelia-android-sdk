@@ -241,10 +241,12 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
         @Override
         public void onPincodeCheckDone(boolean succeed) {
-            ((Errorable) mNumberInput).setError(!succeed);
             if (!succeed) {
                 mNumberInput.setText(null);
+                mNumberInput.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup));
+                requestNumberInputFocus();
             }
+            ((Errorable) mNumberInput).setError(!succeed);
             if (((Errorable) mNumberInput).hasError() && getActivity() != null) {
                 setError(getResources().getString(R.string.shopelia_pincode_wrong));
                 mNumberInput.removeTextChangedListener(mTextWatcher);

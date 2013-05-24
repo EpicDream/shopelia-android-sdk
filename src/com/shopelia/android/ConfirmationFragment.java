@@ -160,12 +160,11 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     private void setupPriceUi() {
         findViewById(R.id.price_product_name, TextView.class).setText(mOrder.product.name);
-        // findViewById(R.id.price_value_no_shipping,
-        // TextView.class).setText(mOrder.product.currency.format(mOrder.state.productPrice));
-        // findViewById(R.id.price_value_shipping,
-        // TextView.class).setText(mOrder.product.currency.format(mOrder.state.deliveryPrice));
-        // findViewById(R.id.price_value_total,
-        // TextView.class).setText(mOrder.product.currency.format(mOrder.state.totalPrice));
+        findViewById(R.id.price_value_no_shipping, TextView.class).setText(mOrder.product.currency.format(mOrder.product.productPrice));
+        findViewById(R.id.price_value_shipping, TextView.class).setText(mOrder.product.currency.format(mOrder.product.deliveryPrice));
+        findViewById(R.id.price_value_total, TextView.class).setText(
+                mOrder.product.currency.format(mOrder.product.productPrice + mOrder.product.deliveryPrice));
+        findViewById(R.id.price_shipping_info, TextView.class).setText(mOrder.product.shippingExtra);
 
     }
 

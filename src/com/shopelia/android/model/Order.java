@@ -37,8 +37,6 @@ public class Order implements Parcelable {
 
     // User
     public User user;
-    
-    public float expectedPriceTotal;
 
     public Order() {
 
@@ -46,7 +44,6 @@ public class Order implements Parcelable {
 
     private Order(Parcel source) {
         uuid = source.readString();
-        expectedPriceTotal = source.readFloat();
         product = ParcelUtils.readParcelable(source, Product.class.getClassLoader());
         card = ParcelUtils.readParcelable(source, PaymentCard.class.getClassLoader());
         user = ParcelUtils.readParcelable(source, User.class.getClassLoader());
@@ -61,7 +58,6 @@ public class Order implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(uuid);
-        dest.writeFloat(expectedPriceTotal);
         ParcelUtils.writeParcelable(dest, product, flags);
         ParcelUtils.writeParcelable(dest, card, flags);
         ParcelUtils.writeParcelable(dest, user, flags);
@@ -84,7 +80,6 @@ public class Order implements Parcelable {
     public static Order inflate(JSONObject object) {
         Order order = new Order();
         order.uuid = object.optString(Api.UUID, NO_ID);
-        order.expectedPriceTotal = (float) object.optDouble(Api.EXPECTED_PRICE_TOTAL, 0);
         order.product.url = object.optString(Api.PRODUCT_URL);
         if (object.has(Api.ADDRESS)) {
             try {

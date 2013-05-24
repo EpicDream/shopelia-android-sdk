@@ -36,6 +36,9 @@ public final class Address implements JsonData, Parcelable {
         String FIRSTNAME = "first_name";
 
         String REFERENCE = "reference";
+
+        String ADDRESS_ID = "address_id";
+
     }
 
     public static final long NO_ID = -1;
@@ -115,6 +118,7 @@ public final class Address implements JsonData, Parcelable {
 
     public static Address inflate(JSONObject object) throws JSONException {
         Address address = new Address();
+        address.id = object.optLong(Api.ID, NO_ID);
         address.name = object.optString(Api.NAME);
         address.firstname = object.optString(Api.FIRSTNAME);
         address.address = object.optString(Api.ADDRESS1);

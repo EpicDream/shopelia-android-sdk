@@ -34,6 +34,9 @@
     <string name="shopelia_form_account_card_number">Numéro de la carte</string>
     <string name="shopelia_form_account_validate">Continuer la commande</string>
 
+     <!-- Sign In -->
+    <string name="shopelia_sign_in_forgot_password"><![CDATA[<u>Mot de passe oublié ?</u>]]></string>
+    
     <!-- Address creation form -->
     <string name="shopelia_form_address_name">Nom</string>
     <string name="shopelia_form_address_first_name">Prénom</string>

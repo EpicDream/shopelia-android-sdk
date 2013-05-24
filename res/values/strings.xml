@@ -40,6 +40,9 @@
     <string name="shopelia_form_account_card_number">Card number</string>
     <string name="shopelia_form_account_validate">Continue</string>
 
+     <!-- Sign In -->
+    <string name="shopelia_sign_in_forgot_password">Forgot your password?</string>
+    
     <!-- Address creation form -->
     <string name="shopelia_form_address_name">Name</string>
     <string name="shopelia_form_address_first_name">First name</string>

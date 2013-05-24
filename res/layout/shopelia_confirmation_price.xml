@@ -83,5 +83,14 @@
             android:textSize="@dimen/shopelia_font_size_large" />
 
     </LinearLayout>
+
+      <com.shopelia.android.widget.FontableTextView
+          android:id="@+id/price_shipping_info"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"
+          android:layout_marginTop="@dimen/shopelia_margin_normal"
+          android:gravity="right"
+          android:text="Livraison 24h"
+          android:textSize="@dimen/shopelia_font_size_small" />
      
 </LinearLayout>
