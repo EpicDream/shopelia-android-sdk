@@ -25,7 +25,7 @@
         app:shopelia_hint="@string/shopelia_form_main_email" />
 
     <com.shopelia.android.widget.form.PasswordField
-        android:id="@+id/passwordField1"
+        android:id="@+id/password"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_normal"

@@ -99,4 +99,8 @@
     <string name="shopelia_close_checkout_sub_text">Vous allez recevoir la confirmation de la transaction dans votre boîte mail.\n \n Merci d\'avoir utilisé le service Shopelia !</string>
     <string name="shopelia_close_checkout_validation">REVENIR SUR PRIXING</string>
 
+    <!-- Errors -->
+    <string name="shopelia_error_network_error">Une erreur réseau est survenue</string>
+    <string name="shopelia_error_server_broke_down">Les serveurs shopelia ne répondent pas</string>
+    
 </resources>
