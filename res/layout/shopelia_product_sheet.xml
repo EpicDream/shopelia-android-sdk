@@ -88,6 +88,16 @@
                 android:textSize="@dimen/shopelia_font_size_small"
                 app:shopelia_fontStyle="bold" />
 
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/product_shipping_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/shopelia_margin_extra_small"
+                android:text="En stock"
+                android:textColor="@color/shopelia_green"
+                android:textSize="@dimen/shopelia_font_size_small"
+                app:shopelia_fontStyle="bold" />
+            
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" >

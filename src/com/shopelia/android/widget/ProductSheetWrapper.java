@@ -19,6 +19,7 @@ public class ProductSheetWrapper {
     // Views
     private FontableTextView mProductName;
     private FontableTextView mProductDescription;
+    private FontableTextView mProductShippingInfo;
     private FontableTextView mShippingFees;
     private ImageView mProductImage;
     @SuppressWarnings("unused")
@@ -31,6 +32,7 @@ public class ProductSheetWrapper {
         mRootView = view;
         mProductName = findViewById(R.id.product_name);
         mProductDescription = findViewById(R.id.product_description);
+        mProductShippingInfo = findViewById(R.id.product_shipping_info);
         mShippingFees = findViewById(R.id.product_shipping_fees);
         mProductImage = findViewById(R.id.product_image);
         mProductPrice = findViewById(R.id.product_price);
@@ -67,9 +69,9 @@ public class ProductSheetWrapper {
         if (mArguments.containsKey(PrepareOrderActivity.EXTRA_TAX)) {
             tax = mArguments.getParcelable(PrepareOrderActivity.EXTRA_TAX);
         }
-        if (mArguments.containsKey(PrepareOrderActivity.EXTRA_SHIPMENT_FEES)) {
+        if (mArguments.containsKey(PrepareOrderActivity.EXTRA_SHIPPING_PRICE)) {
             mShippingFees.setText(getString(R.string.shopelia_product_shipping_fees,
-                    currency.format(mArguments.getFloat(PrepareOrderActivity.EXTRA_SHIPMENT_FEES))));
+                    currency.format(mArguments.getFloat(PrepareOrderActivity.EXTRA_SHIPPING_PRICE))));
             mShippingFees.setVisibility(View.VISIBLE);
         } else {
             mShippingFees.setVisibility(View.GONE);
@@ -79,6 +81,8 @@ public class ProductSheetWrapper {
         mProductDescription.setText(mArguments.getString(PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION));
         mProductDescription.setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION) ? View.VISIBLE : View.GONE);
         mProductPrice.setText(currency.format(mArguments.getFloat(PrepareOrderActivity.EXTRA_PRICE)));
+        mProductShippingInfo.setText(mArguments.getString(PrepareOrderActivity.EXTRA_SHIPPING_INFO));
+        mProductShippingInfo.setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_SHIPPING_INFO) ? View.VISIBLE : View.GONE);
         mTax.setText(tax.getResId());
         mVendorLogo.setImageResource(vendor.getImageResId());
         Object image = mArguments.get(PrepareOrderActivity.EXTRA_PRODUCT_IMAGE);

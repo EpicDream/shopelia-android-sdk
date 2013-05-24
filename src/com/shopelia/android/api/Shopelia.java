@@ -52,7 +52,12 @@ public final class Shopelia {
     /**
      * The shipping fees of the product to purchase
      */
-    public static final String EXTRA_SHIPMENT_FEES = PrepareOrderActivity.EXTRA_SHIPMENT_FEES;
+    public static final String EXTRA_SHIPPING_PRICE = PrepareOrderActivity.EXTRA_SHIPPING_PRICE;
+
+    /**
+     * The shipping info of the product to purchase
+     */
+    public static final String EXTRA_SHIPPING_INFO = PrepareOrderActivity.EXTRA_SHIPPING_INFO;
 
     /**
      * A {@link Tax} object
@@ -113,6 +118,16 @@ public final class Shopelia {
 
     public Shopelia setProductPrice(float price) {
         mData.putExtra(EXTRA_PRICE, price);
+        return this;
+    }
+
+    public Shopelia setProductShippingPrice(float price) {
+        mData.putExtra(EXTRA_SHIPPING_PRICE, price);
+        return this;
+    }
+
+    public Shopelia setProductShippingInfo(String info) {
+        mData.putExtra(EXTRA_SHIPPING_INFO, info);
         return this;
     }
 

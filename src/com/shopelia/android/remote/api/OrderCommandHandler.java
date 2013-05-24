@@ -26,6 +26,7 @@ public class OrderCommandHandler extends CommandHandler {
             urls.put(order.product.url);
             orderObject.put(Order.Api.PRODUCT_URLS, urls);
             params.put(Order.Api.ORDER, orderObject);
+            params.put(Order.Api.EXPECTED_PRICE_TOTAL, order.expectedPriceTotal);
         } catch (JSONException e) {
             fireError(STEP_ORDER, null, e);
             return;

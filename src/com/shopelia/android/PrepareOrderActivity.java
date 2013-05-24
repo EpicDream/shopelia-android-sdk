@@ -64,7 +64,12 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     /**
      * The shipping fees of the product to purchase
      */
-    public static final String EXTRA_SHIPMENT_FEES = Config.EXTRA_PREFIX + "SHIPPING_FEES";
+    public static final String EXTRA_SHIPPING_PRICE = Config.EXTRA_PREFIX + "SHIPPING_FEES";
+
+    /**
+     * The shipping info of the product to purchase
+     */
+    public static final String EXTRA_SHIPPING_INFO= Config.EXTRA_PREFIX + "SHIPPING_INFO";
 
     /**
      * A {@link Tax} object
@@ -156,6 +161,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     }
 
     private void checkoutOrder(Order order) {
+        order.expectedPriceTotal = getIntent().getFloatExtra(EXTRA_PRICE, 0) + getIntent().getFloatExtra(EXTRA_SHIPPING_PRICE, 0);
         order.product.url = getIntent().getStringExtra(EXTRA_PRODUCT_URL);
         order.product.name = getIntent().getStringExtra(EXTRA_PRODUCT_TITLE);
         order.product.image = getIntent().getParcelableExtra(EXTRA_PRODUCT_IMAGE);
