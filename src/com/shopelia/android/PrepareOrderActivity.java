@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.ScrollView;
+import android.widget.Toast;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
@@ -25,6 +27,7 @@ import com.shopelia.android.model.User;
 import com.shopelia.android.model.Vendor;
 import com.shopelia.android.remote.api.CommandHandler;
 import com.shopelia.android.remote.api.CommandHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.CommandHandler.ErrorInflater;
 import com.shopelia.android.remote.api.UserCommandHandler;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
@@ -32,6 +35,7 @@ import com.shopelia.android.widget.FormListFooter;
 import com.shopelia.android.widget.FormListHeader;
 import com.shopelia.android.widget.ProductSheetWrapper;
 import com.shopelia.android.widget.ValidationButton;
+import com.turbomanage.httpclient.HttpResponse;
 
 public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpListener, OnSignInListener {
 
@@ -82,25 +86,30 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     public static final String EXTRA_CURRENCY = Config.EXTRA_PREFIX + "CURRENCY";
 
     private static final int REQUEST_ADD_PAYMENT_CARD = 0x0113;
+    private static final int REQUEST_CREATE_PINCODE = 0x3110;
+    private static final int REQUEST_AUTH_PINCODE = 0x0216;
 
     private SignInFragment mSignInFragment = new SignInFragment();
     private SignUpFragment mSignUpFragment = new SignUpFragment();
+
+    private ScrollView mScrollView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getIntent().putExtra(EXTRA_INIT_ORDER, true);
         super.onCreate(savedInstanceState);
         setHostContentView(R.layout.shopelia_prepare_order_activity);
-
+        mScrollView = (ScrollView) findViewById(R.id.scrollview);
         if (savedInstanceState == null) {
             if (!UserManager.get(this).isLogged()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, mSignUpFragment);
                 ft.commit();
             } else {
-                new UserCommandHandler(this, null).destroyUser(UserManager.get(this).getUser().id);
-                UserManager.get(this).logout();
-                // checkoutOrder(getOrder());
+                Intent intent = new Intent(this, PincodeActivity.class);
+                intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, false);
+                startActivityForResult(intent, REQUEST_AUTH_PINCODE);
+                return;
             }
         }
         new FormListHeader(this).setView(findViewById(R.id.header));
@@ -119,6 +128,27 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                     finish();
                     return;
                 }
+            case REQUEST_CREATE_PINCODE:
+                if (resultCode == RESULT_OK) {
+                    final Order order = getOrder();
+                    order.user.pincode = data.getStringExtra(PincodeActivity.EXTRA_PINCODE);
+                    new UserCommandHandler(this, new CommandHandler.CallbackAdapter() {
+
+                        @Override
+                        public void onAccountCreationSucceed(final User user, Address address) {
+                            super.onAccountCreationSucceed(user, address);
+                            UserManager.get(PrepareOrderActivity.this).login(user);
+                            order.user = user;
+                            sendPaymentInformations(order.card, order);
+                        }
+
+                    }).createAccount(order.user, order.address);
+                }
+                break;
+            case REQUEST_AUTH_PINCODE:
+                if (resultCode == RESULT_OK) {
+                    // checkoutOrder(getOrder());
+                }
             case REQUEST_ADD_PAYMENT_CARD:
                 if (resultCode == RESULT_OK) {
                     sendPaymentInformations((PaymentCard) data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD), getOrder());
@@ -136,18 +166,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @Override
     public void onSignUp(JSONObject result) {
-        final Order order = Order.inflate(result);
-        new UserCommandHandler(this, new CommandHandler.CallbackAdapter() {
-
-            @Override
-            public void onAccountCreationSucceed(final User user, Address address) {
-                super.onAccountCreationSucceed(user, address);
-                UserManager.get(PrepareOrderActivity.this).login(user);
-                order.user = user;
-                sendPaymentInformations(order.card, order);
-            }
-
-        }).createAccount(order.user, order.address);
+        setOrder(Order.inflate(result));
+        Intent intent = new Intent(this, PincodeActivity.class);
+        intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, true);
+        startActivityForResult(intent, REQUEST_CREATE_PINCODE);
     }
 
     private void sendPaymentInformations(PaymentCard card, final Order order) {
@@ -217,7 +239,32 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @Override
     public void onSignIn(JSONObject result) {
+        User user = User.inflate(result.optJSONObject(User.Api.USER));
+        new UserCommandHandler(this, new CallbackAdapter() {
 
+            @Override
+            public void onSignIn(User user) {
+                super.onSignIn(user);
+                Order order = getOrder();
+                order.user = user;
+                checkoutOrder(order);
+            }
+
+            @Override
+            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+                super.onError(step, httpResponse, response, e);
+                if (e != null) {
+                    if (Config.INFO_LOGS_ENABLED) {
+                        e.printStackTrace();
+                    }
+                    Toast.makeText(PrepareOrderActivity.this, R.string.shopelia_error_network_error, Toast.LENGTH_SHORT).show();
+                }
+                if (response != null) {
+                    Toast.makeText(PrepareOrderActivity.this, response.optString(ErrorInflater.Api.ERROR), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+        }).signIn(user);
     }
 
     @Override
@@ -238,7 +285,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
             @Override
             public void onAnimationStart(Animation animation) {
-
+                mScrollView.smoothScrollTo(0, 0);
             }
 
             @Override
