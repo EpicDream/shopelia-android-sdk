@@ -29,7 +29,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_normal"
-        app:shopelia_hint="@string/shopelia_form_main_password" >
-    </com.shopelia.android.widget.form.PasswordField>
+        app:shopelia_hint="@string/shopelia_form_main_password" />
 
 </com.shopelia.android.widget.form.FormLinearLayout>

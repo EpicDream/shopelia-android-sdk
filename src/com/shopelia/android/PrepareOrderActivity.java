@@ -3,22 +3,18 @@ package com.shopelia.android;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.ActionBar.LayoutParams;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.View;
-import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
-import com.shopelia.android.animation.SmoothResizeAnimation;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
@@ -236,14 +232,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @SuppressLint("NewApi")
     private void switchFragments(final Fragment fragment) {
-        final Animation fadeOut = AnimationUtils.loadAnimation(this, android.R.anim.fade_out);
-        fadeOut.setFillBefore(false);
-        fadeOut.setFillAfter(true);
-        final Animation fadeIn = AnimationUtils.loadAnimation(this, android.R.anim.fade_in);
-        final int initialHeight = findViewById(R.id.fragment_container).getHeight();
-        findViewById(R.id.fragment_container).getLayoutParams().height = initialHeight;
-        findViewById(R.id.fragment_container).setVisibility(View.INVISIBLE);
-        findViewById(R.id.fragment_container).requestLayout();
+        final Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.shopelia_fade_out_short);
+        final Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.shopelia_fade_in_short);
         fadeOut.setAnimationListener(new AnimationListener() {
 
             @Override
@@ -258,44 +248,11 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                findViewById(R.id.fragment_container).setVisibility(View.INVISIBLE);
-                findViewById(R.id.fragment_container).getLayoutParams().height = LayoutParams.WRAP_CONTENT;
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 ft.replace(R.id.fragment_container, fragment);
                 ft.commit();
-                findViewById(R.id.fragment_container).getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+                findViewById(R.id.fragment_container).startAnimation(fadeIn);
 
-                    @Override
-                    public void onGlobalLayout() {
-                        final int finalHeight = findViewById(R.id.fragment_container).getHeight();
-                        Log.d(null, "INIT " + initialHeight + " END " + finalHeight);
-                        findViewById(R.id.fragment_container).getViewTreeObserver().removeGlobalOnLayoutListener(this);
-                        SmoothResizeAnimation resize = new SmoothResizeAnimation(findViewById(R.id.fragment_container),
-                                LayoutParams.MATCH_PARENT, initialHeight, LayoutParams.MATCH_PARENT, finalHeight);
-                        resize.setDuration(getResources().getInteger(android.R.integer.config_longAnimTime));
-                        resize.setAnimationListener(new AnimationListener() {
-
-                            @Override
-                            public void onAnimationStart(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationRepeat(Animation animation) {
-
-                            }
-
-                            @Override
-                            public void onAnimationEnd(Animation animation) {
-                                findViewById(R.id.fragment_container).getLayoutParams().height = LayoutParams.WRAP_CONTENT;
-                                findViewById(R.id.fragment_container).setVisibility(View.VISIBLE);
-                                findViewById(R.id.fragment_container).startAnimation(fadeIn);
-                                findViewById(R.id.fragment_container).requestLayout();
-                            }
-                        });
-                        findViewById(R.id.fragment_container).startAnimation(resize);
-                    }
-                });
             }
         });
         findViewById(R.id.fragment_container).startAnimation(fadeOut);
