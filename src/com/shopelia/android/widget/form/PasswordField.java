@@ -1,6 +1,7 @@
 package com.shopelia.android.widget.form;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.InputType;
 import android.util.AttributeSet;
 
@@ -22,6 +23,12 @@ public class PasswordField extends EditTextField {
     protected void setViewStyle(ViewHolder holder) {
         super.setViewStyle(holder);
         holder.editText.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+        holder.editText.setTypeface(Typeface.DEFAULT);
+    }
+
+    @Override
+    protected boolean onValidation(boolean fireError) {
+        return ((String) (getResult())).length() >= 4;
     }
 
 }
