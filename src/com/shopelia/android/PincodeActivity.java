@@ -113,11 +113,8 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
 
         JSONObject params = new JSONObject();
         try {
-            JSONObject object = new JSONObject();
-            object.put(User.Api.PINCODE, pincode);
-            params.put(User.Api.DATA, object);
+            params.put(User.Api.PINCODE, pincode);
         } catch (JSONException e) {
-
         }
         ShopeliaRestClient.post(Command.V1.Users.Verify.$, params, mAsyncCallback);
         return true;
