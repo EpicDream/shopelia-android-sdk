@@ -30,6 +30,7 @@ public class User implements JsonData, Parcelable {
         String LAST_NAME = "last_name";
         String ADDRESSES_ATTRIBUTES = "addresses_attributes";
         String ADDRESSES = "addresses";
+        String PAYMENT_CARDS_ATTRIBUTES = "payment_cards_attributes";
 
         String PAYMENT_CARDS = "payment_cards";
 
@@ -146,7 +147,7 @@ public class User implements JsonData, Parcelable {
         return user;
     }
 
-    public static JSONObject createObjectForAccountCreation(User user, Address address) throws JSONException {
+    public static JSONObject createObjectForAccountCreation(User user, Address address, PaymentCard card) throws JSONException {
         user.firstName = address.firstname;
         user.lastName = address.name;
         JSONObject out = new JSONObject();
@@ -173,6 +174,13 @@ public class User implements JsonData, Parcelable {
         addressObject.put(Address.Api.PHONES_ATTRIBUTES, phones);
 
         addresses.put(addressObject);
+
+        JSONArray cards = new JSONArray();
+        JSONObject cardObject = card.toJson();
+        cardObject.put(PaymentCard.Api.NAME, user.lastName);
+        cards.put(cardObject);
+
+        out.put(User.Api.PAYMENT_CARDS_ATTRIBUTES, cards);
 
         return out;
     }

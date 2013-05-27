@@ -140,11 +140,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         }
         switch (requestCode) {
             case REQUEST_CHECKOUT:
-                if ((resultCode == RESULT_OK || resultCode == ShopeliaActivity.RESULT_FAILURE) || fragment == null
-                        || fragment == mSignInFragment) {
-                    finish();
-                    return;
-                }
+                finish();
             case REQUEST_CREATE_PINCODE:
                 if (resultCode == RESULT_OK) {
                     final Order order = getOrder();
@@ -156,10 +152,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                             super.onAccountCreationSucceed(user, address);
                             UserManager.get(PrepareOrderActivity.this).login(user);
                             order.user = user;
-                            sendPaymentInformations(order.card, order);
+                            checkoutOrder(order);
                         }
 
-                    }).createAccount(order.user, order.address);
+                    }).createAccount(order.user, order.address, order.card);
                 }
                 break;
             case REQUEST_AUTH_PINCODE:

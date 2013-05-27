@@ -20,13 +20,13 @@ public class UserCommandHandler extends CommandHandler {
         super(context, callback);
     }
 
-    public void createAccount(final User user, final Address address) {
+    public void createAccount(final User user, final Address address, final PaymentCard card) {
 
         setCurrentStep(STEP_ACCOUNT_CREATION);
         JSONObject params = new JSONObject();
 
         try {
-            params.put(Order.Api.USER, User.createObjectForAccountCreation(user, address));
+            params.put(Order.Api.USER, User.createObjectForAccountCreation(user, address, card));
 
         } catch (JSONException e) {
             fireError(STEP_ACCOUNT_CREATION, null, null, e);
