@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
@@ -31,6 +32,8 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
      */
     public static final String EXTRA_CREATE_PINCODE = Config.EXTRA_PREFIX + "CREATE_PINCODE";
 
+    public static final String EXTRA_UPDATE_PINCODE = Config.EXTRA_PREFIX + "UPDATE_PINCODE";
+
     /**
      * A {@link String} or {@link Integer} representing the pin code to match
      */
@@ -44,6 +47,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
     private static final String PREF_TIME_TO_BLOCK = "SPH_LAST_ATTEMPT";
 
     private boolean mCreatePincode = true;
+    private boolean mUpdatePincode = false;
     private long mTimeToBlock;
 
     private Timer mTimer = new Timer();
@@ -58,7 +62,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         mTimeToBlock = getSharedPreferences().getLong(PREF_TIME_TO_BLOCK, 0L);
 
         init(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
-
+        mUpdatePincode = getIntent().getBooleanExtra(EXTRA_UPDATE_PINCODE, false);
         if (savedInstanceState == null) {
             handleFragment(null);
         }
@@ -105,20 +109,54 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         return mCreatePincode;
     }
 
+    public void onPincodeCreated(String pincode) {
+        Intent data = new Intent();
+        data.putExtra(EXTRA_CREATE_PINCODE, true);
+        data.putExtra(EXTRA_PINCODE, pincode);
+        setResult(RESULT_OK, data);
+        finish();
+    }
+
     @Override
     public boolean sendPincode(final String pincode) {
         if (!isServiceAvailable()) {
             return false;
         }
-        if (isCreatingPincode()) {
-
-            Intent data = new Intent();
-            data.putExtra(EXTRA_CREATE_PINCODE, true);
-            data.putExtra(EXTRA_PINCODE, pincode);
-            setResult(RESULT_OK, data);
-            finish();
+        if (isCreatingPincode() && !mUpdatePincode) {
+            onPincodeCreated(pincode);
             return true;
         }
+
+        if (isCreatingPincode() && mUpdatePincode) {
+            JSONObject object = new JSONObject();
+            try {
+                JSONObject userObject = new JSONObject();
+                userObject.put(User.Api.PINCODE, pincode);
+                object.put(User.Api.USER, userObject);
+            } catch (JSONException e) {
+
+            }
+
+            ShopeliaRestClient.authenticate(this);
+            ShopeliaRestClient.put(Command.V1.Users.User(UserManager.get(this).getUser().id), object, new AsyncCallback() {
+
+                @Override
+                public void onComplete(HttpResponse httpResponse) {
+                    if (httpResponse.getStatus() == 204) {
+                        onPincodeCreated(pincode);
+                    }
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    super.onError(e);
+
+                }
+
+            });
+            return true;
+        }
+
         ShopeliaRestClient.authenticate(this);
 
         JSONObject params = new JSONObject();

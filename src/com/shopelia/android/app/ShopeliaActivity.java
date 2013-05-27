@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -36,10 +37,15 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     public static final int RESULT_FAILURE = 0xfa15e;
     public static final int RESULT_LOGOUT = 0xd04e;
 
+    public static final int MODE_CLEARED = 0x0;
+    public static final int MODE_WAITING = 1 << 0;
+    public static final int MODE_BLOCKED = 1 << 1;
+
     private Order mOrder;
     private ShopeliaActivityPath mCurrentActivity;
     private FrameLayout mRootView;
     private ActionBar mActionBar;
+    private int mMode = MODE_CLEARED;
     @SuppressWarnings("rawtypes")
     private List<WeakReference<ShopeliaFragment>> mAttachedFragment = new ArrayList<WeakReference<ShopeliaFragment>>();
 
@@ -65,6 +71,47 @@ public abstract class ShopeliaActivity extends FragmentActivity {
             mCurrentActivity.startRecording();
         }
 
+    }
+
+    public void setWaitingMode(boolean value) {
+        if (value) {
+            setHostMode(getMode() | MODE_BLOCKED | MODE_WAITING);
+        } else {
+            setHostContentView(getMode() & ~(MODE_BLOCKED | MODE_WAITING));
+        }
+    }
+
+    public void setQuietWaintingMode(boolean value) {
+        if (value) {
+            setHostMode(getMode() | MODE_WAITING);
+        } else {
+            setHostContentView(getMode() & ~(MODE_WAITING));
+        }
+    }
+
+    public void setHostMode(int mode) {
+        mMode = mode;
+        invalidate();
+    }
+
+    public void invalidate() {
+        Log.d(null, "MODE = " + String.format("%16s", Integer.toBinaryString(mMode)).replace(' ', '0'));
+        if ((mMode & MODE_WAITING) == MODE_WAITING) {
+
+        } else {
+
+        }
+        if ((mMode & MODE_BLOCKED) == MODE_BLOCKED) {
+            Log.d(null, "isBlocked");
+            mRootView.setEnabled(false);
+        } else {
+            Log.d(null, "isNotBlocked");
+            mRootView.setEnabled(true);
+        }
+    }
+
+    public int getMode() {
+        return mMode;
     }
 
     @SuppressWarnings("rawtypes")

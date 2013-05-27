@@ -3,6 +3,7 @@ package com.shopelia.android;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -27,6 +28,8 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
 
     public static final String ACTIVITY_NAME = "RecoverPincode";
 
+    private static final int REQUEST_CREATE_PINCODE = 0x906;
+
     private FormLinearLayout mFormContainer;
     private TextView mErrorMessage;
 
@@ -41,6 +44,15 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
 
         findViewById(R.id.validate).setOnClickListener(mOnClickValidateListener);
         mErrorMessage = (TextView) findViewById(R.id.error);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_CREATE_PINCODE) {
+            setResult(resultCode);
+            finish();
+        }
     }
 
     private void setError(String message, boolean shake) {
@@ -94,6 +106,7 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
         @Override
         public void onClick(View v) {
             if (mFormContainer.validate()) {
+                setWaitingMode(true);
                 JSONObject object = mFormContainer.toJson();
                 try {
                     String month = object.getString(User.Api.CC_MONTH);
@@ -107,8 +120,10 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
                         public void onComplete(HttpResponse httpResponse) {
                             Log.d(null, httpResponse.getStatus() + "  RESPONSE " + httpResponse.getBodyAsString());
                             if (httpResponse.getStatus() == 204) {
-                                setResult(RESULT_OK);
-                                finish();
+                                Intent intent = new Intent(RecoverPincodeActivity.this, PincodeActivity.class);
+                                intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, true);
+                                intent.putExtra(PincodeActivity.EXTRA_UPDATE_PINCODE, true);
+                                startActivityForResult(intent, REQUEST_CREATE_PINCODE);
                             } else {
                                 setError(getString(R.string.shopelia_recover_pin_error), true);
                             }

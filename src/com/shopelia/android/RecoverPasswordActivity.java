@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -43,7 +44,9 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
         mFormLayout.onCreate(saveState);
         mFormLayout.findFieldById(R.id.email, EmailField.class).setContentText(getIntent().getStringExtra(EXTRA_EMAIL));
         mEmailField = mFormLayout.findFieldById(R.id.email);
-        requestFocus();
+        if (TextUtils.isEmpty((CharSequence) mEmailField.getResult())) {
+            requestFocus();
+        }
         mEmailField.setValid(mEmailField.onValidation(false));
         mFormLayout.updateSections();
         mErrorMessage = (TextView) findViewById(R.id.error);
@@ -67,6 +70,9 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
         (new Handler()).postDelayed(new Runnable() {
 
             public void run() {
+                if (mEmailField.getView() == null) {
+                    return;
+                }
                 MotionEvent event = MotionEvent.obtain(SystemClock.uptimeMillis(), SystemClock.uptimeMillis(), MotionEvent.ACTION_DOWN, 0,
                         0, 0);
                 mEmailField.getView().dispatchTouchEvent(event);

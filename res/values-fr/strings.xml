@@ -34,9 +34,9 @@
     <string name="shopelia_form_account_card_number">Numéro de la carte</string>
     <string name="shopelia_form_account_validate">Continuer la commande</string>
 
-     <!-- Sign In -->
+    <!-- Sign In -->
     <string name="shopelia_sign_in_forgot_password"><![CDATA[<u>Mot de passe oublié ?</u>]]></string>
-    
+
     <!-- Address creation form -->
     <string name="shopelia_form_address_name">Nom</string>
     <string name="shopelia_form_address_first_name">Prénom</string>
@@ -83,8 +83,8 @@
     <string name="shopelia_pincode_do_not_match">Les codes PIN ne sont pas identiques</string>
     <string name="shopelia_pincode_wrong">Code PIN incorrect</string>
     <string name="shopelia_pincode_retry" formatted="false">Réessayer dans %s</string>
-<string name="shopelia_pincode_forgotten"><![CDATA[<u>Code PIN oublié ?</u>]]></string>
-    
+    <string name="shopelia_pincode_forgotten"><![CDATA[<u>Code PIN oublié ?</u>]]></string>
+
     <!-- Recover password -->
     <string name="shopelia_recover_password_title">Mot de passe oublié ?</string>
     <string name="shopelia_recover_password_description">Les instructions de réinitialisation du mot de passe vous seront envoyées sur votre email</string>
@@ -93,7 +93,18 @@
     <string name="shopelia_recover_password_unknown_email">Cette email n\'existe pas</string>
     <string name="shopelia_recover_password_network_error">Une erreur réseau est survenue</string>
     <string name="shopelia_recover_password_email_sent">Vous allez recevoir les instructions de réinitialisation du mot de passe dans quelques instants sur votre email</string>
-    
+
+    <!-- Recover pincode -->
+    <string name="shopelia_recover_pin_title">Code PIN oublié ?</string>
+    <string name="shopelia_recover_pin_description"></string>
+    <string name="shopelia_recover_pin_type_last_numbers">Entrez les 4 derniers chiffres de votre carte de paiement</string>
+    <string name="shopelia_recover_pin_last_numbers">XXXX</string>
+    <string name="shopelia_recover_pin_type_expiry_date">Entrez les 4 chiffres de la date d\'expiration de votre carte de paiement</string>
+    <string name="shopelia_recover_pin_expiry_date">MMAA</string>
+    <string name="shopelia_recover_pin_send">CRÉER NOUVEAU CODE PIN</string>
+    <string name="shopelia_recover_pin_error">Les informations que vous avez renseigné sont invalides</string>
+    <string name="shopelia_recover_pin_network_error">Une erreur réseau est survenue</string>
+
     <!-- Time -->
     <plurals name="hour">
         <item formatted="false" quantity="one">%d heure</item>

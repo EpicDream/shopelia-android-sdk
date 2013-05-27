@@ -13,8 +13,10 @@
         android:id="@+id/headerField1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_large"
         app:shopelia_icon="@drawable/shopelia_lock"
         app:shopelia_text="@string/shopelia_recover_pin_title" >
+
     </com.shopelia.android.widget.form.HeaderField>
 
     <com.shopelia.android.widget.FontableTextView
@@ -26,7 +28,8 @@
         android:layout_marginTop="@dimen/shopelia_margin_large"
         android:gravity="center"
         android:text="@string/shopelia_recover_pin_description"
-        android:textSize="@dimen/shopelia_font_size_small" />
+        android:textSize="@dimen/shopelia_font_size_small"
+        android:visibility="gone" />
 
     <LinearLayout
         android:layout_width="match_parent"

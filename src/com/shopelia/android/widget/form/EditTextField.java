@@ -147,6 +147,7 @@ public class EditTextField extends FormField implements Errorable {
         View view = inflater.inflate(R.layout.shopelia_form_field_edit_text, viewGroup, false);
         ViewHolder holder = new ViewHolder();
         holder.editText = (FormEditText) view.findViewById(R.id.edit_text);
+        mBoundedEditText = holder.editText;
         view.setTag(holder);
         return view;
     }
@@ -164,9 +165,6 @@ public class EditTextField extends FormField implements Errorable {
         holder.editText.setOnEditorActionListener(mOnEditorActionListener);
         holder.editText.setChecked(isValid());
         holder.editText.setError(hasError());
-        if (holder.boundedField != null) {
-            holder.boundedField.mBoundedEditText = null;
-        }
         holder.boundedField = this;
         if (mTextWatcher != null && !isInEditMode()) {
             holder.editText.addTextChangedListener(mTextWatcher);
