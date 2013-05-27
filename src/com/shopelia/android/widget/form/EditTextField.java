@@ -2,6 +2,7 @@ package com.shopelia.android.widget.form;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -307,7 +308,15 @@ public class EditTextField extends FormField implements Errorable {
         }
     }
 
-    protected boolean onValidation(boolean fireError) {
+    @Override
+    protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
+        super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
+        if (gainFocus) {
+            mBoundedEditText.requestFocus();
+        }
+    }
+
+    public boolean onValidation(boolean fireError) {
         return (!TextUtils.isEmpty(mContentText) || mAllowEmptyContent);
     }
 
@@ -324,6 +333,10 @@ public class EditTextField extends FormField implements Errorable {
     @Override
     public boolean hasError() {
         return mError;
+    }
+
+    public View getView() {
+        return mBoundedEditText;
     }
 
 }

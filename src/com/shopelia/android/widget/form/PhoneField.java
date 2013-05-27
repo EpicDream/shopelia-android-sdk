@@ -40,7 +40,7 @@ public class PhoneField extends EditTextField {
     }
 
     @Override
-    protected boolean onValidation(boolean fireError) {
+    public boolean onValidation(boolean fireError) {
         String content = (String) getResult();
         boolean out = super.onValidation(fireError) && PHONE_PATTERN.matcher(content).matches();
         return out;

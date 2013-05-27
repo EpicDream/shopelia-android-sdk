@@ -35,7 +35,7 @@ public class EmailField extends EditTextField {
     }
 
     @Override
-    protected boolean onValidation(boolean fireError) {
+    public boolean onValidation(boolean fireError) {
         boolean out = super.onValidation(fireError) && EMAIL_ADDRESS_PATTERN.matcher((CharSequence) getResult()).matches();
         return out;
     }

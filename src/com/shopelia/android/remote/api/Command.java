@@ -58,6 +58,10 @@ public final class Command {
                 return $ + "/" + id;
             }
 
+            public static String Reset() {
+                return $ + "/reset";
+            }
+
         }
     }
 

@@ -92,6 +92,15 @@
     <string name="shopelia_pincode_wrong">Wrong PIN</string>
     <string name="shopelia_pincode_retry" formatted="false">Try again in %s</string>
 
+    <!-- Recover password -->
+    <string name="shopelia_recover_password_title">Forgotten your password?</string>
+    <string name="shopelia_recover_password_description">A long description explaining how to recover the password</string>
+    <string name="shopelia_recover_password_email">Email</string>
+    <string name="shopelia_recover_password_send">SEND EMAIL</string>
+    <string name="shopelia_recover_password_unknown_email">This email is not registered</string>
+    <string name="shopelia_recover_password_network_error">A network error occurred</string>
+    <string name="shopelia_recover_password_email_sent">Vous allez recevoir les instructions de réinitialisation du mot de passe dans quelques instants sur votre email</string>
+    
     <!-- Time -->
     <plurals name="hour">
         <item formatted="false" quantity="one">%d hour</item>

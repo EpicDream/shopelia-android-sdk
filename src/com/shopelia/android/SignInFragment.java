@@ -2,14 +2,17 @@ package com.shopelia.android;
 
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.TextView;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
 import com.shopelia.android.app.ShopeliaFragment;
@@ -33,6 +36,8 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
         public ValidationButton getValidationButton();
     }
 
+    private static final int REQUEST_EMAIL = 0x1010;
+
     private FormLinearLayout mFormContainer;
 
     @Override
@@ -51,10 +56,16 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
          */
         mFormContainer.findFieldById(R.id.email, EmailField.class).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory();
         mFormContainer.findFieldById(R.id.password, PasswordField.class).setJsonPath(Order.Api.USER, User.Api.PASSWORD).mandatory();
-        
+
         mFormContainer.onCreate(savedInstanceState);
         //@formatter:on
+
+        TextView recoverPassword = findViewById(R.id.forgotPassword);
+        recoverPassword.setText(Html.fromHtml(recoverPassword.getText().toString()));
+        recoverPassword.setOnClickListener(mOnRecoverPasswordClick);
+
         getContract().getValidationButton().setOnClickListener(mOnClickListener);
+
     }
 
     @Override
@@ -76,6 +87,12 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_EMAIL && resultCode == Activity.RESULT_OK) {
+            mFormContainer.findFieldById(R.id.email, EmailField.class).setContentText(
+                    data.getStringExtra(RecoverPasswordActivity.EXTRA_EMAIL));
+            mFormContainer.findFieldById(R.id.email, EmailField.class).invalidate();
+            return;
+        }
         mFormContainer.onActivityResult(requestCode, resultCode, data);
     }
 
@@ -98,6 +115,16 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
                 JSONObject result = mFormContainer.toJson();
                 getContract().onSignIn(result);
             }
+        }
+    };
+
+    private OnClickListener mOnRecoverPasswordClick = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            Intent intent = new Intent(getActivity(), RecoverPasswordActivity.class);
+            intent.putExtra(RecoverPasswordActivity.EXTRA_EMAIL, (String) findViewById(R.id.email, EmailField.class).getResult());
+            startActivityForResult(intent, REQUEST_EMAIL);
         }
     };
 

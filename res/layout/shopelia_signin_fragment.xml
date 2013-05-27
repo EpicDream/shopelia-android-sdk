@@ -37,7 +37,7 @@
         android:layout_marginTop="@dimen/shopelia_margin_normal"
         android:gravity="center"
         android:text="@string/shopelia_sign_in_forgot_password"
-        android:textColor="@color/shopelia_blue"
+        android:textColor="@color/shopelia_link_text_color"
         android:textSize="@dimen/shopelia_font_size_small"
         app:shopelia_fontFamily="normal"
         app:shopelia_fontStyle="normal"

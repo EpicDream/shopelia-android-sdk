@@ -19,6 +19,7 @@ public class ValidationButton extends FrameLayout {
 
     private ImageView mIcon;
     private TextView mLabel;
+    private View mSeparator;
 
     public ValidationButton(Context context) {
         super(context);
@@ -41,6 +42,7 @@ public class ValidationButton extends FrameLayout {
         try {
             mIcon = (ImageView) findViewById(R.id.icon);
             mLabel = (TextView) findViewById(R.id.text);
+            mSeparator = findViewById(R.id.separator);
         } catch (Exception e) {
 
         }
@@ -77,6 +79,7 @@ public class ValidationButton extends FrameLayout {
     public void setIcon(Drawable drawable) {
         if (mIcon != null) {
             mIcon.setImageDrawable(drawable);
+
         }
     }
 
