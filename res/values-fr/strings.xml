@@ -83,7 +83,8 @@
     <string name="shopelia_pincode_do_not_match">Les codes PIN ne sont pas identiques</string>
     <string name="shopelia_pincode_wrong">Code PIN incorrect</string>
     <string name="shopelia_pincode_retry" formatted="false">Réessayer dans %s</string>
-
+<string name="shopelia_pincode_forgotten"><![CDATA[<u>Code PIN oublié ?</u>]]></string>
+    
     <!-- Recover password -->
     <string name="shopelia_recover_password_title">Mot de passe oublié ?</string>
     <string name="shopelia_recover_password_description">Les instructions de réinitialisation du mot de passe vous seront envoyées sur votre email</string>

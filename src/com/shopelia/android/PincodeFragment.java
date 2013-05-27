@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -116,6 +118,10 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
         } else {
             requestNumberInputFocus();
         }
+
+        TextView forgotten = findViewById(R.id.forgotPincode);
+        forgotten.setText(Html.fromHtml(forgotten.getText().toString()));
+        forgotten.setOnClickListener(mOnForgottenClickListener);
     }
 
     @Override
@@ -259,6 +265,14 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
             if (!getContract().isServiceAvailable()) {
                 mRefreshTask.scheduleAtFixedRate(mRefreshUiRunnable, getUnlockDelay() % 1000, REFRESH_PERIOD);
             }
+        }
+    };
+
+    private OnClickListener mOnForgottenClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+
         }
     };
 
