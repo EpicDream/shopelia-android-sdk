@@ -3,6 +3,7 @@ package com.shopelia.android;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +13,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.shopelia.android.app.ShopeliaActivity;
@@ -19,6 +21,7 @@ import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.shopelia.android.widget.form.EditTextField;
+import com.shopelia.android.widget.form.EditTextField.OnValidateListener;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.NumberField;
 import com.turbomanage.httpclient.AsyncCallback;
@@ -38,8 +41,39 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
         super.onCreate(saveState);
         setHostContentView(R.layout.shopelia_recover_pincode_activity);
         mFormContainer = (FormLinearLayout) findViewById(R.id.form);
-        mFormContainer.findFieldById(R.id.lastNumbers, NumberField.class).setMinLength(4).setJsonPath(User.Api.CC_NUMBER).mandatory();
-        mFormContainer.findFieldById(R.id.expiryDate, NumberField.class).setMinLength(4).setJsonPath(User.Api.CC_MONTH).mandatory();
+        mFormContainer.findFieldById(R.id.lastNumbers, NumberField.class).setMinLength(4).setJsonPath(User.Api.CC_NUMBER).mandatory()
+                .setOnValidateListener(new OnValidateListener() {
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        super.onTextChanged(s, start, before, count);
+                        if (count == 4 && before < count) {
+                            mFormContainer.nextField(mFormContainer.findFieldById(R.id.lastNumbers));
+                        }
+                    }
+
+                    @Override
+                    public boolean onValidate(EditTextField editTextField, boolean shouldFireError) {
+                        return true;
+                    }
+                });
+        mFormContainer.findFieldById(R.id.expiryDate, NumberField.class).setMinLength(4).setJsonPath(User.Api.CC_MONTH).mandatory()
+                .setOnValidateListener(new OnValidateListener() {
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+                        super.onTextChanged(s, start, before, count);
+                        if (count == 4 && before < count) {
+                            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(mFormContainer.getWindowToken(), 0);
+                        }
+                    }
+
+                    @Override
+                    public boolean onValidate(EditTextField editTextField, boolean shouldFireError) {
+                        return true;
+                    }
+                });
         mFormContainer.onCreate(saveState);
 
         findViewById(R.id.validate).setOnClickListener(mOnClickValidateListener);
