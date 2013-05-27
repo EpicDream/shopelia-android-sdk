@@ -161,6 +161,7 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
             View child = viewGroup.getChildAt(position);
             if (child instanceof FormField) {
                 mFields.add((FormField) child);
+                ((FormField) child).onAttachedToContainer(this);
             } else if (child instanceof ViewGroup) {
                 refreshFieldCache((ViewGroup) child);
             }

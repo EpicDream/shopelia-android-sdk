@@ -36,12 +36,12 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
      */
     public static final String EXTRA_PINCODE = Config.EXTRA_PREFIX + "PINCODE";
 
+    public static final int REQUEST_RECOVER_PINCODE = 0x7000;
+
     private static final long MIN_ERROR_DELAY = 5 * 60 * 1000;
     private static final long MAX_ERROR_DELAY = 1 * 60 * 60 * 1000;
 
     private static final String PREF_TIME_TO_BLOCK = "SPH_LAST_ATTEMPT";
-    private static final String PREF_FAILURE_COUNT = "SPH_FAILURE_COUNT";
-    private static final String PREF_ATTEMPTS = "SPH_ATTEMPTS";
 
     private boolean mCreatePincode = true;
     private long mTimeToBlock;
@@ -67,6 +67,16 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
             releaseOrder();
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_RECOVER_PINCODE && resultCode == RESULT_OK) {
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+            finish();
+        }
     }
 
     private SharedPreferences getSharedPreferences() {

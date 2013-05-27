@@ -18,6 +18,7 @@
     <attr name="shopelia_hint" format="string" />
     <attr name="shopelia_icon" format="integer" />
     <attr name="shopelia_textSize" format="integer" />
+    <attr name="shopelia_max_length" format="integer" />
 
     <declare-styleable name="ValidationButton">
         <attr name="shopelia_text" />
@@ -28,9 +29,10 @@
         <attr name="shopelia_text" />
         <attr name="shopelia_icon" />
     </declare-styleable>
-     <declare-styleable name="EditTextField">
+    <declare-styleable name="EditTextField">
         <attr name="shopelia_text" />
         <attr name="shopelia_hint" />
+        <attr name="shopelia_max_length" />
     </declare-styleable>
     <declare-styleable name="NumberInput">
         <attr name="shopelia_number_background" format="integer" />

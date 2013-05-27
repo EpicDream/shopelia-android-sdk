@@ -1,5 +1,6 @@
 package com.shopelia.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -272,7 +273,8 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
         @Override
         public void onClick(View v) {
-
+            Intent intent = new Intent(getActivity(), RecoverPincodeActivity.class);
+            getActivity().startActivityForResult(intent, PincodeActivity.REQUEST_RECOVER_PINCODE);
         }
     };
 

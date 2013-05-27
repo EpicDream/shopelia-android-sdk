@@ -4,14 +4,14 @@
     <!-- ActionBar -->
     <string name="shopelia_action_bar_sign_in">Sign in</string>
     <string name="shopelia_action_bar_sign_up">Sign up</string>
-	<string name="shopelia_action_bar_sign_out">Logout</string>
-	
+    <string name="shopelia_action_bar_sign_out">Logout</string>
+
     <!-- Main form -->
     <string name="shopelia_form_main_phone">Phone number</string>
     <string name="shopelia_form_main_email">Email</string>
     <string name="shopelia_form_main_password">Password</string>
     <string name="shopelia_form_main_validate">Continue my order</string>
-     <string name="shopelia_form_main_sign_in">Sign in</string>
+    <string name="shopelia_form_main_sign_in">Sign in</string>
     <string name="shopelia_form_main_personal_info">Personal informations</string>
     <string name="shopelia_form_main_shipping_address">Shipping address</string>
     <string name="shopelia_form_main_payment_method">Payment method</string>
@@ -40,9 +40,9 @@
     <string name="shopelia_form_account_card_number">Card number</string>
     <string name="shopelia_form_account_validate">Continue</string>
 
-     <!-- Sign In -->
+    <!-- Sign In -->
     <string name="shopelia_sign_in_forgot_password"><![CDATA[<u>Forgotten your password?</u>]]></string>
-    
+
     <!-- Address creation form -->
     <string name="shopelia_form_address_name">Name</string>
     <string name="shopelia_form_address_first_name">First name</string>
@@ -91,8 +91,8 @@
     <string name="shopelia_pincode_do_not_match">PIN codes do not match</string>
     <string name="shopelia_pincode_wrong">Wrong PIN</string>
     <string name="shopelia_pincode_retry" formatted="false">Try again in %s</string>
-	<string name="shopelia_pincode_forgotten"><![CDATA[<u>Forgotten your PIN?</u>]]></string>
-    
+    <string name="shopelia_pincode_forgotten"><![CDATA[<u>Forgotten your PIN?</u>]]></string>
+
     <!-- Recover password -->
     <string name="shopelia_recover_password_title">Forgotten your password?</string>
     <string name="shopelia_recover_password_description">A long description explaining how to recover the password</string>
@@ -101,7 +101,18 @@
     <string name="shopelia_recover_password_unknown_email">This email is not registered</string>
     <string name="shopelia_recover_password_network_error">A network error occurred</string>
     <string name="shopelia_recover_password_email_sent">Vous allez recevoir les instructions de réinitialisation du mot de passe dans quelques instants sur votre email</string>
-    
+
+    <!-- Recover pincode -->
+    <string name="shopelia_recover_pin_title">Forgotten your pin?</string>
+    <string name="shopelia_recover_pin_description">A long description explaining how to recover the pin</string>
+    <string name="shopelia_recover_pin_type_last_numbers">Type the 4 last numbers of your payment card</string>
+    <string name="shopelia_recover_pin_last_numbers">XXXX</string>
+    <string name="shopelia_recover_pin_type_expiry_date">Type the expiry date of your payment card</string>
+    <string name="shopelia_recover_pin_expiry_date">MMYY</string>
+    <string name="shopelia_recover_pin_send">RECOVER MY PIN</string>
+    <string name="shopelia_recover_pin_error">Invalid informations</string>
+    <string name="shopelia_recover_pin_network_error">A network error occurred</string>
+
     <!-- Time -->
     <plurals name="hour">
         <item formatted="false" quantity="one">%d hour</item>
@@ -124,5 +135,5 @@
     <!-- Errors -->
     <string name="shopelia_error_network_error"></string>
     <string name="shopelia_error_server_broke_down"></string>
-    
+
 </resources>

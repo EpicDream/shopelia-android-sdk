@@ -38,6 +38,10 @@ public class User implements JsonData, Parcelable {
         String PHONES = "phones";
         String PHONE = "phone";
 
+        String CC_NUMBER = "cc_num";
+        String CC_MONTH = "cc_month";
+        String CC_YEAR = "cc_year";
+
         public interface Phone {
             String NUMBER = "number";
             String LINE_TYPE = "line_type";

@@ -5,6 +5,7 @@ import android.content.res.TypedArray;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -45,6 +46,8 @@ public class EditTextField extends FormField implements Errorable {
     }
 
     public static final int TYPE = 1;
+    public static final int INVALID_LENGTH = -1;
+
     public static final String SAVE_TAG = "EditTextFieldSave_";
 
     private String mContentText;
@@ -53,6 +56,8 @@ public class EditTextField extends FormField implements Errorable {
     private boolean mAllowEmptyContent = true;
     private boolean mAutoTrim = true;
     private String mJsonPath;
+
+    private int mMaxLength = INVALID_LENGTH;
 
     private boolean mError = false;
 
@@ -73,6 +78,7 @@ public class EditTextField extends FormField implements Errorable {
             try {
                 mContentText = ta.getString(R.styleable.EditTextField_shopelia_text);
                 mHint = ta.getString(R.styleable.EditTextField_shopelia_hint);
+                mMaxLength = ta.getInt(R.styleable.EditTextField_shopelia_max_length, INVALID_LENGTH);
             } finally {
                 ta.recycle();
             }
@@ -151,6 +157,7 @@ public class EditTextField extends FormField implements Errorable {
         holder.editText.removeTextChangedListener(holder.textWatcher);
         holder.textWatcher = mTextWatcher;
         holder.editText.setOnFocusChangeListener(mOnFocusChangeListener);
+        mBoundedEditText = holder.editText;
         setViewStyle(holder);
         holder.editText.setHint(mHint);
         holder.editText.setText(mContentText);
@@ -161,7 +168,6 @@ public class EditTextField extends FormField implements Errorable {
             holder.boundedField.mBoundedEditText = null;
         }
         holder.boundedField = this;
-        mBoundedEditText = holder.editText;
         if (mTextWatcher != null && !isInEditMode()) {
             holder.editText.addTextChangedListener(mTextWatcher);
         }
@@ -183,6 +189,11 @@ public class EditTextField extends FormField implements Errorable {
         // Here for extension purpose so we can later create PasswordField,
         // EmailField... just by extending EditTextField and overriding this
         // method.
+        if (mMaxLength > INVALID_LENGTH && mBoundedEditText != null) {
+            mBoundedEditText.setFilters(new InputFilter[] {
+                new InputFilter.LengthFilter(mMaxLength)
+            });
+        }
     }
 
     @Override

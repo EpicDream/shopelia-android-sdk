@@ -46,7 +46,12 @@ public abstract class FormField extends FrameLayout {
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         bindView(mBoundedView);
-        mFormContainer = (FormContainer) getParent();
+    }
+
+    protected void onAttachedToContainer(FormContainer container) {
+        super.onAttachedToWindow();
+        bindView(mBoundedView);
+        mFormContainer = container;
     }
 
     /**

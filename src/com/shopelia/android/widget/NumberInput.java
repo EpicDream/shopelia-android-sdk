@@ -9,6 +9,7 @@ import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.EditText;
 
 import com.shopelia.android.R;
@@ -33,6 +34,13 @@ public class NumberInput extends EditText implements Errorable {
         }
         mCirclePaint.setStyle(Style.FILL);
         mCirclePaint.setColor(Color.BLACK);
+        setOnLongClickListener(new OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View arg0) {
+                return true;
+            }
+        });
     }
 
     @Override
