@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
@@ -150,12 +151,18 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
     }
 
     private void refreshFieldCache() {
-        final int count = getChildCount();
         mFields.clear();
+        refreshFieldCache(this);
+    }
+
+    private void refreshFieldCache(ViewGroup viewGroup) {
+        final int count = viewGroup.getChildCount();
         for (int position = 0; position < count; position++) {
-            View child = getChildAt(position);
+            View child = viewGroup.getChildAt(position);
             if (child instanceof FormField) {
                 mFields.add((FormField) child);
+            } else if (child instanceof ViewGroup) {
+                refreshFieldCache((ViewGroup) child);
             }
         }
     }
