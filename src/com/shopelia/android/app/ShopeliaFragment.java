@@ -1,5 +1,7 @@
 package com.shopelia.android.app;
 
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,6 +42,13 @@ public class ShopeliaFragment<Contract> extends Fragment {
 
     protected void onActionItemSelected(Item item) {
 
+    }
+
+    public void track(String eventName, JSONObject properties) {
+        ShopeliaActivity activity = (ShopeliaActivity) getContract();
+        if (activity != null) {
+            activity.track(eventName, properties);
+        }
     }
 
     public void startWaiting(CharSequence message, boolean blockUi, boolean isCancelable) {
