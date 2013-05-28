@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -182,15 +181,19 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             final EmailField emailField = mFormContainer.findFieldById(R.id.email);
             if (emailField.onValidation(false)) {
                 final String email = (String) emailField.getResult();
-                ShopeliaRestClient.get(Command.V1.Users.Exists(), null, new AsyncCallback() {
+                JSONObject params = new JSONObject();
+                try {
+                    params.put(User.Api.EMAIL, email);
+                } catch (JSONException e) {
+
+                }
+                ShopeliaRestClient.post(Command.V1.Users.Exists(), params, new AsyncCallback() {
 
                     @Override
                     public void onComplete(HttpResponse httpResponse) {
-                        Log.d(null, "STATUS " + httpResponse.getStatus());
-                        if (httpResponse.getStatus() != 200 && getActivity() != null) {
+                        if (httpResponse.getStatus() == 204 && getActivity() != null) {
                             emailField.setError(true);
-                            emailField.getView().startAnimation(
-                                    AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup_interpolator));
+                            emailField.getView().startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup));
                             Toast.makeText(getActivity(), getString(R.string.shopelia_error_user_already_exists, email), Toast.LENGTH_LONG)
                                     .show();
                         }
