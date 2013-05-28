@@ -141,6 +141,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         switch (requestCode) {
             case REQUEST_CHECKOUT:
                 finish();
+                return;
             case REQUEST_CREATE_PINCODE:
                 if (resultCode == RESULT_OK) {
                     final Order order = getOrder();
