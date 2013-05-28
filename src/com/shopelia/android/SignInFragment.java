@@ -22,6 +22,7 @@ import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
+import com.shopelia.android.widget.form.EditTextField;
 import com.shopelia.android.widget.form.EmailField;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.PasswordField;
@@ -35,6 +36,8 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
 
         public ValidationButton getValidationButton();
     }
+
+    public static final String ARGS_EMAIL = "args:email";
 
     private static final int REQUEST_EMAIL = 0x1010;
 
@@ -66,6 +69,17 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
 
         getContract().getValidationButton().setOnClickListener(mOnClickListener);
 
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (getArguments() != null) {
+            if (getArguments().containsKey(ARGS_EMAIL)) {
+                mFormContainer.findFieldById(R.id.email, EditTextField.class).setContentText(getArguments().getString(ARGS_EMAIL));
+                mFormContainer.nextField(mFormContainer.findFieldById(R.id.email));
+            }
+        }
     }
 
     @Override

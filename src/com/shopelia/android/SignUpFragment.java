@@ -7,12 +7,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
@@ -43,7 +41,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     public interface OnSignUpListener {
         public void onSignUp(JSONObject result);
 
-        public void requestSignIn();
+        public void requestSignIn(Bundle arguments);
 
         public ValidationButton getValidationButton();
     }
@@ -59,7 +57,6 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             mFormContainer.onCreate(savedInstanceState);
             ;
         }
-        Log.d(null, "Load STATE " + savedInstanceState);
     }
 
     @Override
@@ -108,7 +105,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     protected void onActionItemSelected(Item item) {
         super.onActionItemSelected(item);
         if (item.getId() == R.id.shopelia_action_bar_login) {
-            getContract().requestSignIn();
+            getContract().requestSignIn(null);
         }
     }
 
@@ -124,7 +121,6 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         if (mFormContainer != null) {
             mFormContainer.onSaveInstanceState(outState);
         }
-        Log.d(null, "SAVE STATE " + outState);
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {
@@ -206,8 +202,9 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                     @Override
                     public void onComplete(HttpResponse httpResponse) {
                         if (httpResponse.getStatus() == 204 && getActivity() != null) {
-                            emailField.setError(true);
-                            emailField.getView().startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup));
+                            Bundle arguments = new Bundle();
+                            arguments.putString(SignInFragment.ARGS_EMAIL, email);
+                            getContract().requestSignIn(arguments);
                             Toast.makeText(getActivity(), getString(R.string.shopelia_error_user_already_exists, email), Toast.LENGTH_LONG)
                                     .show();
                         }

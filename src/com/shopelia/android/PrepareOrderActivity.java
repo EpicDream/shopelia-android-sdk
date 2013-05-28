@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -285,7 +287,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     }
 
     @Override
-    public void requestSignIn() {
+    public void requestSignIn(Bundle arguments) {
+        mSignInFragment.setArguments(arguments);
         switchFragments(mSignInFragment, mSignUpFragment);
     }
 
@@ -365,5 +368,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             }
         });
         findViewById(R.id.fragment_container).startAnimation(fadeOut);
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(findViewById(R.id.fragment_container).getWindowToken(), 0);
     }
 }

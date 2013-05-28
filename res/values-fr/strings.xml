@@ -133,6 +133,6 @@
     <!-- Errors -->
     <string name="shopelia_error_network_error">Une erreur réseau est survenue</string>
     <string name="shopelia_error_server_broke_down">Les serveurs shopelia ne répondent pas</string>
-	<string name="shopelia_error_user_already_exists" formatted="false">L\'adresse \'%s\' est indisponible</string>
+	<string name="shopelia_error_user_already_exists" formatted="false">Vous avez déjà un compte shopelia.</string>
 	
 </resources>
