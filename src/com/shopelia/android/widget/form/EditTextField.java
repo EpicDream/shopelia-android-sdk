@@ -9,6 +9,7 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -166,7 +167,7 @@ public class EditTextField extends FormField implements Errorable {
         holder.editText.setChecked(isValid());
         holder.editText.setError(hasError());
         holder.boundedField = this;
-        if (mTextWatcher != null && !isInEditMode()) {
+        if (!isInEditMode()) {
             holder.editText.addTextChangedListener(mTextWatcher);
         }
     }
@@ -244,6 +245,7 @@ public class EditTextField extends FormField implements Errorable {
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            Log.d(null, "On Text Changed " + before + " " + count);
             if (mOnValidateListener != null) {
                 mOnValidateListener.onTextChanged(s, start, before, count);
             }

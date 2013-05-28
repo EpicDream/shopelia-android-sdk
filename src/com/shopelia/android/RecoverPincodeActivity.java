@@ -47,7 +47,8 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         super.onTextChanged(s, start, before, count);
-                        if (count == 4 && before < count) {
+                        Log.d(null, "FORM On Text Changed " + start + " " + before + " " + count);
+                        if (start + count == 4 && before < count) {
                             mFormContainer.nextField(mFormContainer.findFieldById(R.id.lastNumbers));
                         }
                     }
@@ -63,7 +64,7 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         super.onTextChanged(s, start, before, count);
-                        if (count == 4 && before < count) {
+                        if (count + start == 4 && before < count) {
                             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(mFormContainer.getWindowToken(), 0);
                         }
