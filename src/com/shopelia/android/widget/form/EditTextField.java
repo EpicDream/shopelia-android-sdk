@@ -181,6 +181,9 @@ public class EditTextField extends FormField implements Errorable {
             mContentText = null;
         }
         setValid(onValidation(false) && (mOnValidateListener != null ? mOnValidateListener.onValidate(this, false) : true));
+        if (getBoundedView() != null) {
+            bindView(getBoundedView());
+        }
     }
 
     protected void setViewStyle(ViewHolder holder) {
@@ -220,7 +223,7 @@ public class EditTextField extends FormField implements Errorable {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        if (savedInstanceState != null && mJsonPath != null) {
+        if (savedInstanceState != null) {
             setContentText(savedInstanceState.getString(SAVE_TAG + mJsonPath));
         }
     }

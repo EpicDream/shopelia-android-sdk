@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -53,10 +54,12 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
-        if (mFormContainer != null) {
+
+        if (savedInstanceState != null) {
             mFormContainer.onCreate(savedInstanceState);
             ;
         }
+        Log.d(null, "Load STATE " + savedInstanceState);
     }
 
     @Override
@@ -121,6 +124,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         if (mFormContainer != null) {
             mFormContainer.onSaveInstanceState(outState);
         }
+        Log.d(null, "SAVE STATE " + outState);
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {

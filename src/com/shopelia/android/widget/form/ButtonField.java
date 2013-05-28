@@ -87,6 +87,9 @@ public abstract class ButtonField extends FormField implements Errorable, Checka
 
     protected void setContentText(String text) {
         mContentText = text;
+        if (getBoundedView() != null) {
+            bindView(getBoundedView());
+        }
     }
 
     private class ViewHolder {
