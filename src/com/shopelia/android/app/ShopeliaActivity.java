@@ -8,7 +8,6 @@ import java.util.List;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -113,17 +112,14 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     }
 
     public void invalidate() {
-        Log.d(null, "MODE = " + String.format("%16s", Integer.toBinaryString(mMode)).replace(' ', '0'));
         if ((mMode & MODE_WAITING) == MODE_WAITING) {
 
         } else {
 
         }
         if ((mMode & MODE_BLOCKED) == MODE_BLOCKED) {
-            Log.d(null, "isBlocked");
             mRootView.setEnabled(false);
         } else {
-            Log.d(null, "isNotBlocked");
             mRootView.setEnabled(true);
         }
     }
