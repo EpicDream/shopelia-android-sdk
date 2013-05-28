@@ -73,6 +73,7 @@ public class PaymentCardField extends ButtonField {
         setValid(mPaymentCard != null);
         setChecked(mPaymentCard != null);
         setDisplayableCardNumber();
+        invalidate();
     }
 
     @Override
