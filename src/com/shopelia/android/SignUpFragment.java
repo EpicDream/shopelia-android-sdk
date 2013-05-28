@@ -50,6 +50,16 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     private FormLinearLayout mFormContainer;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setRetainInstance(true);
+        if (mFormContainer != null) {
+            mFormContainer.onCreate(savedInstanceState);
+            ;
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.shopelia_signup_fragment, container, false);
     }

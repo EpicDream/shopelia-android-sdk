@@ -1,5 +1,8 @@
 package com.shopelia.android;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -8,6 +11,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 import android.util.Log;
@@ -20,6 +24,7 @@ import android.widget.Toast;
 import com.shopelia.android.SignInFragment.OnSignInListener;
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.app.ShopeliaActivity;
+import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
@@ -103,6 +108,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     // Cache
     private String mCachedPincode = null;
 
+    private Map<Class<?>, Fragment.SavedState> mSavedStates = new HashMap<Class<?>, Fragment.SavedState>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getIntent().putExtra(EXTRA_INIT_ORDER, true);
@@ -112,8 +119,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         if (savedInstanceState == null) {
             if (!UserManager.get(this).isLogged()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.fragment_container, mSignInFragment);
-                ft.detach(mSignInFragment);
                 ft.add(R.id.fragment_container, mSignUpFragment);
                 ft.commit();
             } else {
@@ -136,8 +141,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 switchFragments(mSignInFragment, mSignUpFragment);
             } else if (fragment == null) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.fragment_container, mSignUpFragment);
-                ft.detach(mSignUpFragment);
                 ft.add(R.id.fragment_container, mSignInFragment);
                 ft.commit();
             }
@@ -330,7 +333,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     }
 
     @SuppressLint("NewApi")
-    private void switchFragments(final Fragment inFragment, final Fragment outFragment) {
+    private void switchFragments(final ShopeliaFragment<?> inFragment, final ShopeliaFragment<?> outFragment) {
         final Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.shopelia_fade_out_short);
         final Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.shopelia_fade_in_short);
         fadeOut.setAnimationListener(new AnimationListener() {
@@ -348,9 +351,13 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             @Override
             public void onAnimationEnd(Animation animation) {
                 {
+                    FragmentManager fm = getSupportFragmentManager();
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.detach(outFragment);
-                    ft.attach(inFragment);
+                    mSavedStates.put(outFragment.getClass(), fm.saveFragmentInstanceState(outFragment));
+                    if (mSavedStates.containsKey(inFragment.getClass())) {
+                        inFragment.setInitialSavedState(mSavedStates.get(inFragment.getClass()));
+                    }
+                    ft.replace(R.id.fragment_container, inFragment);
                     ft.commit();
                 }
                 findViewById(R.id.fragment_container).startAnimation(fadeIn);
