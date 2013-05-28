@@ -16,7 +16,6 @@
         android:layout_marginBottom="@dimen/shopelia_margin_large"
         app:shopelia_icon="@drawable/shopelia_lock"
         app:shopelia_text="@string/shopelia_recover_pin_title" >
-
     </com.shopelia.android.widget.form.HeaderField>
 
     <com.shopelia.android.widget.FontableTextView
@@ -72,12 +71,12 @@
                 android:textSize="@dimen/shopelia_font_size_small"
                 app:shopelia_fontStyle="bold" />
 
-            <com.shopelia.android.widget.form.NumberField
+            <com.shopelia.android.widget.form.SimpleDateField
                 android:id="@+id/expiryDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:shopelia_hint="@string/shopelia_recover_pin_expiry_date"
-                app:shopelia_max_length="4" />
+                app:shopelia_max_length="5" />
         </LinearLayout>
     </LinearLayout>
 

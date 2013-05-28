@@ -110,7 +110,7 @@
     <string name="shopelia_recover_pin_type_last_numbers">Type the 4 last numbers of your payment card</string>
     <string name="shopelia_recover_pin_last_numbers">XXXX</string>
     <string name="shopelia_recover_pin_type_expiry_date">Type the expiry date of your payment card</string>
-    <string name="shopelia_recover_pin_expiry_date">MMYY</string>
+    <string name="shopelia_recover_pin_expiry_date">MM/YY</string>
     <string name="shopelia_recover_pin_send">RECOVER MY PIN</string>
     <string name="shopelia_recover_pin_error">Invalid informations</string>
     <string name="shopelia_recover_pin_network_error">A network error occurred</string>

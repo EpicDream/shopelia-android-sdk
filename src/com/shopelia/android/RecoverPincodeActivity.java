@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -47,7 +46,6 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         super.onTextChanged(s, start, before, count);
-                        Log.d(null, "FORM On Text Changed " + start + " " + before + " " + count);
                         if (start + count == 4 && before < count) {
                             mFormContainer.nextField(mFormContainer.findFieldById(R.id.lastNumbers));
                         }
@@ -58,13 +56,13 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
                         return true;
                     }
                 });
-        mFormContainer.findFieldById(R.id.expiryDate, NumberField.class).setMinLength(4).setJsonPath(User.Api.CC_MONTH).mandatory()
+        mFormContainer.findFieldById(R.id.expiryDate, NumberField.class).setMinLength(5).setJsonPath(User.Api.CC_MONTH).mandatory()
                 .setOnValidateListener(new OnValidateListener() {
 
                     @Override
                     public void onTextChanged(CharSequence s, int start, int before, int count) {
                         super.onTextChanged(s, start, before, count);
-                        if (count + start == 4 && before < count) {
+                        if (count + start == 5 && before < count) {
                             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                             imm.hideSoftInputFromWindow(mFormContainer.getWindowToken(), 0);
                         }
@@ -79,6 +77,7 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
         mFormContainer.findFieldById(R.id.lastNumbers, NumberField.class).requestFocus();
         findViewById(R.id.validate).setOnClickListener(mOnClickValidateListener);
         mErrorMessage = (TextView) findViewById(R.id.error);
+        requestFocus();
     }
 
     @Override
@@ -108,7 +107,8 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
     }
 
     private void requestFocus() {
-        final EditTextField field = null;
+        final EditTextField field = (EditTextField) findViewById(R.id.lastNumbers);
+
         if (field != null) {
             field.requestFocus();
             (new Handler()).postDelayed(new Runnable() {
@@ -145,7 +145,7 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
                 JSONObject object = mFormContainer.toJson();
                 try {
                     String month = object.getString(User.Api.CC_MONTH);
-                    String year = month.substring(2);
+                    String year = month.substring(3);
                     object.put(User.Api.CC_MONTH, month.substring(0, 2));
                     object.put(User.Api.CC_YEAR, year);
                     ShopeliaRestClient.authenticate(RecoverPincodeActivity.this);
@@ -153,7 +153,6 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
 
                         @Override
                         public void onComplete(HttpResponse httpResponse) {
-                            Log.d(null, httpResponse.getStatus() + "  RESPONSE " + httpResponse.getBodyAsString());
                             if (httpResponse.getStatus() == 204) {
                                 Intent intent = new Intent(RecoverPincodeActivity.this, PincodeActivity.class);
                                 intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, true);

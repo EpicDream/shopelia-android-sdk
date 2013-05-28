@@ -106,7 +106,7 @@
     <string name="shopelia_recover_pin_type_last_numbers">Entrez les 4 derniers chiffres de votre carte de paiement</string>
     <string name="shopelia_recover_pin_last_numbers">XXXX</string>
     <string name="shopelia_recover_pin_type_expiry_date">Entrez les 4 chiffres de la date d\'expiration de votre carte de paiement</string>
-    <string name="shopelia_recover_pin_expiry_date">MMAA</string>
+    <string name="shopelia_recover_pin_expiry_date">MM/AA</string>
     <string name="shopelia_recover_pin_send">CRÉER NOUVEAU CODE PIN</string>
     <string name="shopelia_recover_pin_error">Les informations que vous avez renseigné sont invalides</string>
     <string name="shopelia_recover_pin_network_error">Une erreur réseau est survenue</string>
