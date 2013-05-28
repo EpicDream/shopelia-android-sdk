@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Dialogs -->
+    <string name="shopelia_dialog_title">Please wait</string>
+    
     <!-- ActionBar -->
     <string name="shopelia_action_bar_sign_in">Sign in</string>
     <string name="shopelia_action_bar_sign_up">Sign up</string>
     <string name="shopelia_action_bar_sign_out">Logout</string>
 
     <!-- Main form -->
+    <string name="shopelia_form_main_waiting">Shopelia is creating you account</string>
     <string name="shopelia_form_main_phone">Phone number</string>
     <string name="shopelia_form_main_email">Email</string>
     <string name="shopelia_form_main_password">Password</string>
@@ -42,6 +46,7 @@
 
     <!-- Sign In -->
     <string name="shopelia_sign_in_forgot_password"><![CDATA[<u>Forgotten your password?</u>]]></string>
+	<string name="shopelia_sign_in_waiting">Signing in...</string>
 
     <!-- Address creation form -->
     <string name="shopelia_form_address_name">Name</string>
@@ -71,19 +76,15 @@
     <!-- Product sheet -->
     <string name="shopelia_product_shipping_fees" formatted="false">Shipping fees %s</string>
 
-    <!-- Waiting process -->
-    <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
-    <string name="shopelia_waiting_with_shopelia_order_with_1_click">Initialisation&#8230;</string>
-    <string name="shopelia_waiting_shopelia_is_finalizing_your_order" formatted="false">Shopelia finalise votre commande sur %s</string>
-    <string name="shopelia_waiting_with_shopelia_order_sub_text"></string>
-
     <!-- Order confirmation -->
+    <string name="shopelia_confirmation_waiting" formatted="false">Shopelia is checking out your product on %s</string>
     <string name="shopelia_confirmation_confirm">Order now</string>
     <string name="shopelia_confirmation_title">Order summary</string>
     <string name="shopelia_confirmation_shipping_fees">Shipping fees</string>
     <string name="shopelia_confirmation_total_price">TOTAL</string>
 
     <!-- Pin code -->
+    <string name="shopelia_pincode_waiting">Shopelia is creating your pincode</string>
     <string name="shopelia_pincode_create">Create your pin code</string>
     <string name="shopelia_pincode_re_enter">Type your pin code again</string>
     <string name="shopelia_pincode_enter">Type your pin code</string>
@@ -103,6 +104,7 @@
     <string name="shopelia_recover_password_email_sent">Vous allez recevoir les instructions de réinitialisation du mot de passe dans quelques instants sur votre email</string>
 
     <!-- Recover pincode -->
+    <string name="shopelia_recover_pin_waiting">Shopelia is checking your informations</string>
     <string name="shopelia_recover_pin_title">Forgotten your pin?</string>
     <string name="shopelia_recover_pin_description">A long description explaining how to recover the pin</string>
     <string name="shopelia_recover_pin_type_last_numbers">Type the 4 last numbers of your payment card</string>
@@ -135,5 +137,6 @@
     <!-- Errors -->
     <string name="shopelia_error_network_error"></string>
     <string name="shopelia_error_server_broke_down"></string>
+    <string name="shopelia_error_user_already_exists" formatted="false"></string>
 
 </resources>

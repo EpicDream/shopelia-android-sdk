@@ -7,11 +7,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.app.ShopeliaFragment;
@@ -62,7 +65,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
          * User informations
          */
         mFormContainer.findFieldById(R.id.phone, PhoneField.class).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener);
-        mFormContainer.findFieldById(R.id.email, EmailField.class).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory();
+        mFormContainer.findFieldById(R.id.email, EmailField.class).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory().setOnValidateListener(mEmailOnValidateListener);
         
         /*
          * Shipment details
@@ -157,6 +160,43 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 
                     public void onError(Exception e) {
                         mCurrentNumber = "";
+                        e.printStackTrace();
+                    };
+
+                });
+            }
+        }
+
+    };
+
+    private OnValidateListener mEmailOnValidateListener = new OnValidateListener() {
+
+        @Override
+        public boolean onValidate(EditTextField editTextField, boolean shouldFireError) {
+            return true;
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            super.afterTextChanged(s);
+            final EmailField emailField = mFormContainer.findFieldById(R.id.email);
+            if (emailField.onValidation(false)) {
+                final String email = (String) emailField.getResult();
+                ShopeliaRestClient.get(Command.V1.Users.Exists(), null, new AsyncCallback() {
+
+                    @Override
+                    public void onComplete(HttpResponse httpResponse) {
+                        Log.d(null, "STATUS " + httpResponse.getStatus());
+                        if (httpResponse.getStatus() != 200 && getActivity() != null) {
+                            emailField.setError(true);
+                            emailField.getView().startAnimation(
+                                    AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup_interpolator));
+                            Toast.makeText(getActivity(), getString(R.string.shopelia_error_user_already_exists, email), Toast.LENGTH_LONG)
+                                    .show();
+                        }
+                    }
+
+                    public void onError(Exception e) {
                         e.printStackTrace();
                     };
 

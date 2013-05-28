@@ -18,17 +18,18 @@
         app:shopelia_icon="@drawable/shopelia_user"
         app:shopelia_text="@string/shopelia_form_main_personal_info" />
 
+    <com.shopelia.android.widget.form.EmailField
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shopelia_hint="@string/shopelia_form_main_email" >
+    </com.shopelia.android.widget.form.EmailField>
+
     <com.shopelia.android.widget.form.PhoneField
         android:id="@+id/phone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:shopelia_hint="@string/shopelia_form_main_phone" />
-
-    <com.shopelia.android.widget.form.EmailField
-        android:id="@+id/email"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:shopelia_hint="@string/shopelia_form_main_email" />
 
     <com.shopelia.android.widget.form.HeaderField
         android:id="@+id/header_address"

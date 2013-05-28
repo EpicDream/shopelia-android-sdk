@@ -42,6 +42,20 @@ public class ShopeliaFragment<Contract> extends Fragment {
 
     }
 
+    public void startWaiting(CharSequence message, boolean blockUi, boolean isCancelable) {
+        ShopeliaActivity activity = (ShopeliaActivity) mContract;
+        if (activity != null) {
+            activity.startWaiting(message, blockUi, isCancelable);
+        }
+    }
+
+    public void stopWaiting() {
+        ShopeliaActivity activity = (ShopeliaActivity) mContract;
+        if (activity != null) {
+            activity.stopWaiting();
+        }
+    }
+
     public Contract getContract() {
         return mContract;
     }

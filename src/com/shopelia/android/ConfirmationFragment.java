@@ -80,12 +80,20 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
         @Override
         public void onClick(View v) {
+            startWaiting(getString(R.string.shopelia_confirmation_waiting, mOrder.product.vendor.getName()), true, false);
             new OrderCommandHandler(getActivity(), new CallbackAdapter() {
 
                 public void onOrderConfirmation(boolean succeed) {
+                    stopWaiting();
                     Intent intent = new Intent(getActivity(), CloseCheckoutActivity.class);
                     intent.putExtra(ShopeliaActivity.EXTRA_ORDER, mOrder);
                     getActivity().startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
+                };
+
+                @Override
+                public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response,
+                        Exception e) {
+                    stopWaiting();
                 };
 
             }).order(mOrder);

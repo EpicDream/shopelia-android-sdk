@@ -1,5 +1,6 @@
 package com.shopelia.android;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -8,6 +9,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
+import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -95,8 +98,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     private SignInFragment mSignInFragment = new SignInFragment();
     private SignUpFragment mSignUpFragment = new SignUpFragment();
-
     private ScrollView mScrollView;
+
+    // Cache
+    private String mCachedPincode = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,17 +151,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 if (resultCode == RESULT_OK) {
                     final Order order = getOrder();
                     order.user.pincode = data.getStringExtra(PincodeActivity.EXTRA_PINCODE);
-                    new UserCommandHandler(this, new CommandHandler.CallbackAdapter() {
-
-                        @Override
-                        public void onAccountCreationSucceed(final User user, Address address) {
-                            super.onAccountCreationSucceed(user, address);
-                            UserManager.get(PrepareOrderActivity.this).login(user);
-                            order.user = user;
-                            checkoutOrder(order);
-                        }
-
-                    }).createAccount(order.user, order.address, order.card);
+                    mCachedPincode = order.user.pincode;
+                    createAccount();
                 }
                 break;
             case REQUEST_AUTH_PINCODE:
@@ -184,9 +180,43 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     @Override
     public void onSignUp(JSONObject result) {
         setOrder(Order.inflate(result));
-        Intent intent = new Intent(this, PincodeActivity.class);
-        intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, true);
-        startActivityForResult(intent, REQUEST_CREATE_PINCODE);
+        if (TextUtils.isEmpty(mCachedPincode)) {
+            Intent intent = new Intent(this, PincodeActivity.class);
+            intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, true);
+            startActivityForResult(intent, REQUEST_CREATE_PINCODE);
+        } else {
+            getOrder().user.pincode = mCachedPincode;
+            createAccount();
+        }
+    }
+
+    private void createAccount() {
+        final Order order = getOrder();
+        startWaiting(getString(R.string.shopelia_form_main_waiting), true, true);
+        new UserCommandHandler(this, new CommandHandler.CallbackAdapter() {
+
+            @Override
+            public void onAccountCreationSucceed(final User user, Address address) {
+                super.onAccountCreationSucceed(user, address);
+                stopWaiting();
+                UserManager.get(PrepareOrderActivity.this).login(user);
+                order.user = user;
+                checkoutOrder(order);
+            }
+
+            @Override
+            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+                super.onError(step, httpResponse, response, e);
+                stopWaiting();
+                try {
+                    Log.d(null, "RESPONSE " + response.toString(2));
+                } catch (JSONException e1) {
+                    // TODO Auto-generated catch block
+                    e1.printStackTrace();
+                }
+            }
+
+        }).createAccount(order.user, order.address, order.card);
     }
 
     private void sendPaymentInformations(PaymentCard card, final Order order) {
@@ -259,11 +289,13 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     @Override
     public void onSignIn(JSONObject result) {
         User user = User.inflate(result.optJSONObject(User.Api.USER));
+        startWaiting(getString(R.string.shopelia_sign_in_waiting), true, true);
         new UserCommandHandler(this, new CallbackAdapter() {
 
             @Override
             public void onSignIn(User user) {
                 super.onSignIn(user);
+                stopWaiting();
                 Order order = getOrder();
                 order.user = user;
                 checkoutOrder(order);
@@ -272,6 +304,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             @Override
             public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
                 super.onError(step, httpResponse, response, e);
+                stopWaiting();
                 if (e != null) {
                     if (Config.INFO_LOGS_ENABLED) {
                         e.printStackTrace();

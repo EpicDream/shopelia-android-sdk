@@ -62,6 +62,10 @@ public final class Command {
                 return $ + "/reset";
             }
 
+            public static String Exists() {
+                return $ + "/exists";
+            }
+
         }
     }
 

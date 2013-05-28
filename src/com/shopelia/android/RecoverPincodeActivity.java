@@ -76,7 +76,7 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
                     }
                 });
         mFormContainer.onCreate(saveState);
-
+        mFormContainer.findFieldById(R.id.lastNumbers, NumberField.class).requestFocus();
         findViewById(R.id.validate).setOnClickListener(mOnClickValidateListener);
         mErrorMessage = (TextView) findViewById(R.id.error);
     }

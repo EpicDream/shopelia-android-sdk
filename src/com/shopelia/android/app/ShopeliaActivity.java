@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
@@ -49,6 +50,8 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     @SuppressWarnings("rawtypes")
     private List<WeakReference<ShopeliaFragment>> mAttachedFragment = new ArrayList<WeakReference<ShopeliaFragment>>();
 
+    private ProgressDialog mProgressDialog;
+
     @Override
     protected void onCreate(Bundle saveState) {
         mActionBar = new ActionBar(this);
@@ -77,11 +80,26 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         if (value) {
             setHostMode(getMode() | MODE_BLOCKED | MODE_WAITING);
         } else {
-            setHostContentView(getMode() & ~(MODE_BLOCKED | MODE_WAITING));
+            setHostMode(getMode() & ~(MODE_BLOCKED | MODE_WAITING));
         }
     }
 
-    public void setQuietWaintingMode(boolean value) {
+    public void startWaiting(CharSequence message, boolean blockUi, boolean isCancelable) {
+        setWaitingMode(true);
+        if (blockUi) {
+            mProgressDialog = ProgressDialog.show(this, getString(R.string.shopelia_dialog_title), message);
+        }
+    }
+
+    public void stopWaiting() {
+        setWaitingMode(false);
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+            mProgressDialog = null;
+        }
+    }
+
+    public void setQuietWaitingMode(boolean value) {
         if (value) {
             setHostMode(getMode() | MODE_WAITING);
         } else {
