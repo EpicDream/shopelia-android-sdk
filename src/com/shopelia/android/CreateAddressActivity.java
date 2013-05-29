@@ -39,7 +39,7 @@ import com.shopelia.android.widget.FormEditText;
 
 public class CreateAddressActivity extends ShopeliaActivity {
 
-    public static final String ACTIVITY_NAME = "AddressCreation";
+    public static final String ACTIVITY_NAME = "Add Address";
 
     /*
      * Form informations extras/saves

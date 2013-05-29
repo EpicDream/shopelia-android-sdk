@@ -7,7 +7,7 @@ import com.shopelia.android.app.ShopeliaActivity;
 
 public class CloseCheckoutActivity extends ShopeliaActivity {
 
-    public static final String ACTIVITY_NAME = "CloseCheckout";
+    public static final String ACTIVITY_NAME = "Thank you";
 
     @Override
     protected void onCreate(Bundle saveState) {

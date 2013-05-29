@@ -23,7 +23,10 @@ import com.turbomanage.httpclient.HttpResponse;
 
 public class PincodeActivity extends ShopeliaActivity implements PincodeHandler {
 
-    public static final String ACTIVITY_NAME = "Pincode";
+    public static final String PREFIX_CREATE = "Create";
+    public static final String PREFIX_EDIT = "Edit";
+    public static final String PREFIX_VERIFY = "Verify";
+    public static final String ACTIVITY_NAME = " Pincode";
 
     /**
      * An optional boolean value. If this field is not set and
@@ -189,7 +192,13 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
 
     @Override
     public String getActivityName() {
-        return ACTIVITY_NAME;
+        String prefix = PREFIX_VERIFY;
+        if (getIntent().getBooleanExtra(EXTRA_UPDATE_PINCODE, false)) {
+            prefix = PREFIX_EDIT;
+        } else if (getIntent().getBooleanExtra(EXTRA_CREATE_PINCODE, false)) {
+            prefix = PREFIX_CREATE;
+        }
+        return prefix + ACTIVITY_NAME;
     }
 
     @Override

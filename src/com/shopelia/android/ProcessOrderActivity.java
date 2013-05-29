@@ -8,7 +8,7 @@ import com.shopelia.android.app.ShopeliaActivity;
 
 public class ProcessOrderActivity extends ShopeliaActivity {
 
-    public static final String ACTIVITY_NAME = "ProcessOrder";
+    public static final String ACTIVITY_NAME = "Order Summary";
 
     public static final int REQUEST_AUTHENTICATE = 0x16;
 

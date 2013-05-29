@@ -33,7 +33,7 @@ import com.shopelia.android.widget.FormEditText;
 
 public class AddPaymentCardActivity extends ShopeliaActivity {
 
-    public static final String ACTIVITY_NAME = "PaymentCardCreation";
+    public static final String ACTIVITY_NAME = "Add Payment Card";
 
     public static final String EXTRA_PAYMENT_CARD = Config.EXTRA_PREFIX + "PAYMENT_CARD";
 

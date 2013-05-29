@@ -45,6 +45,14 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
     private FormLinearLayout mFormContainer;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            // track(Analytics.Events.Steps.SIGNING_IN, )
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.shopelia_signin_fragment, container, false);
     }

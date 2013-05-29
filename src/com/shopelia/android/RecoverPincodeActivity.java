@@ -28,7 +28,7 @@ import com.turbomanage.httpclient.HttpResponse;
 
 public class RecoverPincodeActivity extends ShopeliaActivity {
 
-    public static final String ACTIVITY_NAME = "RecoverPincode";
+    public static final String ACTIVITY_NAME = "Recover Pincode";
 
     private static final int REQUEST_CREATE_PINCODE = 0x906;
 
