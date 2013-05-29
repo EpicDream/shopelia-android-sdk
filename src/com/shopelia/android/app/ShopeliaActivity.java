@@ -67,13 +67,9 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
         if (isTracked()) {
             mTrackingObject.init(this);
-            JSONObject properties = new JSONObject();
-            try {
-                properties.put(Analytics.Properties.SCREEN_NAME, getActivityName());
-            } catch (JSONException e) {
-
+            if (saveState == null) {
+                fireScreenSeenEvent(getActivityName());
             }
-            track(Analytics.Events.Activities.SCREEN_SEEN, properties);
         }
 
         setContentView(R.layout.shopelia_host_activity);
@@ -93,6 +89,19 @@ public abstract class ShopeliaActivity extends FragmentActivity {
             mCurrentActivity.startRecording();
         }
 
+    }
+
+    public void fireScreenSeenEvent(String screenName) {
+        if (screenName == null) {
+            return;
+        }
+        JSONObject properties = new JSONObject();
+        try {
+            properties.put(Analytics.Properties.SCREEN_NAME, screenName);
+        } catch (JSONException e) {
+
+        }
+        track(Analytics.Events.Activities.SCREEN_SEEN, properties);
     }
 
     @Override

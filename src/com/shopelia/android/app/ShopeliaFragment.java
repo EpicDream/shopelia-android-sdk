@@ -19,6 +19,10 @@ public class ShopeliaFragment<Contract> extends Fragment {
 
     private Contract mContract;
 
+    public interface SafeContextOperation {
+        public void run(ShopeliaActivity activity);
+    }
+
     @SuppressWarnings("unchecked")
     @Override
     public void onAttach(Activity activity) {
@@ -56,6 +60,16 @@ public class ShopeliaFragment<Contract> extends Fragment {
         if (activity != null) {
             activity.track(eventName);
         }
+    }
+
+    public void fireScreenSeenEvent(final String screenName) {
+        runSafely(new SafeContextOperation() {
+
+            @Override
+            public void run(ShopeliaActivity activity) {
+                activity.fireScreenSeenEvent(screenName);
+            }
+        });
     }
 
     public void startWaiting(CharSequence message, boolean blockUi, boolean isCancelable) {
@@ -96,6 +110,13 @@ public class ShopeliaFragment<Contract> extends Fragment {
         }
         View view = getView().findViewById(id);
         return (T) view;
+    }
+
+    public void runSafely(SafeContextOperation operation) {
+        ShopeliaActivity activity = (ShopeliaActivity) mContract;
+        if (activity != null) {
+            operation.run(activity);
+        }
     }
 
 }

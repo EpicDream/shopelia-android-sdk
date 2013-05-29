@@ -46,6 +46,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         public ValidationButton getValidationButton();
     }
 
+    public static final String FRAGMENT_NAME = "SignUp";
+
     private FormLinearLayout mFormContainer;
 
     @Override
@@ -56,6 +58,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         if (savedInstanceState != null) {
             mFormContainer.onCreate(savedInstanceState);
             ;
+        } else {
+            fireScreenSeenEvent(FRAGMENT_NAME);
         }
     }
 

@@ -15,7 +15,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
-import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
@@ -38,6 +37,7 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
         public ValidationButton getValidationButton();
     }
 
+    public static final String FRAGMENT_NAME = "SignIn";
     public static final String ARGS_EMAIL = "args:email";
 
     private static final int REQUEST_EMAIL = 0x1010;
@@ -70,7 +70,9 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
 
         getContract().getValidationButton().setOnClickListener(mOnClickListener);
 
-        track(Analytics.Events.Steps.SIGNING_IN);
+        if (savedInstanceState == null) {
+            fireScreenSeenEvent(FRAGMENT_NAME);
+        }
     }
 
     @Override
