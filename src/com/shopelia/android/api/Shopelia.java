@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Parcelable;
 
 import com.shopelia.android.PrepareOrderActivity;
+import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.app.ShopeliaTracking;
 import com.shopelia.android.model.Vendor;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
@@ -98,9 +100,12 @@ public final class Shopelia {
         checkout(context, null, mData);
     }
 
-    public static Shopelia obtain(String productUrl) {
+    public static Shopelia obtain(Context context, String productUrl) {
         if (productUrl.contains("amazon.fr") || productUrl.contains("amazon.com")) {
             // FIXME Just for V1 tests and alpha
+            ShopeliaTracking tracking = new ShopeliaTracking(context);
+            tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
+            tracking.flush();
             return new Shopelia(productUrl, Vendor.AMAZON);
         }
         return null;
