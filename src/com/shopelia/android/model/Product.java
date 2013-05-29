@@ -1,5 +1,8 @@
 package com.shopelia.android.model;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -8,8 +11,14 @@ import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.ParcelUtils;
 import com.shopelia.android.utils.Tax;
 
-public class Product implements Parcelable {
+public class Product implements JsonData, Parcelable {
 
+    public interface Api {
+        String NAME = "name";
+        String URL = "url";
+        String IMAGE_URL = "image_url";
+    }
+    
     public String url;
     public String name;
     public String description;
@@ -44,6 +53,15 @@ public class Product implements Parcelable {
     }
 
     @Override
+    public JSONObject toJson() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put(Api.NAME, name);
+        json.put(Api.URL, url);
+        json.put(Api.IMAGE_URL, image.toString());
+        return json;
+    }
+    
+    @Override
     public int describeContents() {
         return 0;
     }
@@ -74,5 +92,13 @@ public class Product implements Parcelable {
             return new Product(source);
         }
     };
+    
+    public static Product inflate(JSONObject object) {
+        Product product = new Product();
+        product.name = object.optString(Api.NAME);
+        product.url = object.optString(Api.URL);
+        product.image = Uri.parse(object.optString(Api.IMAGE_URL));
+        return product;
+    }
 
 }

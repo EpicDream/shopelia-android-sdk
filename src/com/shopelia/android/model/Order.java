@@ -15,12 +15,10 @@ public class Order implements Parcelable {
         String USER = "user";
         String ADDRESS = "address";
         String PAYMENT_CARD = "payment_card";
-        String PRODUCT_URL = "url";
-        String PRODUCT_URLS = "urls";
+        String PRODUCT = "product";
+        String PRODUCTS = "products";
         String EXPECTED_PRICE_TOTAL = "expected_price_total";
-
         String ORDER = "order";
-
     }
 
     public static final String NO_ID = null;
@@ -80,7 +78,11 @@ public class Order implements Parcelable {
     public static Order inflate(JSONObject object) {
         Order order = new Order();
         order.uuid = object.optString(Api.UUID, NO_ID);
-        order.product.url = object.optString(Api.PRODUCT_URL);
+        try {
+            order.product = Product.inflate(object.getJSONObject(Api.PRODUCT));
+        } catch (JSONException e) {
+            // Nothing to be done
+        }   
         if (object.has(Api.ADDRESS)) {
             try {
                 order.address = Address.inflate(object.getJSONObject(Api.ADDRESS));

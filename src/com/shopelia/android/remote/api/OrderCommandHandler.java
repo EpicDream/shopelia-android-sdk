@@ -24,9 +24,9 @@ public class OrderCommandHandler extends CommandHandler {
         setCurrentStep(STEP_ORDER);
         try {
             JSONObject orderObject = new JSONObject();
-            JSONArray urls = new JSONArray();
-            urls.put(order.product.url);
-            orderObject.put(Order.Api.PRODUCT_URLS, urls);
+            JSONArray products = new JSONArray();
+            products.put(order.product.toJson());
+            orderObject.put(Order.Api.PRODUCTS, products);
             orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL, order.product.deliveryPrice + order.product.productPrice);
             orderObject.put(PaymentCard.Api.PAYMENT_CARD_ID, order.card.id);
             orderObject.put(Address.Api.ADDRESS_ID, order.address.id);
