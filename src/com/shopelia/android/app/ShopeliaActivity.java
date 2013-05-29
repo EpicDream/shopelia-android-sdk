@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
+import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.api.ShopeliaActivityPath;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
@@ -56,7 +58,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     private ProgressDialog mProgressDialog;
 
-    private ShopeliaTracking mTrackingObject;
+    private ShopeliaTracking mTrackingObject = new ShopeliaTracking();
 
     @Override
     protected void onCreate(Bundle saveState) {
@@ -64,7 +66,14 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         super.onCreate(saveState);
 
         if (isTracked()) {
-            mTrackingObject = new ShopeliaTracking(this);
+            mTrackingObject.init(this);
+            JSONObject properties = new JSONObject();
+            try {
+                properties.put(Analytics.Properties.SCREEN_NAME, getActivityName());
+            } catch (JSONException e) {
+
+            }
+            track(Analytics.Events.Activities.SCREEN_SEEN, properties);
         }
 
         setContentView(R.layout.shopelia_host_activity);
