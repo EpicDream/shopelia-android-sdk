@@ -17,12 +17,26 @@ import com.shopelia.android.adapter.FormAdapter.Field;
 
 public abstract class FormField extends FrameLayout {
 
+    public interface Listener {
+        public void onValidChanged(FormField field);
+    }
+
+    public static class ListenerAdapter implements Listener {
+
+        @Override
+        public void onValidChanged(FormField field) {
+
+        }
+
+    }
+
     private static LayoutInflater sLayoutInflater;
 
     private boolean mIsValid = false;
 
     private View mBoundedView;
     private FormContainer mFormContainer;
+    private Listener mListener = new ListenerAdapter();
 
     public FormField(Context context) {
         this(context, null);
@@ -30,6 +44,11 @@ public abstract class FormField extends FrameLayout {
 
     public FormField(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
+    }
+
+    public FormField setListener(Listener l) {
+        mListener = l == null ? new ListenerAdapter() : l;
+        return this;
     }
 
     public FormField(Context context, AttributeSet attrs, int defStyle) {
@@ -143,6 +162,7 @@ public abstract class FormField extends FrameLayout {
             if (getFormContainer() != null) {
                 getFormContainer().updateSections();
             }
+            mListener.onValidChanged(this);
         }
     }
 

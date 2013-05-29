@@ -25,6 +25,7 @@ import android.widget.Toast;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
+import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.config.Config;
@@ -158,6 +159,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                     order.user.pincode = data.getStringExtra(PincodeActivity.EXTRA_PINCODE);
                     mCachedPincode = order.user.pincode;
                     createAccount();
+                    track(Analytics.Events.Steps.SignUp.PINCODE);
+                } else {
+                    track(Analytics.Events.Steps.SignUp.PINCODE_CANCELED);
                 }
                 break;
             case REQUEST_AUTH_PINCODE:
@@ -203,6 +207,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             @Override
             public void onAccountCreationSucceed(final User user, Address address) {
                 super.onAccountCreationSucceed(user, address);
+                track(Analytics.Events.Steps.SignUp.END);
                 stopWaiting();
                 UserManager.get(PrepareOrderActivity.this).login(user);
                 order.user = user;

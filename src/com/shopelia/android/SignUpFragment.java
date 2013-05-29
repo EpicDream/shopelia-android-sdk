@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,6 +16,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
+import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
@@ -29,6 +31,8 @@ import com.shopelia.android.widget.form.AddressField;
 import com.shopelia.android.widget.form.EditTextField;
 import com.shopelia.android.widget.form.EditTextField.OnValidateListener;
 import com.shopelia.android.widget.form.EmailField;
+import com.shopelia.android.widget.form.FormField;
+import com.shopelia.android.widget.form.FormField.ListenerAdapter;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.HeaderField;
 import com.shopelia.android.widget.form.PaymentCardField;
@@ -48,6 +52,16 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 
     public static final String FRAGMENT_NAME = "SignUp";
 
+    private static final SparseArray<String> EVENTS;
+
+    static {
+        EVENTS = new SparseArray<String>();
+        EVENTS.put(R.id.email, Analytics.Events.Steps.SignUp.EMAIL);
+        EVENTS.put(R.id.phone, Analytics.Events.Steps.SignUp.PHONE_NUMBER);
+        EVENTS.put(R.id.address, Analytics.Events.Steps.SignUp.ADDRESS);
+        EVENTS.put(R.id.payment_card, Analytics.Events.Steps.SignUp.PAYMENT_CARD);
+    }
+
     private FormLinearLayout mFormContainer;
 
     @Override
@@ -57,9 +71,9 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 
         if (savedInstanceState != null) {
             mFormContainer.onCreate(savedInstanceState);
-            ;
         } else {
             fireScreenSeenEvent(FRAGMENT_NAME);
+            track(Analytics.Events.Steps.SignUp.BEGIN);
         }
     }
 
@@ -77,19 +91,19 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         /*
          * User informations
          */
-        mFormContainer.findFieldById(R.id.phone, PhoneField.class).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener);
-        mFormContainer.findFieldById(R.id.email, EmailField.class).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory().setOnValidateListener(mEmailOnValidateListener);
+        mFormContainer.findFieldById(R.id.phone, PhoneField.class).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener).setListener(mTrackingListener);
+        mFormContainer.findFieldById(R.id.email, EmailField.class).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory().setOnValidateListener(mEmailOnValidateListener).setListener(mTrackingListener);
         
         /*
          * Shipment details
          */
-        mFormContainer.findFieldById(R.id.address, AddressField.class).setJsonPath(Order.Api.ADDRESS);
+        mFormContainer.findFieldById(R.id.address, AddressField.class).setJsonPath(Order.Api.ADDRESS).setListener(mTrackingListener);
         
         /*
          * Payment methods
          */
         mFormContainer.findFieldById(R.id.header_payment_method, HeaderField.class).addPictures(R.drawable.shopelia_logos_visa, R.drawable.shopelia_logos_mc, R.drawable.shopelia_logos_norton);
-        mFormContainer.findFieldById(R.id.payment_card, PaymentCardField.class).setJsonPath(Order.Api.PAYMENT_CARD);
+        mFormContainer.findFieldById(R.id.payment_card, PaymentCardField.class).setJsonPath(Order.Api.PAYMENT_CARD).setListener(mTrackingListener);
         
         mFormContainer.onCreate(savedInstanceState);
         //@formatter:on
@@ -221,6 +235,18 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                 });
             }
         }
+
+    };
+
+    private FormField.ListenerAdapter mTrackingListener = new ListenerAdapter() {
+
+        @Override
+        public void onValidChanged(FormField field) {
+            String event = EVENTS.get(field.getId());
+            if (event != null && field.isValid() && field.getResult() != null) {
+                track(event);
+            }
+        };
 
     };
 

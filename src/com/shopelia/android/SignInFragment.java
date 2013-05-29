@@ -15,6 +15,8 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
+import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
@@ -48,7 +50,8 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
-            // track(Analytics.Events.Steps.SIGNING_IN, )
+            track(Analytics.Events.Steps.SIGNING_IN,
+                    AnalyticsBuilder.prepareStepPackage(getActivity(), Analytics.Properties.Steps.SigningUp.BEGIN).build());
         }
     }
 
