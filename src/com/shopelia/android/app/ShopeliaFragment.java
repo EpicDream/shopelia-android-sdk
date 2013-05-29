@@ -51,6 +51,13 @@ public class ShopeliaFragment<Contract> extends Fragment {
         }
     }
 
+    public void track(String eventName) {
+        ShopeliaActivity activity = (ShopeliaActivity) getContract();
+        if (activity != null) {
+            activity.track(eventName);
+        }
+    }
+
     public void startWaiting(CharSequence message, boolean blockUi, boolean isCancelable) {
         ShopeliaActivity activity = (ShopeliaActivity) mContract;
         if (activity != null) {

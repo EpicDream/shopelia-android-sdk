@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.shopelia.android.R;
 import com.shopelia.android.api.ShopeliaActivityPath;
 import com.shopelia.android.config.Config;
@@ -44,7 +43,8 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     public static final int MODE_WAITING = 1 << 0;
     public static final int MODE_BLOCKED = 1 << 1;
 
-    private static final String MIXPANEL_API_TOKEN = "95c15bf80bf7bf93cb1c673865c75a22";
+    // static final String MIXPANEL_API_TOKEN =
+    // "95c15bf80bf7bf93cb1c673865c75a22";
 
     private Order mOrder;
     private ShopeliaActivityPath mCurrentActivity;
@@ -56,7 +56,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     private ProgressDialog mProgressDialog;
 
-    private MixpanelAPI mMixpanelInstance;
+    private ShopeliaTracking mTrackingObject;
 
     @Override
     protected void onCreate(Bundle saveState) {
@@ -64,7 +64,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         super.onCreate(saveState);
 
         if (isTracked()) {
-            mMixpanelInstance = MixpanelAPI.getInstance(this, MIXPANEL_API_TOKEN);
+            mTrackingObject = new ShopeliaTracking(this);
         }
 
         setContentView(R.layout.shopelia_host_activity);
@@ -89,15 +89,15 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (isTracked()) {
-            mMixpanelInstance.flush();
-        }
+        mTrackingObject.flush();
     }
 
     public void track(String eventName, JSONObject properties) {
-        if (isTracked()) {
-            mMixpanelInstance.track(eventName, properties);
-        }
+        mTrackingObject.track(eventName, properties);
+    }
+
+    public void track(String eventName) {
+        mTrackingObject.track(eventName);
     }
 
     /**
@@ -185,10 +185,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
      */
     public int getMode() {
         return mMode;
-    }
-
-    public MixpanelAPI getTrackingApi() {
-        return mMixpanelInstance;
     }
 
     @SuppressWarnings("rawtypes")
