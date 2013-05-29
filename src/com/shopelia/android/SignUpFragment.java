@@ -77,7 +77,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         /*
          * User informations
          */
-        mFormContainer.findFieldById(R.id.phone, PhoneField.class).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener);
+        mFormContainer.findFieldById(R.id.phone, PhoneField.class).setJsonPath(Order.Api.ADDRESS, Address.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener);
         mFormContainer.findFieldById(R.id.email, EmailField.class).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory().setOnValidateListener(mEmailOnValidateListener);
         
         /*
@@ -153,7 +153,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         @Override
         public void afterTextChanged(Editable s) {
             super.afterTextChanged(s);
-            String number = s.toString().replace(" ", "");
+            final String number = s.toString().replace(" ", "");
             if (PhoneField.PHONE_PATTERN.matcher(number).matches() && !number.equals(mCurrentNumber)) {
                 mCurrentNumber = number;
                 ShopeliaRestClient.get(Command.V1.Phones.Lookup(mCurrentNumber), null, new AsyncCallback() {
@@ -164,7 +164,9 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                             JSONObject address = new JSONObject(httpResponse.getBodyAsString());
                             AddressField field = (AddressField) mFormContainer.findFieldById(R.id.address);
                             if (field != null) {
-                                field.setAddress(Address.inflate(address));
+                                Address addressWithPhone = Address.inflate(address);
+                                addressWithPhone.phone = number;
+                                field.setAddress(addressWithPhone);
                             }
                         } catch (JSONException e) {
                             onError(e);

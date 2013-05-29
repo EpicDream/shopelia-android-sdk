@@ -23,10 +23,10 @@ public final class Command {
         }
 
         public static final class Phones {
-            public static final String $ = V1.$ + "/phones";
+            public static final String $ = V1.$ + "/phone_lookup";
 
             public static String Lookup(String number) {
-                return Phones.$ + "/" + number + "/lookup";
+                return Phones.$ + "/" + number;
             }
         }
 

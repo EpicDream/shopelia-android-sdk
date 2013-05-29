@@ -11,8 +11,6 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
-import com.shopelia.android.utils.JsonUtils;
-
 public final class Address implements JsonData, Parcelable {
 
     public interface Api {
@@ -23,8 +21,7 @@ public final class Address implements JsonData, Parcelable {
         String ADDRESS1 = "address1";
         String ZIP = "zip";
         String CITY = "city";
-        String PHONES_ATTRIBUTES = "phones_attributes";
-        String PHONES = "phones";
+        String PHONE = "phone";
         String COUNTRY = "country";
         String EXTRAS = "address2";
 
@@ -48,7 +45,7 @@ public final class Address implements JsonData, Parcelable {
     public String zipcode;
     public String city;
     public String country;
-    public ArrayList<Phone> phones = new ArrayList<Phone>();
+    public String phone;
 
     public String reference;
 
@@ -70,8 +67,8 @@ public final class Address implements JsonData, Parcelable {
         reference = source.readString();
         name = source.readString();
         firstname = source.readString();
+        phone = source.readString();
         extras = source.readString();
-        source.readTypedList(phones, Phone.CREATOR);
     }
 
     @Override
@@ -93,7 +90,7 @@ public final class Address implements JsonData, Parcelable {
         if (!TextUtils.isEmpty(extras)) {
             json.put(Api.EXTRAS, extras);
         }
-        json.put(Api.PHONES, JsonUtils.toJson(phones));
+        json.put(Api.PHONE, phone);
         return json;
     }
 
@@ -112,8 +109,8 @@ public final class Address implements JsonData, Parcelable {
         dest.writeString(reference);
         dest.writeString(name);
         dest.writeString(firstname);
+        dest.writeString(phone);
         dest.writeString(extras);
-        dest.writeTypedList(phones);
     }
 
     public static Address inflate(JSONObject object) throws JSONException {
@@ -125,12 +122,10 @@ public final class Address implements JsonData, Parcelable {
         address.city = object.optString(Api.CITY);
         address.country = object.optString(Api.COUNTRY);
         address.zipcode = object.optString(Api.ZIP);
+        address.phone = object.optString(Api.PHONE);
         address.reference = object.optString(Api.REFERENCE, null);
         if (TextUtils.isEmpty(address.country)) {
             address.country = Locale.getDefault().getCountry();
-        }
-        if (object.has(Api.PHONES)) {
-            address.phones = Phone.inflate(object.getJSONArray(Api.PHONES));
         }
         return address;
     }
