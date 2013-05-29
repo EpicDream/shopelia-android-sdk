@@ -36,17 +36,9 @@ public class User implements JsonData, Parcelable {
 
         String PINCODE = "pincode";
 
-        String PHONES = "phones";
-        String PHONE = "phone";
-
         String CC_NUMBER = "cc_num";
         String CC_MONTH = "cc_month";
         String CC_YEAR = "cc_year";
-
-        public interface Phone {
-            String NUMBER = "number";
-            String LINE_TYPE = "line_type";
-        }
     }
 
     public static final long NO_ID = -1;
@@ -55,7 +47,6 @@ public class User implements JsonData, Parcelable {
     public String email;
     public String firstName;
     public String lastName;
-    public String phone;
     public String password;
     public String pincode;
 
@@ -80,7 +71,6 @@ public class User implements JsonData, Parcelable {
         email = source.readString();
         firstName = source.readString();
         lastName = source.readString();
-        phone = source.readString();
         pincode = source.readString();
         password = source.readString();
         ParcelUtils.readParcelableList(source, addresses, Address.class.getClassLoader());
@@ -93,7 +83,6 @@ public class User implements JsonData, Parcelable {
         dest.writeString(email);
         dest.writeString(firstName);
         dest.writeString(lastName);
-        dest.writeString(phone);
         dest.writeString(pincode);
         dest.writeString(password);
         ParcelUtils.writeParcelableList(dest, addresses, flags);
@@ -118,7 +107,6 @@ public class User implements JsonData, Parcelable {
         user.email = json.optString(Api.EMAIL);
         user.firstName = json.optString(Api.FIRST_NAME);
         user.lastName = json.optString(Api.LAST_NAME);
-        user.phone = json.optString(Api.PHONE);
         user.password = json.optString(Api.PASSWORD);
         if (json.has(Api.ADDRESSES)) {
             try {
@@ -158,22 +146,12 @@ public class User implements JsonData, Parcelable {
         JSONArray addresses = new JSONArray();
         JSONObject addressObject = address.toJson();
 
-        addressObject.remove(Address.Api.FIRSTNAME);
-        addressObject.remove(Address.Api.NAME);
         addressObject.remove(Address.Api.COUNTRY);
         // TODO Handle multiple ISO
         addressObject.put(Address.Api.COUNTRY_ISO, "FR");
 
-        out.put(User.Api.ADDRESSES_ATTRIBUTES, addresses);
-        JSONArray phones = new JSONArray();
-        JSONObject phoneObject = new JSONObject();
-        phoneObject.put(Api.Phone.LINE_TYPE, 0);
-        phoneObject.put(Api.Phone.NUMBER, user.phone);
-        phones.put(phoneObject);
-
-        addressObject.put(Address.Api.PHONES_ATTRIBUTES, phones);
-
         addresses.put(addressObject);
+        out.put(User.Api.ADDRESSES_ATTRIBUTES, addresses);
 
         JSONArray cards = new JSONArray();
         JSONObject cardObject = card.toJson();

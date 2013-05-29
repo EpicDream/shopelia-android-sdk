@@ -154,7 +154,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     private void setupUserUi() {
         findViewById(R.id.user_email, TextView.class).setText(mOrder.user.email);
-        String number = mOrder.address.phones.get(0).number;
+        String number = mOrder.address.phone;
         try {
             PhoneNumberUtil util = PhoneNumberUtil.getInstance();
             PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());

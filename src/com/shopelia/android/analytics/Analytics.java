@@ -59,6 +59,7 @@ public interface Analytics {
                 String ADDRESS = "Address OK";
                 String PAYMENT_CARD = "Payment Card OK";
                 String PINCODE = "Pincode OK";
+                String PINCODE_CANCEL = "Pincode Canceled";
             }
 
         }

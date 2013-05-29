@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
@@ -56,10 +57,10 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 
     static {
         EVENTS = new SparseArray<String>();
-        EVENTS.put(R.id.email, Analytics.Events.Steps.SignUp.EMAIL);
-        EVENTS.put(R.id.phone, Analytics.Events.Steps.SignUp.PHONE_NUMBER);
-        EVENTS.put(R.id.address, Analytics.Events.Steps.SignUp.ADDRESS);
-        EVENTS.put(R.id.payment_card, Analytics.Events.Steps.SignUp.PAYMENT_CARD);
+        EVENTS.put(R.id.email, Analytics.Properties.Steps.SigningUp.EMAIL);
+        EVENTS.put(R.id.phone, Analytics.Properties.Steps.SigningUp.PHONE);
+        EVENTS.put(R.id.address, Analytics.Properties.Steps.SigningUp.ADDRESS);
+        EVENTS.put(R.id.payment_card, Analytics.Properties.Steps.SigningUp.PAYMENT_CARD);
     }
 
     private FormLinearLayout mFormContainer;
@@ -91,7 +92,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         /*
          * User informations
          */
-        mFormContainer.findFieldById(R.id.phone, PhoneField.class).setJsonPath(Order.Api.USER, User.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener).setListener(mTrackingListener);
+        mFormContainer.findFieldById(R.id.phone, PhoneField.class).setJsonPath(Order.Api.ADDRESS, Address.Api.PHONE).mandatory().setOnValidateListener(mPhoneOnValidateListener).setListener(mTrackingListener);
         mFormContainer.findFieldById(R.id.email, EmailField.class).setJsonPath(Order.Api.USER, User.Api.EMAIL).mandatory().setOnValidateListener(mEmailOnValidateListener).setListener(mTrackingListener);
         
         /*
@@ -167,7 +168,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         @Override
         public void afterTextChanged(Editable s) {
             super.afterTextChanged(s);
-            String number = s.toString().replace(" ", "");
+            final String number = s.toString().replace(" ", "");
             if (PhoneField.PHONE_PATTERN.matcher(number).matches() && !number.equals(mCurrentNumber)) {
                 mCurrentNumber = number;
                 ShopeliaRestClient.get(Command.V1.Phones.Lookup(mCurrentNumber), null, new AsyncCallback() {
@@ -178,7 +179,9 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                             JSONObject address = new JSONObject(httpResponse.getBodyAsString());
                             AddressField field = (AddressField) mFormContainer.findFieldById(R.id.address);
                             if (field != null) {
-                                field.setAddress(Address.inflate(address));
+                                Address addressWithPhone = Address.inflate(address);
+                                addressWithPhone.phone = number;
+                                field.setAddress(addressWithPhone);
                             }
                         } catch (JSONException e) {
                             onError(e);
@@ -244,7 +247,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         public void onValidChanged(FormField field) {
             String event = EVENTS.get(field.getId());
             if (event != null && field.isValid() && field.getResult() != null) {
-                track(event);
+                track(Analytics.Events.Steps.SignUp.SIGNING_UP, AnalyticsBuilder.prepareStepPackage(getActivity(), event));
             }
         };
 
