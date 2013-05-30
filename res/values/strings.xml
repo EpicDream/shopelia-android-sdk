@@ -3,7 +3,7 @@
 
     <!-- Dialogs -->
     <string name="shopelia_dialog_title">Please wait</string>
-    
+
     <!-- ActionBar -->
     <string name="shopelia_action_bar_sign_in">Sign in</string>
     <string name="shopelia_action_bar_sign_up">Sign up</string>
@@ -46,7 +46,7 @@
 
     <!-- Sign In -->
     <string name="shopelia_sign_in_forgot_password"><![CDATA[<u>Forgotten your password?</u>]]></string>
-	<string name="shopelia_sign_in_waiting">Signing in...</string>
+    <string name="shopelia_sign_in_waiting">Signing in...</string>
 
     <!-- Address creation form -->
     <string name="shopelia_form_address_name">Name</string>
@@ -91,7 +91,8 @@
     <string name="shopelia_pincode_description_create">Votre code PIN vous permet de sécuriser toutes les transactions.</string>
     <string name="shopelia_pincode_do_not_match">PIN codes do not match</string>
     <string name="shopelia_pincode_wrong">Wrong PIN</string>
-    <string name="shopelia_pincode_retry" formatted="false">Try again in %s</string>
+    <string name="shopelia_pincode_retry" formatted="false">Try again in %s and %s</string>
+    <string name="shopelia_pincode_retry_seconds" formatted="false">Try again in %s</string>
     <string name="shopelia_pincode_forgotten"><![CDATA[<u>Forgotten your PIN?</u>]]></string>
 
     <!-- Recover password -->
@@ -125,7 +126,8 @@
         <item quantity="other">%d minutes</item>
     </plurals>
     <plurals name="second">
-        <item formatted="false" quantity="one">%d second</item>
+         <item formatted="false" quantity="zero">%d second</item>
+           <item formatted="false" quantity="one">%d second</item>
         <item quantity="other">%d seconds</item>
     </plurals>
 

@@ -116,6 +116,7 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
         mNumberInput.setEnabled(getContract().isServiceAvailable());
         if (!getContract().isServiceAvailable()) {
             mRefreshTask.scheduleAtFixedRate(mRefreshUiRunnable, getUnlockDelay() % 1000, REFRESH_PERIOD);
+            mRefreshUiRunnable.run();
         } else {
             requestNumberInputFocus();
         }
@@ -231,10 +232,13 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
                     errorMessage = getString(R.string.shopelia_pincode_retry,
                             getResources().getQuantityString(R.plurals.hour, (int) delay / (60 * 60 * 1000), delay / (60 * 60 * 1000)));
                 } else if (delay >= 60 * 1000) {
-                    errorMessage = getString(R.string.shopelia_pincode_retry,
-                            getResources().getQuantityString(R.plurals.minute, (int) delay / (60 * 1000), delay / (60 * 1000)));
+                    errorMessage = getString(
+                            R.string.shopelia_pincode_retry,
+                            getResources().getQuantityString(R.plurals.minute, (int) delay / (60 * 1000), delay / (60 * 1000)),
+                            getResources().getQuantityString(R.plurals.second, (int) (delay % (60 * 1000)) / (1000),
+                                    (delay % (60 * 1000)) / (1000)));
                 } else if (delay >= 1000) {
-                    errorMessage = getString(R.string.shopelia_pincode_retry,
+                    errorMessage = getString(R.string.shopelia_pincode_retry_seconds,
                             getResources().getQuantityString(R.plurals.second, (int) delay / (1000), delay / (1000)));
                 } else {
                     errorMessage = null;

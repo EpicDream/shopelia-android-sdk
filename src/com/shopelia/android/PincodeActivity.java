@@ -10,6 +10,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.widget.Toast;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
 import com.shopelia.android.app.ShopeliaActivity;
@@ -44,10 +46,10 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
 
     public static final int REQUEST_RECOVER_PINCODE = 0x7000;
 
-    private static final long MIN_ERROR_DELAY = 5 * 60 * 1000;
-    private static final long MAX_ERROR_DELAY = 1 * 60 * 60 * 1000;
+    static final long SECONDS = 1000;
 
-    private static final String PREF_TIME_TO_BLOCK = "SPH_LAST_ATTEMPT";
+    static final String PREF_TIME_TO_BLOCK = "SPH_TIME_TO_BLOCK";
+    static final String JSON_DELAY = "delay";
 
     private boolean mCreatePincode = true;
     private boolean mUpdatePincode = false;
@@ -63,14 +65,13 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         setHostContentView(R.layout.shopelia_process_order_activity);
 
         mTimeToBlock = getSharedPreferences().getLong(PREF_TIME_TO_BLOCK, 0L);
-
         init(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
         mUpdatePincode = getIntent().getBooleanExtra(EXTRA_UPDATE_PINCODE, false);
         if (savedInstanceState == null) {
             handleFragment(null);
         }
 
-        if (mTimeToBlock + MAX_ERROR_DELAY < System.currentTimeMillis()) {
+        if (mTimeToBlock < System.currentTimeMillis()) {
             releaseOrder();
         }
 
@@ -153,7 +154,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
                 @Override
                 public void onError(Exception e) {
                     super.onError(e);
-
+                    Toast.makeText(PincodeActivity.this, R.string.shopelia_error_network_error, Toast.LENGTH_LONG).show();
                 }
 
             });
@@ -171,9 +172,9 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         return true;
     }
 
-    public void forbidOrder() {
+    public void forbidOrder(long delay) {
         SharedPreferences.Editor editor = getSharedPreferences().edit();
-        mTimeToBlock = System.currentTimeMillis() + MIN_ERROR_DELAY;
+        mTimeToBlock = System.currentTimeMillis() + delay;
         editor.putLong(PREF_TIME_TO_BLOCK, mTimeToBlock);
         editor.commit();
     }
@@ -236,6 +237,15 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
                     mPincodeHandlerCallback.onPincodeCheckDone(true);
                 }
             } else {
+                if (response.getStatus() == 503) {
+                    try {
+                        Log.d(null, response.getBodyAsString());
+                        JSONObject object = new JSONObject(response.getBodyAsString());
+                        forbidOrder(object.optLong(JSON_DELAY, 300) * SECONDS);
+                    } catch (JSONException e) {
+
+                    }
+                }
                 if (mPincodeHandlerCallback != null) {
                     mPincodeHandlerCallback.onPincodeCheckDone(false);
                 }
@@ -245,6 +255,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         @Override
         public void onError(Exception e) {
             e.printStackTrace();
+            Toast.makeText(PincodeActivity.this, R.string.shopelia_error_network_error, Toast.LENGTH_LONG).show();
         };
 
     };

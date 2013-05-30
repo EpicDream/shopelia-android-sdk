@@ -13,7 +13,7 @@
         android:id="@+id/headerField1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/shopelia_margin_large"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
         app:shopelia_icon="@drawable/shopelia_lock"
         app:shopelia_text="@string/shopelia_recover_pin_title" >
     </com.shopelia.android.widget.form.HeaderField>
@@ -24,60 +24,58 @@
         android:layout_marginBottom="@dimen/shopelia_margin_large"
         android:layout_marginLeft="@dimen/shopelia_margin_normal"
         android:layout_marginRight="@dimen/shopelia_margin_normal"
-        android:layout_marginTop="@dimen/shopelia_margin_large"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
         android:gravity="center"
         android:text="@string/shopelia_recover_pin_description"
-        android:textSize="@dimen/shopelia_font_size_small"
-        android:visibility="gone" />
+        android:textSize="@dimen/shopelia_font_size_small" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
         android:orientation="horizontal" >
 
-        <LinearLayout
+        <com.shopelia.android.widget.FontableTextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/shopelia_margin_large"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
             android:layout_weight="50"
-            android:orientation="vertical" >
+            android:text="@string/shopelia_recover_pin_type_last_numbers"
+            android:textSize="@dimen/shopelia_font_size_small" />
 
-            <com.shopelia.android.widget.FontableTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/shopelia_recover_pin_type_last_numbers"
-                android:textSize="@dimen/shopelia_font_size_small"
-                app:shopelia_fontStyle="bold" />
-
-            <com.shopelia.android.widget.form.NumberField
-                android:id="@+id/lastNumbers"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:shopelia_hint="@string/shopelia_recover_pin_last_numbers"
-                app:shopelia_max_length="4" />
-        </LinearLayout>
-
-        <LinearLayout
+        <com.shopelia.android.widget.FontableTextView
             android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/shopelia_margin_large"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
             android:layout_weight="50"
-            android:orientation="vertical" >
+            android:text="@string/shopelia_recover_pin_type_expiry_date"
+            android:textSize="@dimen/shopelia_font_size_small" />
+    </LinearLayout>
 
-            <com.shopelia.android.widget.FontableTextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/shopelia_recover_pin_type_expiry_date"
-                android:textSize="@dimen/shopelia_font_size_small"
-                app:shopelia_fontStyle="bold" />
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
 
-            <com.shopelia.android.widget.form.SimpleDateField
-                android:id="@+id/expiryDate"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:shopelia_hint="@string/shopelia_recover_pin_expiry_date"
-                app:shopelia_max_length="5" />
-        </LinearLayout>
+        <com.shopelia.android.widget.form.NumberField
+            android:id="@+id/lastNumbers"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:layout_weight="50"
+            app:shopelia_hint="@string/shopelia_recover_pin_last_numbers"
+            app:shopelia_max_length="4" >
+        </com.shopelia.android.widget.form.NumberField>
+
+        <com.shopelia.android.widget.form.SimpleDateField
+            android:id="@+id/expiryDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:layout_weight="50"
+            app:shopelia_hint="@string/shopelia_recover_pin_expiry_date"
+            app:shopelia_max_length="5" >
+        </com.shopelia.android.widget.form.SimpleDateField>
     </LinearLayout>
 
     <com.shopelia.android.widget.FontableTextView

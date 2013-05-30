@@ -88,7 +88,8 @@
     <string name="shopelia_pincode_description_create">Le code PIN vous permet de sécuriser toutes les transactions.</string>
     <string name="shopelia_pincode_do_not_match">Les codes PIN ne sont pas identiques</string>
     <string name="shopelia_pincode_wrong">Code PIN incorrect</string>
-    <string name="shopelia_pincode_retry" formatted="false">Réessayer dans %s</string>
+    <string name="shopelia_pincode_retry" formatted="false">Réessayez dans %s et %s</string>
+    <string name="shopelia_pincode_retry_seconds" formatted="false">Réessayez dans %s</string>
     <string name="shopelia_pincode_forgotten"><![CDATA[<u>Code PIN oublié ?</u>]]></string>
 
     <!-- Recover password -->
@@ -121,6 +122,7 @@
         <item formatted="false" quantity="other">%d minutes</item>
     </plurals>
     <plurals name="second">
+         <item formatted="false" quantity="zero">%d seconde</item>
         <item formatted="false" quantity="one">%d seconde</item>
         <item formatted="false" quantity="other">%d secondes</item>
     </plurals>

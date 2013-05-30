@@ -232,8 +232,6 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         @Override
         public void afterTextChanged(Editable s) {
             super.afterTextChanged(s);
-            if (true)
-                return;
             final EmailField emailField = mFormContainer.findFieldById(R.id.email);
             if (emailField.onValidation(false)) {
                 final String email = (String) emailField.getResult();

@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -16,6 +17,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.shopelia.android.app.ShopeliaActivity;
+import com.shopelia.android.concurent.ScheduledTask;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
@@ -35,10 +37,19 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
     private FormLinearLayout mFormContainer;
     private TextView mErrorMessage;
 
+    private long mTimeToBlock = 0L;
+
+    private static final long REFRESH_PERIOD = 1000L;
+    private NumberField mLastNumbers;
+    private NumberField mExpiryDate;
+
+    private ScheduledTask mRefreshTask = new ScheduledTask();
+
     @Override
     protected void onCreate(Bundle saveState) {
         super.onCreate(saveState);
         setHostContentView(R.layout.shopelia_recover_pincode_activity);
+        mTimeToBlock = getSharedPreferences().getLong(PincodeActivity.PREF_TIME_TO_BLOCK, 0L);
         mFormContainer = (FormLinearLayout) findViewById(R.id.form);
         mFormContainer.findFieldById(R.id.lastNumbers, NumberField.class).setMinLength(4).setJsonPath(User.Api.CC_NUMBER).mandatory()
                 .setOnValidateListener(new OnValidateListener() {
@@ -77,7 +88,15 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
         mFormContainer.findFieldById(R.id.lastNumbers, NumberField.class).requestFocus();
         findViewById(R.id.validate).setOnClickListener(mOnClickValidateListener);
         mErrorMessage = (TextView) findViewById(R.id.error);
+
+        mExpiryDate = mFormContainer.findFieldById(R.id.expiryDate);
+        mLastNumbers = mFormContainer.findFieldById(R.id.lastNumbers);
+
         requestFocus();
+        if (!isServiceAvailable()) {
+            mRefreshTask.scheduleAtFixedRate(mRefreshUiRunnable, getUnlockDate() % 1000, REFRESH_PERIOD);
+            mRefreshUiRunnable.run();
+        }
     }
 
     @Override
@@ -87,6 +106,10 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
             setResult(resultCode);
             finish();
         }
+    }
+
+    private SharedPreferences getSharedPreferences() {
+        return getSharedPreferences(PincodeActivity.PREFERENCE_NAME, Context.MODE_PRIVATE);
     }
 
     private void setError(String message, boolean shake) {
@@ -136,6 +159,74 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
         return false;
     }
 
+    public void forbidOrder(long delay) {
+        SharedPreferences.Editor editor = getSharedPreferences().edit();
+        mTimeToBlock = System.currentTimeMillis() + delay;
+        editor.putLong(PincodeActivity.PREF_TIME_TO_BLOCK, mTimeToBlock);
+        editor.commit();
+    }
+
+    public boolean isServiceAvailable() {
+        return mTimeToBlock < System.currentTimeMillis();
+    }
+
+    public long getUnlockDate() {
+        return mTimeToBlock;
+    }
+
+    public long getUnlockDelay() {
+        return mTimeToBlock - System.currentTimeMillis();
+    }
+
+    private Runnable mRefreshUiRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+
+            if (isServiceAvailable()) {
+                mExpiryDate.setEnabled(true);
+                mExpiryDate.setError(false);
+
+                requestFocus();
+
+                mLastNumbers.setEnabled(true);
+                mLastNumbers.setError(false);
+                findViewById(R.id.validate).setEnabled(true);
+                setError(null, false);
+                mRefreshTask.stop();
+            } else {
+                findViewById(R.id.validate).setEnabled(false);
+                mLastNumbers.setEnabled(false);
+                mLastNumbers.clearFocus();
+                mExpiryDate.setEnabled(false);
+                mExpiryDate.clearFocus();
+                mExpiryDate.setContentText(null);
+                mLastNumbers.setContentText(null);
+                String errorMessage;
+                long delay = getUnlockDelay();
+                if (delay >= 60 * 60 * 1000) {
+                    errorMessage = getString(
+                            R.string.shopelia_pincode_retry,
+                            getResources().getQuantityString(R.plurals.hour, (int) delay / (60 * 60 * 1000), delay / (60 * 60 * 1000)),
+                            getResources().getQuantityString(R.plurals.second, (int) (delay % (60 * 60 * 1000)) / (1000),
+                                    (delay % (60 * 60 * 1000)) / (1000)));
+                } else if (delay >= 60 * 1000) {
+                    errorMessage = getString(
+                            R.string.shopelia_pincode_retry,
+                            getResources().getQuantityString(R.plurals.minute, (int) delay / (60 * 1000), delay / (60 * 1000)),
+                            getResources().getQuantityString(R.plurals.second, (int) (delay % (60 * 1000)) / (1000),
+                                    (delay % (60 * 1000)) / (1000)));
+                } else if (delay >= 1000) {
+                    errorMessage = getString(R.string.shopelia_pincode_retry_seconds,
+                            getResources().getQuantityString(R.plurals.second, (int) delay / (1000), delay / (1000)));
+                } else {
+                    errorMessage = null;
+                }
+                setError(errorMessage, false);
+            }
+        }
+    };
+
     private OnClickListener mOnClickValidateListener = new OnClickListener() {
 
         @Override
@@ -160,6 +251,9 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
                                 startActivityForResult(intent, REQUEST_CREATE_PINCODE);
                             } else {
                                 setError(getString(R.string.shopelia_recover_pin_error), true);
+                                if (!isServiceAvailable()) {
+                                    mRefreshTask.scheduleAtFixedRate(mRefreshUiRunnable, getUnlockDate() % 1000, REFRESH_PERIOD);
+                                }
                             }
                         }
 
