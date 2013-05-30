@@ -246,6 +246,10 @@ public abstract class FormField extends FrameLayout implements Errorable {
         return hasError() ? mErrorMessage : null;
     }
 
+    public void clearErrorsCache() {
+        mErrorStack = new Bundle();
+    }
+
     /**
      * Returns the bounded view if it exists otherwise returns null
      * 
