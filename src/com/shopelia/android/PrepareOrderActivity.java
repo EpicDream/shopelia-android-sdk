@@ -191,6 +191,11 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @Override
     public void onSignUp(JSONObject result) {
+        try {
+            Log.d(null, result.toString(2));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         setOrder(Order.inflate(result));
         if (TextUtils.isEmpty(mCachedPincode)) {
             Intent intent = new Intent(this, PincodeActivity.class);
@@ -223,8 +228,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 stopWaiting();
                 try {
                     Log.d(null, "RESPONSE " + response.toString(2));
+                    mSignUpFragment.onCreateAccountError(response);
                 } catch (JSONException e1) {
-                    // TODO Auto-generated catch block
                     e1.printStackTrace();
                 }
             }

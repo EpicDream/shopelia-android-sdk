@@ -2,6 +2,7 @@ package com.shopelia.android;
 
 import java.util.HashSet;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -112,6 +113,24 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         //@formatter:on
 
         getContract().getValidationButton().setOnClickListener(mOnClickListener);
+    }
+
+    public void onCreateAccountError(JSONObject object) {
+        if (getActivity() == null) {
+            return;
+        }
+        JSONArray names = object.names();
+        final int count = names.length();
+        for (int index = 0; index < count; index++) {
+            String name = names.optString(index);
+            JSONArray errors = object.optJSONArray(name);
+            FormField field = mFormContainer.findFieldByPath(Order.Api.USER, User.Api.EMAIL);
+            if (field != null) {
+                field.setError(errors.optString(0));
+            } else {
+                Toast.makeText(getActivity(), errors.optString(0), Toast.LENGTH_LONG).show();
+            }
+        }
     }
 
     @Override

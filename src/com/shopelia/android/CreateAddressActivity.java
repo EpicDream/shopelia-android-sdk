@@ -315,7 +315,6 @@ public class CreateAddressActivity extends ShopeliaActivity {
         mResult.extras = mAddressExtrasField.getText().toString();
         mResult.zipcode = mPostalCodeField.getText().toString();
         mResult.city = mCityField.getText().toString();
-        mResult.phone = "0646403619"; // FIXME
         mResult.country = LocaleUtils.getCountryISO2Code(mCountryField.getText().toString());
         if (mAddressField.getTag() != null) {
             mResult.reference = (String) mAddressField.getTag();
