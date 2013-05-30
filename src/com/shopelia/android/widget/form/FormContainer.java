@@ -39,4 +39,6 @@ public interface FormContainer {
 
     public JSONObject toJson();
 
+    public FormField findFieldByPath(String... path);
+
 }

@@ -19,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 import com.shopelia.android.config.Config;
+import com.shopelia.android.utils.JsonUtils;
 
 public class FormLinearLayout extends LinearLayout implements FormContainer {
 
@@ -192,7 +193,11 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
     private void tryInserting(Object json, String path, Object result) {
         try {
             if (json instanceof JSONObject) {
-                ((JSONObject) json).put(path, result);
+                if (result instanceof JSONObject) {
+                    JsonUtils.mergeObject((JSONObject) json, path, (JSONObject) result);
+                } else {
+                    ((JSONObject) json).put(path, result);
+                }
             } else if (json instanceof JSONArray) {
                 ((JSONArray) json).put(result);
             } else {
@@ -221,4 +226,25 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
         return nodeName;
     }
 
+    @Override
+    public FormField findFieldByPath(String... path) {
+        if (path.length == 0) {
+            return null;
+        }
+        StringBuilder p = new StringBuilder();
+        for (String item : path) {
+            p.append(item);
+            p.append(FormContainer.PATH_SEPARATOR);
+        }
+        if (p.length() > 0) {
+            p.deleteCharAt(p.length() - 1);
+        }
+        String pathString = p.toString();
+        for (FormField field : mFields) {
+            if (pathString.equals(field.getJsonPath())) {
+                return field;
+            }
+        }
+        return null;
+    }
 }
