@@ -406,6 +406,7 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
         @Override
         public void onClick(View v) {
             if (validate(true)) {
+                closeSoftKeyboard();
                 Intent data = new Intent();
                 data.putExtra(EXTRA_PAYMENT_CARD, mPaymentCard);
                 setResult(RESULT_OK, data);

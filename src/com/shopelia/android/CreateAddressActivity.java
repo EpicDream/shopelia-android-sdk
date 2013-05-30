@@ -296,6 +296,7 @@ public class CreateAddressActivity extends ShopeliaActivity {
         @Override
         public void onClick(View v) {
             if (validate(true)) {
+                closeSoftKeyboard();
                 Intent data = new Intent();
                 Bundle extras = new Bundle();
                 extras.putParcelable(EXTRA_ADDRESS_OBJECT, mResult);
