@@ -1,5 +1,7 @@
 package com.shopelia.android;
 
+import java.util.HashSet;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -201,6 +203,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 
     private OnValidateListener mEmailOnValidateListener = new OnValidateListener() {
 
+        private HashSet<String> mCheckedEmails = new HashSet<String>();
+
         @Override
         public boolean onValidate(EditTextField editTextField, boolean shouldFireError) {
             return true;
@@ -209,9 +213,15 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         @Override
         public void afterTextChanged(Editable s) {
             super.afterTextChanged(s);
+            if (true)
+                return;
             final EmailField emailField = mFormContainer.findFieldById(R.id.email);
             if (emailField.onValidation(false)) {
                 final String email = (String) emailField.getResult();
+                if (mCheckedEmails.contains(email)) {
+                    return;
+                }
+                mCheckedEmails.add(email);
                 JSONObject params = new JSONObject();
                 try {
                     params.put(User.Api.EMAIL, email);
@@ -226,6 +236,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                             Bundle arguments = new Bundle();
                             arguments.putString(SignInFragment.ARGS_EMAIL, email);
                             getContract().requestSignIn(arguments);
+                            emailField.setError(getString(R.string.shopelia_error_user_already_exists, email));
                             Toast.makeText(getActivity(), getString(R.string.shopelia_error_user_already_exists, email), Toast.LENGTH_LONG)
                                     .show();
                         }
