@@ -51,7 +51,7 @@
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Shopelia"
-            android:windowSoftInputMode="adjustResize" />
+            android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name="com.shopelia.android.CreateAddressActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
