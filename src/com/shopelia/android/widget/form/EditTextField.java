@@ -19,10 +19,10 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter;
-import com.shopelia.android.widget.Errorable;
+import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.FormEditText;
 
-public class EditTextField extends FormField implements Errorable {
+public class EditTextField extends FormField {
 
     public abstract static class OnValidateListener implements TextWatcher {
 
@@ -58,8 +58,6 @@ public class EditTextField extends FormField implements Errorable {
     private String mJsonPath;
 
     private int mMaxLength = INVALID_LENGTH;
-
-    private boolean mError = false;
 
     private EditText mBoundedEditText;
 
@@ -148,6 +146,7 @@ public class EditTextField extends FormField implements Errorable {
         ViewHolder holder = new ViewHolder();
         holder.editText = (FormEditText) view.findViewById(R.id.edit_text);
         mBoundedEditText = holder.editText;
+        holder.error = (FontableTextView) view.findViewById(R.id.error);
         view.setTag(holder);
         return view;
     }
@@ -161,7 +160,9 @@ public class EditTextField extends FormField implements Errorable {
         mBoundedEditText = holder.editText;
         setViewStyle(holder);
         holder.editText.setHint(mHint);
-        holder.editText.setText(mContentText);
+        if (!(mContentText != null && mContentText.equals(holder.editText.getText().toString()))) {
+            holder.editText.setText(mContentText);
+        }
         holder.editText.setOnEditorActionListener(mOnEditorActionListener);
         holder.editText.setChecked(isValid());
         holder.editText.setError(hasError());
@@ -169,6 +170,8 @@ public class EditTextField extends FormField implements Errorable {
         if (!isInEditMode()) {
             holder.editText.addTextChangedListener(mTextWatcher);
         }
+        holder.error.setVisibility(!TextUtils.isEmpty(getErrorMessage()) ? View.VISIBLE : View.GONE);
+        holder.error.setText(getErrorMessage());
     }
 
     public void setContentText(CharSequence contentText) {
@@ -218,11 +221,13 @@ public class EditTextField extends FormField implements Errorable {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putString(SAVE_TAG + getJsonPath(), mContentText);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             setContentText(savedInstanceState.getString(SAVE_TAG + mJsonPath));
         }
@@ -232,15 +237,12 @@ public class EditTextField extends FormField implements Errorable {
         FormEditText editText;
         TextWatcher textWatcher;
         EditTextField boundedField;
+        FontableTextView error;
     }
 
     @Override
     public boolean isSectionHeader() {
         return false;
-    }
-
-    public void setError(String errorMsg) {
-
     }
 
     protected TextWatcher mTextWatcher = new TextWatcher() {
@@ -313,14 +315,6 @@ public class EditTextField extends FormField implements Errorable {
     }
 
     @Override
-    public void setValid(boolean isValid) {
-        super.setValid(isValid);
-        if (isValid()) {
-            mError = false;
-        }
-    }
-
-    @Override
     protected void onFocusChanged(boolean gainFocus, int direction, Rect previouslyFocusedRect) {
         super.onFocusChanged(gainFocus, direction, previouslyFocusedRect);
         if (gainFocus) {
@@ -332,23 +326,13 @@ public class EditTextField extends FormField implements Errorable {
         return (!TextUtils.isEmpty(mContentText) || mAllowEmptyContent);
     }
 
-    @Override
-    public void setError(boolean hasError) {
-        if (hasError() != hasError) {
-            mError = hasError;
-            if (getBoundedView() != null) {
-                bindView(getBoundedView());
-            }
-        }
-    }
-
-    @Override
-    public boolean hasError() {
-        return mError;
-    }
-
     public View getView() {
         return mBoundedEditText;
+    }
+
+    @Override
+    public String getResultAsString() {
+        return (String) getResult();
     }
 
 }

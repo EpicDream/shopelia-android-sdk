@@ -14,8 +14,9 @@ import android.widget.FrameLayout;
 
 import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.FormAdapter.Field;
+import com.shopelia.android.widget.Errorable;
 
-public abstract class FormField extends FrameLayout {
+public abstract class FormField extends FrameLayout implements Errorable {
 
     public interface Listener {
         public void onValidChanged(FormField field);
@@ -31,12 +32,18 @@ public abstract class FormField extends FrameLayout {
     }
 
     private static LayoutInflater sLayoutInflater;
+    private static final String SAVE_ERRORS = "ERRORS_BUNDLE";
 
     private boolean mIsValid = false;
 
     private View mBoundedView;
     private FormContainer mFormContainer;
     private Listener mListener = new ListenerAdapter();
+
+    // Error management
+    private boolean mError = false;
+    private String mErrorMessage;
+    private Bundle mErrorStack = new Bundle();
 
     public FormField(Context context) {
         this(context, null);
@@ -104,6 +111,13 @@ public abstract class FormField extends FrameLayout {
     public abstract Object getResult();
 
     /**
+     * Returns data held by this field as a {@link String}.
+     * 
+     * @return The result as String or null
+     */
+    public abstract String getResultAsString();
+
+    /**
      * The path in the final {@link JSONObject} to retrieve this field result.
      * Json keys are separated with '.' and '#' indicates an array.
      * 
@@ -134,14 +148,20 @@ public abstract class FormField extends FrameLayout {
      * 
      * @param outState
      */
-    public abstract void onSaveInstanceState(Bundle outState);
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putBundle(getJsonPath() + SAVE_ERRORS, mErrorStack);
+    }
 
     /**
      * Called each time the {@link FormAdapter} is being commited.
      * 
      * @param savedInstanceState
      */
-    public abstract void onCreate(Bundle savedInstanceState);
+    public void onCreate(Bundle savedInstanceState) {
+        if (savedInstanceState != null && savedInstanceState.containsKey(getJsonPath() + SAVE_ERRORS)) {
+            mErrorStack = savedInstanceState.getBundle(getJsonPath() + SAVE_ERRORS);
+        }
+    }
 
     /**
      * Indicates if the given field is a section header or not
@@ -157,10 +177,17 @@ public abstract class FormField extends FrameLayout {
      * @param isValid
      */
     public void setValid(boolean isValid) {
+        if (isValid && hasPreviousError()) {
+            setError(mErrorStack.getString(getResultAsString()));
+            isValid = false;
+        }
         if (mIsValid != isValid) {
             mIsValid = isValid;
             if (getFormContainer() != null) {
                 getFormContainer().updateSections();
+            }
+            if (isValid()) {
+                setError(false);
             }
             mListener.onValidChanged(this);
         }
@@ -178,6 +205,45 @@ public abstract class FormField extends FrameLayout {
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
+    }
+
+    @Override
+    public void setError(boolean hasError) {
+        setError(hasError, null);
+    }
+
+    public void setError(String message) {
+        setError(true, message);
+    }
+
+    protected void setError(boolean hasError, String message) {
+        mErrorMessage = message;
+        if (hasError != mError) {
+            mError = hasError;
+            if (hasError) {
+                setValid(false);
+                if (getResultAsString() != null) {
+                    mErrorStack.putString(getResultAsString(), message);
+                }
+            }
+            if (mBoundedView != null) {
+                bindView(mBoundedView);
+            }
+        }
+    }
+
+    protected boolean hasPreviousError() {
+        String result = getResultAsString();
+        return result != null && mErrorStack.containsKey(result);
+    }
+
+    @Override
+    public boolean hasError() {
+        return mError;
+    }
+
+    public String getErrorMessage() {
+        return hasError() ? mErrorMessage : null;
     }
 
     /**

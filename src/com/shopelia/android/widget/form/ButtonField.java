@@ -10,10 +10,9 @@ import android.widget.Button;
 import android.widget.Checkable;
 
 import com.shopelia.android.R;
-import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormEditTextButton;
 
-public abstract class ButtonField extends FormField implements Errorable, Checkable {
+public abstract class ButtonField extends FormField implements Checkable {
 
     public static final int TYPE = 2;
     public static int REQUEST_ADDRESS = 0x16;
@@ -23,7 +22,6 @@ public abstract class ButtonField extends FormField implements Errorable, Checka
     private String mJsonPath;
 
     private boolean mChecked = false;
-    private boolean mError = false;
 
     public ButtonField(Context context) {
         this(context, null);
@@ -67,7 +65,7 @@ public abstract class ButtonField extends FormField implements Errorable, Checka
         holder.button.setText(mContentText);
         holder.button.setHint(mHint);
         holder.button.setChecked(isValid());
-        holder.button.setError(mError);
+        holder.button.setError(hasError());
     }
 
     @Override
@@ -127,22 +125,11 @@ public abstract class ButtonField extends FormField implements Errorable, Checka
     }
 
     @Override
-    public boolean hasError() {
-        return mError;
-    }
-
-    @Override
     public void setError(boolean hasError) {
-        if (hasError() != hasError) {
-            mError = hasError;
-            if (hasError) {
-                setChecked(false);
-            }
-
-            if (getBoundedView() != null) {
-                bindView(getBoundedView());
-            }
+        if (hasError) {
+            setChecked(false);
         }
+        super.setError(hasError);
     }
 
     @Override

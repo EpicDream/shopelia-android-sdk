@@ -3,6 +3,7 @@ package com.shopelia.android.widget.form;
 import java.util.Locale;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -53,11 +54,13 @@ public class AddressField extends ButtonField {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putParcelable(getJsonPath(), mAddress);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mAddress = savedInstanceState.getParcelable(getJsonPath());
             if (mAddress != null) {
@@ -112,6 +115,15 @@ public class AddressField extends ButtonField {
             }
             activity.startActivityForResult(intent, REQUEST_ADDRESS);
         }
+    }
+
+    @Override
+    public String getResultAsString() {
+        JSONObject object = (JSONObject) getResult();
+        if (object != null) {
+            return object.toString();
+        }
+        return null;
     }
 
 }

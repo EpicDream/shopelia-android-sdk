@@ -1,6 +1,7 @@
 package com.shopelia.android.widget.form;
 
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
@@ -78,11 +79,13 @@ public class PaymentCardField extends ButtonField {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
         outState.putParcelable(getJsonPath(), mPaymentCard);
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             mPaymentCard = savedInstanceState.getParcelable(getJsonPath());
             setPaymentCard(mPaymentCard);
@@ -112,5 +115,14 @@ public class PaymentCardField extends ButtonField {
             }
             setContentText(number.toString());
         }
+    }
+
+    @Override
+    public String getResultAsString() {
+        JSONObject object = (JSONObject) getResult();
+        if (object != null) {
+            return object.toString();
+        }
+        return null;
     }
 }

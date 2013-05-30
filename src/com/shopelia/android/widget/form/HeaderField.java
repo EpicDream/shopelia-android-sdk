@@ -38,8 +38,8 @@ public class HeaderField extends FormField {
         if (attrs != null) {
             TypedArray ta = getContext().getTheme().obtainStyledAttributes(attrs, R.styleable.HeaderField, 0, 0);
             try {
-                mTitle = ta.getString(R.styleable.HeaderField_shopelia_text);
-                mIcon = ta.getDrawable(R.styleable.HeaderField_shopelia_icon);
+                setTitle(ta.getString(R.styleable.HeaderField_shopelia_text));
+                setIcon(ta.getDrawable(R.styleable.HeaderField_shopelia_icon));
             } finally {
                 ta.recycle();
             }
@@ -54,6 +54,19 @@ public class HeaderField extends FormField {
 
     public HeaderField addPictures(int... resIds) {
         mImagesIds = resIds;
+        return this;
+    }
+
+    public HeaderField setTitle(String title) {
+        mTitle = title;
+        if (mTitle != null) {
+            mTitle = mTitle.toUpperCase();
+        }
+        return this;
+    }
+
+    public HeaderField setIcon(Drawable icon) {
+        mIcon = icon;
         return this;
     }
 
@@ -135,6 +148,11 @@ public class HeaderField extends FormField {
     @Override
     public boolean validate() {
         return isValid();
+    }
+
+    @Override
+    public String getResultAsString() {
+        return null;
     }
 
 }
