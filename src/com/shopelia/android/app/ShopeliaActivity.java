@@ -9,10 +9,12 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
@@ -304,6 +306,11 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     public ActionBar getShopeliaActionBar() {
         return mActionBar;
+    }
+
+    public void closeSoftKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
     protected boolean isPartOfOrderWorkFlow() {

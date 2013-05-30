@@ -72,6 +72,16 @@ public class ShopeliaFragment<Contract> extends Fragment {
         });
     }
 
+    public void closeSoftKeyboard() {
+        runSafely(new SafeContextOperation() {
+
+            @Override
+            public void run(ShopeliaActivity activity) {
+                activity.closeSoftKeyboard();
+            }
+        });
+    }
+
     public void startWaiting(CharSequence message, boolean blockUi, boolean isCancelable) {
         ShopeliaActivity activity = (ShopeliaActivity) mContract;
         if (activity != null) {
