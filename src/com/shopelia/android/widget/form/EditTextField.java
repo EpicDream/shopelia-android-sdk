@@ -99,6 +99,13 @@ public class EditTextField extends FormField {
         return this;
     }
 
+    public void setEnabled(boolean enabled) {
+        super.setEnabled(enabled);
+        if (getBoundedView() != null) {
+            bindView(getBoundedView());
+        }
+    }
+
     public EditTextField setJsonPath(String... jsonPath) {
         StringBuilder builder = new StringBuilder();
         if (jsonPath != null) {
@@ -148,6 +155,8 @@ public class EditTextField extends FormField {
         mBoundedEditText = holder.editText;
         holder.error = (FontableTextView) view.findViewById(R.id.error);
         view.setTag(holder);
+        holder.editText.setId(View.NO_ID);
+        holder.error.setId(View.NO_ID);
         return view;
     }
 
@@ -157,6 +166,7 @@ public class EditTextField extends FormField {
         holder.editText.removeTextChangedListener(holder.textWatcher);
         holder.textWatcher = mTextWatcher;
         holder.editText.setOnFocusChangeListener(mOnFocusChangeListener);
+        holder.editText.setEnabled(isEnabled());
         mBoundedEditText = holder.editText;
         setViewStyle(holder);
         holder.editText.setHint(mHint);
