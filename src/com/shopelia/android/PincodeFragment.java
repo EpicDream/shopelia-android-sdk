@@ -40,6 +40,8 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
         public boolean isCreatingPincode();
 
+        public boolean isUpdatingPincode();
+
         public boolean sendPincode(String pincode);
 
         public boolean isServiceAvailable();
@@ -124,6 +126,7 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
         TextView forgotten = findViewById(R.id.forgotPincode);
         forgotten.setText(Html.fromHtml(forgotten.getText().toString()));
         forgotten.setOnClickListener(mOnForgottenClickListener);
+        forgotten.setVisibility(getContract().isCreatingPincode() || getContract().isUpdatingPincode() ? View.GONE : View.VISIBLE);
     }
 
     @Override

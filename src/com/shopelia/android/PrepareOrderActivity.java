@@ -226,11 +226,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
                 super.onError(step, httpResponse, response, e);
                 stopWaiting();
-                try {
-                    Log.d(null, "RESPONSE " + response.toString(2));
+                if (e != null) {
+                    Toast.makeText(PrepareOrderActivity.this, R.string.shopelia_error_network_error, Toast.LENGTH_LONG).show();
+                } else {
                     mSignUpFragment.onCreateAccountError(response);
-                } catch (JSONException e1) {
-                    e1.printStackTrace();
                 }
             }
 

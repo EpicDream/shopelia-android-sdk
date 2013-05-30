@@ -65,7 +65,13 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         setHostContentView(R.layout.shopelia_process_order_activity);
 
         mTimeToBlock = getSharedPreferences().getLong(PREF_TIME_TO_BLOCK, 0L);
+
         init(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
+
+        if (mCreatePincode || mUpdatePincode) {
+            mTimeToBlock = 0L;
+        }
+
         mUpdatePincode = getIntent().getBooleanExtra(EXTRA_UPDATE_PINCODE, false);
         if (savedInstanceState == null) {
             handleFragment(null);
@@ -259,5 +265,10 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         };
 
     };
+
+    @Override
+    public boolean isUpdatingPincode() {
+        return mUpdatePincode;
+    }
 
 }

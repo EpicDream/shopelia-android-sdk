@@ -13,7 +13,7 @@
         layout="@layout/shopelia_form_field_title_header" />
 
     <com.shopelia.android.widget.FontableTextView
-        android:id="@+id/fontableTextView1"
+        android:id="@+id/description"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_extra_large"
