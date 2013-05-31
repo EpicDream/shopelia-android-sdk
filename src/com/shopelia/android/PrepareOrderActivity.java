@@ -123,7 +123,11 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         if (savedInstanceState == null) {
             if (!UserManager.get(this).isLogged()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.fragment_container, mSignUpFragment);
+                if (UserManager.get(this).getLoginsCount() > 0) {
+                    ft.add(R.id.fragment_container, mSignInFragment);
+                } else {
+                    ft.add(R.id.fragment_container, mSignUpFragment);
+                }
                 ft.commit();
             } else {
                 Intent intent = new Intent(this, PincodeActivity.class);
