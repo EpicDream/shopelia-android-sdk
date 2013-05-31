@@ -1,8 +1,13 @@
 package com.shopelia.android.api;
 
+import java.util.ArrayList;
+
+import android.app.Fragment.SavedState;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
+import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.shopelia.android.PrepareOrderActivity;
@@ -15,15 +20,34 @@ import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 
 /**
- * This class ease the use of the Shopelia service and should be the only one
- * used by developers.
+ * This class eases the use of the Shopelia service and should be the only one
+ * used by developers. It implements {@link Parcelable} so you can store it in
+ * {@link Intent}, {@link SavedState} or {@link Bundle}
  * 
  * @author Pierre Pollastri
  */
-public final class Shopelia {
+public final class Shopelia implements Parcelable {
 
     public interface Callback {
+
         public void onShopeliaIsAvailable(Shopelia instance);
+
+        public void onUpdateDone();
+
+    }
+
+    public static class CallbackAdapter implements Callback {
+
+        @Override
+        public void onShopeliaIsAvailable(Shopelia instance) {
+
+        }
+
+        @Override
+        public void onUpdateDone() {
+
+        }
+
     }
 
     /**
@@ -88,6 +112,10 @@ public final class Shopelia {
         tracking.flush();
     }
 
+    private Shopelia(Parcel source) {
+        mData = source.readParcelable(Intent.class.getClassLoader());
+    }
+
     /**
      * Checkouts the product of the given url
      * 
@@ -137,6 +165,18 @@ public final class Shopelia {
         return null;
     }
 
+    /**
+     * Obtains a new instance of {@link Shopelia} only if the merchant of the
+     * product url is available on Shopelia.
+     * 
+     * @param context
+     * @param productUrl
+     * @return
+     */
+    public static Shopelia obtain(final Context context, final String productUrl) {
+        return obtain(context, productUrl, null);
+    }
+
     public Shopelia setProductImageUri(Uri imageUri) {
         mData.putExtra(EXTRA_PRODUCT_IMAGE, imageUri);
         return this;
@@ -160,6 +200,47 @@ public final class Shopelia {
     public Shopelia setProductShippingInfo(String info) {
         mData.putExtra(EXTRA_SHIPPING_INFO, info);
         return this;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeParcelable(mData, flags);
+    }
+
+    public static final Parcelable.Creator<Shopelia> CREATOR = new Creator<Shopelia>() {
+
+        @Override
+        public Shopelia[] newArray(int size) {
+            return new Shopelia[size];
+        }
+
+        @Override
+        public Shopelia createFromParcel(Parcel source) {
+            return new Shopelia(source);
+        }
+    };
+
+    /**
+     * Update Shopelia's data. This method is useful if you want to avoid
+     * retrieving {@link Shopelia} instances asynchronously. Once update is done
+     * it will call {@link Callback#onUpdateDone()}. You should do your Shopelia
+     * operations in this method.
+     */
+    public static void update(Context context, final Callback callback) {
+        new MerchantsAPI(context, new com.shopelia.android.remote.api.ApiHandler.CallbackAdapter() {
+            @Override
+            public void onRetrieveMerchants(ArrayList<Merchant> merchants) {
+                super.onRetrieveMerchants(merchants);
+                if (callback != null) {
+                    callback.onUpdateDone();
+                }
+            }
+        }).update();
     }
 
 }

@@ -30,7 +30,7 @@ public class MerchantsAPI extends ApiHandler {
     private static final long DELAY_BEFORE_UPDATE = 5 * 60 * 60 * 1000;
 
     private SharedPreferences mPreferences;
-    private List<Merchant> mMerchants;
+    private ArrayList<Merchant> mMerchants;
 
     public MerchantsAPI(Context context, Callback callback) {
         super(context, callback);
@@ -68,6 +68,30 @@ public class MerchantsAPI extends ApiHandler {
             });
         }
         return out;
+    }
+
+    public void update() {
+        if (canFetchMerchants()) {
+            ShopeliaRestClient.get(Command.V1.Merchants.$, null, new AsyncCallback() {
+
+                @Override
+                public void onComplete(HttpResponse httpResponse) {
+                    try {
+                        mMerchants = Merchant.inflate(new JSONArray(httpResponse.getBodyAsString()));
+                        saveMerchants(mMerchants);
+                        if (hasCallback()) {
+                            getCallback().onRetrieveMerchants(mMerchants);
+                        }
+                    } catch (JSONException e) {
+                        if (Config.ERROR_LOGS_ENABLED) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+            });
+        } else if (hasCallback()) {
+            getCallback().onRetrieveMerchants(mMerchants);
+        }
     }
 
     private void loadMerchantsFromCache() {
