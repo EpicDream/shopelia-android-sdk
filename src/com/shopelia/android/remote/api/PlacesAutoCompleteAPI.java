@@ -21,7 +21,7 @@ import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
 
-public final class PlacesAutoCompleteClient {
+public final class PlacesAutoCompleteAPI {
 
     public interface OnAddressDetailsListener {
         public void onAddressDetails(Address address);
@@ -55,7 +55,7 @@ public final class PlacesAutoCompleteClient {
         }
     }
 
-    private PlacesAutoCompleteClient() {
+    private PlacesAutoCompleteAPI() {
 
     }
 

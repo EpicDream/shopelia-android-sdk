@@ -14,9 +14,9 @@ import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class UserCommandHandler extends CommandHandler {
+public class UserAPI extends ApiHandler {
 
-    public UserCommandHandler(Context context, Callback callback) {
+    public UserAPI(Context context, Callback callback) {
         super(context, callback);
     }
 
@@ -190,5 +190,15 @@ public class UserCommandHandler extends CommandHandler {
             }
 
         });
+    }
+
+    public void signOut(final String email) {
+        JSONObject params = new JSONObject();
+        try {
+            params.putOpt(User.Api.EMAIL, email);
+        } catch (JSONException e) {
+
+        }
+
     }
 }

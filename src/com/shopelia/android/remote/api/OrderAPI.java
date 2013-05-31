@@ -13,9 +13,9 @@ import com.shopelia.android.utils.FormatUtils;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class OrderCommandHandler extends CommandHandler {
+public class OrderAPI extends ApiHandler {
 
-    public OrderCommandHandler(Context context, Callback callback) {
+    public OrderAPI(Context context, Callback callback) {
         super(context, callback);
     }
 

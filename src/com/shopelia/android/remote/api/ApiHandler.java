@@ -11,7 +11,7 @@ import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class CommandHandler {
+public class ApiHandler {
 
     public interface Callback {
         public void onAccountCreationSucceed(User user, Address address);
@@ -111,7 +111,7 @@ public class CommandHandler {
     private int mCurrentStep = STEP_DEAD;
     private int mInternalState = STATE_RUNNING;
 
-    public CommandHandler(Context context, Callback callback) {
+    public ApiHandler(Context context, Callback callback) {
         this.mContext = context;
         setCallback(callback);
     }
