@@ -99,13 +99,15 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
     private OnClickListener mOnValidateClickListener = new OnClickListener() {
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             if (mFormLayout.validate()) {
                 JSONObject params = mFormLayout.toJson();
+                v.setEnabled(false);
                 ShopeliaRestClient.post(Command.V1.Users.Reset(), params, new AsyncCallback() {
 
                     @Override
                     public void onComplete(HttpResponse httpResponse) {
+                        v.setEnabled(true);
                         if (httpResponse.getStatus() == 404) {
                             setError(getString(R.string.shopelia_recover_password_unknown_email), true);
                             requestFocus();
@@ -128,6 +130,7 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
                     @Override
                     public void onError(Exception e) {
                         setError(getString(R.string.shopelia_recover_password_network_error), false);
+                        v.setEnabled(true);
                     };
 
                 });

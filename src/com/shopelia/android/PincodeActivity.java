@@ -5,7 +5,11 @@ import java.util.Timer;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -119,12 +123,19 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         return mCreatePincode;
     }
 
-    public void onPincodeCreated(String pincode) {
-        Intent data = new Intent();
-        data.putExtra(EXTRA_CREATE_PINCODE, true);
-        data.putExtra(EXTRA_PINCODE, pincode);
-        setResult(RESULT_OK, data);
-        finish();
+    public void onPincodeCreated(final String pincode) {
+        createConfirmationDialog(pincode, new OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent data = new Intent();
+                data.putExtra(EXTRA_CREATE_PINCODE, true);
+                data.putExtra(EXTRA_PINCODE, pincode);
+                setResult(RESULT_OK, data);
+                finish();
+                dialog.dismiss();
+            }
+        }).show();
     }
 
     @Override
@@ -154,6 +165,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
                 public void onComplete(HttpResponse httpResponse) {
                     if (httpResponse.getStatus() == 204) {
                         onPincodeCreated(pincode);
+
                     }
                 }
 
@@ -228,6 +240,23 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
     @Override
     public void setPincodeCallback(Callback callback) {
         mPincodeHandlerCallback = callback;
+    }
+
+    private AlertDialog createConfirmationDialog(String pincode, final OnClickListener listener) {
+        //@formatter:off
+        return new AlertDialog.Builder(this)
+            .setTitle(R.string.shopelia_dialog_title)
+            .setMessage(getString(R.string.shopelia_pincode_your_pincode_is, pincode))
+            .setPositiveButton(android.R.string.ok, listener)
+            .setOnCancelListener(new OnCancelListener() {
+                
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    listener.onClick(dialog, 0);
+                }
+            })
+            .create();
+        //@formater:on
     }
 
     private AsyncCallback mAsyncCallback = new AsyncCallback() {

@@ -127,7 +127,8 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
         forgotten.setText(Html.fromHtml(forgotten.getText().toString()));
         forgotten.setOnClickListener(mOnForgottenClickListener);
         forgotten.setVisibility(getContract().isCreatingPincode() || getContract().isUpdatingPincode() ? View.GONE : View.VISIBLE);
-        findViewById(R.id.description).setVisibility(getContract().isCreatingPincode() ? View.VISIBLE : View.GONE);
+        findViewById(R.id.description).setVisibility(
+                getContract().isCreatingPincode() && !getContract().isUpdatingPincode() ? View.VISIBLE : View.GONE);
     }
 
     @Override
