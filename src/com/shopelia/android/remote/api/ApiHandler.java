@@ -1,5 +1,7 @@
 package com.shopelia.android.remote.api;
 
+import java.util.ArrayList;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -7,6 +9,7 @@ import android.content.Context;
 
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
+import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.HttpResponse;
@@ -27,6 +30,10 @@ public class ApiHandler {
         public void onUserDestroyed(long userId);
 
         public void onSignIn(User user);
+
+        public void onRetrieveMerchant(Merchant merchant);
+
+        public void onRetrieveMerchants(ArrayList<Merchant> merchants);
 
     }
 
@@ -64,6 +71,16 @@ public class ApiHandler {
 
         @Override
         public void onSignIn(User user) {
+
+        }
+
+        @Override
+        public void onRetrieveMerchant(Merchant merchant) {
+
+        }
+
+        @Override
+        public void onRetrieveMerchants(ArrayList<Merchant> merchants) {
 
         }
 

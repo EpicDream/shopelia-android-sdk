@@ -25,7 +25,9 @@ public class Merchant implements Parcelable, JsonData {
         String URL = "url";
     }
 
-    public long id;
+    public static final long INVALID_ID = -1;
+
+    public long id = INVALID_ID;
     public String name;
     public String logo;
     public String url;
@@ -99,6 +101,15 @@ public class Merchant implements Parcelable, JsonData {
             }
         }
         return list;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Merchant) {
+            Merchant m = (Merchant) o;
+            return this.id == m.id && m.id != INVALID_ID;
+        }
+        return super.equals(o);
     }
 
 }

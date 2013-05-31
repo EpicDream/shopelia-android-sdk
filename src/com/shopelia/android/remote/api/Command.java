@@ -71,6 +71,11 @@ public final class Command {
             }
 
         }
+
+        public static final class Merchants {
+            public static final String $ = V1.$ + "/merchants";
+        }
+
     }
 
 }

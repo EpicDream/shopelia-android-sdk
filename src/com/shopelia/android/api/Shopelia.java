@@ -9,6 +9,8 @@ import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaTracking;
 import com.shopelia.android.model.Merchant;
+import com.shopelia.android.remote.api.ApiHandler;
+import com.shopelia.android.remote.api.MerchantsAPI;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 
@@ -19,6 +21,10 @@ import com.shopelia.android.utils.Tax;
  * @author Pierre Pollastri
  */
 public final class Shopelia {
+
+    public interface Callback {
+        public void onShopeliaIsAvailable(Shopelia instance);
+    }
 
     /**
      * Url of the product to purchase
@@ -44,7 +50,7 @@ public final class Shopelia {
     /**
      * The {@link Merchant} of the product to purchase
      */
-    public static final String EXTRA_VENDOR = PrepareOrderActivity.EXTRA_VENDOR;
+    public static final String EXTRA_MERCHANT = PrepareOrderActivity.EXTRA_MERCHANT;
 
     /**
      * The price of the product to purchase
@@ -73,10 +79,13 @@ public final class Shopelia {
 
     private Intent mData;
 
-    private Shopelia(String productUrl, Merchant vendor) {
+    private Shopelia(Context context, String productUrl, Merchant merchant) {
         mData = new Intent();
         mData.putExtra(EXTRA_PRODUCT_URL, productUrl);
-        mData.putExtra(EXTRA_VENDOR, (Parcelable) vendor);
+        mData.putExtra(EXTRA_MERCHANT, (Parcelable) merchant);
+        ShopeliaTracking tracking = new ShopeliaTracking(context);
+        tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
+        tracking.flush();
     }
 
     /**
@@ -100,13 +109,30 @@ public final class Shopelia {
         checkout(context, null, mData);
     }
 
-    public static Shopelia obtain(Context context, String productUrl) {
-        if (productUrl.contains("amazon.fr") || productUrl.contains("amazon.com")) {
-            // FIXME Just for V1 tests and alpha
-            ShopeliaTracking tracking = new ShopeliaTracking(context);
-            tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
-            tracking.flush();
-            return new Shopelia(productUrl, Merchant.AMAZON);
+    /**
+     * Obtains a new instance of {@link Shopelia} only if the merchant of the
+     * product url is available on Shopelia. Even if the method returns null, it
+     * will check online if the merchant is available and notify you later.
+     * 
+     * @param context
+     * @param productUrl The product url
+     * @param callback The {@link Callback} instance used to notify you that the
+     *            merchant is available
+     * @return
+     */
+    public static Shopelia obtain(final Context context, final String productUrl, final Callback callback) {
+        MerchantsAPI api = new MerchantsAPI(context, new ApiHandler.CallbackAdapter() {
+            @Override
+            public void onRetrieveMerchant(Merchant merchant) {
+                super.onRetrieveMerchant(merchant);
+                if (callback != null) {
+                    callback.onShopeliaIsAvailable(new Shopelia(context, productUrl, merchant));
+                }
+            }
+        });
+        Merchant out = api.getMerchant(productUrl);
+        if (out != null) {
+            return new Shopelia(context, productUrl, out);
         }
         return null;
     }

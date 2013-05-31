@@ -32,10 +32,10 @@ import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
+import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
-import com.shopelia.android.model.Merchant;
 import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.ApiHandler.ErrorInflater;
@@ -74,7 +74,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     /**
      * The {@link Merchant} of the product to purchase
      */
-    public static final String EXTRA_VENDOR = Config.EXTRA_PREFIX + "VENDOR";
+    public static final String EXTRA_MERCHANT = Config.EXTRA_PREFIX + "MERCHANT";
 
     /**
      * The price of the product to purchase
@@ -260,20 +260,14 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         order.product.url = getIntent().getStringExtra(EXTRA_PRODUCT_URL);
         order.product.name = getIntent().getStringExtra(EXTRA_PRODUCT_TITLE);
         order.product.image = getIntent().getParcelableExtra(EXTRA_PRODUCT_IMAGE);
+        order.product.merchant = getIntent().getParcelableExtra(EXTRA_MERCHANT);
         order.product.currency = Currency.EUR;
         order.product.tax = Tax.ATI;
         order.product.description = getIntent().getStringExtra(EXTRA_PRODUCT_DESCRIPTION);
 
-        // TODO REMOVE THIS ONLY FOR TESTING
-        order.product.vendor = Merchant.AMAZON;
-
         Bundle extras = getIntent().getExtras();
         if (extras.containsKey(PrepareOrderActivity.EXTRA_CURRENCY)) {
             order.product.currency = extras.getParcelable(PrepareOrderActivity.EXTRA_CURRENCY);
-        }
-
-        if (extras.containsKey(PrepareOrderActivity.EXTRA_VENDOR)) {
-            order.product.vendor = extras.getParcelable(PrepareOrderActivity.EXTRA_VENDOR);
         }
 
         if (extras.containsKey(PrepareOrderActivity.EXTRA_TAX)) {

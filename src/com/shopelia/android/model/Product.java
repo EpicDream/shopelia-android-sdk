@@ -18,14 +18,14 @@ public class Product implements JsonData, Parcelable {
         String URL = "url";
         String IMAGE_URL = "image_url";
     }
-    
+
     public String url;
     public String name;
     public String description;
 
     public Uri image;
 
-    public Merchant vendor;
+    public Merchant merchant;
     public Tax tax;
     public Currency currency;
 
@@ -47,7 +47,7 @@ public class Product implements JsonData, Parcelable {
         shippingExtra = source.readString();
         image = ParcelUtils.readParcelable(source, Uri.class.getClassLoader());
         description = source.readString();
-        vendor = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
+        merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
     }
@@ -60,7 +60,7 @@ public class Product implements JsonData, Parcelable {
         json.put(Api.IMAGE_URL, image.toString());
         return json;
     }
-    
+
     @Override
     public int describeContents() {
         return 0;
@@ -75,7 +75,7 @@ public class Product implements JsonData, Parcelable {
         dest.writeString(shippingExtra);
         ParcelUtils.writeParcelable(dest, image, flags);
         dest.writeString(description);
-        ParcelUtils.writeParcelable(dest, vendor, flags);
+        ParcelUtils.writeParcelable(dest, merchant, flags);
         ParcelUtils.writeParcelable(dest, tax, flags);
         ParcelUtils.writeParcelable(dest, currency, flags);
     }
@@ -92,7 +92,7 @@ public class Product implements JsonData, Parcelable {
             return new Product(source);
         }
     };
-    
+
     public static Product inflate(JSONObject object) {
         Product product = new Product();
         product.name = object.optString(Api.NAME);

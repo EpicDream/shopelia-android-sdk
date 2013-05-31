@@ -25,9 +25,9 @@ public class FormListHeader {
             mView = inflater.inflate(R.layout.shopelia_form_list_header, null);
             TextView introductionText = (TextView) mView.findViewById(R.id.introduction_text);
             String vendor = "";
-            if (mContext.getIntent().hasExtra(PrepareOrderActivity.EXTRA_VENDOR)) {
-                Merchant v = mContext.getIntent().getParcelableExtra(PrepareOrderActivity.EXTRA_VENDOR);
-                vendor = v.getName();
+            if (mContext.getIntent().hasExtra(PrepareOrderActivity.EXTRA_MERCHANT)) {
+                Merchant v = mContext.getIntent().getParcelableExtra(PrepareOrderActivity.EXTRA_MERCHANT);
+                vendor = v.name;
             }
             introductionText.setText(Html.fromHtml(mContext.getString(R.string.shopelia_form_main_header_text, vendor)));
         }
@@ -38,9 +38,9 @@ public class FormListHeader {
         mView = view;
         TextView introductionText = (TextView) mView.findViewById(R.id.introduction_text);
         String vendor = "";
-        if (mContext.getIntent().hasExtra(PrepareOrderActivity.EXTRA_VENDOR)) {
-            Merchant v = mContext.getIntent().getParcelableExtra(PrepareOrderActivity.EXTRA_VENDOR);
-            vendor = v.getName();
+        if (mContext.getIntent().hasExtra(PrepareOrderActivity.EXTRA_MERCHANT)) {
+            Merchant v = mContext.getIntent().getParcelableExtra(PrepareOrderActivity.EXTRA_MERCHANT);
+            vendor = v.name;
         }
         introductionText.setText(Html.fromHtml(mContext.getString(R.string.shopelia_form_main_header_text, vendor)));
     }

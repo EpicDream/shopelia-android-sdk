@@ -3,7 +3,6 @@ package com.shopelia.android.widget;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
 
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.R;
@@ -24,7 +23,7 @@ public class ProductSheetWrapper {
     private AsyncImageView mProductImage;
     @SuppressWarnings("unused")
     private FontableTextView mVendorText;
-    private ImageView mVendorLogo;
+    private AsyncImageView mVendorLogo;
     private FontableTextView mProductPrice;
     private FontableTextView mTax;
 
@@ -57,13 +56,13 @@ public class ProductSheetWrapper {
         }
         Currency currency = Currency.EUR;
         Tax tax = Tax.ATI;
-        Merchant vendor = Merchant.AMAZON;
+        Merchant vendor = null;
         if (mArguments.containsKey(PrepareOrderActivity.EXTRA_CURRENCY)) {
             currency = mArguments.getParcelable(PrepareOrderActivity.EXTRA_CURRENCY);
         }
 
-        if (mArguments.containsKey(PrepareOrderActivity.EXTRA_VENDOR)) {
-            vendor = mArguments.getParcelable(PrepareOrderActivity.EXTRA_VENDOR);
+        if (mArguments.containsKey(PrepareOrderActivity.EXTRA_MERCHANT)) {
+            vendor = mArguments.getParcelable(PrepareOrderActivity.EXTRA_MERCHANT);
         }
 
         if (mArguments.containsKey(PrepareOrderActivity.EXTRA_TAX)) {
@@ -85,7 +84,7 @@ public class ProductSheetWrapper {
         mProductShippingInfo.setText(mArguments.getString(PrepareOrderActivity.EXTRA_SHIPPING_INFO));
         mProductShippingInfo.setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_SHIPPING_INFO) ? View.VISIBLE : View.GONE);
         mTax.setText(tax.getResId());
-        mVendorLogo.setImageResource(vendor.getImageResId());
+        mVendorLogo.setUrl(vendor.name);
         Object image = mArguments.get(PrepareOrderActivity.EXTRA_PRODUCT_IMAGE);
         if (image != null && image instanceof Uri) {
             mProductImage.setImageURI((Uri) image);
