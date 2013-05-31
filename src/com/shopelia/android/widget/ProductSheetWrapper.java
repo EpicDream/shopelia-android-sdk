@@ -7,7 +7,7 @@ import android.widget.ImageView;
 
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.R;
-import com.shopelia.android.model.Vendor;
+import com.shopelia.android.model.Merchant;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 
@@ -57,7 +57,7 @@ public class ProductSheetWrapper {
         }
         Currency currency = Currency.EUR;
         Tax tax = Tax.ATI;
-        Vendor vendor = Vendor.AMAZON;
+        Merchant vendor = Merchant.AMAZON;
         if (mArguments.containsKey(PrepareOrderActivity.EXTRA_CURRENCY)) {
             currency = mArguments.getParcelable(PrepareOrderActivity.EXTRA_CURRENCY);
         }

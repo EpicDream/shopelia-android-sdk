@@ -8,7 +8,7 @@ import android.os.Parcelable;
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaTracking;
-import com.shopelia.android.model.Vendor;
+import com.shopelia.android.model.Merchant;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 
@@ -42,7 +42,7 @@ public final class Shopelia {
     public static final String EXTRA_PRODUCT_DESCRIPTION = PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION;
 
     /**
-     * The {@link Vendor} of the product to purchase
+     * The {@link Merchant} of the product to purchase
      */
     public static final String EXTRA_VENDOR = PrepareOrderActivity.EXTRA_VENDOR;
 
@@ -73,7 +73,7 @@ public final class Shopelia {
 
     private Intent mData;
 
-    private Shopelia(String productUrl, Vendor vendor) {
+    private Shopelia(String productUrl, Merchant vendor) {
         mData = new Intent();
         mData.putExtra(EXTRA_PRODUCT_URL, productUrl);
         mData.putExtra(EXTRA_VENDOR, (Parcelable) vendor);
@@ -106,7 +106,7 @@ public final class Shopelia {
             ShopeliaTracking tracking = new ShopeliaTracking(context);
             tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
             tracking.flush();
-            return new Shopelia(productUrl, Vendor.AMAZON);
+            return new Shopelia(productUrl, Merchant.AMAZON);
         }
         return null;
     }

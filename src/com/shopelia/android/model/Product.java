@@ -25,7 +25,7 @@ public class Product implements JsonData, Parcelable {
 
     public Uri image;
 
-    public Vendor vendor;
+    public Merchant vendor;
     public Tax tax;
     public Currency currency;
 
@@ -47,7 +47,7 @@ public class Product implements JsonData, Parcelable {
         shippingExtra = source.readString();
         image = ParcelUtils.readParcelable(source, Uri.class.getClassLoader());
         description = source.readString();
-        vendor = ParcelUtils.readParcelable(source, Vendor.class.getClassLoader());
+        vendor = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
     }

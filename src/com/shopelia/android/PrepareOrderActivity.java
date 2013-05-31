@@ -35,7 +35,7 @@ import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
-import com.shopelia.android.model.Vendor;
+import com.shopelia.android.model.Merchant;
 import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.ApiHandler.ErrorInflater;
@@ -72,7 +72,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     public static final String EXTRA_PRODUCT_DESCRIPTION = Config.EXTRA_PREFIX + "PRODUCT_DESCRIPTION";
 
     /**
-     * The {@link Vendor} of the product to purchase
+     * The {@link Merchant} of the product to purchase
      */
     public static final String EXTRA_VENDOR = Config.EXTRA_PREFIX + "VENDOR";
 
@@ -265,7 +265,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         order.product.description = getIntent().getStringExtra(EXTRA_PRODUCT_DESCRIPTION);
 
         // TODO REMOVE THIS ONLY FOR TESTING
-        order.product.vendor = Vendor.AMAZON;
+        order.product.vendor = Merchant.AMAZON;
 
         Bundle extras = getIntent().getExtras();
         if (extras.containsKey(PrepareOrderActivity.EXTRA_CURRENCY)) {
