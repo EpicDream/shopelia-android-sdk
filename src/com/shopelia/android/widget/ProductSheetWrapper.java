@@ -84,11 +84,11 @@ public class ProductSheetWrapper {
         mProductShippingInfo.setText(mArguments.getString(PrepareOrderActivity.EXTRA_SHIPPING_INFO));
         mProductShippingInfo.setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_SHIPPING_INFO) ? View.VISIBLE : View.GONE);
         mTax.setText(tax.getResId());
-        mVendorLogo.setUrl(vendor.name);
         Object image = mArguments.get(PrepareOrderActivity.EXTRA_PRODUCT_IMAGE);
         if (image != null && image instanceof Uri) {
             mProductImage.setImageURI((Uri) image);
         }
+        mVendorLogo.setUrl(vendor.logo);
     }
 
     @SuppressWarnings("unchecked")

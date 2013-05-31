@@ -53,6 +53,9 @@ public class ImageLoader {
 
     private static final String ASSETS_PREFIX = "icons://";
 
+    private static final String CACHE_DIR = "shopelia/images";
+    private static final String TEMP_DIR = "shopelia/temp";
+
     private static final double DISK_CACHE_PERCENTAGE = 0.01f;
     private static final long DISK_INTERNAL_MINIMUM_CACHE_SIZE = 10 * 1024 * 1024;
     private static final long DISK_EXTERNAL_MINIMUM_CACHE_SIZE = 30 * 1024 * 1024;
@@ -69,7 +72,6 @@ public class ImageLoader {
     // Messages that will be used by the WorkerHandlers (associated with a
     // worker thread).
     private static final int MESSAGE_LOAD = 100;
-    private static final int MESSAGE_ON_SLOW_CONNECTION = 101;
 
     // Messages that will be used by the Handler associated with the UI Thread.
     private static final int MESSAGE_ON_START = 200;
@@ -129,11 +131,13 @@ public class ImageLoader {
         final DiskSpace diskSpace = new DiskSpace(context);
         final File externalCacheDir = ContextCompat.getExternalCacheDir(context);
         if (externalCacheDir != null) {
-            cacheDir = new File(externalCacheDir, "images");
+            cacheDir = new File(externalCacheDir, CACHE_DIR);
+            cacheDir.mkdirs();
             cacheSize = Math.max(DISK_EXTERNAL_MINIMUM_CACHE_SIZE,
                     (long) (diskSpace.getExternalStorageTotalSpace() * DISK_CACHE_PERCENTAGE));
         } else {
-            cacheDir = new File(context.getCacheDir(), "images");
+            cacheDir = new File(context.getCacheDir(), CACHE_DIR);
+            cacheDir.mkdirs();
             cacheSize = Math.max(DISK_INTERNAL_MINIMUM_CACHE_SIZE,
                     (long) (diskSpace.getInternalStorageTotalSpace() * DISK_CACHE_PERCENTAGE));
         }
@@ -149,7 +153,7 @@ public class ImageLoader {
         mMaximumMemoryCachedImageSize = 4 * metrics.widthPixels * metrics.heightPixels / 2;
         mMaximumDiskCachedImageSize = 5 * mMaximumMemoryCachedImageSize;
 
-        mTempDir = new File(context.getCacheDir(), "temp");
+        mTempDir = new File(context.getCacheDir(), TEMP_DIR);
         mTempDir.mkdirs();
 
         mAssetManager = appContext.getAssets();
@@ -167,7 +171,6 @@ public class ImageLoader {
     }
 
     public void clearUrlFromCache(String url) {
-        Log.e("Debug", "Removing from cache " + url);
         Sha1Builder sha1Builder = new Sha1Builder();
         sha1Builder.reset();
         sha1Builder.update(url);
@@ -175,13 +178,11 @@ public class ImageLoader {
         try {
             mDiskCache.remove(sha1);
         } catch (IOException e) {
-            Log.e("Debug", "Exception", e);
         }
         mHardMemoryCache.remove(url);
     }
 
     public boolean loadRequest(Context context, ImageRequest request) {
-
         // First ensure the URL is valid
         final String url = request.url;
         if (TextUtils.isEmpty(url)) {

@@ -72,7 +72,7 @@ public class MerchantsAPI extends ApiHandler {
 
     public void update() {
         if (canFetchMerchants()) {
-            ShopeliaRestClient.get(Command.V1.Merchants.$, null, new AsyncCallback() {
+            ShopeliaRestClient.get(Command.V1.Merchants.$, ShopeliaRestClient.newParams(), new AsyncCallback() {
 
                 @Override
                 public void onComplete(HttpResponse httpResponse) {
@@ -88,6 +88,13 @@ public class MerchantsAPI extends ApiHandler {
                         }
                     }
                 }
+
+                @Override
+                public void onError(Exception e) {
+                    super.onError(e);
+                    e.printStackTrace();
+                }
+
             });
         } else if (hasCallback()) {
             getCallback().onRetrieveMerchants(mMerchants);
@@ -117,8 +124,11 @@ public class MerchantsAPI extends ApiHandler {
     }
 
     private Merchant findMerchantByUrl(String url) {
+        if (url == null) {
+            return null;
+        }
         for (Merchant merchant : mMerchants) {
-            if (merchant.url.contains(url)) {
+            if (url.contains(merchant.url)) {
                 return merchant;
             }
         }

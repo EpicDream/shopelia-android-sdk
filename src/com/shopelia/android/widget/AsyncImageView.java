@@ -51,6 +51,10 @@ public class AsyncImageView extends ImageView {
     private static final int DEFAULT_CROSS_FADING_DURATION = 300;
     private static final Drawable EMPTY_DRAWABLE = new ColorDrawable(Color.TRANSPARENT);
 
+    private static final long DELAY_FOR_CROSS = 800L;
+
+    private long mStartLoading = 0;
+
     /**
      * Clients may listen to {@link AsyncImageView} changes using a
      * {@link OnAsyncImageViewLoadListener}.
@@ -429,6 +433,7 @@ public class AsyncImageView extends ImageView {
             if (mOnAsyncImageViewLoadListener != null) {
                 mOnAsyncImageViewLoadListener.onLoadingStarted(AsyncImageView.this);
             }
+            mStartLoading = System.currentTimeMillis();
         }
 
         public void onImageRequestFailed(ImageRequest request, Exception exception) {
@@ -441,7 +446,10 @@ public class AsyncImageView extends ImageView {
         public void onImageRequestEnded(ImageRequest request, Bitmap image) {
             mRequest = null;
             mBitmap = image;
-
+            if (mStartLoading + DELAY_FOR_CROSS > System.currentTimeMillis()) {
+                setImageBitmap(image);
+                return;
+            }
             if (canCrossFade() && !mIsLoading) {
                 final TransitionDrawable d = new TransitionDrawable(new Drawable[] {
                         mDefaultDrawable == null ? EMPTY_DRAWABLE : new KeepRatioDrawable(mDefaultDrawable),

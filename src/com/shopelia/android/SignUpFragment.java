@@ -73,7 +73,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        if (savedInstanceState != null) {
+        if (savedInstanceState != null && mFormContainer != null) {
             mFormContainer.onCreate(savedInstanceState);
         } else {
             fireScreenSeenEvent(FRAGMENT_NAME);

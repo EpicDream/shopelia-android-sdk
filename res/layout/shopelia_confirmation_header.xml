@@ -58,7 +58,7 @@
                 android:textSize="@dimen/shopelia_font_size_small"
                 app:shopelia_fontStyle="bold" />
 
-            <ImageView
+            <com.shopelia.android.widget.AsyncImageView
                 android:id="@+id/product_vendor_icon"
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"

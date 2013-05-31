@@ -106,7 +106,7 @@ public final class Shopelia implements Parcelable {
     private Shopelia(Context context, String productUrl, Merchant merchant) {
         mData = new Intent();
         mData.putExtra(EXTRA_PRODUCT_URL, productUrl);
-        mData.putExtra(EXTRA_MERCHANT, (Parcelable) merchant);
+        mData.putExtra(EXTRA_MERCHANT, merchant);
         ShopeliaTracking tracking = new ShopeliaTracking(context);
         tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
         tracking.flush();
@@ -130,6 +130,8 @@ public final class Shopelia implements Parcelable {
         if (productUrl != null) {
             data.putExtra(EXTRA_PRODUCT_URL, productUrl);
         }
+        // Android can be stupid sometimes -_-
+        data.setExtrasClassLoader(Merchant.class.getClassLoader());
         context.startActivity(data);
     }
 

@@ -111,13 +111,14 @@
                     android:textSize="@dimen/shopelia_font_size_small"
                     app:shopelia_fontStyle="bold" />
 
-                <ImageView
-                    android:id="@+id/product_vendor_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="20dp"
-                    android:layout_marginLeft="@dimen/shopelia_margin_normal"
-                    android:scaleType="fitStart"
-                    android:src="@drawable/shopelia_photo" />
+               <com.shopelia.android.widget.AsyncImageView
+                   android:id="@+id/product_vendor_icon"
+                   android:layout_width="wrap_content"
+                   android:layout_height="20dp"
+                   android:layout_marginLeft="@dimen/shopelia_margin_normal"
+                   android:scaleType="fitStart"
+                   app:shopelia_crossFadingEnabled="true" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
