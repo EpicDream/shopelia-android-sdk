@@ -24,8 +24,8 @@ import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Order;
-import com.shopelia.android.remote.api.CommandHandler.CallbackAdapter;
-import com.shopelia.android.remote.api.OrderCommandHandler;
+import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.OrderAPI;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
@@ -82,7 +82,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         @Override
         public void onClick(View v) {
             startWaiting(getString(R.string.shopelia_confirmation_waiting, mOrder.product.vendor.getName()), true, false);
-            new OrderCommandHandler(getActivity(), new CallbackAdapter() {
+            new OrderAPI(getActivity(), new CallbackAdapter() {
 
                 public void onOrderConfirmation(boolean succeed) {
                     stopWaiting();

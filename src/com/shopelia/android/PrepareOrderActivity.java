@@ -36,10 +36,10 @@ import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.model.Vendor;
-import com.shopelia.android.remote.api.CommandHandler;
-import com.shopelia.android.remote.api.CommandHandler.CallbackAdapter;
-import com.shopelia.android.remote.api.CommandHandler.ErrorInflater;
-import com.shopelia.android.remote.api.UserCommandHandler;
+import com.shopelia.android.remote.api.ApiHandler;
+import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiHandler.ErrorInflater;
+import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 import com.shopelia.android.widget.FormListFooter;
@@ -214,7 +214,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     private void createAccount() {
         final Order order = getOrder();
         startWaiting(getString(R.string.shopelia_form_main_waiting), true, true);
-        new UserCommandHandler(this, new CommandHandler.CallbackAdapter() {
+        new UserAPI(this, new ApiHandler.CallbackAdapter() {
 
             @Override
             public void onAccountCreationSucceed(final User user, Address address) {
@@ -241,7 +241,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     }
 
     private void sendPaymentInformations(PaymentCard card, final Order order) {
-        new UserCommandHandler(PrepareOrderActivity.this, new CallbackAdapter() {
+        new UserAPI(PrepareOrderActivity.this, new CallbackAdapter() {
             @Override
             public void onPaymentInformationSent(PaymentCard paymentInformation) {
                 super.onPaymentInformationSent(paymentInformation);
@@ -312,7 +312,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     public void onSignIn(JSONObject result) {
         User user = User.inflate(result.optJSONObject(User.Api.USER));
         startWaiting(getString(R.string.shopelia_sign_in_waiting), true, true);
-        new UserCommandHandler(this, new CallbackAdapter() {
+        new UserAPI(this, new CallbackAdapter() {
 
             @Override
             public void onSignIn(User user) {

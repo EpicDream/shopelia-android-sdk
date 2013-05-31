@@ -32,7 +32,7 @@ import android.widget.TextView;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
-import com.shopelia.android.remote.api.PlacesAutoCompleteClient;
+import com.shopelia.android.remote.api.PlacesAutoCompleteAPI;
 import com.shopelia.android.utils.LocaleUtils;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormEditText;
@@ -256,7 +256,7 @@ public class CreateAddressActivity extends ShopeliaActivity {
 
             @Override
             protected FilterResults performFiltering(CharSequence constraints) {
-                List<Address> addresses = PlacesAutoCompleteClient.autocomplete(CreateAddressActivity.this,
+                List<Address> addresses = PlacesAutoCompleteAPI.autocomplete(CreateAddressActivity.this,
                         constraints != null ? constraints.toString() : "", 0);
                 FilterResults results = new FilterResults();
                 results.values = addresses;

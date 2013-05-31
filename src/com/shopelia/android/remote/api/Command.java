@@ -66,6 +66,10 @@ public final class Command {
                 return $ + "/exists";
             }
 
+            public static String SignOut() {
+                return $ + "/sign_out";
+            }
+
         }
     }
 
