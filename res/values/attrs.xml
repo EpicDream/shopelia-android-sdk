@@ -41,4 +41,18 @@
         <attr name="state_error" format="boolean" />
     </declare-styleable>
 
+    <declare-styleable name="AsyncImageView">
+        <attr name="shopelia_defaultSrc" format="reference" />
+        <attr name="shopelia_url" format="string" />
+        <attr name="shopelia_inDensity">
+            <enum name="ldpi" value="120" />
+            <enum name="mdpi" value="160" />
+            <enum name="hdpi" value="240" />
+            <enum name="xhdpi" value="320" />
+        </attr>
+        <attr name="shopelia_crossFadingEnabled" format="boolean" />
+        <attr name="shopelia_crossFadingDuration" format="integer" />
+        <attr name="shopelia_isFixedSize" format="boolean" />
+    </declare-styleable>
+    
 </resources>
