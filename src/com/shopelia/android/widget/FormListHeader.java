@@ -43,8 +43,6 @@ public class FormListHeader {
             vendor = v.getName();
         }
         introductionText.setText(Html.fromHtml(mContext.getString(R.string.shopelia_form_main_header_text, vendor)));
-        TextView loginText = (TextView) mView.findViewById(R.id.login);
-        loginText.setText(Html.fromHtml(loginText.getText().toString()));
     }
 
 }

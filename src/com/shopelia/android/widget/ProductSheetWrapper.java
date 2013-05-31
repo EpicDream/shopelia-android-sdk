@@ -21,7 +21,7 @@ public class ProductSheetWrapper {
     private FontableTextView mProductDescription;
     private FontableTextView mProductShippingInfo;
     private FontableTextView mShippingFees;
-    private ImageView mProductImage;
+    private AsyncImageView mProductImage;
     @SuppressWarnings("unused")
     private FontableTextView mVendorText;
     private ImageView mVendorLogo;
@@ -79,7 +79,8 @@ public class ProductSheetWrapper {
 
         mProductName.setText(mArguments.getString(PrepareOrderActivity.EXTRA_PRODUCT_TITLE));
         mProductDescription.setText(mArguments.getString(PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION));
-        mProductDescription.setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION) ? View.VISIBLE : View.GONE);
+        mProductDescription
+                .setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION) ? View.VISIBLE : View.GONE);
         mProductPrice.setText(currency.format(mArguments.getFloat(PrepareOrderActivity.EXTRA_PRICE)));
         mProductShippingInfo.setText(mArguments.getString(PrepareOrderActivity.EXTRA_SHIPPING_INFO));
         mProductShippingInfo.setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_SHIPPING_INFO) ? View.VISIBLE : View.GONE);

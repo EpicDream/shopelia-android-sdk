@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
@@ -173,6 +174,7 @@ public class UserCommandHandler extends CommandHandler {
                     return;
                 }
                 if (httpResponse.getStatus() == 200) {
+                    Log.d(null, httpResponse.getBodyAsString());
                     User user = User.inflate(object.optJSONObject(User.Api.USER));
                     UserManager.get(getContext()).login(user);
                     UserManager.get(getContext()).setAuthToken(object.optString(User.Api.AUTH_TOKEN));

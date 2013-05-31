@@ -105,7 +105,7 @@
                 android:layout_marginLeft="@dimen/shopelia_margin_large"
                 android:layout_marginRight="@dimen/shopelia_margin_large"
                 android:layout_marginTop="@dimen/shopelia_margin_extra_large"
-                app:shopelia_icon="@drawable/shopelia_bill_white"
+                app:shopelia_icon="@drawable/shopelia_cart_white"
                 app:shopelia_text="@string/shopelia_confirmation_confirm"
                 app:shopelia_textSize="@dimen/shopelia_font_size_normal" >
             </com.shopelia.android.widget.ValidationButton>

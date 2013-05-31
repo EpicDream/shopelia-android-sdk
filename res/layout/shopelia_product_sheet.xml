@@ -20,7 +20,7 @@
             android:layout_height="match_parent"
             android:layout_marginRight="@dimen/shopelia_margin_normal"
             android:scaleType="centerInside"
-            android:src="@drawable/shopelia_default_product" />
+            app:shopelia_defaultSrc="@drawable/shopelia_default_product" />
 
         <LinearLayout
             android:layout_width="wrap_content"

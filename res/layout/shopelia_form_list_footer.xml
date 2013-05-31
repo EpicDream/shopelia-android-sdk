@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
-        app:shopelia_icon="@drawable/shopelia_cart_white"
+        app:shopelia_icon="@drawable/shopelia_bill_white"
         app:shopelia_text="@string/shopelia_form_main_validate" />
 
     <com.shopelia.android.widget.FontableTextView
