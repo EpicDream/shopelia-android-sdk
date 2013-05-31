@@ -66,7 +66,9 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
     }
 
     private void requestFocus() {
-        mEmailField.requestFocus();
+        if (mEmailField.requestFocus()) {
+            return;
+        }
         (new Handler()).postDelayed(new Runnable() {
 
             public void run() {
@@ -130,7 +132,8 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
 
                 });
             } else {
-                setError(null, true);
+                setError(TextUtils.isEmpty(mErrorMessage.getText()) || TextUtils.isEmpty(mEmailField.getResultAsString()) ? null
+                        : mErrorMessage.getText().toString(), true);
                 requestFocus();
             }
         }
