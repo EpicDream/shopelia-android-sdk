@@ -93,11 +93,18 @@ public abstract class ButtonField extends FormField implements Checkable {
 
     protected abstract void onClick(Button view);
 
+    private void callClick(Button view) {
+    	onClick(view);
+    	if (hasOnClickListener()) {
+    		getOnClickListener().onClick(this);
+    	}
+    }
+    
     private OnClickListener mOnClickListener = new OnClickListener() {
 
         @Override
         public void onClick(View v) {
-            ButtonField.this.onClick((Button) v);
+            callClick((Button) v);
         }
     };
 

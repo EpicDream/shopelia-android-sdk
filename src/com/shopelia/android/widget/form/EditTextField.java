@@ -298,6 +298,9 @@ public class EditTextField extends FormField {
                     editText.setChecked(false);
                 }
             } else {
+            	  if (hasOnClickListener()) {
+                  	getOnClickListener().onClick(EditTextField.this);
+                  }
                 if (getFormContainer() != null) {
                     getFormContainer().requestFocus(EditTextField.this);
                 }
@@ -345,4 +348,5 @@ public class EditTextField extends FormField {
         return (String) getResult();
     }
 
+    
 }

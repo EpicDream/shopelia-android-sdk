@@ -39,7 +39,8 @@ public abstract class FormField extends FrameLayout implements Errorable {
     private View mBoundedView;
     private FormContainer mFormContainer;
     private Listener mListener = new ListenerAdapter();
-
+    private OnClickListener mOnClickListener;
+    
     // Error management
     private boolean mError = false;
     private String mErrorMessage;
@@ -52,7 +53,7 @@ public abstract class FormField extends FrameLayout implements Errorable {
     public FormField(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
+    
     public FormField setListener(Listener l) {
         mListener = l == null ? new ListenerAdapter() : l;
         return this;
@@ -272,4 +273,17 @@ public abstract class FormField extends FrameLayout implements Errorable {
         bindView(mBoundedView);
     }
 
+    @Override
+    public void setOnClickListener(OnClickListener l) {
+    	mOnClickListener = l;
+    }
+    
+    public OnClickListener getOnClickListener() {
+    	return mOnClickListener;
+    }
+    
+    public boolean hasOnClickListener() {
+    	return mOnClickListener != null;
+    }
+    
 }

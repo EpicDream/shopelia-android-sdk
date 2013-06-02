@@ -9,6 +9,7 @@ public interface Analytics {
             public interface SignUp {
                 String BEGIN = "Begin Sign Up";
                 String SIGNING_UP = "Signing Up";
+                String SIGN_UP_ACTION = "Sign Up User Action";
                 String END = "Signed Up";
             }
 
@@ -39,7 +40,6 @@ public interface Analytics {
 
         public interface UInterface {
             String SHOPELIA_BUTTON_SHOWN = "Shopelia button shown";
-            String FIELD_FILLED = "FieldFilled";
 
         }
 
@@ -47,7 +47,9 @@ public interface Analytics {
 
     public interface Properties {
         String SCREEN_NAME = "Screen Name";
+        String EVENT_TIME = "Event Time";
         String STEP = "Step";
+        String CLICK_ON = "Click On";
 
         public interface Steps {
 
@@ -59,11 +61,33 @@ public interface Analytics {
                 String ADDRESS = "Address OK";
                 String PAYMENT_CARD = "Payment Card OK";
                 String PINCODE = "Pincode OK";
-                String PINCODE_CANCEL = "Pincode Canceled";
             }
 
         }
 
+        public interface ClickOn {
+        	
+        	public interface SigningUp {
+        		String EMAIL = "Email";
+        		String PHONE = "Phone";
+        		String ADDRESS = "Address";
+        		String ADDRESS_NAME = "Address First Name";
+        		String ADDRESS_LAST_NAME = "Address Last Name";
+        		String ADDRESS_LINE_1 = "Address Line 1";
+        		String ADDRESS_EXTRA = "Address Line 2";
+        		String ADDRESS_ZIP = "Address Zip Code";
+        		String ADDRESS_COUNTRY = "Address Country";
+        		String ADDRESS_CITY = "Address City";
+        		String PINCODE = "Pincode";
+        		String PAYMENT_CARD = "Payment Card";
+        		String PAYMENT_NUMBER = "Payment Number";
+        		String PAYMENT_DATE = "Payment Expiry Date";
+        		String PAYMENT_CVV = "Payment CVV";
+        		String PAYMENT_SCANNED = "Payment Scanned";
+        	}
+        	
+        }
+        
     }
-
+    
 }

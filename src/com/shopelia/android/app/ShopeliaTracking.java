@@ -1,10 +1,13 @@
 package com.shopelia.android.app;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
+import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.utils.JsonUtils;
 
 public class ShopeliaTracking {
 
@@ -30,6 +33,11 @@ public class ShopeliaTracking {
 
     public void track(String eventName, JSONObject object) {
         if (mMixpanelInstance != null) {
+        	try {
+        		object = JsonUtils.insert(object, Analytics.Properties.EVENT_TIME, System.currentTimeMillis() / 1000);
+        	} catch (JSONException e) {
+        		
+        	}
             mMixpanelInstance.track(eventName, object);
         }
     }

@@ -19,6 +19,12 @@ public class AnalyticsBuilder extends JSONObject {
         return builder;
     }
 
+    public static AnalyticsBuilder prepareClickOnPackage(Context context, String action) {
+    	AnalyticsBuilder builder = new AnalyticsBuilder(context);
+    	builder.add(Analytics.Properties.CLICK_ON, action);
+    	return builder;
+    }
+    
     public AnalyticsBuilder add(String property, Object value) {
         try {
             put(property, value);

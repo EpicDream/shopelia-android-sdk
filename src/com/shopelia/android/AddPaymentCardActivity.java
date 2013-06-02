@@ -15,6 +15,7 @@ import android.text.Editable;
 import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shopelia.android.algorithm.Luhn;
+import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.PaymentCard;
@@ -37,6 +39,15 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
 
     public static final String EXTRA_PAYMENT_CARD = Config.EXTRA_PREFIX + "PAYMENT_CARD";
 
+    private static final SparseArray<String> CLICK_ON;
+    
+    static {
+    	CLICK_ON = new SparseArray<String>();
+    	CLICK_ON.put(R.id.card_numer, Analytics.Properties.ClickOn.SigningUp.PAYMENT_NUMBER);
+    	CLICK_ON.put(R.id.expiry_date, Analytics.Properties.ClickOn.SigningUp.PAYMENT_DATE);
+    	CLICK_ON.put(R.id.cvv, Analytics.Properties.ClickOn.SigningUp.PAYMENT_CVV);
+    }
+    
     private static final int MAX_CARD_VALIDITY_YEAR = 15;
     private static final int MAX_MONTH_VALUE = 12;
 

@@ -166,10 +166,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                     createAccount();
                     track(Analytics.Events.Steps.SignUp.SIGNING_UP,
                             AnalyticsBuilder.prepareStepPackage(this, Analytics.Properties.Steps.SigningUp.PINCODE));
-                } else {
-                    track(Analytics.Events.Steps.SignUp.SIGNING_UP,
-                            AnalyticsBuilder.prepareStepPackage(this, Analytics.Properties.Steps.SigningUp.PINCODE_CANCEL));
-                }
+                } 
                 break;
             case REQUEST_AUTH_PINCODE:
                 if (resultCode == RESULT_OK) {
