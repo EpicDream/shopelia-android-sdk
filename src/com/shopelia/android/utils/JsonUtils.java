@@ -47,4 +47,21 @@ public final class JsonUtils {
             }
         }
     }
+    
+    /**
+     * Inserts a new key/value in the dest {@link JSONObject}. If dest is null, the method will create a new {@link JSONObject} and return it.
+     * @param dest
+     * @param key
+     * @param value
+     * @return
+     * @throws JSONException
+     */
+    public static JSONObject insert(JSONObject dest, String key, Object value) throws JSONException {
+    	if (dest == null) {
+    		dest = new JSONObject();
+    	}
+    	dest.put(key, value);
+    	return dest;
+    }
+    
 }
