@@ -95,21 +95,25 @@ public class NumberInput extends EditText implements Errorable {
         if (mDrawable instanceof StateListDrawable) {
             StateListDrawable drawable = (StateListDrawable) mDrawable;
             if (!isEnabled()) {
-                drawable.setState(new int[] {});
+                drawable.setState(new int[] {
+
+                });
             } else if (hasError()) {
                 drawable.setState(new int[] {
-                    R.attr.state_error
+                        R.attr.state_error, android.R.attr.state_enabled
                 });
             } else if (index == length && hasFocus()) {
                 drawable.setState(new int[] {
-                    android.R.attr.state_focused
+                        android.R.attr.state_focused, android.R.attr.state_enabled
                 });
             } else if (index < length) {
                 drawable.setState(new int[] {
-                    android.R.attr.state_checked
+                        android.R.attr.state_checked, android.R.attr.state_enabled
                 });
             } else {
-                drawable.setState(new int[] {});
+                drawable.setState(new int[] {
+
+                });
             }
             return drawable;
         } else {
