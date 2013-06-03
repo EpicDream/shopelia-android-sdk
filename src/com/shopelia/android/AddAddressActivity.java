@@ -37,7 +37,7 @@ import com.shopelia.android.utils.LocaleUtils;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormEditText;
 
-public class CreateAddressActivity extends ShopeliaActivity {
+public class AddAddressActivity extends ShopeliaActivity {
 
     public static final String ACTIVITY_NAME = "Add Address";
 
@@ -55,7 +55,7 @@ public class CreateAddressActivity extends ShopeliaActivity {
 
     public static final String EXTRA_ADDRESS_OBJECT = Config.EXTRA_PREFIX + "OBJECT";
 
-    public static final String LOG_TAG = "CreateAddressActivity";
+    public static final String LOG_TAG = "AddAddressActivity";
 
     // Views
     private AutoCompleteTextView mAddressField;
@@ -256,7 +256,7 @@ public class CreateAddressActivity extends ShopeliaActivity {
 
             @Override
             protected FilterResults performFiltering(CharSequence constraints) {
-                List<Address> addresses = PlacesAutoCompleteAPI.autocomplete(CreateAddressActivity.this,
+                List<Address> addresses = PlacesAutoCompleteAPI.autocomplete(AddAddressActivity.this,
                         constraints != null ? constraints.toString() : "", 0);
                 FilterResults results = new FilterResults();
                 results.values = addresses;

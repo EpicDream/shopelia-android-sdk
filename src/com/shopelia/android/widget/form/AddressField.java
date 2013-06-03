@@ -12,7 +12,7 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.widget.Button;
 
-import com.shopelia.android.CreateAddressActivity;
+import com.shopelia.android.AddAddressActivity;
 import com.shopelia.android.R;
 import com.shopelia.android.model.Address;
 
@@ -89,7 +89,7 @@ public class AddressField extends ButtonField {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_ADDRESS && resultCode == Activity.RESULT_OK) {
-            setAddress((Address) data.getParcelableExtra(CreateAddressActivity.EXTRA_ADDRESS_OBJECT));
+            setAddress((Address) data.getParcelableExtra(AddAddressActivity.EXTRA_ADDRESS_OBJECT));
         }
     }
 
@@ -102,16 +102,16 @@ public class AddressField extends ButtonField {
     protected void onClick(Button view) {
         if (getContext() instanceof Activity) {
             Activity activity = (Activity) getContext();
-            Intent intent = new Intent(activity, CreateAddressActivity.class);
+            Intent intent = new Intent(activity, AddAddressActivity.class);
             if (mAddress != null) {
-                intent.putExtra(CreateAddressActivity.EXTRA_ADDRESS, mAddress.address);
-                intent.putExtra(CreateAddressActivity.EXTRA_ZIPCODE, mAddress.zipcode);
-                intent.putExtra(CreateAddressActivity.EXTRA_ADDRESS_EXTRAS, mAddress.extras);
-                intent.putExtra(CreateAddressActivity.EXTRA_CITY, mAddress.city);
-                intent.putExtra(CreateAddressActivity.EXTRA_COUNTRY, mAddress.country);
-                intent.putExtra(CreateAddressActivity.EXTRA_FIRSTNAME, mAddress.firstname);
-                intent.putExtra(CreateAddressActivity.EXTRA_NAME, mAddress.name);
-                intent.putExtra(CreateAddressActivity.EXTRA_REFERENCE, mAddress.reference);
+                intent.putExtra(AddAddressActivity.EXTRA_ADDRESS, mAddress.address);
+                intent.putExtra(AddAddressActivity.EXTRA_ZIPCODE, mAddress.zipcode);
+                intent.putExtra(AddAddressActivity.EXTRA_ADDRESS_EXTRAS, mAddress.extras);
+                intent.putExtra(AddAddressActivity.EXTRA_CITY, mAddress.city);
+                intent.putExtra(AddAddressActivity.EXTRA_COUNTRY, mAddress.country);
+                intent.putExtra(AddAddressActivity.EXTRA_FIRSTNAME, mAddress.firstname);
+                intent.putExtra(AddAddressActivity.EXTRA_NAME, mAddress.name);
+                intent.putExtra(AddAddressActivity.EXTRA_REFERENCE, mAddress.reference);
             }
             activity.startActivityForResult(intent, REQUEST_ADDRESS);
         }
