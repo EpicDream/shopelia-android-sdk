@@ -19,6 +19,7 @@ import com.shopelia.android.config.Config;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
+import com.shopelia.android.utils.ViewUtils;
 import com.shopelia.android.widget.form.EmailField;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.turbomanage.httpclient.AsyncCallback;
@@ -50,6 +51,7 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
         mEmailField.setValid(mEmailField.onValidation(false));
         mFormLayout.updateSections();
         mErrorMessage = (TextView) findViewById(R.id.error);
+        ViewUtils.forceRequestFocus(mEmailField.getView());
     }
 
     private void setError(String message, boolean shake) {
@@ -101,6 +103,7 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
         @Override
         public void onClick(final View v) {
             if (mFormLayout.validate()) {
+                closeSoftKeyboard();
                 JSONObject params = mFormLayout.toJson();
                 v.setEnabled(false);
                 ShopeliaRestClient.post(Command.V1.Users.Reset(), params, new AsyncCallback() {

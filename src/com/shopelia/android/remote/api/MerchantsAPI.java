@@ -8,6 +8,7 @@ import org.json.JSONException;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.text.TextUtils;
 
 import com.shopelia.android.config.Config;
@@ -127,8 +128,11 @@ public class MerchantsAPI extends ApiHandler {
         if (url == null) {
             return null;
         }
+
+        Uri uri = Uri.parse(url);
+
         for (Merchant merchant : mMerchants) {
-            if (url.contains(merchant.url)) {
+            if (uri.getHost().equals(merchant.uri.getHost())) {
                 return merchant;
             }
         }

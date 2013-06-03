@@ -43,7 +43,7 @@
         app:shopelia_fontStyle="normal"
         android:autoLink="all"
         android:linksClickable="false"
-        android:padding="@dimen/shopelia_margin_small"
+        android:padding="@dimen/shopelia_margin_normal"
         android:layout_marginBottom="@dimen/shopelia_margin_normal" />
 
 </com.shopelia.android.widget.form.FormLinearLayout>

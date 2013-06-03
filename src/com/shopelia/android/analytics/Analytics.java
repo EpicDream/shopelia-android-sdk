@@ -25,13 +25,18 @@ public interface Analytics {
 
             public interface Finalize {
                 String BEGIN = "Display Thank you";
-                String END = "Worklow Done";
+                String END = "Worklow Completed";
             }
 
             String SIGNING_IN = "Signing In";
             String CONFIRMING = "Confirming order";
             String FINALIZING = "Finalizing";
 
+        }
+
+        public interface AddPaymentCardMethod {
+            String CARD_SCANNED = "Payment Card Scanned";
+            String CARD_NOT_SCANNED = "Payment Card Not Scanned";
         }
 
         public interface Activities {
@@ -43,6 +48,8 @@ public interface Analytics {
 
         }
 
+        public String ADD_ADDRESS_METHOD = "AddAddressMethod";
+
     }
 
     public interface Properties {
@@ -50,6 +57,7 @@ public interface Analytics {
         String EVENT_TIME = "Event Time";
         String STEP = "Step";
         String CLICK_ON = "Click On";
+        String METHOD = "Method";
 
         public interface Steps {
 
@@ -63,31 +71,46 @@ public interface Analytics {
                 String PINCODE = "Pincode OK";
             }
 
+            public interface Finalizing {
+
+                public interface Method {
+                    String BACK_ON_APPLICATION = "Back On Application";
+                    String SIGN_OUT = "Sign Out";
+                }
+
+            }
+
+        }
+
+        public interface AddAddressMethod {
+            String PLACES_AUTOCOMPLETE = "Places Autocompletion";
+            String REVERSE_DIRECTORY = "Reverse Directory";
+            String MANUAL = "Manual";
         }
 
         public interface ClickOn {
-        	
-        	public interface SigningUp {
-        		String EMAIL = "Email";
-        		String PHONE = "Phone";
-        		String ADDRESS = "Address";
-        		String ADDRESS_NAME = "Address First Name";
-        		String ADDRESS_LAST_NAME = "Address Last Name";
-        		String ADDRESS_LINE_1 = "Address Line 1";
-        		String ADDRESS_EXTRA = "Address Line 2";
-        		String ADDRESS_ZIP = "Address Zip Code";
-        		String ADDRESS_COUNTRY = "Address Country";
-        		String ADDRESS_CITY = "Address City";
-        		String PINCODE = "Pincode";
-        		String PAYMENT_CARD = "Payment Card";
-        		String PAYMENT_NUMBER = "Payment Number";
-        		String PAYMENT_DATE = "Payment Expiry Date";
-        		String PAYMENT_CVV = "Payment CVV";
-        		String PAYMENT_SCANNED = "Payment Scanned";
-        	}
-        	
+
+            public interface SigningUp {
+                String EMAIL = "Email";
+                String PHONE = "Phone";
+                String ADDRESS = "Address";
+                String ADDRESS_NAME = "Address First Name";
+                String ADDRESS_LAST_NAME = "Address Last Name";
+                String ADDRESS_LINE_1 = "Address Line 1";
+                String ADDRESS_LINE_2 = "Address Line 2";
+                String ADDRESS_ZIP = "Address Zip Code";
+                String ADDRESS_COUNTRY = "Address Country";
+                String ADDRESS_CITY = "Address City";
+                String PINCODE = "Pincode";
+                String PAYMENT_CARD = "Payment Card";
+                String PAYMENT_NUMBER = "Payment Number";
+                String PAYMENT_DATE = "Payment Expiry Date";
+                String PAYMENT_CVV = "Payment CVV";
+                String PAYMENT_SCANNED = "Payment Scanned";
+            }
+
         }
-        
+
     }
-    
+
 }
