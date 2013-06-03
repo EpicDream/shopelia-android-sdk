@@ -22,14 +22,11 @@ import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
-import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
 import com.shopelia.android.widget.AsyncImageView;
 import com.shopelia.android.widget.actionbar.ActionBar;
-import com.shopelia.android.widget.actionbar.ActionBar.Item;
-import com.shopelia.android.widget.actionbar.TextButtonItem;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
@@ -64,18 +61,8 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     protected void onCreateShopeliaActionBar(ActionBar actionBar) {
         super.onCreateShopeliaActionBar(actionBar);
         actionBar.clear();
-        actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_sign_out, getActivity(), R.string.shopelia_action_bar_sign_out));
-        actionBar.commit();
-    }
 
-    @Override
-    protected void onActionItemSelected(Item item) {
-        super.onActionItemSelected(item);
-        if (item.getId() == R.id.shopelia_action_bar_sign_out) {
-            UserManager.get(getActivity()).logout();
-            getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
-            getActivity().finish();
-        }
+        actionBar.commit();
     }
 
     private OnClickListener mOnConfirmClickListener = new OnClickListener() {

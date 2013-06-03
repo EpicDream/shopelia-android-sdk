@@ -1,5 +1,6 @@
 package com.shopelia.android;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,6 +23,7 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.concurent.ScheduledTask;
 import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.utils.DialogHelper;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.NumberInput;
 import com.shopelia.android.widget.actionbar.ActionBar;
@@ -135,7 +137,9 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
     protected void onCreateShopeliaActionBar(ActionBar actionBar) {
         super.onCreateShopeliaActionBar(actionBar);
         actionBar.clear();
-        actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_sign_out, getActivity(), R.string.shopelia_action_bar_sign_out));
+        if (!getContract().isCreatingPincode() && !getContract().isUpdatingPincode()) {
+            actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_sign_out, getActivity(), R.string.shopelia_action_bar_sign_out));
+        }
         actionBar.commit();
     }
 
@@ -143,9 +147,17 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
     protected void onActionItemSelected(Item item) {
         super.onActionItemSelected(item);
         if (item.getId() == R.id.shopelia_action_bar_sign_out) {
-            UserManager.get(getActivity()).logout();
-            getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
-            getActivity().finish();
+            DialogHelper.buildLogoutDialog(getActivity(), new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    closeSoftKeyboard();
+                    UserManager.get(getActivity()).logout();
+                    getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
+                    getActivity().finish();
+
+                }
+            }, null).create().show();
         }
     }
 

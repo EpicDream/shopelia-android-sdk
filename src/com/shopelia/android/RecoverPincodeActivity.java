@@ -230,9 +230,10 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
     private OnClickListener mOnClickValidateListener = new OnClickListener() {
 
         @Override
-        public void onClick(View v) {
+        public void onClick(final View v) {
             if (mFormContainer.validate()) {
                 setWaitingMode(true);
+                v.setEnabled(false);
                 JSONObject object = mFormContainer.toJson();
                 try {
                     String month = object.getString(User.Api.CC_MONTH);
@@ -244,6 +245,7 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
 
                         @Override
                         public void onComplete(HttpResponse httpResponse) {
+                            v.setEnabled(true);
                             if (httpResponse.getStatus() == 204) {
                                 Intent intent = new Intent(RecoverPincodeActivity.this, PincodeActivity.class);
                                 intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, true);
@@ -260,6 +262,7 @@ public class RecoverPincodeActivity extends ShopeliaActivity {
                         @Override
                         public void onError(Exception e) {
                             setError(getString(R.string.shopelia_recover_pin_network_error), false);
+                            v.setEnabled(true);
                         };
 
                     });
