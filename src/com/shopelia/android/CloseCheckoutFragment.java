@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
@@ -27,6 +29,8 @@ public class CloseCheckoutFragment extends ShopeliaFragment<Void> {
 
             @Override
             public void onClick(View v) {
+                track(Analytics.Events.Steps.Finalize.END, AnalyticsBuilder.prepareMethodPackage(getActivity(),
+                        Analytics.Properties.Steps.Finalizing.Method.BACK_ON_APPLICATION));
                 getActivity().finish();
             }
         });
@@ -44,6 +48,8 @@ public class CloseCheckoutFragment extends ShopeliaFragment<Void> {
     protected void onActionItemSelected(Item item) {
         super.onActionItemSelected(item);
         if (item.getId() == R.id.shopelia_action_bar_sign_out) {
+            track(Analytics.Events.Steps.Finalize.END,
+                    AnalyticsBuilder.prepareMethodPackage(getActivity(), Analytics.Properties.Steps.Finalizing.Method.SIGN_OUT));
             UserManager.get(getActivity()).logout();
             getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
             getActivity().finish();

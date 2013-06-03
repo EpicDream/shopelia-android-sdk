@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
+import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 
 public class ProcessOrderActivity extends ShopeliaActivity {
@@ -21,6 +22,7 @@ public class ProcessOrderActivity extends ShopeliaActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, new ConfirmationFragment());
             ft.commit();
+            track(Analytics.Events.Steps.Confirmation.BEGIN);
         }
 
     }

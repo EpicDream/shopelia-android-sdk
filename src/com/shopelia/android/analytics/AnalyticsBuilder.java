@@ -25,7 +25,7 @@ public class AnalyticsBuilder extends JSONObject {
         return builder;
     }
 
-    public static AnalyticsBuilder prepareAddAddressMethod(Context context, String method) {
+    public static AnalyticsBuilder prepareMethodPackage(Context context, String method) {
         AnalyticsBuilder builder = new AnalyticsBuilder(context);
         builder.add(Analytics.Properties.METHOD, method);
         return builder;

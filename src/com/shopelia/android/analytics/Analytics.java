@@ -25,7 +25,7 @@ public interface Analytics {
 
             public interface Finalize {
                 String BEGIN = "Display Thank you";
-                String END = "Worklow Done";
+                String END = "Worklow Completed";
             }
 
             String SIGNING_IN = "Signing In";
@@ -69,6 +69,15 @@ public interface Analytics {
                 String ADDRESS = "Address OK";
                 String PAYMENT_CARD = "Payment Card OK";
                 String PINCODE = "Pincode OK";
+            }
+
+            public interface Finalizing {
+
+                public interface Method {
+                    String BACK_ON_APPLICATION = "Back On Application";
+                    String SIGN_OUT = "Sign Out";
+                }
+
             }
 
         }

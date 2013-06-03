@@ -224,7 +224,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                             if (field != null) {
                                 Address addressWithPhone = Address.inflate(address);
                                 if (addressWithPhone.isValid()) {
-                                    track(Analytics.Events.ADD_ADDRESS_METHOD, AnalyticsBuilder.prepareAddAddressMethod(getActivity(),
+                                    track(Analytics.Events.ADD_ADDRESS_METHOD, AnalyticsBuilder.prepareMethodPackage(getActivity(),
                                             Analytics.Properties.AddAddressMethod.REVERSE_DIRECTORY));
                                 }
                                 addressWithPhone.phone = number;

@@ -320,7 +320,7 @@ public class AddAddressActivity extends ShopeliaActivity {
                 setResult(RESULT_OK, data);
                 String method = TextUtils.isEmpty(mResult.reference) ? Analytics.Properties.AddAddressMethod.MANUAL
                         : Analytics.Properties.AddAddressMethod.PLACES_AUTOCOMPLETE;
-                track(Analytics.Events.ADD_ADDRESS_METHOD, AnalyticsBuilder.prepareAddAddressMethod(AddAddressActivity.this, method));
+                track(Analytics.Events.ADD_ADDRESS_METHOD, AnalyticsBuilder.prepareMethodPackage(AddAddressActivity.this, method));
                 finish();
             }
         }

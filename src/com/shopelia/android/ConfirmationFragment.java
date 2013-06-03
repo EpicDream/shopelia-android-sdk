@@ -18,6 +18,7 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
+import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
@@ -86,6 +87,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
                 public void onOrderConfirmation(boolean succeed) {
                     stopWaiting();
+                    track(Analytics.Events.Steps.Confirmation.END);
                     Intent intent = new Intent(getActivity(), CloseCheckoutActivity.class);
                     intent.putExtra(ShopeliaActivity.EXTRA_ORDER, mOrder);
                     getActivity().startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
