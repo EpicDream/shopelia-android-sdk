@@ -18,6 +18,7 @@
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/login"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_normal"
