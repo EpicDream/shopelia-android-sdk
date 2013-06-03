@@ -28,8 +28,7 @@ public class OrderAPI extends ApiHandler {
             JSONArray products = new JSONArray();
             products.put(order.product.toJson());
             orderObject.put(Order.Api.PRODUCTS, products);
-            orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL,
-                    FormatUtils.formatPrice(order.product.deliveryPrice + order.product.productPrice));
+            orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL, order.product.deliveryPrice + order.product.productPrice);
             orderObject.put(PaymentCard.Api.PAYMENT_CARD_ID, order.card.id);
             orderObject.put(Address.Api.ADDRESS_ID, order.address.id);
             params.put(Order.Api.ORDER, orderObject);
