@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -30,7 +31,7 @@ public class Merchant implements Parcelable, JsonData {
     public long id = INVALID_ID;
     public String name;
     public String logo;
-    public String url;
+    public Uri uri;
 
     public Merchant() {
 
@@ -40,7 +41,7 @@ public class Merchant implements Parcelable, JsonData {
         id = source.readLong();
         name = source.readString();
         logo = source.readString();
-        url = source.readString();
+        uri = source.readParcelable(Uri.class.getClassLoader());
     }
 
     @Override
@@ -53,7 +54,7 @@ public class Merchant implements Parcelable, JsonData {
         dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(logo);
-        dest.writeString(url);
+        dest.writeParcelable(uri, flags);
     }
 
     public static final Parcelable.Creator<Merchant> CREATOR = new Creator<Merchant>() {
@@ -75,7 +76,7 @@ public class Merchant implements Parcelable, JsonData {
         object.put(Api.ID, id);
         object.put(Api.NAME, name);
         object.put(Api.LOGO, logo);
-        object.put(Api.URL, url);
+        object.put(Api.URL, uri.toString());
         return object;
     }
 
@@ -84,7 +85,7 @@ public class Merchant implements Parcelable, JsonData {
         merchant.id = object.optLong(Api.ID);
         merchant.name = object.getString(Api.NAME);
         merchant.logo = object.optString(Api.LOGO);
-        merchant.url = object.getString(Api.URL);
+        merchant.uri = Uri.parse(object.getString(Api.URL));
         return merchant;
     }
 
