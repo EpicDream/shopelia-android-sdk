@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.SparseArray;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,6 +30,8 @@ import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
@@ -56,6 +59,19 @@ public class AddAddressActivity extends ShopeliaActivity {
     public static final String EXTRA_ADDRESS_OBJECT = Config.EXTRA_PREFIX + "OBJECT";
 
     public static final String LOG_TAG = "AddAddressActivity";
+
+    private static final SparseArray<String> CLICK_ON;
+
+    static {
+        CLICK_ON = new SparseArray<String>();
+        CLICK_ON.put(R.id.first_name, Analytics.Properties.ClickOn.SigningUp.ADDRESS_NAME);
+        CLICK_ON.put(R.id.name, Analytics.Properties.ClickOn.SigningUp.ADDRESS_LAST_NAME);
+        CLICK_ON.put(R.id.address, Analytics.Properties.ClickOn.SigningUp.ADDRESS_LINE_1);
+        CLICK_ON.put(R.id.extras, Analytics.Properties.ClickOn.SigningUp.ADDRESS_LINE_2);
+        CLICK_ON.put(R.id.country, Analytics.Properties.ClickOn.SigningUp.ADDRESS_COUNTRY);
+        CLICK_ON.put(R.id.city, Analytics.Properties.ClickOn.SigningUp.ADDRESS_CITY);
+        CLICK_ON.put(R.id.zipcode, Analytics.Properties.ClickOn.SigningUp.ADDRESS_ZIP);
+    }
 
     // Views
     private AutoCompleteTextView mAddressField;
@@ -302,6 +318,9 @@ public class AddAddressActivity extends ShopeliaActivity {
                 extras.putParcelable(EXTRA_ADDRESS_OBJECT, mResult);
                 data.putExtras(extras);
                 setResult(RESULT_OK, data);
+                String method = TextUtils.isEmpty(mResult.reference) ? Analytics.Properties.AddAddressMethod.MANUAL
+                        : Analytics.Properties.AddAddressMethod.PLACES_AUTOCOMPLETE;
+                track(Analytics.Events.ADD_ADDRESS_METHOD, AnalyticsBuilder.prepareAddAddressMethod(AddAddressActivity.this, method));
                 finish();
             }
         }
@@ -363,7 +382,13 @@ public class AddAddressActivity extends ShopeliaActivity {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             validate(false);
-
+            if (hasFocus) {
+                String action = CLICK_ON.get(v.getId());
+                if (action != null) {
+                    track(Analytics.Events.Steps.SignUp.SIGN_UP_ACTION,
+                            AnalyticsBuilder.prepareClickOnPackage(AddAddressActivity.this, action));
+                }
+            }
             if (v == mAddressField && !TextUtils.isEmpty(mAddressField.getText()) && v.getTag() == null) {
                 mPostalCodeField.setVisibility(View.VISIBLE);
                 mCityField.setVisibility(View.VISIBLE);

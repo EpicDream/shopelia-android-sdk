@@ -48,6 +48,8 @@ public interface Analytics {
 
         }
 
+        public String ADD_ADDRESS_METHOD = "AddAddressMethod";
+
     }
 
     public interface Properties {
@@ -55,6 +57,7 @@ public interface Analytics {
         String EVENT_TIME = "Event Time";
         String STEP = "Step";
         String CLICK_ON = "Click On";
+        String METHOD = "Method";
 
         public interface Steps {
 
@@ -70,6 +73,12 @@ public interface Analytics {
 
         }
 
+        public interface AddAddressMethod {
+            String PLACES_AUTOCOMPLETE = "Places Autocompletion";
+            String REVERSE_DIRECTORY = "Reverse Directory";
+            String MANUAL = "Manual";
+        }
+
         public interface ClickOn {
 
             public interface SigningUp {
@@ -79,7 +88,7 @@ public interface Analytics {
                 String ADDRESS_NAME = "Address First Name";
                 String ADDRESS_LAST_NAME = "Address Last Name";
                 String ADDRESS_LINE_1 = "Address Line 1";
-                String ADDRESS_EXTRA = "Address Line 2";
+                String ADDRESS_LINE_2 = "Address Line 2";
                 String ADDRESS_ZIP = "Address Zip Code";
                 String ADDRESS_COUNTRY = "Address Country";
                 String ADDRESS_CITY = "Address City";
