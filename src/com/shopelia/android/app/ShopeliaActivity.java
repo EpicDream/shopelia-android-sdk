@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.ActionBar.OnItemClickListener;
 import com.shopelia.android.widget.actionbar.ActionBarWidget;
+import com.shopelia.android.widget.actionbar.ProgressBarItem;
 
 /**
  * Base activity of the shopelia SDK. This Activity has a default appearance and
@@ -54,13 +56,15 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     private ShopeliaActivityPath mCurrentActivity;
     private FrameLayout mRootView;
     private ActionBar mActionBar;
+    private Handler mHandler = new Handler();
     private int mMode = MODE_CLEARED;
     @SuppressWarnings("rawtypes")
     private List<WeakReference<ShopeliaFragment>> mAttachedFragment = new ArrayList<WeakReference<ShopeliaFragment>>();
-
     private ProgressDialog mProgressDialog;
 
     private ShopeliaTracking mTrackingObject = new ShopeliaTracking();
+
+    private Runnable mWaitModeRunnable;
 
     @Override
     protected void onCreate(Bundle saveState) {
@@ -140,12 +144,27 @@ public abstract class ShopeliaActivity extends FragmentActivity {
      * @param isCancelable Action is cancelable (true or false)
      */
     public void startWaiting(CharSequence message, boolean blockUi, boolean isCancelable) {
-        setWaitingMode(true);
+        getShopeliaActionBar().save();
         if (blockUi) {
+            setWaitingMode(true);
             mProgressDialog = ProgressDialog.show(this, getString(R.string.shopelia_dialog_title), message);
         } else {
-            // getActionBar().ge
+            setQuietWaitingMode(true);
+            getShopeliaActionBar().clear();
+            getShopeliaActionBar().addItem(new ProgressBarItem(0, message.toString()));
+            getShopeliaActionBar().commit();
         }
+    }
+
+    public void startDelayedWaiting(final CharSequence message, final boolean blockUi, final boolean isCancelable, long delay) {
+        mWaitModeRunnable = new Runnable() {
+
+            @Override
+            public void run() {
+                startWaiting(message, blockUi, isCancelable);
+            }
+        };
+        mHandler.postDelayed(mWaitModeRunnable, delay);
     }
 
     /**
@@ -153,11 +172,19 @@ public abstract class ShopeliaActivity extends FragmentActivity {
      * {@link ShopeliaActivity#startWaiting(CharSequence, boolean, boolean)}
      */
     public void stopWaiting() {
-        setWaitingMode(false);
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-            mProgressDialog = null;
+        if (mWaitModeRunnable != null) {
+            mHandler.removeCallbacks(mWaitModeRunnable);
+            mWaitModeRunnable = null;
         }
+        if ((mMode & MODE_WAITING) == MODE_WAITING) {
+            getShopeliaActionBar().restore();
+            getShopeliaActionBar().commit();
+            if (mProgressDialog != null) {
+                mProgressDialog.dismiss();
+                mProgressDialog = null;
+            }
+        }
+        setWaitingMode(false);
     }
 
     /**
@@ -207,6 +234,18 @@ public abstract class ShopeliaActivity extends FragmentActivity {
      */
     public int getMode() {
         return mMode;
+    }
+
+    public Handler getHandler() {
+        return mHandler;
+    }
+
+    public void post(Runnable runnable) {
+        mHandler.post(runnable);
+    }
+
+    public void postDelayed(Runnable runnable, long delay) {
+        mHandler.postDelayed(runnable, delay);
     }
 
     @SuppressWarnings("rawtypes")

@@ -67,7 +67,6 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHostContentView(R.layout.shopelia_process_order_activity);
-
         mTimeToBlock = getSharedPreferences().getLong(PREF_TIME_TO_BLOCK, 0L);
 
         init(savedInstanceState != null ? savedInstanceState : getIntent().getExtras());
@@ -186,6 +185,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
             params.put(User.Api.PINCODE, pincode);
         } catch (JSONException e) {
         }
+        startDelayedWaiting(getString(R.string.shopelia_pincode_verification), false, false, 500L);
         ShopeliaRestClient.post(Command.V1.Users.Verify.$, params, mAsyncCallback);
         return true;
     }
@@ -272,6 +272,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
                     mPincodeHandlerCallback.onPincodeCheckDone(true);
                 }
             } else {
+                stopWaiting();
                 if (response.getStatus() == 503) {
                     try {
                         Log.d(null, response.getBodyAsString());
@@ -291,6 +292,7 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         public void onError(Exception e) {
             e.printStackTrace();
             Toast.makeText(PincodeActivity.this, R.string.shopelia_error_network_error, Toast.LENGTH_LONG).show();
+            stopWaiting();
         };
 
     };

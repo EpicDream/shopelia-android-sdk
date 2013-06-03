@@ -21,6 +21,15 @@ public class StateList<E> implements List<E> {
 
     }
 
+    public StateList(StateList<E> cpy) {
+        for (E elem : cpy.mStaged) {
+            mStaged.add(elem);
+        }
+        for (E elem : cpy.mCommitted) {
+            mCommitted.add(elem);
+        }
+    }
+
     public void commit() {
         mCommitted.clear();
         for (E item : mStaged) {

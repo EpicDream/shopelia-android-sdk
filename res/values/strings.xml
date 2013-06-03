@@ -84,8 +84,10 @@
 
     <!-- Pin code -->
     <string name="shopelia_pincode_create">CRÉEZ VOTRE CODE D\'ACCÈS</string>
-    <string name="shopelia_pincode_re_enter">VÉRIFIEZ VOTRE CODE D\’ACCÈS</string>
-    <string name="shopelia_pincode_enter">ENTREZ VOTRE CODE D\’ACCÈS</string>
+    <string name="shopelia_pincode_re_enter">VÉRIFIEZ VOTRE CODE D\'ACCÈS</string>
+    <string name="shopelia_pincode_enter">ENTREZ VOTRE CODE D\'ACCÈS</string>
+    <string name="shopelia_pincode_verification">Vérification...</string>
+    <string name="shopelia_pincode_update">Mise à jour...</string>
     <string name="shopelia_pincode_description_create">Ce code de sécurité vous sera demandé lors de vos prochaines commandes</string>
     <string name="shopelia_pincode_wrong">Code d\'accès incorrect</string>
     <string name="shopelia_pincode_retry" formatted="false">Réessayez dans %s et %s</string>

@@ -1,5 +1,8 @@
 package com.shopelia.android.widget.actionbar;
 
+import java.util.LinkedList;
+import java.util.NoSuchElementException;
+
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -61,6 +64,7 @@ public class ActionBar {
     private Context mContext;
     private ActionBarWidget mActionBarWidget;
     private StateList<Item> mItems = new StateList<ActionBar.Item>();
+    private LinkedList<StateList<Item>> mSavedStates = new LinkedList<StateList<Item>>();
     private LayoutInflater mInflater;
     private OnItemClickListener mOnItemClickListener;
 
@@ -119,6 +123,18 @@ public class ActionBar {
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         mOnItemClickListener = listener;
+    }
+
+    public void save() {
+        mSavedStates.add(new StateList<ActionBar.Item>(mItems));
+    }
+
+    public void restore() {
+        try {
+            mItems = mSavedStates.getLast();
+        } catch (NoSuchElementException e) {
+            throw new IllegalStateException("Too much call to restore", e);
+        }
     }
 
     private void doCommit() {
