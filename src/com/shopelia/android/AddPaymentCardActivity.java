@@ -26,6 +26,7 @@ import android.widget.TextView;
 
 import com.shopelia.android.algorithm.Luhn;
 import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.PaymentCard;
@@ -40,14 +41,14 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
     public static final String EXTRA_PAYMENT_CARD = Config.EXTRA_PREFIX + "PAYMENT_CARD";
 
     private static final SparseArray<String> CLICK_ON;
-    
+
     static {
-    	CLICK_ON = new SparseArray<String>();
-    	CLICK_ON.put(R.id.card_numer, Analytics.Properties.ClickOn.SigningUp.PAYMENT_NUMBER);
-    	CLICK_ON.put(R.id.expiry_date, Analytics.Properties.ClickOn.SigningUp.PAYMENT_DATE);
-    	CLICK_ON.put(R.id.cvv, Analytics.Properties.ClickOn.SigningUp.PAYMENT_CVV);
+        CLICK_ON = new SparseArray<String>();
+        CLICK_ON.put(R.id.card_numer, Analytics.Properties.ClickOn.SigningUp.PAYMENT_NUMBER);
+        CLICK_ON.put(R.id.expiry_date, Analytics.Properties.ClickOn.SigningUp.PAYMENT_DATE);
+        CLICK_ON.put(R.id.cvv, Analytics.Properties.ClickOn.SigningUp.PAYMENT_CVV);
     }
-    
+
     private static final int MAX_CARD_VALIDITY_YEAR = 15;
     private static final int MAX_MONTH_VALUE = 12;
 
@@ -61,6 +62,8 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
     private TextView mHeaderTitle;
 
     private PaymentCard mPaymentCard;
+
+    private boolean mCardScanned = false;
 
     @Override
     protected void onCreate(Bundle saveState) {
@@ -293,6 +296,15 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
                 checkCvv(null, false);
             }
             validateHeader();
+
+            if (hasFocus) {
+                String action = CLICK_ON.get(v.getId());
+                if (action != null) {
+                    track(Analytics.Events.Steps.SignUp.SIGN_UP_ACTION,
+                            AnalyticsBuilder.prepareClickOnPackage(AddPaymentCardActivity.this, action));
+                }
+            }
+
         }
     };
 
@@ -384,6 +396,7 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
                     CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                     mCardNumberField.setText(scanResult.cardNumber);
                     mExpiryField.requestFocus();
+                    mCardScanned = true;
                     (new Handler()).postDelayed(new Runnable() {
 
                         public void run() {
@@ -418,6 +431,11 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
         public void onClick(View v) {
             if (validate(true)) {
                 closeSoftKeyboard();
+                if (mCardScanned) {
+                    track(Analytics.Events.AddPaymentCardMethod.CARD_SCANNED);
+                } else {
+                    track(Analytics.Events.AddPaymentCardMethod.CARD_NOT_SCANNED);
+                }
                 Intent data = new Intent();
                 data.putExtra(EXTRA_PAYMENT_CARD, mPaymentCard);
                 setResult(RESULT_OK, data);

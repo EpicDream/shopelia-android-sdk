@@ -34,6 +34,11 @@ public interface Analytics {
 
         }
 
+        public interface AddPaymentCardMethod {
+            String CARD_SCANNED = "Payment Card Scanned";
+            String CARD_NOT_SCANNED = "Payment Card Not Scanned";
+        }
+
         public interface Activities {
             String SCREEN_SEEN = "Screen seen";
         }
@@ -66,28 +71,28 @@ public interface Analytics {
         }
 
         public interface ClickOn {
-        	
-        	public interface SigningUp {
-        		String EMAIL = "Email";
-        		String PHONE = "Phone";
-        		String ADDRESS = "Address";
-        		String ADDRESS_NAME = "Address First Name";
-        		String ADDRESS_LAST_NAME = "Address Last Name";
-        		String ADDRESS_LINE_1 = "Address Line 1";
-        		String ADDRESS_EXTRA = "Address Line 2";
-        		String ADDRESS_ZIP = "Address Zip Code";
-        		String ADDRESS_COUNTRY = "Address Country";
-        		String ADDRESS_CITY = "Address City";
-        		String PINCODE = "Pincode";
-        		String PAYMENT_CARD = "Payment Card";
-        		String PAYMENT_NUMBER = "Payment Number";
-        		String PAYMENT_DATE = "Payment Expiry Date";
-        		String PAYMENT_CVV = "Payment CVV";
-        		String PAYMENT_SCANNED = "Payment Scanned";
-        	}
-        	
+
+            public interface SigningUp {
+                String EMAIL = "Email";
+                String PHONE = "Phone";
+                String ADDRESS = "Address";
+                String ADDRESS_NAME = "Address First Name";
+                String ADDRESS_LAST_NAME = "Address Last Name";
+                String ADDRESS_LINE_1 = "Address Line 1";
+                String ADDRESS_EXTRA = "Address Line 2";
+                String ADDRESS_ZIP = "Address Zip Code";
+                String ADDRESS_COUNTRY = "Address Country";
+                String ADDRESS_CITY = "Address City";
+                String PINCODE = "Pincode";
+                String PAYMENT_CARD = "Payment Card";
+                String PAYMENT_NUMBER = "Payment Number";
+                String PAYMENT_DATE = "Payment Expiry Date";
+                String PAYMENT_CVV = "Payment CVV";
+                String PAYMENT_SCANNED = "Payment Scanned";
+            }
+
         }
-        
+
     }
-    
+
 }
