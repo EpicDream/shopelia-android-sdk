@@ -143,6 +143,8 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         setWaitingMode(true);
         if (blockUi) {
             mProgressDialog = ProgressDialog.show(this, getString(R.string.shopelia_dialog_title), message);
+        } else {
+            // getActionBar().ge
         }
     }
 
