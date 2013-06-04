@@ -117,6 +117,9 @@ public class ActionBar {
         container.removeAllViews();
         for (Item item : mItems) {
             View view = item.getView(this);
+            if (view.getParent() != null && view.getParent() instanceof ViewGroup) {
+                ((ViewGroup) view.getParent()).removeView(view);
+            }
             view.setOnClickListener(mOnClickListener);
             container.addView(view);
         }
