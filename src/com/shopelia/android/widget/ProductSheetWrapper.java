@@ -69,8 +69,12 @@ public class ProductSheetWrapper {
             tax = mArguments.getParcelable(PrepareOrderActivity.EXTRA_TAX);
         }
         if (mArguments.containsKey(PrepareOrderActivity.EXTRA_SHIPPING_PRICE)) {
-            mShippingFees.setText(getString(R.string.shopelia_product_shipping_fees,
-                    currency.format(mArguments.getFloat(PrepareOrderActivity.EXTRA_SHIPPING_PRICE))));
+            final float shippingPrice = mArguments.getFloat(PrepareOrderActivity.EXTRA_SHIPPING_PRICE);
+            if (shippingPrice > 0) {
+                mShippingFees.setText(getString(R.string.shopelia_product_shipping_fees, currency.format(shippingPrice)));
+            } else {
+                mShippingFees.setText(getString(R.string.shopelia_product_free_shipping));
+            }
             mShippingFees.setVisibility(View.VISIBLE);
         } else {
             mShippingFees.setVisibility(View.GONE);

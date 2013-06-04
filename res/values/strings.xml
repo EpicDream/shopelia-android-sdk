@@ -70,7 +70,8 @@
 
     <!-- Product sheet -->
     <string name="shopelia_product_shipping_fees" formatted="false">Frais de livraison : %s</string>
-
+    <string name="shopelia_product_free_shipping">Livraison gratuite</string>
+    
     <!-- Waiting process -->
     <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
     <string name="shopelia_waiting_with_shopelia_order_with_1_click">Avec Shopelia, commandez facilement en 1-clic avec votre mobile sur n\'importe quel site e-commerce !</string>
