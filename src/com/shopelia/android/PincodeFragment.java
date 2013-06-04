@@ -92,7 +92,6 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
     @Override
     public void onResume() {
         super.onResume();
-        getBaseActivity().startDelayedWaiting(getString(R.string.shopelia_pincode_verification), false, false, 500L);
     }
 
     @Override

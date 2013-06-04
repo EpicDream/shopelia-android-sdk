@@ -89,6 +89,7 @@ public class ActionBar {
             return;
         }
         if (mItems.size() > 0) {
+            mActionBarWidget.swapBuffer();
             doCommit();
         } else {
             doCommit();
