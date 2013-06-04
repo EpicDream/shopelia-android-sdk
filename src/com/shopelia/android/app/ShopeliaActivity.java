@@ -62,7 +62,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     private List<WeakReference<ShopeliaFragment>> mAttachedFragment = new ArrayList<WeakReference<ShopeliaFragment>>();
     private ProgressDialog mProgressDialog;
 
-    private ShopeliaTracking mTrackingObject = new ShopeliaTracking();
+    private ShopeliaTracking mTrackingObject = ShopeliaTracking.Factory.create(ShopeliaTracking.MIXPANEL);
 
     private Runnable mWaitModeRunnable;
 

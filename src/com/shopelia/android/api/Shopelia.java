@@ -107,7 +107,8 @@ public final class Shopelia implements Parcelable {
         mData = new Intent();
         mData.putExtra(EXTRA_PRODUCT_URL, productUrl);
         mData.putExtra(EXTRA_MERCHANT, merchant);
-        ShopeliaTracking tracking = new ShopeliaTracking(context);
+        ShopeliaTracking tracking = ShopeliaTracking.Factory.create(ShopeliaTracking.MIXPANEL);
+        tracking.init(context);
         tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
         tracking.flush();
     }

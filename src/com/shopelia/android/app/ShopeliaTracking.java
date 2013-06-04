@@ -1,51 +1,34 @@
 package com.shopelia.android.app;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.utils.JsonUtils;
+import com.shopelia.android.app.tracking.MixPanelTracking;
 
-public class ShopeliaTracking {
+public interface ShopeliaTracking {
 
-    private static final String MIXPANEL_API_TOKEN = "4938aa680803589593ce9287c33abf43";
+    public int MIXPANEL = 0x1;
 
-    private MixpanelAPI mMixpanelInstance;
+    public void init(Context context);
 
-    public ShopeliaTracking() {
+    public void track(String eventName);
 
-    }
+    public void track(String eventName, JSONObject object);
 
-    public ShopeliaTracking(Context context) {
-        init(context);
-    }
+    public void flush();
 
-    public void init(Context context) {
-        mMixpanelInstance = MixpanelAPI.getInstance(context, MIXPANEL_API_TOKEN);
-    }
+    public static class Factory {
 
-    public void track(String eventName) {
-        track(eventName, null);
-    }
-
-    public void track(String eventName, JSONObject object) {
-        if (mMixpanelInstance != null) {
-        	try {
-        		object = JsonUtils.insert(object, Analytics.Properties.EVENT_TIME, System.currentTimeMillis() / 1000);
-        	} catch (JSONException e) {
-        		
-        	}
-            mMixpanelInstance.track(eventName, object);
+        public static ShopeliaTracking create(int provider) {
+            switch (provider) {
+                case MIXPANEL:
+                    return new MixPanelTracking();
+                default:
+                    return new MixPanelTracking();
+            }
         }
-    }
 
-    public void flush() {
-        if (mMixpanelInstance != null) {
-            mMixpanelInstance.flush();
-        }
     }
 
 }
