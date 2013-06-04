@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -23,6 +24,7 @@ import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.api.ShopeliaActivityPath;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.utils.DigestUtils;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.ActionBar.OnItemClickListener;
@@ -40,6 +42,8 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     public static final String EXTRA_ORDER = Config.EXTRA_PREFIX + "ORDER";
     protected static final String EXTRA_INIT_ORDER = Config.EXTRA_PREFIX + "INIT_ORDER";
     public static final String EXTRA_USER = Config.EXTRA_PREFIX + "USER";
+
+    private static final String EXTRA_SESSION_ID = Config.EXTRA_PREFIX + "PRIVATE_SESSION_ID";
 
     public static final int REQUEST_CHECKOUT = 0x1602;
     public static final int RESULT_FAILURE = 0xfa15e;
@@ -62,18 +66,25 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     private List<WeakReference<ShopeliaFragment>> mAttachedFragment = new ArrayList<WeakReference<ShopeliaFragment>>();
     private ProgressDialog mProgressDialog;
 
-    private ShopeliaTracking mTrackingObject = ShopeliaTracking.Factory.create(ShopeliaTracking.MIXPANEL);
+    private String mSessionId;
+    private ShopeliaTracker mTrackingObject = ShopeliaTracker.Factory.create(ShopeliaTracker.MIXPANEL);
 
     private Runnable mWaitModeRunnable;
 
     @Override
-    protected void onCreate(Bundle saveState) {
+    protected void onCreate(Bundle savedInstanceState) {
         mActionBar = new ActionBar(this);
-        super.onCreate(saveState);
+        super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mSessionId = savedInstanceState.getString(EXTRA_SESSION_ID);
+        } else {
+            mSessionId = getIntent().getExtras().getString(EXTRA_SESSION_ID);
+        }
 
         if (isTracked()) {
             mTrackingObject.init(this);
-            if (saveState == null) {
+            if (savedInstanceState == null) {
                 fireScreenSeenEvent(getActivityName());
             }
         }
@@ -83,18 +94,23 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         mActionBar.bindWidget((ActionBarWidget) super.findViewById(R.id.action_bar));
         mActionBar.setOnItemClickListener(mOnActionBarItemClickListener);
         if (isPartOfOrderWorkFlow()) {
-            recoverOrder(saveState == null ? getIntent().getExtras() : saveState);
+            recoverOrder(savedInstanceState == null ? getIntent().getExtras() : savedInstanceState);
             if (mOrder == null) {
                 throw new UnsupportedOperationException("Activity should hold an order at this point");
             }
         }
 
-        if (saveState == null) {
+        if (savedInstanceState == null) {
             mCurrentActivity = new ShopeliaActivityPath();
             mCurrentActivity.setActivityName(getActivityName());
             mCurrentActivity.startRecording();
         }
 
+    }
+
+    protected void createSessionId(long value, String str) {
+        String input = value + str;
+        mSessionId = DigestUtils.SHA1(input, "UTF-8");
     }
 
     public void fireScreenSeenEvent(String screenName) {
@@ -248,6 +264,22 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         mHandler.postDelayed(runnable, delay);
     }
 
+    @Override
+    public void startActivity(Intent intent) {
+        if (intent != null) {
+            intent.putExtra(EXTRA_SESSION_ID, getSessionId());
+        }
+        super.startActivity(intent);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        if (intent != null) {
+            intent.putExtra(EXTRA_SESSION_ID, getSessionId());
+        }
+        super.startActivityForResult(intent, requestCode);
+    }
+
     @SuppressWarnings("rawtypes")
     @Override
     public void onAttachFragment(android.support.v4.app.Fragment fragment) {
@@ -314,6 +346,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(EXTRA_ORDER, mOrder);
+        outState.putString(EXTRA_SESSION_ID, getSessionId());
     }
 
     @Override
@@ -373,5 +406,9 @@ public abstract class ShopeliaActivity extends FragmentActivity {
             onActionItemSelected(item);
         }
     };
+
+    public String getSessionId() {
+        return mSessionId;
+    }
 
 }

@@ -120,7 +120,14 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         super.onCreate(savedInstanceState);
         setHostContentView(R.layout.shopelia_prepare_order_activity);
         mScrollView = (ScrollView) findViewById(R.id.scrollview);
+
+        if (getIntent().getExtras() == null || !getIntent().getExtras().containsKey(EXTRA_PRODUCT_URL)) {
+            finish();
+            return;
+        }
+
         if (savedInstanceState == null) {
+            createSessionId(System.currentTimeMillis(), getIntent().getStringExtra(EXTRA_PRODUCT_URL));
             if (!UserManager.get(this).isLogged()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 if (UserManager.get(this).getLoginsCount() > 0) {
@@ -166,7 +173,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                     createAccount();
                     track(Analytics.Events.Steps.SignUp.SIGNING_UP,
                             AnalyticsBuilder.prepareStepPackage(this, Analytics.Properties.Steps.SigningUp.PINCODE));
-                } 
+                }
                 break;
             case REQUEST_AUTH_PINCODE:
                 if (resultCode == RESULT_OK) {

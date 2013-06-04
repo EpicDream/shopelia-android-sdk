@@ -54,8 +54,9 @@ public interface Analytics {
 
     public interface Properties {
         String SCREEN_NAME = "Screen Name";
-        String EVENT_TIME = "Event Time";
         String STEP = "Step";
+        String SESSION = "session_id";
+        String SDK_INT = "sdk_version";
         String CLICK_ON = "Click On";
         String METHOD = "Method";
 

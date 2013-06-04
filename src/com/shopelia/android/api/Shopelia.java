@@ -12,7 +12,7 @@ import android.os.Parcelable;
 
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.app.ShopeliaTracking;
+import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.model.Merchant;
 import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.MerchantsAPI;
@@ -107,7 +107,7 @@ public final class Shopelia implements Parcelable {
         mData = new Intent();
         mData.putExtra(EXTRA_PRODUCT_URL, productUrl);
         mData.putExtra(EXTRA_MERCHANT, merchant);
-        ShopeliaTracking tracking = ShopeliaTracking.Factory.create(ShopeliaTracking.MIXPANEL);
+        ShopeliaTracker tracking = ShopeliaTracker.Factory.create(ShopeliaTracker.MIXPANEL);
         tracking.init(context);
         tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
         tracking.flush();

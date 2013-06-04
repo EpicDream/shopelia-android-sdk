@@ -4,9 +4,9 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
-import com.shopelia.android.app.tracking.MixPanelTracking;
+import com.shopelia.android.app.tracking.MixPanelTracker;
 
-public interface ShopeliaTracking {
+public interface ShopeliaTracker {
 
     public int MIXPANEL = 0x1;
 
@@ -20,12 +20,12 @@ public interface ShopeliaTracking {
 
     public static class Factory {
 
-        public static ShopeliaTracking create(int provider) {
+        public static ShopeliaTracker create(int provider) {
             switch (provider) {
                 case MIXPANEL:
-                    return new MixPanelTracking();
+                    return new MixPanelTracker();
                 default:
-                    return new MixPanelTracking();
+                    return new MixPanelTracker();
             }
         }
 
