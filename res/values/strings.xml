@@ -81,6 +81,7 @@
     <string name="shopelia_confirmation_title">Vérification et validation de votre commande</string>
     <string name="shopelia_confirmation_shipping_fees">Frais de livraison</string>
     <string name="shopelia_confirmation_total_price">TOTAL</string>
+    <string name="shopelia_confirmation_error">Une erreur est survenue. Impossible de valider votre commande.</string>
 
     <!-- Pin code -->
     <string name="shopelia_pincode_create">CRÉEZ VOTRE CODE D\'ACCÈS</string>
@@ -93,8 +94,8 @@
     <string name="shopelia_pincode_retry" formatted="false">Réessayez dans %s et %s</string>
     <string name="shopelia_pincode_retry_seconds" formatted="false">Réessayez dans %s</string>
     <string name="shopelia_pincode_forgotten"><![CDATA[<u>Code d\'accès oublié ?</u>]]></string>
-	<string name="shopelia_pincode_your_pincode_is" formatted="false" >Votre code d\'accès est : %s</string>
-    
+    <string name="shopelia_pincode_your_pincode_is" formatted="false">Votre code d\'accès est : %s</string>
+
     <!-- Recover password -->
     <string name="shopelia_recover_password_title">Mot de passe oublié ?</string>
     <string name="shopelia_recover_password_description">Les instructions de réinitialisation du mot de passe vous seront envoyées sur votre email</string>
@@ -139,7 +140,7 @@
     <string name="shopelia_logout_are_you_sure">Voulez-vous vraiment vous déconnecter ?</string>
     <string name="shopelia_logout_positive">Se déconnecter</string>
     <string name="shopelia_logout_cancel">Annuler</string>
-    
+
     <!-- Errors -->
     <string name="shopelia_error_network_error">Une erreur réseau est survenue</string>
     <string name="shopelia_error_server_broke_down">Les serveurs shopelia ne répondent pas</string>
