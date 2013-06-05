@@ -63,8 +63,13 @@ public class FontableTextView extends TextView {
      */
     private Typeface getTypeface(int fontFamily, int fontStyle) {
 
-        if (isInEditMode()) {
-            return Typeface.DEFAULT;
+        if (isInEditMode() || android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.GINGERBREAD) {
+            switch (fontStyle) {
+                case STYLE_BOLD:
+                    return Typeface.DEFAULT_BOLD;
+                default:
+                    return Typeface.DEFAULT;
+            }
         }
 
         SparseArray<Typeface> typefacesForFamily = sTypefaces.get(fontFamily);

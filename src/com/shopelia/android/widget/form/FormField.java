@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,8 +64,9 @@ public abstract class FormField extends FrameLayout implements Errorable {
         if (sLayoutInflater == null || sLayoutInflater.getContext() != context) {
             sLayoutInflater = LayoutInflater.from(context);
         }
-        mBoundedView = createView(getContext(), sLayoutInflater, this);
+        View v = createView(getContext(), sLayoutInflater, this);
         removeAllViews();
+        mBoundedView = v;
         addView(mBoundedView);
     }
 
@@ -272,7 +272,6 @@ public abstract class FormField extends FrameLayout implements Errorable {
     public void invalidate() {
         super.invalidate();
         if (getBoundedView() != null) {
-            Log.d(null, "INVALIDATE");
             bindView(mBoundedView);
         }
     }

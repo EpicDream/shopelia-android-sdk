@@ -1,5 +1,7 @@
 package com.shopelia.android.widget.form;
 
+import java.util.HashSet;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
@@ -9,7 +11,6 @@ import android.text.InputFilter;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -57,6 +58,7 @@ public class EditTextField extends FormField {
     private boolean mAllowEmptyContent = true;
     private boolean mAutoTrim = true;
     private String mJsonPath;
+    private HashSet<TextWatcher> mTextWatchers = new HashSet<TextWatcher>();
 
     private int mMaxLength = INVALID_LENGTH;
 
@@ -205,7 +207,6 @@ public class EditTextField extends FormField {
         // EmailField... just by extending EditTextField and overriding this
         // method.
         if (mMaxLength > INVALID_LENGTH && holder.editText != null) {
-            Log.d(null, "GOT " + mMaxLength);
             holder.editText.setFilters(new InputFilter[] {
                 new InputFilter.LengthFilter(mMaxLength)
             });
@@ -257,6 +258,20 @@ public class EditTextField extends FormField {
         return false;
     }
 
+    public void addTextWatcher(TextWatcher textWatcher) {
+        if (textWatcher == null) {
+            return;
+        }
+        mTextWatchers.add(textWatcher);
+    }
+
+    public void removeTextWatcher(TextWatcher textWatcher) {
+        if (textWatcher == null) {
+            return;
+        }
+        mTextWatchers.remove(textWatcher);
+    }
+
     protected TextWatcher mTextWatcher = new TextWatcher() {
 
         @Override
@@ -264,12 +279,18 @@ public class EditTextField extends FormField {
             if (mOnValidateListener != null) {
                 mOnValidateListener.onTextChanged(s, start, before, count);
             }
+            for (TextWatcher textWatcher : mTextWatchers) {
+                textWatcher.onTextChanged(s, start, before, count);
+            }
         }
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             if (mOnValidateListener != null) {
                 mOnValidateListener.beforeTextChanged(s, start, count, after);
+            }
+            for (TextWatcher textWatcher : mTextWatchers) {
+                textWatcher.beforeTextChanged(s, start, count, after);
             }
         }
 
@@ -283,6 +304,9 @@ public class EditTextField extends FormField {
             if (getBoundedView() != null) {
                 ViewHolder holder = (ViewHolder) getBoundedView().getTag();
                 holder.editText.setChecked(isValid());
+            }
+            for (TextWatcher textWatcher : mTextWatchers) {
+                textWatcher.afterTextChanged(s);
             }
         }
     };

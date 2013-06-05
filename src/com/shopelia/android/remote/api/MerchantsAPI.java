@@ -76,6 +76,9 @@ public class MerchantsAPI extends ApiHandler {
 
                 @Override
                 public void onComplete(HttpResponse httpResponse) {
+                    if (httpResponse == null) {
+                        return;
+                    }
                     try {
                         mMerchants = Merchant.inflate(new JSONArray(httpResponse.getBodyAsString()));
                         saveMerchants(mMerchants);
