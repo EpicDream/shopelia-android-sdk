@@ -105,7 +105,8 @@
     <string name="shopelia_recover_password_unknown_email">Email inconnu.\n Saisissez l\'email associé à votre compte Shopelia puis cliquez sur \"Envoyer l\'email\".</string>
     <string name="shopelia_recover_password_network_error">Une erreur réseau est survenue</string>
     <string name="shopelia_recover_password_email_sent">Vous allez recevoir les instructions de réinitialisation du mot de passe dans quelques instants sur votre email</string>
-
+	<string name="shopelia_recover_password_loading">Vérification...</string>
+	
     <!-- Recover pincode -->
     <string name="shopelia_recover_pin_title">Code d\'accès oublié ?</string>
     <string name="shopelia_recover_pin_description">Saisissez les informations suivantes afin de réinitialiser votre code d\'accès</string>

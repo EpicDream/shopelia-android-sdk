@@ -55,6 +55,7 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
     }
 
     private void setError(String message, boolean shake) {
+        stopWaiting();
         mErrorMessage.setText(message);
         if (message == null) {
             mErrorMessage.setVisibility(View.GONE);
@@ -103,6 +104,7 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
         @Override
         public void onClick(final View v) {
             if (mFormLayout.validate()) {
+                startWaiting(getString(R.string.shopelia_recover_password_loading), false, false);
                 closeSoftKeyboard();
                 JSONObject params = mFormLayout.toJson();
                 v.setEnabled(false);
