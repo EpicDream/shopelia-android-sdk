@@ -101,6 +101,16 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
      */
     public static final String EXTRA_CURRENCY = Config.EXTRA_PREFIX + "CURRENCY";
 
+    /**
+     * An email that will be pre-filled for the user
+     */
+    public static final String EXTRA_USER_EMAIL = Config.EXTRA_PREFIX + "USER_EMAIL";
+
+    /**
+     * An phone that will be pre-filled for the user
+     */
+    public static final String EXTRA_USER_PHONE = Config.EXTRA_PREFIX + "USER_PHONE";
+
     private static final int REQUEST_ADD_PAYMENT_CARD = 0x0113;
     private static final int REQUEST_CREATE_PINCODE = 0x3110;
     private static final int REQUEST_AUTH_PINCODE = 0x0216;

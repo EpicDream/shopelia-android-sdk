@@ -101,6 +101,16 @@ public final class Shopelia implements Parcelable {
      */
     public static final String EXTRA_CURRENCY = PrepareOrderActivity.EXTRA_CURRENCY;
 
+    /**
+     * An email that will be pre-filled for the user
+     */
+    public static final String EXTRA_USER_EMAIL = PrepareOrderActivity.EXTRA_USER_EMAIL;
+
+    /**
+     * An phone that will be pre-filled for the user
+     */
+    public static final String EXTRA_USER_PHONE = PrepareOrderActivity.EXTRA_USER_PHONE;
+
     private Intent mData;
 
     private Shopelia(Context context, String productUrl, Merchant merchant) {
@@ -202,6 +212,16 @@ public final class Shopelia implements Parcelable {
 
     public Shopelia setProductShippingInfo(String info) {
         mData.putExtra(EXTRA_SHIPPING_INFO, info);
+        return this;
+    }
+
+    public Shopelia setUserEmail(String email) {
+        mData.putExtra(EXTRA_USER_EMAIL, email);
+        return this;
+    }
+
+    public Shopelia setUserPhone(String phone) {
+        mData.putExtra(EXTRA_USER_PHONE, phone);
         return this;
     }
 

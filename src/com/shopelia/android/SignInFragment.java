@@ -75,6 +75,11 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
         mFormContainer.onCreate(savedInstanceState);
         //@formatter:on
 
+        if (getActivity().getIntent() != null && getActivity().getIntent().hasExtra(PrepareOrderActivity.EXTRA_USER_EMAIL)) {
+            mFormContainer.findFieldById(R.id.email, EmailField.class).setContentText(
+                    getActivity().getIntent().getStringExtra(PrepareOrderActivity.EXTRA_USER_EMAIL));
+        }
+
         TextView recoverPassword = findViewById(R.id.forgotPassword);
         recoverPassword.setText(Html.fromHtml(recoverPassword.getText().toString()));
         recoverPassword.setOnClickListener(mOnRecoverPasswordClick);
