@@ -131,9 +131,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             if (!UserManager.get(this).isLogged()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 if (UserManager.get(this).getLoginsCount() > 0) {
-                    ft.add(R.id.fragment_container, mSignInFragment);
+                    ft.add(R.id.fragment_container, mSignInFragment, mSignInFragment.getName());
                 } else {
-                    ft.add(R.id.fragment_container, mSignUpFragment);
+                    ft.add(R.id.fragment_container, mSignUpFragment, mSignUpFragment.getName());
                 }
                 ft.commit();
             } else {
@@ -370,11 +370,19 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 {
                     FragmentManager fm = getSupportFragmentManager();
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    mSavedStates.put(outFragment.getClass(), fm.saveFragmentInstanceState(outFragment));
+                    try {
+                        mSavedStates.put(outFragment.getClass(), fm.saveFragmentInstanceState(outFragment));
+                    } catch (Exception e) {
+                        // Do nothing : We cannot retrieve the Fragment and this
+                        // causes an IllegalStateException. Unfortunately it
+                        // seems to be impossible to know if the fragment is or
+                        // not in the FragmentManager. The only solution seems
+                        // to catch the exception. Sad...
+                    }
                     if (mSavedStates.containsKey(inFragment.getClass())) {
                         inFragment.setInitialSavedState(mSavedStates.get(inFragment.getClass()));
                     }
-                    ft.replace(R.id.fragment_container, inFragment);
+                    ft.replace(R.id.fragment_container, inFragment, inFragment.getName());
                     ft.commit();
                 }
                 findViewById(R.id.fragment_container).startAnimation(fadeIn);

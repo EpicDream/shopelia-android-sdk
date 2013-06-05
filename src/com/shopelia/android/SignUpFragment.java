@@ -80,8 +80,10 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         super.onCreate(savedInstanceState);
         setRetainInstance(true);
 
-        if (savedInstanceState != null && mFormContainer != null) {
-            mFormContainer.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            if (mFormContainer != null) {
+                mFormContainer.onCreate(savedInstanceState);
+            }
         } else {
             fireScreenSeenEvent(FRAGMENT_NAME);
             track(Analytics.Events.Steps.SignUp.BEGIN);
@@ -183,6 +185,11 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         if (mFormContainer != null) {
             mFormContainer.onSaveInstanceState(outState);
         }
+    }
+
+    @Override
+    public String getName() {
+        return FRAGMENT_NAME;
     }
 
     private OnClickListener mOnClickListener = new OnClickListener() {

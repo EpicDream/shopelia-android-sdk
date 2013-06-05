@@ -129,4 +129,8 @@ public class ShopeliaFragment<Contract> extends Fragment {
         }
     }
 
+    public String getName() {
+        return null;
+    }
+
 }

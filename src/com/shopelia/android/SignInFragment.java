@@ -133,6 +133,11 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
         }
     }
 
+    @Override
+    public String getName() {
+        return FRAGMENT_NAME;
+    }
+
     private OnClickListener mOnClickListener = new OnClickListener() {
 
         @Override
