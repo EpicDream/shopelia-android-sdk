@@ -44,7 +44,6 @@ public class HeaderField extends FormField {
                 ta.recycle();
             }
         }
-        mHasIcon = mIcon != null;
     }
 
     public HeaderField displayLock() {
@@ -67,6 +66,7 @@ public class HeaderField extends FormField {
 
     public HeaderField setIcon(Drawable icon) {
         mIcon = icon;
+        mHasIcon = mIcon != null;
         return this;
     }
 

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,7 +41,7 @@ public abstract class FormField extends FrameLayout implements Errorable {
     private FormContainer mFormContainer;
     private Listener mListener = new ListenerAdapter();
     private OnClickListener mOnClickListener;
-    
+
     // Error management
     private boolean mError = false;
     private String mErrorMessage;
@@ -53,7 +54,7 @@ public abstract class FormField extends FrameLayout implements Errorable {
     public FormField(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-    
+
     public FormField setListener(Listener l) {
         mListener = l == null ? new ListenerAdapter() : l;
         return this;
@@ -270,20 +271,23 @@ public abstract class FormField extends FrameLayout implements Errorable {
     @Override
     public void invalidate() {
         super.invalidate();
-        bindView(mBoundedView);
+        if (getBoundedView() != null) {
+            Log.d(null, "INVALIDATE");
+            bindView(mBoundedView);
+        }
     }
 
     @Override
     public void setOnClickListener(OnClickListener l) {
-    	mOnClickListener = l;
+        mOnClickListener = l;
     }
-    
+
     public OnClickListener getOnClickListener() {
-    	return mOnClickListener;
+        return mOnClickListener;
     }
-    
+
     public boolean hasOnClickListener() {
-    	return mOnClickListener != null;
+        return mOnClickListener != null;
     }
-    
+
 }
