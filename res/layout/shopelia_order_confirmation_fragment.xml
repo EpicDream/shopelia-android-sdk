@@ -9,17 +9,19 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/shopelia_margin_extra_large"
-        android:layout_marginLeft="@dimen/shopelia_margin_large"
-        android:layout_marginRight="@dimen/shopelia_margin_large"
-        android:layout_marginTop="@dimen/shopelia_margin_large"
+        android:gravity="center"
         android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/ticket"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:layout_marginBottom="@dimen/shopelia_margin_extra_large"
+            android:layout_marginLeft="@dimen/shopelia_margin_large"
+            android:layout_marginRight="@dimen/shopelia_margin_large"
+            android:layout_marginTop="@dimen/shopelia_margin_large"
+            android:orientation="vertical"
+            android:padding="@dimen/shopelia_margin_none" >
 
             <com.shopelia.android.widget.FontableTextView
                 android:layout_width="match_parent"
@@ -143,7 +145,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/shopelia_margin_large"
                 layout="@layout/shopelia_include_footer" />
-
         </LinearLayout>
 
         <View
