@@ -27,7 +27,7 @@ public class MerchantsAPI extends ApiHandler {
     private static final String PREFS_MERCHANTS = "merchant:merchants";
     private static final String PREFS_LAST_UPDATE = "merchant:last_update";
 
-    private static final long DELAY_BEFORE_UPDATE = 5 * 60 * 60 * 1000;
+    private static final long DELAY_BEFORE_UPDATE = 1 * 60 * 60 * 1000;
 
     private SharedPreferences mPreferences;
     private ArrayList<Merchant> mMerchants;
