@@ -32,11 +32,9 @@ public class TicketDrawable extends Drawable {
     public TicketDrawable(Context context) {
         mBackgroundPaint.setStyle(Style.FILL);
         mBackgroundPaint.setColor(COLOR_BACKGROUND);
-
         mBorderPaint.setStyle(Style.STROKE);
         mBorderPaint.setStrokeWidth(1);
         mBorderPaint.setColor(COLOR_BORDER);
-
         mTriangleHeight = context.getResources().getDimensionPixelSize(R.dimen.shopelia_ticket_triangle_height);
         mRectCornerRadius = context.getResources().getDimensionPixelSize(R.dimen.shopelia_ticket_border_radius);
     }
