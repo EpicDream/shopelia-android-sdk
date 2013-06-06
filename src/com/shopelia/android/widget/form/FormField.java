@@ -40,7 +40,7 @@ public abstract class FormField extends FrameLayout implements Errorable {
     private FormContainer mFormContainer;
     private Listener mListener = new ListenerAdapter();
     private OnClickListener mOnClickListener;
-    
+
     // Error management
     private boolean mError = false;
     private String mErrorMessage;
@@ -53,7 +53,7 @@ public abstract class FormField extends FrameLayout implements Errorable {
     public FormField(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-    
+
     public FormField setListener(Listener l) {
         mListener = l == null ? new ListenerAdapter() : l;
         return this;
@@ -64,8 +64,9 @@ public abstract class FormField extends FrameLayout implements Errorable {
         if (sLayoutInflater == null || sLayoutInflater.getContext() != context) {
             sLayoutInflater = LayoutInflater.from(context);
         }
-        mBoundedView = createView(getContext(), sLayoutInflater, this);
+        View v = createView(getContext(), sLayoutInflater, this);
         removeAllViews();
+        mBoundedView = v;
         addView(mBoundedView);
     }
 
@@ -270,20 +271,22 @@ public abstract class FormField extends FrameLayout implements Errorable {
     @Override
     public void invalidate() {
         super.invalidate();
-        bindView(mBoundedView);
+        if (getBoundedView() != null) {
+            bindView(mBoundedView);
+        }
     }
 
     @Override
     public void setOnClickListener(OnClickListener l) {
-    	mOnClickListener = l;
+        mOnClickListener = l;
     }
-    
+
     public OnClickListener getOnClickListener() {
-    	return mOnClickListener;
+        return mOnClickListener;
     }
-    
+
     public boolean hasOnClickListener() {
-    	return mOnClickListener != null;
+        return mOnClickListener != null;
     }
-    
+
 }

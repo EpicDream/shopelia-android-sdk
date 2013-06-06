@@ -1,5 +1,7 @@
 package com.shopelia.android.widget.form;
 
+import java.util.HashSet;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Rect;
@@ -46,7 +48,7 @@ public class EditTextField extends FormField {
     }
 
     public static final int TYPE = 1;
-    public static final int INVALID_LENGTH = -1;
+    public static final int INVALID_LENGTH = 0;
 
     public static final String SAVE_TAG = "EditTextFieldSave_";
 
@@ -56,6 +58,7 @@ public class EditTextField extends FormField {
     private boolean mAllowEmptyContent = true;
     private boolean mAutoTrim = true;
     private String mJsonPath;
+    private HashSet<TextWatcher> mTextWatchers = new HashSet<TextWatcher>();
 
     private int mMaxLength = INVALID_LENGTH;
 
@@ -168,8 +171,8 @@ public class EditTextField extends FormField {
         holder.editText.setOnFocusChangeListener(mOnFocusChangeListener);
         holder.editText.setEnabled(isEnabled());
         mBoundedEditText = holder.editText;
-        setViewStyle(holder);
         holder.editText.setHint(mHint);
+        setViewStyle(holder);
         if (!(mContentText != null && mContentText.equals(holder.editText.getText().toString()))) {
             holder.editText.setText(mContentText);
         }
@@ -203,8 +206,8 @@ public class EditTextField extends FormField {
         // Here for extension purpose so we can later create PasswordField,
         // EmailField... just by extending EditTextField and overriding this
         // method.
-        if (mMaxLength > INVALID_LENGTH && mBoundedEditText != null) {
-            mBoundedEditText.setFilters(new InputFilter[] {
+        if (mMaxLength > INVALID_LENGTH && holder.editText != null) {
+            holder.editText.setFilters(new InputFilter[] {
                 new InputFilter.LengthFilter(mMaxLength)
             });
         }
@@ -255,6 +258,20 @@ public class EditTextField extends FormField {
         return false;
     }
 
+    public void addTextWatcher(TextWatcher textWatcher) {
+        if (textWatcher == null) {
+            return;
+        }
+        mTextWatchers.add(textWatcher);
+    }
+
+    public void removeTextWatcher(TextWatcher textWatcher) {
+        if (textWatcher == null) {
+            return;
+        }
+        mTextWatchers.remove(textWatcher);
+    }
+
     protected TextWatcher mTextWatcher = new TextWatcher() {
 
         @Override
@@ -262,12 +279,18 @@ public class EditTextField extends FormField {
             if (mOnValidateListener != null) {
                 mOnValidateListener.onTextChanged(s, start, before, count);
             }
+            for (TextWatcher textWatcher : mTextWatchers) {
+                textWatcher.onTextChanged(s, start, before, count);
+            }
         }
 
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             if (mOnValidateListener != null) {
                 mOnValidateListener.beforeTextChanged(s, start, count, after);
+            }
+            for (TextWatcher textWatcher : mTextWatchers) {
+                textWatcher.beforeTextChanged(s, start, count, after);
             }
         }
 
@@ -281,6 +304,9 @@ public class EditTextField extends FormField {
             if (getBoundedView() != null) {
                 ViewHolder holder = (ViewHolder) getBoundedView().getTag();
                 holder.editText.setChecked(isValid());
+            }
+            for (TextWatcher textWatcher : mTextWatchers) {
+                textWatcher.afterTextChanged(s);
             }
         }
     };
@@ -298,9 +324,9 @@ public class EditTextField extends FormField {
                     editText.setChecked(false);
                 }
             } else {
-            	  if (hasOnClickListener()) {
-                  	getOnClickListener().onClick(EditTextField.this);
-                  }
+                if (hasOnClickListener()) {
+                    getOnClickListener().onClick(EditTextField.this);
+                }
                 if (getFormContainer() != null) {
                     getFormContainer().requestFocus(EditTextField.this);
                 }
@@ -348,5 +374,4 @@ public class EditTextField extends FormField {
         return (String) getResult();
     }
 
-    
 }

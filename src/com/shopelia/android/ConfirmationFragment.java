@@ -51,8 +51,13 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         view.findViewById(R.id.confirm).setOnClickListener(mOnConfirmClickListener);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             view.findViewById(R.id.ticket).setBackground(new TicketDrawable(getActivity()));
+            // TODO Fix the drawable for pre version
+            // } else if (Build.VERSION.SDK_INT >=
+            // Build.VERSION_CODES.GINGERBREAD) {
+            // view.findViewById(R.id.ticket).setBackgroundDrawable(new
+            // TicketDrawable(getActivity()));
         } else {
-            view.findViewById(R.id.ticket).setBackgroundDrawable(new TicketDrawable(getActivity()));
+            view.findViewById(R.id.ticket).setBackgroundResource(R.drawable.shopelia_field_normal);
         }
         mOrder = getBaseActivity().getOrder();
         setupUi();

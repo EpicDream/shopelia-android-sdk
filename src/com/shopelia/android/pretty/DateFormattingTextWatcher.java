@@ -49,6 +49,9 @@ public class DateFormattingTextWatcher implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        if (s == null) {
+            return;
+        }
         if (start == 0 && start < s.length() && s.charAt(start) != '1' && s.charAt(start) != '0') {
             mZeroFill = true;
         } else {
