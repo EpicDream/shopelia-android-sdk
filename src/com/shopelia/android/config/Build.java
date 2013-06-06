@@ -12,8 +12,8 @@ public final class Build {
 
     public static final class VERSION_CODES {
 
-        // Version 1 and previous
-        public static final int ALBENIZ = 0;
+        // Version 1
+        public static final int ALBENIZ = 1;
 
     }
 

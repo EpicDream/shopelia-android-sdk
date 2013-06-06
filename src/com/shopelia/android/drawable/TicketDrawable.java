@@ -43,12 +43,11 @@ public class TicketDrawable extends Drawable {
 
     @Override
     public void draw(Canvas canvas) {
-        if (canvas.getWidth() != mMainRectBounds.width() || canvas.getHeight() != mMainRectBounds.height()) {
-            mMainRectBounds.set(0, 0, canvas.getWidth(), canvas.getHeight());
+        if (getBounds().width() != mMainRectBounds.width() || getBounds().height() != mMainRectBounds.height()) {
+            mMainRectBounds.set(0, 0, getBounds().width(), getBounds().height());
             computeFooterPath(canvas);
         }
         canvas.save();
-
         canvas.clipRect(0, 0, canvas.getWidth(), canvas.getHeight() - mTriangleHeight);
         canvas.drawRoundRect(mMainRectBounds, mRectCornerRadius, mRectCornerRadius, mBackgroundPaint);
         canvas.drawRoundRect(mMainRectBounds, mRectCornerRadius, mRectCornerRadius, mBorderPaint);
