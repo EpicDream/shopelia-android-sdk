@@ -3,9 +3,11 @@ package com.shopelia.android.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.text.Editable;
+import android.text.InputType;
 import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -42,12 +44,22 @@ public class SegmentedEditText extends LinearLayout {
         private Editable mContentText = new SpannableStringBuilder();
         private int mId = AUTO_ID;
 
-        private Segment(int id) {
+        protected Segment(int id) {
 
         }
 
         public void setText(CharSequence text) {
             mContentText = new SpannableStringBuilder(text);
+        }
+
+        public View createView() {
+            EditText editText = new EditText(getContext());
+            editText.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+            editText.setMinWidth(10);
+            editText.setMaxWidth(200);
+            editText.setMaxLines(1);
+            editText.setInputType(InputType.TYPE_CLASS_DATETIME);
+            return editText;
         }
 
         public Editable getText() {
@@ -86,6 +98,9 @@ public class SegmentedEditText extends LinearLayout {
     }
 
     public void addSegment(Segment segment) {
+        if (segment == null) {
+            return;
+        }
         if (segment.getId() == Segment.AUTO_ID) {
             segment.mId = computeAvailableId();
         }
@@ -98,6 +113,17 @@ public class SegmentedEditText extends LinearLayout {
 
     public void removeSegment(int id) {
         mSegments.remove(id);
+    }
+
+    public void commit() {
+        removeAllViews();
+        if (true) {
+            addView(mSegments.valueAt(0).createView());
+            return;
+        }
+        for (Segment segment : mSegments) {
+            addView(segment.createView());
+        }
     }
 
     private int computeAvailableId() {

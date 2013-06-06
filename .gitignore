@@ -9,3 +9,4 @@ lint.xml
 .DS_Store
 # Remove workstation-related files for versioning
 local.properties
+*~
