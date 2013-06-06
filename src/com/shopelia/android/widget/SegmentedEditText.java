@@ -2,6 +2,7 @@ package com.shopelia.android.widget;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.SpannableStringBuilder;
@@ -54,8 +55,9 @@ public class SegmentedEditText extends LinearLayout {
 
         public View createView() {
             EditText editText = new EditText(getContext());
+            editText.setBackgroundColor(Color.TRANSPARENT);
             editText.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            editText.setMinWidth(10);
+            editText.setMinWidth(200);
             editText.setMaxWidth(200);
             editText.setMaxLines(1);
             editText.setInputType(InputType.TYPE_CLASS_DATETIME);
@@ -117,12 +119,10 @@ public class SegmentedEditText extends LinearLayout {
 
     public void commit() {
         removeAllViews();
-        if (true) {
-            addView(mSegments.valueAt(0).createView());
-            return;
-        }
         for (Segment segment : mSegments) {
-            addView(segment.createView());
+            if (segment != null) {
+                addView(segment.createView());
+            }
         }
     }
 
