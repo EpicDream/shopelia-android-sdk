@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -75,6 +76,11 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
         @Override
         public void onClick(View v) {
+            if (((CheckBox) getView().findViewById(R.id.auto_cancel)).isChecked()) {
+                mOrder.product.productPrice = 0;
+                mOrder.product.deliveryPrice = 0;
+            }
+
             startWaiting(getString(R.string.shopelia_confirmation_waiting, mOrder.product.merchant.name), true, false);
             new OrderAPI(getActivity(), new CallbackAdapter() {
 
@@ -171,6 +177,11 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                 mOrder.product.currency.format(mOrder.product.productPrice + mOrder.product.deliveryPrice));
         findViewById(R.id.price_shipping_info, TextView.class).setText(mOrder.product.shippingExtra);
 
+        // Testing purposes
+        if (mOrder.user.email.equals("elarch@gmail.com") || mOrder.user.email.contains("shopelia")
+                || mOrder.user.email.contains("prixing.fr")) {
+            getView().findViewById(R.id.auto_cancel).setVisibility(View.VISIBLE);
+        }
     }
 
 }
