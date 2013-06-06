@@ -1,5 +1,7 @@
 package com.shopelia.android.remote.api;
 
+import java.math.BigDecimal;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -9,7 +11,6 @@ import android.content.Context;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
-import com.shopelia.android.utils.FormatUtils;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -17,6 +18,12 @@ public class OrderAPI extends ApiHandler {
 
     public OrderAPI(Context context, Callback callback) {
         super(context, callback);
+    }
+
+    private double round(double unrounded, int precision, int roundingMode) {
+        BigDecimal bd = new BigDecimal(unrounded);
+        BigDecimal rounded = bd.setScale(precision, roundingMode);
+        return rounded.doubleValue();
     }
 
     public void order(final Order order) {
@@ -28,7 +35,8 @@ public class OrderAPI extends ApiHandler {
             JSONArray products = new JSONArray();
             products.put(order.product.toJson());
             orderObject.put(Order.Api.PRODUCTS, products);
-            orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL, order.product.deliveryPrice + order.product.productPrice);
+            orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL,
+                    round(order.product.deliveryPrice + order.product.productPrice, 2, BigDecimal.ROUND_HALF_UP));
             orderObject.put(PaymentCard.Api.PAYMENT_CARD_ID, order.card.id);
             orderObject.put(Address.Api.ADDRESS_ID, order.address.id);
             params.put(Order.Api.ORDER, orderObject);
