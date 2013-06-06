@@ -32,6 +32,7 @@ import com.shopelia.android.config.Config;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.pretty.CardNumberFormattingTextWatcher;
 import com.shopelia.android.pretty.DateFormattingTextWatcher;
+import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.FormEditText;
 
 public class AddPaymentCardActivity extends ShopeliaActivity {
@@ -57,6 +58,7 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
     private FormEditText mCardNumberField;
     private FormEditText mCvvField;
     private FormEditText mExpiryField;
+    private FontableTextView mErrorMessage;
 
     private ImageView mHeaderIcon;
     private TextView mHeaderTitle;
@@ -89,6 +91,8 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
         mExpiryField.addTextChangedListener(mExpiryTextWatcher);
 
         mExpiryField.addTextChangedListener(new DateFormattingTextWatcher());
+
+        mErrorMessage = (FontableTextView) findViewById(R.id.error);
 
         View headerFrame = findViewById(R.id.header_frame);
         mHeaderIcon = (ImageView) headerFrame.findViewById(R.id.icon);
@@ -185,16 +189,28 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
                 mCardNumberField.setError(true);
             }
             isValid = false;
+            mErrorMessage.setVisibility(View.GONE);
         } else if (!checkIfCardNumberIsMod10(number)) {
             isValid = false;
             mCardNumberField.setError(true);
+            mErrorMessage.setVisibility(View.GONE);
+        } else if (!checkIsCompatibleWithShopelia(number)) {
+            isValid = false;
+            mCardNumberField.setError(true);
+            mErrorMessage.setVisibility(View.VISIBLE);
         } else {
             mCardNumberField.setChecked(true);
         }
         if (card != null) {
             card.number = number;
+            mErrorMessage.setVisibility(View.GONE);
         }
+
         return isValid;
+    }
+
+    private boolean checkIsCompatibleWithShopelia(String number) {
+        return number.charAt(0) == '4' || number.charAt(0) == '5';
     }
 
     private boolean checkExpiryDate(PaymentCard card, boolean fireError) {
@@ -328,6 +344,7 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
                 }
             } else {
                 mCardNumberField.setChecked(false);
+                mErrorMessage.setVisibility(View.GONE);
                 mCardNumberField.setError(false);
             }
             validateHeader();

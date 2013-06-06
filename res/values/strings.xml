@@ -60,7 +60,8 @@
     <string name="shopelia_form_payment_card_scan">SCANNER MA CARTE</string>
     <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
     <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saisissez manuellement les informations</string>
-
+	<string name="shopelia_form_payment_card_not_compatible">Shopelia n\'est disponible que pour les cartes Visa et American Express.</string>
+    
     <!-- Shopelia footer -->
     <string name="shopelia_footer">PAIEMENT SECURISE PAR</string>
 
