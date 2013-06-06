@@ -281,6 +281,11 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
                     } catch (JSONException e) {
 
                     }
+                } else if (response.getStatus() == 500) {
+                    if (mPincodeHandlerCallback != null) {
+                        mPincodeHandlerCallback.resetPincode();
+                    }
+                    return ;
                 }
                 if (mPincodeHandlerCallback != null) {
                     mPincodeHandlerCallback.onPincodeCheckDone(false);
@@ -293,6 +298,9 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
             e.printStackTrace();
             Toast.makeText(PincodeActivity.this, R.string.shopelia_error_network_error, Toast.LENGTH_LONG).show();
             stopWaiting();
+            if (mPincodeHandlerCallback != null) {
+                mPincodeHandlerCallback.resetPincode();
+            }
         };
 
     };

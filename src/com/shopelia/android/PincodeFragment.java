@@ -36,6 +36,9 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
 
         public interface Callback {
             public void onPincodeCheckDone(boolean succeed);
+
+            public void resetPincode();
+
         }
 
         public String PREFERENCE_NAME = "ShopeliaPincodeHandler";
@@ -292,6 +295,13 @@ public class PincodeFragment extends ShopeliaFragment<PincodeHandler> {
             if (!getContract().isServiceAvailable()) {
                 mRefreshTask.scheduleAtFixedRate(mRefreshUiRunnable, getUnlockDelay() % 1000, REFRESH_PERIOD);
             }
+        }
+
+        @Override
+        public void resetPincode() {
+            mNumberInput.setText(null);
+            mNumberInput.setEnabled(getContract().isServiceAvailable());
+            requestNumberInputFocus();
         }
     };
 
