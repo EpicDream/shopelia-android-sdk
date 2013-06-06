@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clickable="false"
+    android:focusable="false"
+    android:gravity="center|clip_horizontal"
+    android:orientation="vertical" >
+
+    <com.shopelia.android.widget.ValidationButton
+        android:id="@+id/validate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        app:shopelia_icon="@drawable/shopelia_bill_white"
+        app:shopelia_text="@string/shopelia_form_main_validate" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/login"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginLeft="@dimen/shopelia_margin_large"
+        android:layout_marginRight="@dimen/shopelia_margin_large"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
+        android:gravity="center"
+        android:icon="@drawable/shopelia_cart_white"
+        android:text="@string/shopelia_form_main_footer_text"
+        android:textColor="@color/shopelia_dark"
+        android:textSize="@dimen/shopelia_font_size_small"
+        app:shopelia_fontFamily="normal"
+        app:shopelia_fontStyle="normal" />
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/shopelia_include_footer" />
+
+</LinearLayout>

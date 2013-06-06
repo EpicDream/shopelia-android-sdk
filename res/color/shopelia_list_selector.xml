@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+		android:state_pressed="true"
+		android:color="@color/shopelia_holo_blue_light_translucent_60" />
+	
+	<item
+		android:state_focused="true"
+		android:color="@color/shopelia_holo_blue_light_translucent_30" />
+	
+</selector>

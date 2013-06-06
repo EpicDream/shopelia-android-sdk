@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:animateLayoutChanges="true"
+        android:paddingBottom="@dimen/shopelia_margin_normal"
+        android:paddingLeft="@dimen/shopelia_margin_large"
+        android:paddingRight="@dimen/shopelia_margin_large"
+        android:paddingTop="@dimen/shopelia_margin_normal" >
+
+        <include
+            android:id="@+id/header_frame"
+            layout="@layout/shopelia_form_field_title_header" />
+
+        <include
+            android:id="@+id/scan"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_marginTop="@dimen/shopelia_margin_large"
+            layout="@layout/shopelia_grey_button" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_large"
+            android:layout_marginRight="@dimen/shopelia_margin_large"
+            android:layout_marginTop="@dimen/shopelia_margin_large"
+            android:gravity="center"
+            android:text="@string/shopelia_form_payment_card_scan_or_fill"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_small" />
+
+        <com.shopelia.android.widget.FormEditText
+            android:id="@+id/card_numer"
+            style="@style/Theme.Shopelia.Widget.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/shopelia_margin_normal"
+            android:layout_marginTop="@dimen/shopelia_margin_large"
+            android:ems="10"
+            android:hint="@string/shopelia_form_payment_card_number"
+            android:inputType="number|text"
+            android:nextFocusDown="@+id/expiry_date" >
+        </com.shopelia.android.widget.FormEditText>
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/shopelia_margin_normal"
+            android:layout_marginLeft="@dimen/shopelia_margin_extra_small"
+            android:layout_marginRight="@dimen/shopelia_margin_extra_small"
+            android:layout_marginTop="@dimen/shopelia_margin_none"
+            android:gravity="center"
+            android:text="@string/shopelia_form_payment_card_not_compatible"
+            android:textColor="@color/shopelia_red"
+            android:textSize="@dimen/shopelia_font_size_small"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <com.shopelia.android.widget.FormEditText
+                android:id="@+id/expiry_date"
+                style="@style/Theme.Shopelia.Widget.EditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/shopelia_margin_small"
+                android:layout_weight="50"
+                android:ems="10"
+                android:hint="@string/shopelia_form_payment_card_expiry_date"
+                android:inputType="date"
+                android:maxLength="5"
+                android:nextFocusDown="@+id/cvv" />
+
+            <com.shopelia.android.widget.FormEditText
+                android:id="@+id/cvv"
+                style="@style/Theme.Shopelia.Widget.EditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/shopelia_margin_small"
+                android:layout_weight="50"
+                android:ems="10"
+                android:hint="@string/shopelia_form_payment_card_cvv"
+                android:inputType="numberPassword"
+                android:maxLength="3" />
+        </LinearLayout>
+
+        <com.shopelia.android.widget.ValidationButton
+            android:id="@+id/validate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shopelia_margin_large"
+            android:icon="@drawable/shopelia_card_white"
+            app:shopelia_icon="@drawable/shopelia_card_white"
+            app:shopelia_text="@string/shopelia_form_payment_card_validate" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:layout_marginTop="@dimen/shopelia_margin_large"
+            android:gravity="center" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/shopelia_logos_visa" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/shopelia_logos_mc" />
+
+            <ImageView
+                android:id="@+id/imageView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/shopelia_logos_norton" />
+        </LinearLayout>
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/shopelia_include_footer" />
+    </LinearLayout>
+
+</ScrollView>

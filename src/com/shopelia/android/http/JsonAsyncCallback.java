@@ -3,6 +3,8 @@ package com.shopelia.android.http;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.util.Log;
+
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -20,13 +22,14 @@ public abstract class JsonAsyncCallback extends AsyncCallback {
         try {
             object = new JSONObject(httpResponse.getBodyAsString());
         } catch (JSONException e) {
+            Log.e(null, "RESPONSE : " + httpResponse.getBodyAsString());
             onError(e);
         }
         if (object != null) {
-            onComplete(object);
+            onComplete(httpResponse, object);
         }
     }
 
-    public abstract void onComplete(JSONObject object);
+    public abstract void onComplete(HttpResponse response, JSONObject object);
 
 }

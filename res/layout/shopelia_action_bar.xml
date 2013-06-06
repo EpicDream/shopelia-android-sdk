@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/shopelia_title_bar_height"
+    android:background="@drawable/shopelia_title_bar_background"
+    android:orientation="vertical" >
+
+    <FrameLayout
+        android:id="@+id/title_logo_frame"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="@dimen/shopelia_margin_large" >
+
+        <ImageView
+            android:id="@+id/title_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/shopelia_logo" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/title_options_container_first"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/shopelia_margin_normal"
+        android:layout_toRightOf="@+id/title_logo_frame"
+        android:gravity="right" >
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/title_options_container_second"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="@dimen/shopelia_margin_normal"
+        android:layout_toRightOf="@+id/title_logo_frame"
+        android:gravity="right" >
+
+    </LinearLayout>
+    
+</RelativeLayout>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.shopelia.android.widget.form.FormLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/form"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent"
+    android:cacheColorHint="@android:color/transparent"
+    android:divider="@null"
+    android:listSelector="@android:color/transparent"
+    android:orientation="vertical"
+    android:scrollbarStyle="outsideOverlay" >
+
+    <com.shopelia.android.widget.form.HeaderField
+        android:id="@+id/header_personal_informations"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shopelia_icon="@drawable/shopelia_user"
+        app:shopelia_text="@string/shopelia_form_main_sign_in" />
+
+    <com.shopelia.android.widget.form.EmailField
+        android:id="@+id/email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shopelia_hint="@string/shopelia_form_main_email" />
+
+    <com.shopelia.android.widget.form.PasswordField
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shopelia_hint="@string/shopelia_form_main_password" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/forgotPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:gravity="center"
+        android:text="@string/shopelia_sign_in_forgot_password"
+        android:textColor="@color/shopelia_link_text_color"
+        android:textSize="@dimen/shopelia_font_size_small"
+        app:shopelia_fontFamily="normal"
+        app:shopelia_fontStyle="normal"
+        android:autoLink="all"
+        android:linksClickable="false"
+        android:padding="@dimen/shopelia_margin_normal"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal" />
+
+</com.shopelia.android.widget.form.FormLinearLayout>

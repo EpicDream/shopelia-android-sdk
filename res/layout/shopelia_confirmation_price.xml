@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_small"
+        android:gravity="center" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/price_product_name"
+            android:layout_width="180dp"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Produit"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/price_value_no_shipping"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="12.89€"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_small" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:text="@string/shopelia_confirmation_shipping_fees"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/price_value_shipping"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="2,79€"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:text="@string/shopelia_confirmation_total_price"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_large"
+            app:shopelia_fontStyle="bold" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/price_value_total"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="15.68€"
+            android:textColor="@color/shopelia_red"
+            android:textSize="@dimen/shopelia_font_size_large"
+            app:shopelia_fontStyle="bold" />
+    </LinearLayout>
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/price_shipping_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:gravity="right"
+        android:text="Livraison 24h"
+        android:textSize="@dimen/shopelia_font_size_small" />
+
+    <CheckBox
+        android:id="@+id/auto_cancel" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:text="Commande de test" />
+
+</LinearLayout>

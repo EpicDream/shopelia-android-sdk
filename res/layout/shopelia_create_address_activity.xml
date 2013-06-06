@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView 
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/shopelia_margin_normal"
+        android:paddingLeft="@dimen/shopelia_margin_large"
+        android:paddingRight="@dimen/shopelia_margin_large"
+        android:paddingTop="@dimen/shopelia_margin_normal" >
+
+        <include
+            android:id="@+id/header_frame"
+            layout="@layout/shopelia_form_field_title_header" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shopelia_margin_large"
+            android:weightSum="100" >
+
+            <com.shopelia.android.widget.FormEditText
+                android:id="@+id/first_name"
+                style="@style/Theme.Shopelia.Widget.EditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/shopelia_margin_small"
+                android:layout_weight="50"
+                android:ems="10"
+                android:hint="@string/shopelia_form_address_first_name"
+                android:inputType="textCapSentences|textNoSuggestions|textPersonName"
+                android:nextFocusDown="@+id/name" >
+            </com.shopelia.android.widget.FormEditText>
+
+            <com.shopelia.android.widget.FormEditText
+                android:id="@+id/name"
+                style="@style/Theme.Shopelia.Widget.EditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/shopelia_margin_small"
+                android:layout_weight="50"
+                android:ems="10"
+                android:hint="@string/shopelia_form_address_name"
+                android:inputType="textCapSentences|textNoSuggestions|textPersonName"
+                android:nextFocusDown="@+id/address" />
+        </LinearLayout>
+
+        <com.shopelia.android.widget.FormAutocompleteEditText
+            android:id="@+id/address"
+            style="@style/Theme.Shopelia.Widget.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
+            android:ems="10"
+            android:hint="@string/shopelia_form_address_address"
+            android:imeOptions="actionNext"
+            android:inputType="textPostalAddress"
+            android:nextFocusDown="@+id/extras"
+            android:singleLine="true" />
+
+        <com.shopelia.android.widget.FormEditText
+            android:id="@+id/extras"
+            style="@style/Theme.Shopelia.Widget.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
+            android:ems="10"
+            android:hint="@string/shopelia_form_address_extra_informations"
+            android:nextFocusDown="@+id/zipcode"
+            android:singleLine="true" >
+        </com.shopelia.android.widget.FormEditText>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:weightSum="100" >
+
+            <com.shopelia.android.widget.FormEditText
+                android:id="@+id/zipcode"
+                style="@style/Theme.Shopelia.Widget.EditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/shopelia_margin_small"
+                android:layout_marginTop="@dimen/shopelia_margin_normal"
+                android:layout_weight="50"
+                android:ems="10"
+                android:hint="@string/shopelia_form_address_zipcode"
+                android:inputType="number"
+                android:nextFocusDown="@+id/city" />
+
+            <com.shopelia.android.widget.FormEditText
+                android:id="@+id/city"
+                style="@style/Theme.Shopelia.Widget.EditText"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/shopelia_margin_small"
+                android:layout_marginTop="@dimen/shopelia_margin_normal"
+                android:layout_weight="50"
+                android:ems="10"
+                android:hint="@string/shopelia_form_address_city"
+                android:inputType="textPersonName|textCapSentences" />
+        </LinearLayout>
+
+        <com.shopelia.android.widget.FormEditText
+            android:id="@+id/country"
+            style="@style/Theme.Shopelia.Widget.EditText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
+            android:ems="10"
+            android:hint="@string/shopelia_form_address_country"
+            android:inputType="textPersonName|textCapSentences" >
+        </com.shopelia.android.widget.FormEditText>
+        
+        <com.shopelia.android.widget.ValidationButton
+            android:id="@+id/validate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/shopelia_margin_extra_large"
+            app:shopelia_text="@string/shopelia_form_address_validate"
+            app:shopelia_icon="@drawable/shopelia_pin_white"
+             />
+
+        <include
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            layout="@layout/shopelia_include_footer"
+            android:layout_marginBottom="20dp" />
+
+    </LinearLayout>
+
+</ScrollView>

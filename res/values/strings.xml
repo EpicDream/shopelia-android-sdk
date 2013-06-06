@@ -1,8 +1,152 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">ShopeliaSDK</string>
-    <string name="action_settings">Settings</string>
-    <string name="hello_world">Hello world!</string>
+    <!-- Dialogs -->
+    <string name="shopelia_dialog_title">Shopelia</string>
+
+    <!-- ActionBar -->
+    <string name="shopelia_action_bar_sign_in">Déjà inscrit ?</string>
+    <string name="shopelia_action_bar_sign_up">Première commande ?</string>
+    <string name="shopelia_action_bar_sign_out">Se déconnecter</string>
+
+    <!-- Main form -->
+    <string name="shopelia_form_main_waiting">Création de votre compte Shopelia</string>
+    <string name="shopelia_form_main_phone">Numéro de téléphone</string>
+    <string name="shopelia_form_main_email">Email</string>
+    <string name="shopelia_form_main_password">Mot de passe</string>
+    <string name="shopelia_form_main_validate">Poursuivre ma commande</string>
+    <string name="shopelia_form_main_sign_in">CONNEXION</string>
+    <string name="shopelia_form_main_personal_info">INFORMATIONS PERSONNELLES</string>
+    <string name="shopelia_form_main_shipping_address">ADRESSE DE LIVRAISON</string>
+    <string name="shopelia_form_main_payment_method">MOYEN DE PAIEMENT</string>
+    <string name="shopelia_form_main_card_number">Numéro de la carte</string>
+    <string name="shopelia_form_main_address">Adresse</string>
+    <string name="shopelia_form_main_header_text" formatted="false">
+<![CDATA[
+	    Votre commande va être préparée automatiquement sur le site <b>%s</b> avec le service <b>Shopelia</b>
+	    ]]>
+    </string>
+    <string name="shopelia_form_main_footer_text">
+<![CDATA[
+	   En cliquant sur ce bouton vous certifiez avoir lu et accepté les <font color="#0098ce">Conditions d\'utilisation</font>
+	    ]]>
+    </string>
+    <string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
+
+    <!-- Account creation form -->
+    <string name="shopelia_form_account_name">Nom</string>
+    <string name="shopelia_form_account_first_name">Prénom</string>
+    <string name="shopelia_form_account_card_number">Numéro de la carte</string>
+    <string name="shopelia_form_account_validate">Continuer la commande</string>
+
+    <!-- Sign In -->
+    <string name="shopelia_sign_in_forgot_password"><![CDATA[<u>Mot de passe oublié ?</u>]]></string>
+    <string name="shopelia_sign_in_waiting">Connexion en cours</string>
+
+    <!-- Address creation form -->
+    <string name="shopelia_form_address_name">Nom</string>
+    <string name="shopelia_form_address_first_name">Prénom</string>
+    <string name="shopelia_form_address_address">Adresse</string>
+    <string name="shopelia_form_address_extra_informations">Complément d\'informations</string>
+    <string name="shopelia_form_address_city">Ville</string>
+    <string name="shopelia_form_address_zipcode">Code postal</string>
+    <string name="shopelia_form_address_country">Pays</string>
+    <string name="shopelia_form_address_validate">Enregistrer mon adresse</string>
+
+    <!-- Payment card creation form -->
+    <string name="shopelia_form_payment_card_number">Numéro de la carte</string>
+    <string name="shopelia_form_payment_card_expiry_date">MM/AA</string>
+    <string name="shopelia_form_payment_card_cvv">CCV</string>
+    <string name="shopelia_form_payment_card_scan">SCANNER MA CARTE</string>
+    <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
+    <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saisissez manuellement les informations</string>
+	<string name="shopelia_form_payment_card_not_compatible">Shopelia n\'est disponible que pour les cartes Visa et American Express.</string>
+    
+    <!-- Shopelia footer -->
+    <string name="shopelia_footer">PAIEMENT SECURISE PAR</string>
+
+    <!-- Taxes -->
+    <string name="shopelia_tax_et">HT</string>
+    <string name="shopelia_tax_ati">TTC</string>
+
+    <!-- Product sheet -->
+    <string name="shopelia_product_shipping_fees" formatted="false">Frais de livraison : %s</string>
+    <string name="shopelia_product_free_shipping">Livraison gratuite</string>
+    
+    <!-- Waiting process -->
+    <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
+    <string name="shopelia_waiting_with_shopelia_order_with_1_click">Avec Shopelia, commandez facilement en 1-clic avec votre mobile sur n\'importe quel site e-commerce !</string>
+
+    <!-- Order confirmation -->
+    <string name="shopelia_confirmation_waiting" formatted="false">Shopelia prépare votre commande sur %s</string>
+    <string name="shopelia_confirmation_confirm">Valider ma commande</string>
+    <string name="shopelia_confirmation_title">Vérification et validation de votre commande</string>
+    <string name="shopelia_confirmation_shipping_fees">Frais de livraison</string>
+    <string name="shopelia_confirmation_total_price">TOTAL</string>
+    <string name="shopelia_confirmation_error">Une erreur est survenue. Impossible de valider votre commande.</string>
+
+    <!-- Pin code -->
+    <string name="shopelia_pincode_create">CRÉEZ VOTRE CODE D\'ACCÈS</string>
+    <string name="shopelia_pincode_re_enter">VÉRIFIEZ VOTRE CODE D\'ACCÈS</string>
+    <string name="shopelia_pincode_enter">ENTREZ VOTRE CODE D\'ACCÈS</string>
+    <string name="shopelia_pincode_verification">Vérification...</string>
+    <string name="shopelia_pincode_update">Mise à jour...</string>
+    <string name="shopelia_pincode_description_create">Ce code de sécurité vous sera demandé lors de vos prochaines commandes</string>
+    <string name="shopelia_pincode_wrong">Code d\'accès incorrect</string>
+    <string name="shopelia_pincode_retry" formatted="false">Réessayez dans %s et %s</string>
+    <string name="shopelia_pincode_retry_seconds" formatted="false">Réessayez dans %s</string>
+    <string name="shopelia_pincode_forgotten"><![CDATA[<u>Code d\'accès oublié ?</u>]]></string>
+    <string name="shopelia_pincode_your_pincode_is" formatted="false">Votre code d\'accès est : %s</string>
+
+    <!-- Recover password -->
+    <string name="shopelia_recover_password_title">Mot de passe oublié ?</string>
+    <string name="shopelia_recover_password_description">Les instructions de réinitialisation du mot de passe vous seront envoyées sur votre email</string>
+    <string name="shopelia_recover_password_email">Votre email</string>
+    <string name="shopelia_recover_password_send">ENVOYER L\'EMAIL</string>
+    <string name="shopelia_recover_password_unknown_email">Email inconnu.\n Saisissez l\'email associé à votre compte Shopelia puis cliquez sur \"Envoyer l\'email\".</string>
+    <string name="shopelia_recover_password_network_error">Une erreur réseau est survenue</string>
+    <string name="shopelia_recover_password_email_sent">Vous allez recevoir les instructions de réinitialisation du mot de passe dans quelques instants sur votre email</string>
+	<string name="shopelia_recover_password_loading">Vérification...</string>
+	
+    <!-- Recover pincode -->
+    <string name="shopelia_recover_pin_title">Code d\'accès oublié ?</string>
+    <string name="shopelia_recover_pin_description">Saisissez les informations suivantes afin de réinitialiser votre code d\'accès</string>
+    <string name="shopelia_recover_pin_type_last_numbers">4 derniers chiffres de votre carte de paiement</string>
+    <string name="shopelia_recover_pin_last_numbers">XXXX</string>
+    <string name="shopelia_recover_pin_type_expiry_date">Date d’expiration de votre carte de paiement</string>
+    <string name="shopelia_recover_pin_expiry_date">MM/AA</string>
+    <string name="shopelia_recover_pin_send">CRÉER NOUVEAU CODE D\'ACCÈS</string>
+    <string name="shopelia_recover_pin_error">Les informations que vous avez renseigné sont invalides</string>
+    <string name="shopelia_recover_pin_network_error">Une erreur réseau est survenue</string>
+
+    <!-- Time -->
+    <plurals name="hour">
+        <item formatted="false" quantity="one">%d heure</item>
+        <item formatted="false" quantity="other">%d heures</item>
+    </plurals>
+    <plurals name="minute">
+        <item formatted="false" quantity="one">%d minute</item>
+        <item formatted="false" quantity="other">%d minutes</item>
+    </plurals>
+    <plurals name="second">
+        <item formatted="false" quantity="zero">%d seconde</item>
+        <item formatted="false" quantity="one">%d seconde</item>
+        <item formatted="false" quantity="other">%d secondes</item>
+    </plurals>
+
+    <!-- Close checkout -->
+    <string name="shopelia_close_checkout_main_text">Votre commande a bien été prise en compte !</string>
+    <string name="shopelia_close_checkout_sub_text">Vous allez recevoir la confirmation de la commande dans votre boîte mail.\n \n Merci d\'avoir utilisé le service Shopelia !</string>
+    <string name="shopelia_close_checkout_validation" formatted="false">REVENIR SUR PRIXING</string>
+
+    <!-- Log Out -->
+    <string name="shopelia_logout_are_you_sure">Voulez-vous vraiment vous déconnecter ?</string>
+    <string name="shopelia_logout_positive">Se déconnecter</string>
+    <string name="shopelia_logout_cancel">Annuler</string>
+
+    <!-- Errors -->
+    <string name="shopelia_error_network_error">Une erreur réseau est survenue</string>
+    <string name="shopelia_error_server_broke_down">Les serveurs shopelia ne répondent pas</string>
+    <string name="shopelia_error_user_already_exists" formatted="false">Vous avez déjà un compte shopelia.</string>
 
 </resources>

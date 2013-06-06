@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".app.ShopeliaActivity" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <View
+        android:id="@+id/divider"
+        android:layout_width="1dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:alpha="0.4"
+        android:background="@color/shopelia_light" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/action_bar_item_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@drawable/shopelia_list_selector"
+        android:gravity="center"
+        android:paddingLeft="@dimen/shopelia_margin_large"
+        android:paddingRight="@dimen/shopelia_margin_large"
+        android:text="Déjà inscrit ?"
+        android:textColor="@color/shopelia_light"
+        android:textSize="@dimen/shopelia_font_size_small"
+        app:shopelia_fontFamily="normal"
+        app:shopelia_fontStyle="normal" />
+
+</LinearLayout>

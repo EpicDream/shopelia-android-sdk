@@ -8,20 +8,98 @@
         android:minSdkVersion="7"
         android:targetSdkVersion="17" />
 
+    <!-- Permission to access coarse location - required -->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
+    <!-- Permission to access network state - required -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
+    <!-- Permission to access internet - required -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!-- Permission to use camera - required -->
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <!-- Permission to vibrate - recommended, allows vibration feedback on scan -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!-- Camera features - recommended -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
-        android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/Theme.Shopelia" >
         <activity
-            android:name="com.shopelia.android.MainActivity"
-            android:label="@string/app_name" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:name="com.shopelia.android.PrepareOrderActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name="com.shopelia.android.AddAddressActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
+            android:name="com.shopelia.android.AddPaymentCardActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.shopelia.android.PincodeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name="com.shopelia.android.ProcessOrderActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia"
+            android:windowSoftInputMode="adjustPan" />
+        <activity
+            android:name="com.shopelia.android.CloseCheckoutActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity
+            android:name="com.shopelia.android.RecoverPasswordActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia" />
+       <activity
+            android:name="com.shopelia.android.RecoverPincodeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia" />
+       
+        <!-- Activities responsible for gathering payment info -->
+        <activity
+            android:name="io.card.payment.CardIOActivity"
+            android:configChanges="keyboardHidden|orientation" />
+        <activity
+            android:name="io.card.payment.DataEntryActivity"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingTop="@dimen/shopelia_margin_large" >
+
+    <ImageView
+        android:id="@+id/icon"
+        android:layout_width="@dimen/shopelia_icon_size"
+        android:layout_height="@dimen/shopelia_icon_size"
+        android:layout_marginLeft="4dp"
+        android:layout_marginRight="8dp" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:text="Large Text"
+        android:textAppearance="@style/Theme.Shopelia.TextAppearance.Header"
+        android:textColor="@color/shopelia_dark"
+        app:shopelia_fontFamily="normal"
+        app:shopelia_fontStyle="bold" />
+
+    <ImageView
+        android:id="@+id/lock"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/shopelia_margin_extra_small"
+        android:src="@drawable/shopelia_lock" />
+
+    <HorizontalScrollView
+        android:id="@+id/horizontalScrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/shopelia_font_size_small"
+        android:layout_weight="1"
+        android:fadingEdge="horizontal"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:id="@+id/scroller"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="right"
+            android:orientation="horizontal" >
+
+        </LinearLayout>
+    </HorizontalScrollView>
+
+</LinearLayout>
