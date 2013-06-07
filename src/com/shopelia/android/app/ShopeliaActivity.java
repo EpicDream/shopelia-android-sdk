@@ -53,9 +53,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     public static final int MODE_WAITING = 1 << 0;
     public static final int MODE_BLOCKED = 1 << 1;
 
-    // static final String MIXPANEL_API_TOKEN =
-    // "95c15bf80bf7bf93cb1c673865c75a22";
-
     private Order mOrder;
     private ShopeliaActivityPath mCurrentActivity;
     private FrameLayout mRootView;

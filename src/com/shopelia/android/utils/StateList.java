@@ -8,7 +8,7 @@ import java.util.ListIterator;
 
 /**
  * A special list holding two sublist. You can add items in the list but there
- * are not accessible unless you commit you changes to the list.
+ * are not accessible unless you commit your changes to the list.
  * 
  * @author Pierre Pollastri
  */

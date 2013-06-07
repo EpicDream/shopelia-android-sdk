@@ -112,15 +112,13 @@ public final class Shopelia implements Parcelable {
     public static final String EXTRA_USER_PHONE = PrepareOrderActivity.EXTRA_USER_PHONE;
 
     private Intent mData;
+    private Context mContext;
 
     private Shopelia(Context context, String productUrl, Merchant merchant) {
         mData = new Intent();
         mData.putExtra(EXTRA_PRODUCT_URL, productUrl);
         mData.putExtra(EXTRA_MERCHANT, merchant);
-        ShopeliaTracker tracking = ShopeliaTracker.Factory.create(ShopeliaTracker.MIXPANEL);
-        tracking.init(context);
-        tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
-        tracking.flush();
+        mContext = context;
     }
 
     private Shopelia(Parcel source) {
@@ -223,6 +221,13 @@ public final class Shopelia implements Parcelable {
     public Shopelia setUserPhone(String phone) {
         mData.putExtra(EXTRA_USER_PHONE, phone);
         return this;
+    }
+
+    public void display() {
+        ShopeliaTracker tracking = ShopeliaTracker.Factory.create(ShopeliaTracker.MIXPANEL);
+        tracking.init(mContext);
+        tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
+        tracking.flush();
     }
 
     @Override
