@@ -3,10 +3,9 @@ package com.shopelia.android.widget;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.SpannableStringBuilder;
 import android.util.AttributeSet;
+import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
@@ -42,30 +41,29 @@ public class SegmentedEditText extends LinearLayout {
         public static final int AUTO_ID = -1;
 
         private int mLengthLimit = DEFAULT_LENGHT_LIMIT;
-        private Editable mContentText = new SpannableStringBuilder();
         private int mId = AUTO_ID;
 
+        private FormEditText mEditText;
+
         protected Segment(int id) {
-
-        }
-
-        public void setText(CharSequence text) {
-            mContentText = new SpannableStringBuilder(text);
-        }
-
-        public View createView() {
-            EditText editText = new EditText(getContext());
+            FormEditText editText = new FormEditText(getContext());
             editText.setBackgroundColor(Color.TRANSPARENT);
             editText.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
-            editText.setMinWidth(200);
-            editText.setMaxWidth(200);
             editText.setMaxLines(1);
             editText.setInputType(InputType.TYPE_CLASS_DATETIME);
-            return editText;
+            mEditText = editText;
         }
 
-        public Editable getText() {
-            return mContentText;
+        public View createView(Segment next) {
+            mEditText.setId(mId);
+            if (next != null) {
+                mEditText.setNextFocusDownId(next.getId());
+            }
+            return mEditText;
+        }
+
+        public FormEditText getView() {
+            return mEditText;
         }
 
         public int getLengthLimit() {
@@ -88,6 +86,10 @@ public class SegmentedEditText extends LinearLayout {
         super(context, attrs);
         if (getBackground() == null) {
             setBackgroundResource(R.drawable.shopelia_field);
+        }
+        if (isInEditMode()) {
+            addSegment(createSegment());
+            commit();
         }
     }
 
@@ -119,11 +121,24 @@ public class SegmentedEditText extends LinearLayout {
 
     public void commit() {
         removeAllViews();
-        for (Segment segment : mSegments) {
+        final int count = mSegments.size();
+        for (int index = 0; index < count; index++) {
+            Segment segment = mSegments.valueAt(index);
             if (segment != null) {
-                addView(segment.createView());
+                addView(segment.createView(getNextFocusableSegment(mSegments, index)));
             }
         }
+    }
+
+    private static Segment getNextFocusableSegment(SparseArray<Segment> segments, int index) {
+        final int count = segments.size();
+        while (++index < count) {
+            Segment segment = segments.valueAt(index);
+            if (segment != null) {
+                return segment;
+            }
+        }
+        return null;
     }
 
     private int computeAvailableId() {

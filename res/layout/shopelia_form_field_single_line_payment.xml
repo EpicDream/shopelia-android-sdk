@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical" >
+
+    <com.shopelia.android.widget.SegmentedEditText
+        android:id="@+id/edit_text"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        style="@style/Theme.Shopelia.Widget.EditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:singleLine="true"
+        android:maxLines="1"
+        android:padding="@dimen/shopelia_margin_small"
+        android:saveEnabled="false"
+        android:ellipsize="end"
+        android:scrollHorizontally="true"
+        android:ems="10" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/shopelia_margin_small"
+        android:textSize="@dimen/shopelia_font_size_small"
+        android:textColor="@color/shopelia_red"
+        android:gravity="right"
+        android:visibility="gone"
+        android:text="An error occurred" />
+
+</LinearLayout>
