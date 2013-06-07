@@ -50,6 +50,10 @@ public class SegmentedEditText extends LinearLayout {
             editText.setBackgroundColor(Color.TRANSPARENT);
             editText.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
             editText.setMaxLines(1);
+            editText.setPadding(getResources().getDimensionPixelSize(R.dimen.shopelia_segment_padding_v), getResources()
+                    .getDimensionPixelSize(R.dimen.shopelia_segment_padding_h),
+                    getResources().getDimensionPixelSize(R.dimen.shopelia_segment_padding_v),
+                    getResources().getDimensionPixelSize(R.dimen.shopelia_segment_padding_h));
             editText.setInputType(InputType.TYPE_CLASS_DATETIME);
             mEditText = editText;
         }
@@ -86,6 +90,7 @@ public class SegmentedEditText extends LinearLayout {
         super(context, attrs);
         if (getBackground() == null) {
             setBackgroundResource(R.drawable.shopelia_field);
+            getBackground().setVisible(false, false);
         }
         if (isInEditMode()) {
             addSegment(createSegment());
@@ -117,6 +122,16 @@ public class SegmentedEditText extends LinearLayout {
 
     public void removeSegment(int id) {
         mSegments.remove(id);
+    }
+
+    @Override
+    public boolean hasFocus() {
+        for (Segment s : mSegments) {
+            if (s != null && s.getView() != null && s.getView().hasFocus()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public void commit() {

@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.SpannableStringBuilder;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -139,6 +140,9 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         if (getActivity().getIntent() != null && getActivity().getIntent().hasExtra(PrepareOrderActivity.EXTRA_USER_EMAIL)) {
             mFormContainer.findFieldById(R.id.email, EmailField.class).setContentText(
                     getActivity().getIntent().getStringExtra(PrepareOrderActivity.EXTRA_USER_EMAIL));
+            SpannableStringBuilder text = new SpannableStringBuilder(getActivity().getIntent().getStringExtra(
+                    PrepareOrderActivity.EXTRA_USER_EMAIL));
+            mEmailOnValidateListener.afterTextChanged(text);
         }
 
         if (getActivity().getIntent() != null && getActivity().getIntent().hasExtra(PrepareOrderActivity.EXTRA_USER_PHONE)) {

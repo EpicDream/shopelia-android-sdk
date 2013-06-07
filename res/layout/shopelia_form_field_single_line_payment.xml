@@ -8,16 +8,12 @@
     <com.shopelia.android.widget.SegmentedEditText
         android:id="@+id/edit_text"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
-        style="@style/Theme.Shopelia.Widget.EditText"
+        style="@style/Theme.Shopelia.Widget.FormButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:singleLine="true"
-        android:maxLines="1"
-        android:padding="@dimen/shopelia_margin_small"
-        android:saveEnabled="false"
-        android:ellipsize="end"
-        android:scrollHorizontally="true"
-        android:ems="10" />
+        android:gravity="left|center_vertical"
+        android:padding="@dimen/shopelia_margin_none"
+        />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/error"

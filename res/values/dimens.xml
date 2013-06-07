@@ -36,4 +36,6 @@
 	<dimen name="shopelia_icon_size">20dp</dimen>
 	<dimen name="shopelia_ticket_triangle_height">10dp</dimen>
 	<dimen name="shopelia_ticket_border_radius">2.5dp</dimen>
+	<dimen name="shopelia_segment_padding_h">12dp</dimen>
+	<dimen name="shopelia_segment_padding_v">10dp</dimen>
 </resources>
