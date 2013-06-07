@@ -8,6 +8,7 @@ import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Checkable;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 
@@ -21,7 +22,7 @@ import com.shopelia.android.utils.IterableSparseArray;
  * 
  * @author Pierre Pollastri
  */
-public class SegmentedEditText extends LinearLayout {
+public class SegmentedEditText extends LinearLayout implements Errorable, Checkable {
 
     public class Segment {
 
@@ -55,6 +56,7 @@ public class SegmentedEditText extends LinearLayout {
                     getResources().getDimensionPixelSize(R.dimen.shopelia_segment_padding_v),
                     getResources().getDimensionPixelSize(R.dimen.shopelia_segment_padding_h));
             editText.setInputType(InputType.TYPE_CLASS_DATETIME);
+            editText.setOnFocusChangeListener(mFocusObserver);
             mEditText = editText;
         }
 
@@ -80,7 +82,23 @@ public class SegmentedEditText extends LinearLayout {
 
     }
 
+    private static final int[] CHECKED_STATE_SET = {
+        android.R.attr.state_checked
+    };
+
+    private static final int[] ERROR_STATE_SET = {
+        R.attr.state_error
+    };
+
+    private static final int[] FOCUSED_STATE_SET = {
+            android.R.attr.state_focused, android.R.attr.state_enabled
+    };
+
     private IterableSparseArray<Segment> mSegments = new IterableSparseArray<SegmentedEditText.Segment>();
+
+    private boolean mChecked = false;
+    private boolean mError = false;
+    private boolean mFocused = false;
 
     public SegmentedEditText(Context context) {
         this(context, null);
@@ -126,12 +144,21 @@ public class SegmentedEditText extends LinearLayout {
 
     @Override
     public boolean hasFocus() {
-        for (Segment s : mSegments) {
-            if (s != null && s.getView() != null && s.getView().hasFocus()) {
-                return true;
-            }
+        return mFocused;
+    }
+
+    @Override
+    protected int[] onCreateDrawableState(int extraSpace) {
+        int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
+        if (isChecked()) {
+            mergeDrawableStates(drawableState, CHECKED_STATE_SET);
+        } else if (hasError()) {
+            mergeDrawableStates(drawableState, ERROR_STATE_SET);
+        } else if (hasFocus()) {
+            mergeDrawableStates(drawableState, FOCUSED_STATE_SET);
         }
-        return false;
+
+        return drawableState;
     }
 
     public void commit() {
@@ -177,5 +204,55 @@ public class SegmentedEditText extends LinearLayout {
     public boolean onTouchEvent(MotionEvent event) {
         return super.onTouchEvent(event);
     }
+
+    @Override
+    public boolean isChecked() {
+        return mChecked;
+    }
+
+    @Override
+    public void setChecked(boolean checked) {
+        if (checked != mChecked) {
+            if (checked) {
+                mError = false;
+            }
+            mChecked = checked;
+        }
+    }
+
+    @Override
+    public void toggle() {
+        setChecked(!mChecked);
+    }
+
+    @Override
+    public void setError(boolean hasError) {
+        if (hasError != mError) {
+            if (hasError) {
+                mChecked = false;
+            }
+            mError = hasError;
+        }
+    }
+
+    @Override
+    public boolean hasError() {
+        return mError;
+    }
+
+    private OnFocusChangeListener mFocusObserver = new OnFocusChangeListener() {
+
+        @Override
+        public void onFocusChange(View v, boolean hasFocus) {
+            mFocused = true;
+            if (mSegments != null) {
+                for (Segment s : mSegments) {
+                    if (s != null && s.getView() != null && s.getView().hasFocus()) {
+                        mFocused = true;
+                    }
+                }
+            }
+        }
+    };
 
 }
