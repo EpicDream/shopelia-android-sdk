@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.shopelia.android.R;
 import com.shopelia.android.pretty.CardNumberFormattingTextWatcher;
@@ -30,6 +31,8 @@ public class SingleLinePaymentCardField extends FormField {
         SegmentedEditText editText = (SegmentedEditText) v.findViewById(R.id.edit_text);
         Segment segment = editText.createSegment();
         segment.getView().setHint("1234 5678 9012 3456");
+        segment.setFillParent(true);
+        segment.setOnValidateListener(sPaymentCardValidator);
         segment.getView().addTextChangedListener(new CardNumberFormattingTextWatcher());
         segment.getView().setFilters(new InputFilter[] {
             new InputFilter.LengthFilter(19)
@@ -42,6 +45,7 @@ public class SingleLinePaymentCardField extends FormField {
         segment.getView().setFilters(new InputFilter[] {
             new InputFilter.LengthFilter(5)
         });
+        segment.setOnValidateListener(sExpiryDateValidator);
         editText.addSegment(segment);
 
         segment = editText.createSegment();
@@ -49,7 +53,9 @@ public class SingleLinePaymentCardField extends FormField {
         segment.getView().setFilters(new InputFilter[] {
             new InputFilter.LengthFilter(3)
         });
+        segment.setOnValidateListener(sCvvValidator);
         editText.addSegment(segment);
+
         editText.commit();
 
         return v;
@@ -84,5 +90,43 @@ public class SingleLinePaymentCardField extends FormField {
     public boolean isSectionHeader() {
         return false;
     }
+
+    private static final SegmentedEditText.OnValidateListener sPaymentCardValidator = new SegmentedEditText.OnValidateListener() {
+
+        @Override
+        public boolean onValidate(Segment segment, CharSequence text) {
+            String number = text.toString().replace(" ", "");
+            if (number.length() == 16) {
+                segment.nextSegment(true);
+                return true;
+            }
+            return false;
+        }
+    };
+
+    private static final SegmentedEditText.OnValidateListener sExpiryDateValidator = new SegmentedEditText.OnValidateListener() {
+
+        @Override
+        public boolean onValidate(Segment segment, CharSequence text) {
+            if (text.length() == 5) {
+                segment.nextSegment(true);
+                return true;
+            }
+            return false;
+        }
+    };
+
+    private static final SegmentedEditText.OnValidateListener sCvvValidator = new SegmentedEditText.OnValidateListener() {
+
+        @Override
+        public boolean onValidate(Segment segment, CharSequence text) {
+            if (text.length() == 3) {
+                InputMethodManager imm = (InputMethodManager) segment.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(segment.getView().getWindowToken(), 0);
+                return true;
+            }
+            return false;
+        }
+    };
 
 }

@@ -137,14 +137,13 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 		mFormContainer.onCreate(savedInstanceState);
 		// @formatter:on
 
-        if (getActivity().getIntent() != null && getActivity().getIntent().hasExtra(PrepareOrderActivity.EXTRA_USER_EMAIL)) {
+        if (getActivity().getIntent() != null && getActivity().getIntent().getStringExtra(PrepareOrderActivity.EXTRA_USER_EMAIL) != null) {
             mFormContainer.findFieldById(R.id.email, EmailField.class).setContentText(
                     getActivity().getIntent().getStringExtra(PrepareOrderActivity.EXTRA_USER_EMAIL));
-            SpannableStringBuilder text = new SpannableStringBuilder(getActivity().getIntent().getStringExtra(
-                    PrepareOrderActivity.EXTRA_USER_EMAIL));
+            SpannableStringBuilder text = new SpannableStringBuilder();
+            text.append(getActivity().getIntent().getStringExtra(PrepareOrderActivity.EXTRA_USER_EMAIL));
             mEmailOnValidateListener.afterTextChanged(text);
         }
-
         if (getActivity().getIntent() != null && getActivity().getIntent().hasExtra(PrepareOrderActivity.EXTRA_USER_PHONE)) {
             mFormContainer.findFieldById(R.id.phone, PhoneField.class).setContentText(
                     getActivity().getIntent().getStringExtra(PrepareOrderActivity.EXTRA_USER_PHONE));
