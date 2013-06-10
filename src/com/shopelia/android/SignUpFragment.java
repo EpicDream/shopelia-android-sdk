@@ -53,6 +53,9 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         public void requestSignIn(Bundle arguments);
 
         public ValidationButton getValidationButton();
+
+        public int getSignInViewCount();
+
     }
 
     public static final String FRAGMENT_NAME = "SignUp";
@@ -298,10 +301,12 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                         if (httpResponse.getStatus() == 204 && getActivity() != null) {
                             Bundle arguments = new Bundle();
                             arguments.putString(SignInFragment.ARGS_EMAIL, email);
-                            getContract().requestSignIn(arguments);
                             emailField.setError(getString(R.string.shopelia_error_user_already_exists, email));
-                            Toast.makeText(getActivity(), getString(R.string.shopelia_error_user_already_exists, email), Toast.LENGTH_LONG)
-                                    .show();
+                            if (getContract().getSignInViewCount() == 0) {
+                                getContract().requestSignIn(arguments);
+                                Toast.makeText(getActivity(), getString(R.string.shopelia_error_user_already_exists, email),
+                                        Toast.LENGTH_LONG).show();
+                            }
                         }
                     }
 

@@ -37,6 +37,9 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
         public void requestSignUp();
 
         public ValidationButton getValidationButton();
+
+        public void incSignInViewCount();
+
     }
 
     public static final String FRAGMENT_NAME = "SignIn";
@@ -53,6 +56,12 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
             track(Analytics.Events.Steps.SIGNING_IN,
                     AnalyticsBuilder.prepareStepPackage(getActivity(), Analytics.Properties.Steps.SigningUp.BEGIN).build());
         }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        getContract().incSignInViewCount();
     }
 
     @Override

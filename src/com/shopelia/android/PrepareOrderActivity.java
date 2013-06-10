@@ -119,6 +119,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     private SignUpFragment mSignUpFragment = new SignUpFragment();
     private ScrollView mScrollView;
 
+    private int mSignInViewCount = 0;
+
     // Cache
     private String mCachedPincode = null;
 
@@ -402,5 +404,15 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         findViewById(R.id.fragment_container).startAnimation(fadeOut);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(findViewById(R.id.fragment_container).getWindowToken(), 0);
+    }
+
+    @Override
+    public int getSignInViewCount() {
+        return mSignInViewCount;
+    }
+
+    @Override
+    public void incSignInViewCount() {
+        mSignInViewCount++;
     }
 }
