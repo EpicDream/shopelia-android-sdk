@@ -15,7 +15,10 @@ import com.shopelia.android.utils.JsonUtils;
 
 public class MixPanelTracker implements ShopeliaTracker {
 
-    private static final String MIXPANEL_API_TOKEN = "4938aa680803589593ce9287c33abf43";
+    // private static final String MIXPANEL_API_TOKEN =
+    // "4938aa680803589593ce9287c33abf43";
+
+    private static final String MIXPANEL_API_TOKEN = "95c15bf80bf7bf93cb1c673865c75a22";
 
     private MixpanelAPI mMixpanelInstance;
     private String mSessionId;

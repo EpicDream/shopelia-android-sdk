@@ -203,7 +203,7 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
         }
         if (card != null) {
             card.number = number;
-            mErrorMessage.setVisibility(View.GONE);
+            // mErrorMessage.setVisibility(View.GONE);
         }
 
         return isValid;

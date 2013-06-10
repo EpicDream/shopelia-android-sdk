@@ -3,7 +3,6 @@ package com.shopelia.android;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -15,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -119,6 +117,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     private SignUpFragment mSignUpFragment = new SignUpFragment();
     private ScrollView mScrollView;
 
+    private int mSignInViewCount = 0;
+
     // Cache
     private String mCachedPincode = null;
 
@@ -209,11 +209,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @Override
     public void onSignUp(JSONObject result) {
-        try {
-            Log.d(null, result.toString(2));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         setOrder(Order.inflate(result));
         if (TextUtils.isEmpty(mCachedPincode)) {
             Intent intent = new Intent(this, PincodeActivity.class);
@@ -402,5 +397,15 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         findViewById(R.id.fragment_container).startAnimation(fadeOut);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(findViewById(R.id.fragment_container).getWindowToken(), 0);
+    }
+
+    @Override
+    public int getSignInViewCount() {
+        return mSignInViewCount;
+    }
+
+    @Override
+    public void incSignInViewCount() {
+        mSignInViewCount++;
     }
 }
