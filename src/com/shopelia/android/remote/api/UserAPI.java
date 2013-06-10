@@ -20,7 +20,7 @@ public class UserAPI extends ApiHandler {
         super(context, callback);
     }
 
-    public void createAccount(final User user, final Address address, final PaymentCard card) {
+    public void createAccount(User user, Address address, PaymentCard card) {
 
         setCurrentStep(STEP_ACCOUNT_CREATION);
         JSONObject params = new JSONObject();

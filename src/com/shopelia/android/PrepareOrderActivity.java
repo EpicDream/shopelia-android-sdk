@@ -3,7 +3,6 @@ package com.shopelia.android;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -15,7 +14,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -211,11 +209,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @Override
     public void onSignUp(JSONObject result) {
-        try {
-            Log.d(null, result.toString(2));
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
         setOrder(Order.inflate(result));
         if (TextUtils.isEmpty(mCachedPincode)) {
             Intent intent = new Intent(this, PincodeActivity.class);

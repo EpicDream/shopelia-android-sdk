@@ -85,8 +85,10 @@ public class UserManager {
 
     public void logout() {
         mUser = null;
-        mPreferences.edit().remove(PREFS_USER_JSON).commit();
-        mPreferences.edit().remove(PREFS_AUTH_TOKEN).commit();
+        Editor editor = mPreferences.edit();
+        editor.remove(PREFS_AUTH_TOKEN);
+        editor.remove(PREFS_USER_JSON);
+        editor.commit();
     }
 
     public boolean isLogged() {
