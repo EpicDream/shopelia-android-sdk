@@ -19,7 +19,8 @@
     <attr name="shopelia_icon" format="integer" />
     <attr name="shopelia_textSize" format="integer" />
     <attr name="shopelia_max_length" format="integer" />
-
+	<attr name="shopelia_segment_width" format="integer" />
+	
     <declare-styleable name="ValidationButton">
         <attr name="shopelia_text" />
         <attr name="shopelia_icon" />
@@ -53,6 +54,10 @@
         <attr name="shopelia_crossFadingEnabled" format="boolean" />
         <attr name="shopelia_crossFadingDuration" format="integer" />
         <attr name="shopelia_isFixedSize" format="boolean" />
+    </declare-styleable>
+    
+    <declare-styleable name="SegmentedEditText">
+        <attr name="shopelia_segment_width" />
     </declare-styleable>
     
 </resources>

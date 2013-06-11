@@ -1,6 +1,7 @@
 package com.shopelia.android.widget;
 
 import android.content.Context;
+import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.Checkable;
 import android.widget.EditText;
@@ -80,4 +81,11 @@ public class FormEditText extends EditText implements Checkable, Errorable {
 
         return drawableState;
     }
+
+    @Override
+    public void draw(Canvas canvas) {
+        // TODO Auto-generated method stub
+        super.draw(canvas);
+    }
+
 }
