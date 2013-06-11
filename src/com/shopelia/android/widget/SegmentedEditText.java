@@ -1,17 +1,22 @@
 package com.shopelia.android.widget;
 
+import java.util.Random;
+
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.text.Editable;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.util.SparseArray;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Checkable;
 import android.widget.EditText;
@@ -46,6 +51,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         }
 
         private void validate(CharSequence text) {
+            mSegment.setError(false);
             if (onValidate(mSegment, text)) {
                 mSegment.setContentText(text);
                 mSegment.setChecked(true);
@@ -57,7 +63,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
 
         @Override
         public void afterTextChanged(Editable s) {
-            validate(s);
+            // validate(s);
         }
 
         @Override
@@ -116,9 +122,13 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                     .getDimensionPixelSize(R.dimen.shopelia_segment_padding_h),
                     getResources().getDimensionPixelSize(R.dimen.shopelia_segment_padding_v),
                     getResources().getDimensionPixelSize(R.dimen.shopelia_segment_padding_h));
+            editText.setTextColor(getResources().getColorStateList(R.color.shopelia_form_text_color_errorable));
             editText.setInputType(InputType.TYPE_CLASS_DATETIME);
             editText.setOnFocusChangeListener(mFocusObserver);
             editText.setOnEditorActionListener(mEditorActionListener);
+            editText.setOnKeyListener(mOnKeyListener);
+            Random r = new Random();
+            editText.setBackgroundColor(Color.rgb(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
             mEditText = editText;
         }
 
@@ -132,6 +142,10 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
 
         public void nextSegment(boolean animated) {
             SegmentedEditText.this.nextSegment(this, animated);
+        }
+
+        public void previousSegment(boolean animated) {
+            SegmentedEditText.this.previousSegment(this, animated);
         }
 
         /**
@@ -197,12 +211,23 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             } else {
                 getView().getLayoutParams().width = LayoutParams.WRAP_CONTENT;
             }
-            invalidate();
+            if (!TextUtils.isEmpty(mContent) && !getView().getText().equals(mContent) && fillParent()) {
+                getView().setText(mContent);
+                getView().setSelection(mContent.length());
+            }
+            getView().invalidate();
+            getView().requestLayout();
         }
 
         public void loseFocus(boolean animated) {
+            if (!TextUtils.isEmpty(mContent) && fillParent()) {
+                getView().setText(mContent.subSequence(mContent.length() - 4, mContent.length()));
+            }
             getView().getLayoutParams().width = LayoutParams.WRAP_CONTENT;
-            invalidate();
+            getView().invalidate();
+            getView().clearFocus();
+            getView().clearComposingText();
+            getView().requestLayout();
         }
 
         public void setOnValidateListener(OnValidateListener l) {
@@ -225,6 +250,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                     mHasError = false;
                 }
                 mIsChecked = checked;
+                getView().setChecked(checked);
             }
         }
 
@@ -240,6 +266,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                     mIsChecked = false;
                 }
                 mHasError = hasError;
+                getView().setError(hasError);
             }
         }
 
@@ -252,8 +279,37 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
 
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_NEXT && !isChecked()) {
+                boolean isValid = isValid();
+                if ((actionId == EditorInfo.IME_ACTION_NEXT || actionId == EditorInfo.IME_ACTION_DONE) && !isValid) {
                     getView().requestFocus();
+                    setError(true);
+                    playWakeUp();
+                    return true;
+                }
+                if ((actionId == EditorInfo.IME_ACTION_NEXT) && isValid) {
+                    nextSegment(true);
+                    return true;
+                }
+
+                return false;
+            }
+        };
+
+        public boolean isValid() {
+            return mListener == null ? true : mListener.onValidate(this, getView().getText());
+        }
+
+        public void playWakeUp() {
+            getView().startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.shopelia_soft_wakeup));
+        }
+
+        private OnKeyListener mOnKeyListener = new OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_UP
+                        && TextUtils.isEmpty(((TextView) v).getText())) {
+                    previousSegment(true);
                     return true;
                 }
                 return false;
@@ -290,6 +346,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
 
     public SegmentedEditText(Context context, AttributeSet attrs) {
         super(context, attrs);
+        setGravity(Gravity.CENTER);
         if (getBackground() == null) {
             setBackgroundResource(R.drawable.shopelia_field);
             getBackground().setVisible(false, false);
@@ -442,7 +499,26 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                 while (++index < count && (s = mSegments.valueAt(index)) == null);
                 //@formatter:on
                 if (s != null) {
-                    s.getView().requestFocus();
+                    mFocusedSegment = s;
+                    mFocusedSegment.requestFocus();
+                    invalidateSegments(animated);
+                    return;
+                }
+            }
+        }
+    }
+
+    public void previousSegment(Segment segment, boolean animated) {
+        final int count = mSegments.size();
+        for (int index = 0; index < count; index++) {
+            Segment s = mSegments.valueAt(index);
+            if (s == segment) {
+                //@formatter:off
+                while (--index >= 0 && (s = mSegments.valueAt(index)) == null);
+                //@formatter:on
+                if (s != null) {
+                    mFocusedSegment = s;
+                    mFocusedSegment.requestFocus();
                     invalidateSegments(animated);
                     return;
                 }
@@ -461,8 +537,10 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                     if (s != null && s.getView() == v && hasFocus) {
                         mFocused = true;
                         mFocusedSegment = s;
+                        s.gainFocus(true);
                     } else if (s != null && s.getView() == v && !hasFocus && s.mListener != null) {
                         s.mListener.validate(s.getView().getText());
+                        s.loseFocus(true);
                     }
                 }
             }
