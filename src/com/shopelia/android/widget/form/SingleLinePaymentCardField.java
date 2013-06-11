@@ -30,7 +30,7 @@ public class SingleLinePaymentCardField extends FormField {
         View v = inflater.inflate(R.layout.shopelia_form_field_single_line_payment, viewGroup, false);
         SegmentedEditText editText = (SegmentedEditText) v.findViewById(R.id.edit_text);
         Segment segment = editText.createSegment();
-        segment.getView().setHint("1234 5678 9012 3456");
+        segment.getView().setHint("1234");
         segment.setFillParent(true);
         segment.setOnValidateListener(sPaymentCardValidator);
         segment.getView().addTextChangedListener(new CardNumberFormattingTextWatcher());
@@ -97,7 +97,6 @@ public class SingleLinePaymentCardField extends FormField {
         public boolean onValidate(Segment segment, CharSequence text) {
             String number = text.toString().replace(" ", "");
             if (number.length() == 16) {
-                segment.nextSegment(true);
                 return true;
             }
             return false;
@@ -109,7 +108,6 @@ public class SingleLinePaymentCardField extends FormField {
         @Override
         public boolean onValidate(Segment segment, CharSequence text) {
             if (text.length() == 5) {
-                segment.nextSegment(true);
                 return true;
             }
             return false;

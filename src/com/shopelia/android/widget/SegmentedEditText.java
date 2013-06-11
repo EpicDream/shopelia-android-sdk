@@ -1,7 +1,5 @@
 package com.shopelia.android.widget;
 
-import java.util.Random;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
@@ -50,20 +48,27 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             return mSegment;
         }
 
-        private void validate(CharSequence text) {
+        private boolean validate(CharSequence text) {
             mSegment.setError(false);
             if (onValidate(mSegment, text)) {
                 mSegment.setContentText(text);
                 mSegment.setChecked(true);
-
+                return true;
             } else {
                 mSegment.setChecked(false);
+                return false;
+            }
+        }
+
+        private void validateAndNext(CharSequence text) {
+            if (validate(text)) {
+                mSegment.nextSegment(true);
             }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-            // validate(s);
+
         }
 
         @Override
@@ -73,7 +78,9 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+            if (before == 0 && count == 1) {
+                validateAndNext(s);
+            }
         }
 
     }
@@ -127,13 +134,11 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             editText.setOnFocusChangeListener(mFocusObserver);
             editText.setOnEditorActionListener(mEditorActionListener);
             editText.setOnKeyListener(mOnKeyListener);
-            Random r = new Random();
-            editText.setBackgroundColor(Color.rgb(r.nextInt(255), r.nextInt(255), r.nextInt(255)));
             mEditText = editText;
         }
 
         public void setContentText(CharSequence text) {
-            mContent = text.toString();
+            mContent = text != null ? text.toString() : null;
         }
 
         public CharSequence getContentText() {
@@ -214,6 +219,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             if (!TextUtils.isEmpty(mContent) && !getView().getText().equals(mContent) && fillParent()) {
                 getView().setText(mContent);
                 getView().setSelection(mContent.length());
+                setContentText(null);
             }
             getView().invalidate();
             getView().requestLayout();
@@ -296,7 +302,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         };
 
         public boolean isValid() {
-            return mListener == null ? true : mListener.onValidate(this, getView().getText());
+            return mListener == null ? true : mListener.validate(getView().getText());
         }
 
         public void playWakeUp() {
