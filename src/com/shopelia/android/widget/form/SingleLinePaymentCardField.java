@@ -12,6 +12,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.shopelia.android.R;
 import com.shopelia.android.pretty.CardNumberFormattingTextWatcher;
 import com.shopelia.android.pretty.DateFormattingTextWatcher;
+import com.shopelia.android.text.method.PaymentCardTransformationMethod;
 import com.shopelia.android.widget.SegmentedEditText;
 import com.shopelia.android.widget.SegmentedEditText.Segment;
 
@@ -33,6 +34,7 @@ public class SingleLinePaymentCardField extends FormField {
         Segment segment = editText.createSegment();
         segment.getView().setHint(R.string.shopelia_form_main_card_number);
         segment.setFillParent(true);
+        segment.getView().setTransformationMethod(new PaymentCardTransformationMethod());
         segment.setOnValidateListener(sPaymentCardValidator);
         segment.getView().addTextChangedListener(new CardNumberFormattingTextWatcher());
         segment.getView().setFilters(new InputFilter[] {

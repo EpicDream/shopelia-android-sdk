@@ -27,6 +27,7 @@ import android.widget.TextView.OnEditorActionListener;
 
 import com.shopelia.android.R;
 import com.shopelia.android.utils.IterableSparseArray;
+import com.shopelia.android.utils.ViewUtils;
 import com.shopelia.android.view.animation.ResizeAnimation;
 import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedListener;
 
@@ -56,7 +57,6 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         private boolean validate(CharSequence text) {
             mSegment.setError(false);
             if (onValidate(mSegment, text)) {
-                mSegment.setContentText(text);
                 mSegment.setChecked(true);
                 return true;
             } else {
@@ -125,7 +125,6 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         private OnValidateListener mListener;
 
         private FormEditText mEditText;
-        private CharSequence mContent;
 
         private boolean mLockedValidation = false;
 
@@ -146,10 +145,6 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             mEditText = editText;
         }
 
-        public void setContentText(CharSequence text) {
-            mContent = text != null ? text.toString() : null;
-        }
-
         public void lockValidation() {
             mLockedValidation = true;
         }
@@ -160,10 +155,6 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
 
         public boolean isLockedForValidation() {
             return mLockedValidation;
-        }
-
-        public CharSequence getContentText() {
-            return mContent;
         }
 
         public void nextSegment(boolean animated) {
@@ -249,24 +240,19 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                 getView().getLayoutParams().width = fillParent() ? LayoutParams.MATCH_PARENT : LayoutParams.WRAP_CONTENT;
             }
 
-            if (!TextUtils.isEmpty(mContent) && !getView().getText().equals(mContent) && fillParent()) {
-                getView().setText(mContent);
-                getView().setSelection(mContent.length());
-                setContentText(null);
-            }
-            getView().invalidate();
-            getView().requestLayout();
             unlockValidation();
+        }
+
+        public Editable getText() {
+            return getView().getText();
         }
 
         public void loseFocus(boolean animated) {
             lockValidation();
-            if (!TextUtils.isEmpty(mContent) && fillParent()) {
-                String prefix = "";
-                getView().setText(prefix + mContent.subSequence(mContent.length() - 4, mContent.length()));
-            }
             if (animated && fillParent()) {
-                final ResizeAnimation anim = new ResizeAnimation(getView(), LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                final ResizeAnimation anim = new ResizeAnimation(getView(), fillParent() ? ViewUtils.getTextViewBounds(getView(),
+                        getView().getText().subSequence(getText().length() - 14, getText().length())).width() : LayoutParams.WRAP_CONTENT,
+                        LayoutParams.WRAP_CONTENT);
                 anim.setDuration(500);
                 anim.setInterpolator(new AccelerateDecelerateInterpolator());
                 anim.computeSize(new OnViewRectComputedListener() {
@@ -279,10 +265,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             } else {
                 getView().getLayoutParams().width = LayoutParams.WRAP_CONTENT;
             }
-            getView().invalidate();
-            getView().clearFocus();
             getView().clearComposingText();
-            getView().requestLayout();
         }
 
         public void setOnValidateListener(OnValidateListener l) {
@@ -642,6 +625,6 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                 first = false;
             }
         }
-        invalidate();
+        // invalidate();
     }
 }
