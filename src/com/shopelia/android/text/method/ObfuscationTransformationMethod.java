@@ -10,8 +10,23 @@ public class ObfuscationTransformationMethod extends PasswordTransformationMetho
     public static final char DOT = '\u2022';
 
     private char mSubstitute = DOT;
-    private int mLength;
-    private HashSet<Character> mExclude;
+    private int mLength = 0;
+    private HashSet<Character> mExclude = new HashSet<Character>();
+
+    public ObfuscationTransformationMethod() {
+        super();
+    }
+
+    public ObfuscationTransformationMethod(ObfuscationTransformationMethod cpy) {
+        this(cpy.mLength, cpy.mSubstitute);
+    }
+
+    public ObfuscationTransformationMethod(int length, char obfuscationCharacter, char... excludes) {
+        this();
+        setLenghtToObfuscate(length);
+        setSubstitute(obfuscationCharacter);
+        setExcludeList(excludes);
+    }
 
     public void setSubstitute(char c) {
         mSubstitute = c;
@@ -21,8 +36,19 @@ public class ObfuscationTransformationMethod extends PasswordTransformationMetho
         mLength = length;
     }
 
+    public int getLenghtToObfuscate() {
+        return mLength;
+    }
+
     public void doNotObfuscate(char c) {
         mExclude.add(Character.valueOf(c));
+    }
+
+    public void setExcludeList(char[] cs) {
+        mExclude.clear();
+        for (int index = 0; index < cs.length; index++) {
+            mExclude.add(Character.valueOf(cs[index]));
+        }
     }
 
     @Override

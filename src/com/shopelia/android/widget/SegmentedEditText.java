@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.text.Editable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -26,6 +27,7 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.shopelia.android.R;
+import com.shopelia.android.text.method.ObfuscationTransformationMethod;
 import com.shopelia.android.utils.IterableSparseArray;
 import com.shopelia.android.utils.ViewUtils;
 import com.shopelia.android.view.animation.ResizeAnimation;
@@ -121,12 +123,15 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         private boolean mFillParent = false;
         private boolean mHasError = false;
         private boolean mIsChecked = false;
+        private boolean mHasFocus = false;
 
         private OnValidateListener mListener;
 
         private FormEditText mEditText;
 
         private boolean mLockedValidation = false;
+
+        private ObfuscationTransformationMethod mObfuscation = new ObfuscationTransformationMethod(0, '\0');
 
         protected Segment(int id) {
             FormEditText editText = new FormEditText(getContext());
@@ -142,7 +147,15 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             editText.setOnFocusChangeListener(mFocusObserver);
             editText.setOnEditorActionListener(mEditorActionListener);
             editText.setOnKeyListener(mOnKeyListener);
+            editText.setSaveEnabled(false);
             mEditText = editText;
+        }
+
+        public void setObfuscationMethod(ObfuscationTransformationMethod method) {
+            mObfuscation = method;
+            if (mObfuscation == null) {
+                mObfuscation = new ObfuscationTransformationMethod(0, '\0');
+            }
         }
 
         public void lockValidation() {
@@ -157,12 +170,12 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             return mLockedValidation;
         }
 
-        public void nextSegment(boolean animated) {
-            SegmentedEditText.this.nextSegment(this, animated);
+        public Segment nextSegment(boolean animated) {
+            return SegmentedEditText.this.nextSegment(this, animated);
         }
 
-        public void previousSegment(boolean animated) {
-            SegmentedEditText.this.previousSegment(this, animated);
+        public Segment previousSegment(boolean animated) {
+            return SegmentedEditText.this.previousSegment(this, animated);
         }
 
         /**
@@ -198,6 +211,10 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             setError(getResources().getString(resId));
         }
 
+        public boolean hasFocus() {
+            return mHasFocus;
+        }
+
         public Context getContext() {
             return SegmentedEditText.this.getContext();
         }
@@ -222,9 +239,25 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             return getView() != null && getView().requestFocus();
         }
 
-        public void gainFocus(boolean animated) {
+        public int getWidth() {
+            if (fillParent()) {
+                return -1;
+            }
+            CharSequence text = getView().getText().length() > getView().getHint().length() ? getView().getText() : getView().getHint();
+            return getView().getWidth() <= 0 ? ViewUtils.getTextViewBounds(getView(), text).width() + 10 : getView().getWidth();
+        }
 
+        public int getMaxWidth() {
+            if (!fillParent()) {
+                return getWidth();
+            }
+            return ViewUtils.getTextViewBounds(getView(), mObfuscation.getTransformation(getView().getText(), getView())).width();
+        }
+
+        public void gainFocus(boolean animated) {
+            mHasFocus = true;
             if (animated && fillParent()) {
+                getView().setTransformationMethod(new ObfuscationTransformationMethod());
                 final ResizeAnimation anim = new ResizeAnimation(getView(), fillParent() ? LayoutParams.MATCH_PARENT
                         : LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                 anim.setDuration(500);
@@ -237,7 +270,8 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                     }
                 });
             } else {
-                getView().getLayoutParams().width = fillParent() ? LayoutParams.MATCH_PARENT : LayoutParams.WRAP_CONTENT;
+                int dimen = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? LayoutParams.WRAP_CONTENT : getWidth();
+                getView().getLayoutParams().width = fillParent() ? LayoutParams.MATCH_PARENT : dimen;
             }
 
             unlockValidation();
@@ -248,11 +282,12 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         }
 
         public void loseFocus(boolean animated) {
+            mHasFocus = false;
             lockValidation();
             if (animated && fillParent()) {
-                final ResizeAnimation anim = new ResizeAnimation(getView(), fillParent() ? ViewUtils.getTextViewBounds(getView(),
-                        getView().getText().subSequence(getText().length() - 14, getText().length())).width() : LayoutParams.WRAP_CONTENT,
-                        LayoutParams.WRAP_CONTENT);
+                getView().setTransformationMethod(mObfuscation);
+                final ResizeAnimation anim = new ResizeAnimation(getView(), fillParent() ? computeSegmentWidth(this)
+                        : LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
                 anim.setDuration(500);
                 anim.setInterpolator(new AccelerateDecelerateInterpolator());
                 anim.computeSize(new OnViewRectComputedListener() {
@@ -263,7 +298,8 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                     }
                 });
             } else {
-                getView().getLayoutParams().width = LayoutParams.WRAP_CONTENT;
+                int dimen = Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB ? LayoutParams.WRAP_CONTENT : getWidth();
+                getView().getLayoutParams().width = fillParent() ? LayoutParams.WRAP_CONTENT : dimen;
             }
             getView().clearComposingText();
         }
@@ -347,7 +383,10 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             public boolean onKey(View v, int keyCode, KeyEvent event) {
                 if (event != null && event.getKeyCode() == KeyEvent.KEYCODE_DEL && event.getAction() == KeyEvent.ACTION_DOWN
                         && TextUtils.isEmpty(((TextView) v).getText())) {
-                    previousSegment(true);
+                    Segment s = previousSegment(true);
+                    if (s != null) {
+                        s.getView().setSelection(s.getView().getText().length());
+                    }
                     return true;
                 }
 
@@ -547,7 +586,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         return mError;
     }
 
-    public void nextSegment(Segment segment, boolean animated) {
+    public Segment nextSegment(Segment segment, boolean animated) {
         final int count = mSegments.size();
         for (int index = 0; index < count; index++) {
             Segment s = mSegments.valueAt(index);
@@ -559,13 +598,14 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                     mFocusedSegment = s;
                     mFocusedSegment.requestFocus();
                     invalidateSegments(animated);
-                    return;
+                    return s;
                 }
             }
         }
+        return null;
     }
 
-    public void previousSegment(Segment segment, boolean animated) {
+    public Segment previousSegment(Segment segment, boolean animated) {
         final int count = mSegments.size();
         for (int index = 0; index < count; index++) {
             Segment s = mSegments.valueAt(index);
@@ -577,10 +617,11 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                     mFocusedSegment = s;
                     mFocusedSegment.requestFocus();
                     invalidateSegments(animated);
-                    return;
+                    return s;
                 }
             }
         }
+        return null;
     }
 
     private OnFocusChangeListener mFocusObserver = new OnFocusChangeListener() {
@@ -611,11 +652,29 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         }
     };
 
+    protected int computeSegmentWidth(Segment segment) {
+        if (!segment.fillParent()) {
+            return segment.getWidth();
+        }
+        int remainingWidth = getWidth() - getPaddingLeft() - getPaddingRight();
+        int fillerSegmentCount = 0;
+        for (Segment s : mSegments) {
+            if (s != null) {
+                if (s.fillParent()) {
+                    fillerSegmentCount += 1;
+                } else {
+                    remainingWidth -= (s.getWidth());
+                }
+            }
+        }
+        return Math.min(remainingWidth / fillerSegmentCount, segment.getMaxWidth());
+    }
+
     protected void invalidateSegments(boolean animated) {
         boolean first = true;
         for (Segment s : mSegments) {
             if (s != null) {
-                if (s.fillParent() && first && (mFocusedSegment == null && !s.isChecked())) {
+                if (s.fillParent() && first && (mFocusedSegment == null && !s.isValid())) {
                     s.gainFocus(animated);
                 } else if (s == mFocusedSegment) {
                     s.gainFocus(animated);
@@ -625,6 +684,6 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                 first = false;
             }
         }
-        // invalidate();
     }
+
 }

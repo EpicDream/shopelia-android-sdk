@@ -1,9 +1,11 @@
 package com.shopelia.android.widget.form;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.InputFilter;
 import android.text.method.PasswordTransformationMethod;
 import android.util.AttributeSet;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +42,7 @@ public class SingleLinePaymentCardField extends FormField {
         segment.getView().setFilters(new InputFilter[] {
             new InputFilter.LengthFilter(19)
         });
+        segment.setObfuscationMethod(new ObfuscationTransformationMethod(15, '*', ' '));
         editText.addSegment(segment);
 
         segment = editText.createSegment();
@@ -48,6 +51,9 @@ public class SingleLinePaymentCardField extends FormField {
         segment.getView().setFilters(new InputFilter[] {
             new InputFilter.LengthFilter(5)
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            segment.getView().setGravity(Gravity.CENTER);
+        }
         segment.setOnValidateListener(sExpiryDateValidator);
         editText.addSegment(segment);
 
@@ -56,6 +62,9 @@ public class SingleLinePaymentCardField extends FormField {
         segment.getView().setFilters(new InputFilter[] {
             new InputFilter.LengthFilter(3)
         });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            segment.getView().setGravity(Gravity.CENTER);
+        }
         segment.getView().setTransformationMethod(PasswordTransformationMethod.getInstance());
         segment.setOnValidateListener(sCvvValidator);
         editText.addSegment(segment);
