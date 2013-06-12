@@ -1,11 +1,29 @@
 package com.shopelia.android.text.method;
 
+import java.util.HashSet;
+
 import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 
-public class PaymentCardTransformationMethod extends PasswordTransformationMethod {
+public class ObfuscationTransformationMethod extends PasswordTransformationMethod {
 
-    private static char DOT = ' ';// '\u2022';
+    public static final char DOT = '\u2022';
+
+    private char mSubstitute = DOT;
+    private int mLength;
+    private HashSet<Character> mExclude;
+
+    public void setSubstitute(char c) {
+        mSubstitute = c;
+    }
+
+    public void setLenghtToObfuscate(int length) {
+        mLength = length;
+    }
+
+    public void doNotObfuscate(char c) {
+        mExclude.add(Character.valueOf(c));
+    }
 
     @Override
     public CharSequence getTransformation(CharSequence source, View view) {
@@ -22,7 +40,7 @@ public class PaymentCardTransformationMethod extends PasswordTransformationMetho
 
         @Override
         public char charAt(int index) {
-            return index >= 15 || mSource.charAt(index) == ' ' ? mSource.charAt(index) : mSource.charAt(index);
+            return index >= mLength || mExclude.contains(Character.valueOf(mSource.charAt(index))) ? mSource.charAt(index) : mSubstitute;
         }
 
         @Override
