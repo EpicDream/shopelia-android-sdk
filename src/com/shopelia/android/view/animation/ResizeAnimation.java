@@ -4,9 +4,11 @@ import java.util.EventListener;
 
 import android.graphics.Rect;
 import android.view.View;
-import android.view.ViewTreeObserver.OnPreDrawListener;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
+
+import com.shopelia.android.utils.ViewUtils;
+import com.shopelia.android.utils.ViewUtils.OnMeasureListener;
 
 public class ResizeAnimation extends Animation {
 
@@ -16,42 +18,34 @@ public class ResizeAnimation extends Animation {
 
     }
 
-    private View mVictim;
+    private View mTargetView;
     private Rect mFrom = new Rect();
     private Rect mTo = new Rect();
 
-    public ResizeAnimation(View victim, int toWidth, int toHeight) {
-        mVictim = victim;
-        mFrom.set(0, 0, victim.getWidth(), victim.getHeight());
+    public ResizeAnimation(View target, int toWidth, int toHeight) {
+        mTargetView = target;
+        mFrom.set(0, 0, target.getWidth(), target.getHeight());
         mTo.set(0, 0, toWidth, toHeight);
     }
 
     public void computeSize(final OnViewRectComputedListener l) {
-        mVictim.getLayoutParams().width = mTo.width();
-        mVictim.getLayoutParams().height = mTo.height();
-        mVictim.getViewTreeObserver().addOnPreDrawListener(new OnPreDrawListener() {
+        ViewUtils.measure(mTargetView, mTo.width(), mTo.height(), new OnMeasureListener() {
 
             @Override
-            public boolean onPreDraw() {
-                mVictim.getViewTreeObserver().removeOnPreDrawListener(this);
-                mTo.set(0, 0, mVictim.getWidth(), mVictim.getHeight());
+            public void onMeasure(View v, int width, int height) {
+                mTo.set(0, 0, width, height);
                 if (l != null) {
-                    l.onViewRectComputed(mVictim, mFrom, mTo);
+                    l.onViewRectComputed(v, mFrom, mTo);
                 }
-                mVictim.getLayoutParams().width = mFrom.width();
-                mVictim.getLayoutParams().height = mFrom.height();
-                mVictim.requestLayout();
-                return false;
             }
         });
-        mVictim.requestLayout();
     }
 
     @Override
     protected void applyTransformation(float interpolatedTime, Transformation t) {
         super.applyTransformation(interpolatedTime, t);
-        mVictim.getLayoutParams().width = (int) (interpolatedTime * (mTo.width() - mFrom.width()) + mFrom.width());
-        mVictim.getLayoutParams().height = (int) (interpolatedTime * (mTo.height() - mFrom.height()) + mFrom.height());
-        mVictim.requestLayout();
+        mTargetView.getLayoutParams().width = (int) (interpolatedTime * (mTo.width() - mFrom.width()) + mFrom.width());
+        mTargetView.getLayoutParams().height = (int) (interpolatedTime * (mTo.height() - mFrom.height()) + mFrom.height());
+        mTargetView.requestLayout();
     }
 }
