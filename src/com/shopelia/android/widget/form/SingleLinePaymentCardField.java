@@ -33,7 +33,7 @@ public class SingleLinePaymentCardField extends FormField {
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         View v = inflater.inflate(R.layout.shopelia_form_field_single_line_payment, viewGroup, false);
         SegmentedEditText editText = (SegmentedEditText) v.findViewById(R.id.edit_text);
-        Segment segment = editText.createSegment();
+        Segment segment = editText.createSegment(R.id.shopelia_card_number);
         segment.getView().setHint(R.string.shopelia_form_main_card_number);
         segment.setFillParent(true);
         segment.getView().setTransformationMethod(new ObfuscationTransformationMethod());
@@ -45,7 +45,7 @@ public class SingleLinePaymentCardField extends FormField {
         segment.setObfuscationMethod(new ObfuscationTransformationMethod(15, '*', ' '));
         editText.addSegment(segment);
 
-        segment = editText.createSegment();
+        segment = editText.createSegment(R.id.shopelia_card_expiry_date);
         segment.getView().setHint(R.string.shopelia_form_payment_card_expiry_date);
         segment.getView().addTextChangedListener(new DateFormattingTextWatcher());
         segment.getView().setFilters(new InputFilter[] {
@@ -57,7 +57,7 @@ public class SingleLinePaymentCardField extends FormField {
         segment.setOnValidateListener(sExpiryDateValidator);
         editText.addSegment(segment);
 
-        segment = editText.createSegment();
+        segment = editText.createSegment(R.id.shopelia_card_cvv);
         segment.getView().setHint(R.string.shopelia_form_payment_card_cvv);
         segment.getView().setFilters(new InputFilter[] {
             new InputFilter.LengthFilter(3)

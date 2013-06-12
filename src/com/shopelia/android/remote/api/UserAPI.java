@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
@@ -32,11 +33,13 @@ public class UserAPI extends ApiHandler {
             fireError(STEP_ACCOUNT_CREATION, null, null, e);
             return;
         }
-
+        ShopeliaRestClient.reset();
+        UserManager.get(getContext()).logout();
         ShopeliaRestClient.post(Command.V1.Users.$, params, new JsonAsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse response, JSONObject object) {
+                Log.d(null, "RECEIVE TOKEN " + object.optString(User.Api.AUTH_TOKEN));
                 if (hasCallback() && object.has(User.Api.USER) && object.has(User.Api.AUTH_TOKEN)) {
                     User user = User.inflate(object.optJSONObject(User.Api.USER));
                     UserManager.get(getContext()).login(user);
@@ -161,6 +164,7 @@ public class UserAPI extends ApiHandler {
             fireError(STEP_SIGN_IN, null, null, e);
             return;
         }
+
         ShopeliaRestClient.post(Command.V1.Users.SignIn.$, params, new AsyncCallback() {
 
             @Override

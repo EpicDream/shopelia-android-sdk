@@ -230,7 +230,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 super.onAccountCreationSucceed(user, address);
                 track(Analytics.Events.Steps.SignUp.END);
                 stopWaiting();
-                UserManager.get(PrepareOrderActivity.this).login(user);
                 order.user = user;
                 checkoutOrder(order);
             }

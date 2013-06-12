@@ -1,8 +1,14 @@
 package com.shopelia.android.remote.api;
 
+import java.net.CookieHandler;
+import java.net.CookieManager;
+import java.net.CookiePolicy;
+
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.os.Build;
 
 import com.shopelia.android.config.Config;
 import com.shopelia.android.http.LogcatRequestLogger;
@@ -17,6 +23,7 @@ import com.turbomanage.httpclient.android.AndroidHttpClient;
  * 
  * @author Pierre Pollastri
  */
+@SuppressLint("NewApi")
 public final class ShopeliaRestClient {
 
     public static final String LOG_TAG = "ShopelisRestClient";
@@ -51,6 +58,12 @@ public final class ShopeliaRestClient {
         sHttpClient.setReadTimeout(READ_TIMEOUT);
         sHttpClient.setMaxRetries(MAX_RETRIES);
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            CookieManager cm = new CookieManager();
+            cm.setCookiePolicy(CookiePolicy.ACCEPT_NONE);
+            CookieHandler.setDefault(cm);
+        }
+
         /*
          * Logger
          */
@@ -74,6 +87,8 @@ public final class ShopeliaRestClient {
     public static void authenticate(Context context) {
         if (UserManager.get(context).isLogged()) {
             sHttpClient.addHeader("X-Shopelia-AuthToken", UserManager.get(context).getAuthToken());
+        } else {
+
         }
     }
 
@@ -181,6 +196,14 @@ public final class ShopeliaRestClient {
      */
     public static void delete(String path, ParameterMap params, AsyncCallback callback) {
         sHttpClient.delete(path, params, callback);
+    }
+
+    public static final void reset() {
+
+        if (sHttpClient != null) {
+            // sHttpClient.clearHeaders();
+        }
+
     }
 
 }
