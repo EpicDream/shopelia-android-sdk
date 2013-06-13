@@ -1,4 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="cardioDoneButton">Valider</string>
+    <string name="cardioCancelButton">Annuler</string> 
+    <string name="cardioConfirmButton">Valider</string>
+	<string name="cardioEntryCardNumber">Numéro de carte</string>           
+	<string name="cardioEntryCVV">CVV</string>           
+	<string name="cardioEntryExpiry">MM/AA</string>           
+	<string name="cardioEntryZip">Code Postal</string>           
+	<string name="cardioEntryZipHint">MM/AA</string>           
+	<string name="cardioScanErrorCameraConnectFail"></string>
+	<string name="cardioScanErrorLibLoadFail">Erreur de chargement de card IO</string>
+	<string name="cardioScanErrorNoDeviceSupport">Votre périphérique n\'est pas compatible</string>    
+	<string name="cardioScanErrorUnauthorized">Une erreur est survenue</string>
+    <string name="cardioScanErrorUnexpectedCameraFail">Une erreur est survenue.</string>       
+	<string name="cardioScanErrorWhoops">Une erreur est survenue</string>
+	<string name="cardioScanHintBottom"></string>    
+    <string name="cardioScanHintTop"></string>
+    <string name="cardioScanKeyboardButton"></string>
+    <string name="cardioWhoops"></string>
 </resources>

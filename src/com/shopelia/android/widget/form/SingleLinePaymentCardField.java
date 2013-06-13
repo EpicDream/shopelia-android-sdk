@@ -1,11 +1,16 @@
 package com.shopelia.android.widget.form;
 
+import io.card.payment.CardIOActivity;
+import io.card.payment.CreditCard;
+
 import java.util.Calendar;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.InputFilter;
@@ -21,6 +26,7 @@ import android.widget.TextView;
 
 import com.shopelia.android.R;
 import com.shopelia.android.algorithm.Luhn;
+import com.shopelia.android.config.Config;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.pretty.CardNumberFormattingTextWatcher;
 import com.shopelia.android.pretty.DateFormattingTextWatcher;
@@ -31,6 +37,8 @@ import com.shopelia.android.widget.SegmentedEditText.Segment;
 public class SingleLinePaymentCardField extends FormField {
 
     public static final String SAVE_TAG = "EditTextFieldSave_";
+
+    private static final int REQUEST_CARD = 16;
 
     private static final int MAX_CARD_VALIDITY_YEAR = 15;
     private static final int MAX_MONTH_VALUE = 12;
@@ -59,8 +67,27 @@ public class SingleLinePaymentCardField extends FormField {
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         View v = inflater.inflate(R.layout.shopelia_form_field_single_line_payment, viewGroup, false);
 
-        v.findViewById(R.id.scan).setOnClickListener(mOnClickScanListener);
+        v.findViewById(R.id.scan).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                Activity activity = (Activity) getContext();
+                Intent scanIntent = new Intent(activity, CardIOActivity.class);
+
+                scanIntent.putExtra(CardIOActivity.EXTRA_APP_TOKEN, Config.CARDIO_TOKEN);
+
+                scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_EXPIRY, false);
+                scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_CVV, false);
+                scanIntent.putExtra(CardIOActivity.EXTRA_REQUIRE_ZIP, false);
+                scanIntent.putExtra(CardIOActivity.EXTRA_SUPPRESS_MANUAL_ENTRY, true);
+                activity.startActivityForResult(scanIntent, REQUEST_CARD);
+            }
+        });
         mErrorMessage = (TextView) v.findViewById(R.id.error);
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.FROYO) {
+            v.findViewById(R.id.scan).setVisibility(View.GONE);
+        }
 
         /*
          * SegmentedEditText initilization
@@ -169,6 +196,20 @@ public class SingleLinePaymentCardField extends FormField {
             mSegmentedEditText.updateState();
         }
     }
+
+    @Override
+    public void onActivityResult(int requestCode, int result, Intent data) {
+        switch (requestCode) {
+            case REQUEST_CARD:
+                if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
+                    CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
+                    mCardNumberField.getView().setText(scanResult.cardNumber);
+                    // mCardScanned = true;
+                    mCardNumberField.nextSegment(true);
+                }
+                break;
+        }
+    };
 
     @Override
     public Object getResult() {
@@ -353,14 +394,6 @@ public class SingleLinePaymentCardField extends FormField {
 
         @Override
         public void onError(Segment s, CharSequence message) {
-
-        }
-    };
-
-    private OnClickListener mOnClickScanListener = new OnClickListener() {
-
-        @Override
-        public void onClick(View v) {
 
         }
     };
