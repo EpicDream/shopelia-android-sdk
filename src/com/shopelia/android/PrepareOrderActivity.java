@@ -12,7 +12,6 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.security.KeyChain;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -168,7 +167,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         new FormListFooter(this).setView(findViewById(R.id.footer));
         new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getIntent().getExtras());
 
-        startActivity(KeyChain.createInstallIntent());
     }
 
     @Override
