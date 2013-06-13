@@ -174,7 +174,7 @@ public final class ShopeliaRestClient {
         sHttpClient = new AndroidHttpClient(ROOT);
         sHttpClient.clearHeaders();
 
-        if (AndroidHttpClient.getCookieManager() != null) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD && AndroidHttpClient.getCookieManager() != null) {
             AndroidHttpClient.getCookieManager().setCookiePolicy(CookiePolicy.ACCEPT_NONE);
         }
 

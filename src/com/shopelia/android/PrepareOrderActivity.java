@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -362,8 +363,14 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @SuppressLint("NewApi")
     private void switchFragments(final ShopeliaFragment<?> inFragment, final ShopeliaFragment<?> outFragment) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB) {
+            switchFragmentsNow(inFragment, outFragment, false);
+            return;
+        }
         final Animation fadeOut = AnimationUtils.loadAnimation(this, R.anim.shopelia_fade_out_short);
         final Animation fadeIn = AnimationUtils.loadAnimation(this, R.anim.shopelia_fade_in_short);
+        fadeOut.setDuration(200);
+        fadeIn.setDuration(200);
         fadeOut.setAnimationListener(new AnimationListener() {
 
             @Override
@@ -380,28 +387,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             public void onAnimationEnd(Animation animation) {
                 final ExtendedFrameLayout container = (ExtendedFrameLayout) findViewById(R.id.fragment_container);
                 container.lockDraw();
-                {
-                    FragmentManager fm = getSupportFragmentManager();
-                    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    try {
-                        mSavedStates.put(outFragment.getClass(), fm.saveFragmentInstanceState(outFragment));
-                    } catch (Exception e) {
-                        // Do nothing : We cannot retrieve the Fragment and this
-                        // causes an IllegalStateException. Unfortunately it
-                        // seems to be impossible to know if the fragment is or
-                        // not in the FragmentManager. The only solution seems
-                        // to catch the exception. Sad...
-                    }
-                    if (mSavedStates.containsKey(inFragment.getClass())) {
-                        inFragment.setInitialSavedState(mSavedStates.get(inFragment.getClass()));
-                    }
-                    ft.replace(R.id.fragment_container, inFragment, inFragment.getName());
-                    ft.commit();
-                    fm.executePendingTransactions();
-                }
-                // findViewById(R.id.fragment_container).startAnimation(fadeIn);
+                switchFragmentsNow(inFragment, outFragment, true);
                 final ResizeAnimation resize = new ResizeAnimation(container, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                resize.setDuration(500);
+                resize.setDuration(150);
                 resize.setInterpolator(new AccelerateDecelerateInterpolator());
                 resize.computeSize(new OnViewRectComputedListener() {
 
@@ -422,6 +410,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                             @Override
                             public void onAnimationEnd(Animation animation) {
                                 container.startAnimation(fadeIn);
+                                container.getLayoutParams().height = LayoutParams.WRAP_CONTENT;
                                 container.unlockDraw();
                             }
                         });
@@ -433,6 +422,28 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         findViewById(R.id.fragment_container).startAnimation(fadeOut);
         InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(findViewById(R.id.fragment_container).getWindowToken(), 0);
+    }
+
+    private void switchFragmentsNow(final ShopeliaFragment<?> inFragment, final ShopeliaFragment<?> outFragment, boolean forceExecute) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        try {
+            mSavedStates.put(outFragment.getClass(), fm.saveFragmentInstanceState(outFragment));
+        } catch (Exception e) {
+            // Do nothing : We cannot retrieve the Fragment and this
+            // causes an IllegalStateException. Unfortunately it
+            // seems to be impossible to know if the fragment is or
+            // not in the FragmentManager. The only solution seems
+            // to catch the exception. Sad...
+        }
+        if (mSavedStates.containsKey(inFragment.getClass())) {
+            inFragment.setInitialSavedState(mSavedStates.get(inFragment.getClass()));
+        }
+        ft.replace(R.id.fragment_container, inFragment, inFragment.getName());
+        ft.commit();
+        if (forceExecute) {
+            fm.executePendingTransactions();
+        }
     }
 
     @Override
