@@ -249,7 +249,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             }
 
             CharSequence text = getView().getText().length() > getView().getHint().length() ? getView().getText() : getView().getHint();
-            return getView().getWidth() <= 0 ? ViewUtils.getTextViewBounds(getView(), text).width() + 10 : getView().getWidth();
+            return getView().getWidth() <= 0 ? ViewUtils.getTextViewBounds(getView(), text).width() + 15 : getView().getWidth();
         }
 
         public int getMaxWidth() {
@@ -649,7 +649,6 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
             mFocused = hasFocus;
-            mFocusedSegment = null;
             boolean found = false;
             if (mSegments != null) {
                 for (Segment s : mSegments) {
@@ -665,10 +664,11 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                     }
                 }
             }
-            refreshDrawableState();
-            if (!found && mFocusedSegment == null) {
-                invalidateSegments(true);
+            if (!found && mFocusedSegment != null && mFocusedSegment.isValid()) {
+                mFocusedSegment.loseFocus(true);
+                mFocusedSegment = null;
             }
+            refreshDrawableState();
         }
     };
 
