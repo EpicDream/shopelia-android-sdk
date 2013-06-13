@@ -106,6 +106,7 @@ public class SingleLinePaymentCardField extends FormField {
             @Override
             public boolean onValidate(Segment segment, CharSequence text) {
                 if (checkCardNumber(null, false)) {
+                    setValid(mSegmentedEditText.isChecked());
                     return true;
                 }
                 return false;
@@ -132,6 +133,7 @@ public class SingleLinePaymentCardField extends FormField {
             @Override
             public boolean onValidate(Segment segment, CharSequence text) {
                 if (checkExpiryDate(null, false)) {
+                    setValid(mSegmentedEditText.isChecked());
                     return true;
                 }
                 return false;
@@ -153,6 +155,7 @@ public class SingleLinePaymentCardField extends FormField {
             @Override
             public boolean onValidate(Segment segment, CharSequence text) {
                 if (checkCvv(null, false)) {
+                    setValid(mSegmentedEditText.isChecked());
                     InputMethodManager imm = (InputMethodManager) segment.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(segment.getView().getWindowToken(), 0);
                     return true;
@@ -262,6 +265,7 @@ public class SingleLinePaymentCardField extends FormField {
         }
         mSegmentedEditText.setError(!isValid);
         mSegmentedEditText.setChecked(isValid);
+        setValid(isValid);
         return isValid;
     }
 

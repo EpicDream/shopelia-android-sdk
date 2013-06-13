@@ -86,13 +86,15 @@ public class UserManager {
     }
 
     public void logout() {
-        new UserAPI(mContext, null).signOut(mUser.email);
-        mUser = null;
-        ShopeliaRestClient.reset();
-        Editor editor = mPreferences.edit();
-        editor.remove(PREFS_AUTH_TOKEN);
-        editor.remove(PREFS_USER_JSON);
-        editor.commit();
+        if (mUser != null) {
+            new UserAPI(mContext, null).signOut(mUser.email);
+            mUser = null;
+            ShopeliaRestClient.reset();
+            Editor editor = mPreferences.edit();
+            editor.remove(PREFS_AUTH_TOKEN);
+            editor.remove(PREFS_USER_JSON);
+            editor.commit();
+        }
     }
 
     public boolean isLogged() {
