@@ -52,6 +52,7 @@ import com.shopelia.android.widget.FormListFooter;
 import com.shopelia.android.widget.FormListHeader;
 import com.shopelia.android.widget.ProductSheetWrapper;
 import com.shopelia.android.widget.ValidationButton;
+import com.shopelia.android.widget.form.SingleLinePaymentCardField;
 import com.turbomanage.httpclient.HttpResponse;
 
 public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpListener, OnSignInListener {
@@ -127,6 +128,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     private int mSignInViewCount = 0;
 
+    private boolean mCardScanned = false;
+
     // Cache
     private String mCachedPincode = null;
 
@@ -167,6 +170,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == SingleLinePaymentCardField.REQUEST_CARD && resultCode == RESULT_OK) {
+            mCardScanned = true;
+        }
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         if (resultCode == ShopeliaActivity.RESULT_LOGOUT) {
@@ -236,6 +242,11 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             @Override
             public void onAccountCreationSucceed(final User user, Address address) {
                 super.onAccountCreationSucceed(user, address);
+                if (mCardScanned) {
+                    track(Analytics.Events.AddPaymentCardMethod.CARD_SCANNED);
+                } else {
+                    track(Analytics.Events.AddPaymentCardMethod.CARD_NOT_SCANNED);
+                }
                 track(Analytics.Events.Steps.SignUp.END);
                 stopWaiting();
                 order.user = user;

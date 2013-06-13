@@ -31,6 +31,7 @@ import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.pretty.CardNumberFormattingTextWatcher;
 import com.shopelia.android.pretty.DateFormattingTextWatcher;
 import com.shopelia.android.text.method.ObfuscationTransformationMethod;
+import com.shopelia.android.utils.ViewUtils;
 import com.shopelia.android.widget.SegmentedEditText;
 import com.shopelia.android.widget.SegmentedEditText.Segment;
 
@@ -38,7 +39,7 @@ public class SingleLinePaymentCardField extends FormField {
 
     public static final String SAVE_TAG = "EditTextFieldSave_";
 
-    private static final int REQUEST_CARD = 16;
+    public static final int REQUEST_CARD = 16;
 
     private static final int MAX_CARD_VALIDITY_YEAR = 15;
     private static final int MAX_MONTH_VALUE = 12;
@@ -204,8 +205,10 @@ public class SingleLinePaymentCardField extends FormField {
                 if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                     CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
                     mCardNumberField.getView().setText(CardNumberFormattingTextWatcher.makeNumberPretty(scanResult.cardNumber));
-                    // mCardScanned = true;
-                    mCardNumberField.nextSegment(true);
+                    Segment s = mCardNumberField.nextSegment(true);
+                    if (s != null) {
+                        ViewUtils.forceRequestFocus(s.getView());
+                    }
                 }
                 break;
         }
