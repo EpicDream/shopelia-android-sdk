@@ -85,13 +85,13 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
+            mSegment.setError(false);
             if (before == 0 && count == 1) {
                 validateAndNext(s);
             } else if (!mSegment.isLockedForValidation()) {
-                mSegment.setChecked(false);
+                mSegment.setChecked(validate(s));
             }
         }
-
     }
 
     public interface OnErrorListener {
@@ -243,6 +243,11 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             if (fillParent()) {
                 return -1;
             }
+
+            if (isInEditMode()) {
+                return getView().getWidth();
+            }
+
             CharSequence text = getView().getText().length() > getView().getHint().length() ? getView().getText() : getView().getHint();
             return getView().getWidth() <= 0 ? ViewUtils.getTextViewBounds(getView(), text).width() + 10 : getView().getWidth();
         }
@@ -306,10 +311,8 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
 
         public void setOnValidateListener(OnValidateListener l) {
             mListener = l;
-            if (getView() != null && l != null) {
-                mListener.setSegment(this);
-                getView().addTextChangedListener(mListener);
-            }
+            mListener.setSegment(this);
+            getView().addTextChangedListener(mListener);
         }
 
         @Override
@@ -325,6 +328,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                 }
                 mIsChecked = checked;
                 getView().setChecked(checked);
+                updateState();
             }
         }
 
@@ -341,6 +345,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
                 }
                 mHasError = hasError;
                 getView().setError(hasError);
+                updateState();
             }
         }
 
@@ -586,6 +591,21 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         return mError;
     }
 
+    public void updateState() {
+        boolean hasError = false;
+        boolean isChecked = true;
+
+        for (Segment s : mSegments) {
+            if (s != null) {
+                isChecked = isChecked && s.isChecked();
+                hasError = hasError || s.hasError();
+            }
+        }
+
+        setChecked(isChecked);
+        setError(hasError);
+    }
+
     public Segment nextSegment(Segment segment, boolean animated) {
         final int count = mSegments.size();
         for (int index = 0; index < count; index++) {
@@ -670,7 +690,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
         return Math.min(remainingWidth / fillerSegmentCount, segment.getMaxWidth());
     }
 
-    protected void invalidateSegments(boolean animated) {
+    public void invalidateSegments(boolean animated) {
         boolean first = true;
         for (Segment s : mSegments) {
             if (s != null) {

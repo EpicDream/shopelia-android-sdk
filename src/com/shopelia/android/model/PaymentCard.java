@@ -25,6 +25,8 @@ public class PaymentCard implements JsonData, Parcelable {
 
         String PAYMENT_CARD_ID = "payment_card_id";
 
+        String EXPIRY_DATE = "expiry_date";
+
     }
 
     public static final long INVALID_ID = -1;

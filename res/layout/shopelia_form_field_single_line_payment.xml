@@ -7,6 +7,17 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical" >
 
+     <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/shopelia_margin_small"
+        android:textSize="@dimen/shopelia_font_size_small"
+        android:textColor="@color/shopelia_red"
+        android:gravity="center"
+        android:visibility="gone"
+        android:text="An error occurred" />
+    
     <com.shopelia.android.widget.SegmentedEditText
         android:id="@+id/edit_text"
         style="@style/Theme.Shopelia.Widget.FormButton"
@@ -18,14 +29,17 @@
         app:shopelia_segment_width="@dimen/shopelia_segment_width" />
 
     <com.shopelia.android.widget.FontableTextView
-        android:id="@+id/error"
+        android:id="@+id/scan"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="@dimen/shopelia_margin_small"
-        android:textSize="@dimen/shopelia_font_size_small"
-        android:textColor="@color/shopelia_red"
-        android:gravity="right"
-        android:visibility="gone"
-        android:text="An error occurred" />
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:drawableLeft="@drawable/shopelia_photo"
+        android:drawablePadding="5dp"
+        android:paddingLeft="5dp"
+        android:gravity="center_vertical|left"
+        android:text="@string/shopelia_form_payment_card_scan"
+        android:textColor="@color/shopelia_link_text_color"
+        android:textSize="@dimen/shopelia_font_size_small" />
 
 </LinearLayout>

@@ -40,8 +40,8 @@ import com.shopelia.android.widget.form.FormField;
 import com.shopelia.android.widget.form.FormField.ListenerAdapter;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.HeaderField;
-import com.shopelia.android.widget.form.PaymentCardField;
 import com.shopelia.android.widget.form.PhoneField;
+import com.shopelia.android.widget.form.SingleLinePaymentCardField;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -132,7 +132,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 		mFormContainer.findFieldById(R.id.header_payment_method,
 				HeaderField.class).addPictures(R.drawable.shopelia_logos_visa,
 				R.drawable.shopelia_logos_mc, R.drawable.shopelia_logos_norton);
-		mFormContainer.findFieldById(R.id.payment_card, PaymentCardField.class)
+		mFormContainer.findFieldById(R.id.payment_card, SingleLinePaymentCardField.class)
 				.setJsonPath(Order.Api.PAYMENT_CARD)
 				.setListener(mTrackingListener)
 				.setOnClickListener(mOnClickFieldClickListener);

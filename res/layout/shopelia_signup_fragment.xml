@@ -51,10 +51,12 @@
         app:shopelia_icon="@drawable/shopelia_card"
         app:shopelia_text="@string/shopelia_form_main_payment_method" />
 
-    <com.shopelia.android.widget.form.PaymentCardField
+    <com.shopelia.android.widget.form.SingleLinePaymentCardField
         android:id="@+id/payment_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:shopelia_hint="@string/shopelia_form_main_card_number" />
+        android:layout_marginBottom="@dimen/shopelia_margin_normal" >
+
+    </com.shopelia.android.widget.form.SingleLinePaymentCardField>
 
 </com.shopelia.android.widget.form.FormLinearLayout>
