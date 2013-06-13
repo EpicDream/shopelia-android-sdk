@@ -203,7 +203,7 @@ public class SingleLinePaymentCardField extends FormField {
             case REQUEST_CARD:
                 if (data != null && data.hasExtra(CardIOActivity.EXTRA_SCAN_RESULT)) {
                     CreditCard scanResult = data.getParcelableExtra(CardIOActivity.EXTRA_SCAN_RESULT);
-                    mCardNumberField.getView().setText(scanResult.cardNumber);
+                    mCardNumberField.getView().setText(CardNumberFormattingTextWatcher.makeNumberPretty(scanResult.cardNumber));
                     // mCardScanned = true;
                     mCardNumberField.nextSegment(true);
                 }

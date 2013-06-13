@@ -19,11 +19,11 @@
             android:layout_height="wrap_content"
             layout="@layout/shopelia_form_list_header" />
 
-        <FrameLayout
+        <com.shopelia.android.widget.ExtendedFrameLayout
             android:id="@+id/fragment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" >
-        </FrameLayout>
+        </com.shopelia.android.widget.ExtendedFrameLayout>
 
         <include
             android:id="@+id/footer"

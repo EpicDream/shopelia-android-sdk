@@ -8,16 +8,20 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
+import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.Toast;
 
@@ -40,6 +44,9 @@ import com.shopelia.android.remote.api.ApiHandler.ErrorInflater;
 import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
+import com.shopelia.android.view.animation.ResizeAnimation;
+import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedListener;
+import com.shopelia.android.widget.ExtendedFrameLayout;
 import com.shopelia.android.widget.FormListFooter;
 import com.shopelia.android.widget.FormListHeader;
 import com.shopelia.android.widget.ProductSheetWrapper;
@@ -371,6 +378,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
             @Override
             public void onAnimationEnd(Animation animation) {
+                final ExtendedFrameLayout container = (ExtendedFrameLayout) findViewById(R.id.fragment_container);
+                container.lockDraw();
                 {
                     FragmentManager fm = getSupportFragmentManager();
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -388,9 +397,37 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                     }
                     ft.replace(R.id.fragment_container, inFragment, inFragment.getName());
                     ft.commit();
+                    fm.executePendingTransactions();
                 }
-                findViewById(R.id.fragment_container).startAnimation(fadeIn);
+                // findViewById(R.id.fragment_container).startAnimation(fadeIn);
+                final ResizeAnimation resize = new ResizeAnimation(container, LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
+                resize.setDuration(500);
+                resize.setInterpolator(new AccelerateDecelerateInterpolator());
+                resize.computeSize(new OnViewRectComputedListener() {
 
+                    @Override
+                    public void onViewRectComputed(View victim, Rect from, Rect to) {
+                        resize.setAnimationListener(new AnimationListener() {
+
+                            @Override
+                            public void onAnimationStart(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationRepeat(Animation animation) {
+
+                            }
+
+                            @Override
+                            public void onAnimationEnd(Animation animation) {
+                                container.startAnimation(fadeIn);
+                                container.unlockDraw();
+                            }
+                        });
+                        container.startAnimation(resize);
+                    }
+                });
             }
         });
         findViewById(R.id.fragment_container).startAnimation(fadeOut);

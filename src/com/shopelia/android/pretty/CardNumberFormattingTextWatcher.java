@@ -39,8 +39,11 @@ public class CardNumberFormattingTextWatcher implements TextWatcher {
     }
 
     private void makePretty(Editable s) {
-        int relativeIndex = 1;
         for (int index = 0; index < s.length(); index++) {
+            if (has4DigitBehind(s, index) && s.charAt(index) != ' ') {
+                s.insert(index, " ");
+                index++;
+            }
             if (s.charAt(index) == ' ' && !has4DigitBehind(s, index) || index >= CardNumberInputFilter.FORMAT.length()
                     || (mIsBackwardDeleting && index == mBackwardDeleteStart - 1)) {
                 s.delete(index, index + 1);
@@ -48,16 +51,21 @@ public class CardNumberFormattingTextWatcher implements TextWatcher {
                 index--;
                 continue;
             }
-            if (relativeIndex % 5 == 0 && s.charAt(index) != ' ') {
-                s.insert(index, " ");
-                index++;
-                relativeIndex = 1;
-            }
-            relativeIndex++;
         }
     }
 
-    private boolean has4DigitBehind(Editable s, int index) {
+    public static CharSequence makeNumberPretty(CharSequence in) {
+        StringBuilder out = new StringBuilder(in.toString().replace(" ", ""));
+        for (int index = 0; index < out.length(); index++) {
+            if (has4DigitBehind(out, index)) {
+                out.insert(index, " ");
+                index++;
+            }
+        }
+        return out;
+    }
+
+    private static boolean has4DigitBehind(CharSequence s, int index) {
         if (index < 4) {
             return false;
         }
@@ -80,7 +88,7 @@ public class CardNumberFormattingTextWatcher implements TextWatcher {
                     count--;
                 }
             }
-            return source;
+            return makeNumberPretty(source);
         }
     }
 

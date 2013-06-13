@@ -84,7 +84,6 @@ public class FormEditText extends EditText implements Checkable, Errorable {
 
     @Override
     public void draw(Canvas canvas) {
-        // TODO Auto-generated method stub
         super.draw(canvas);
     }
 
