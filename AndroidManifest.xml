@@ -59,12 +59,6 @@
             android:theme="@style/Theme.Shopelia"
             android:windowSoftInputMode="adjustResize" />
         <activity
-            android:name="com.shopelia.android.AddPaymentCardActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.Shopelia"
-            android:windowSoftInputMode="adjustPan" />
-        <activity
             android:name="com.shopelia.android.PincodeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorPortrait"

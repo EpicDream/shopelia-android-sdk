@@ -12,6 +12,7 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.security.KeyChain;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -118,7 +119,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
      */
     public static final String EXTRA_USER_PHONE = Config.EXTRA_PREFIX + "USER_PHONE";
 
-    private static final int REQUEST_ADD_PAYMENT_CARD = 0x0113;
     private static final int REQUEST_CREATE_PINCODE = 0x3110;
     private static final int REQUEST_AUTH_PINCODE = 0x0216;
 
@@ -135,6 +135,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     private Map<Class<?>, Fragment.SavedState> mSavedStates = new HashMap<Class<?>, Fragment.SavedState>();
 
+    @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getIntent().putExtra(EXTRA_INIT_ORDER, true);
@@ -166,6 +167,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         new FormListHeader(this).setView(findViewById(R.id.header));
         new FormListFooter(this).setView(findViewById(R.id.footer));
         new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getIntent().getExtras());
+
+        startActivity(KeyChain.createInstallIntent());
     }
 
     @Override
@@ -202,13 +205,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             case REQUEST_AUTH_PINCODE:
                 if (resultCode == RESULT_OK) {
                     checkoutOrder(getOrder());
-                } else {
-                    finish();
-                }
-                break;
-            case REQUEST_ADD_PAYMENT_CARD:
-                if (resultCode == RESULT_OK) {
-                    sendPaymentInformations((PaymentCard) data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD), getOrder());
                 } else {
                     finish();
                 }
@@ -309,13 +305,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         if (order.user.paymentCards.size() > 0) {
             order.card = order.user.paymentCards.get(0);
         }
-        if (order.card == null) {
-            startActivityForResult(new Intent(this, AddPaymentCardActivity.class), REQUEST_ADD_PAYMENT_CARD);
-        } else {
-            Intent intent = new Intent(this, ProcessOrderActivity.class);
-            intent.putExtra(ShopeliaActivity.EXTRA_ORDER, order);
-            startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
-        }
+
+        Intent intent = new Intent(this, ProcessOrderActivity.class);
+        intent.putExtra(ShopeliaActivity.EXTRA_ORDER, order);
+        startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
     }
 
     @Override
