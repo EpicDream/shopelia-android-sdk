@@ -87,6 +87,12 @@
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Shopelia" />
        
+       <service android:name="com.shopelia.android.service.ShopeliaService" android:exported="true">
+           <intent-filter >
+               <action android:name="com.shopelia.android.action.SHOPELIA" />
+           </intent-filter>
+       </service>
+       
         <!-- Activities responsible for gathering payment info -->
         <activity
             android:name="io.card.payment.CardIOActivity"

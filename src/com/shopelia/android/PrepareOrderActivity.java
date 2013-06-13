@@ -43,6 +43,7 @@ import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.ApiHandler.ErrorInflater;
 import com.shopelia.android.remote.api.UserAPI;
+import com.shopelia.android.service.ShopeliaService;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 import com.shopelia.android.view.animation.ResizeAnimation;
@@ -166,7 +167,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         new FormListHeader(this).setView(findViewById(R.id.header));
         new FormListFooter(this).setView(findViewById(R.id.footer));
         new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getIntent().getExtras());
-
+        startService(new Intent(ShopeliaService.ACTION));
     }
 
     @Override
