@@ -36,39 +36,10 @@ public final class ShopeliaRestClient {
     private static final int READ_TIMEOUT = 100000;
     private static final int MAX_RETRIES = 1;
 
-    private static final AndroidHttpClient sHttpClient;
+    private static AndroidHttpClient sHttpClient;
 
     static {
-        sHttpClient = new AndroidHttpClient(ROOT);
-
-        /*
-         * Build shopelia HTTP header
-         */
-
-        sHttpClient.addHeader("Content-Type", "application/json");
-        sHttpClient.addHeader("Accept", "application/json");
-        sHttpClient.addHeader("Accept", "application/vnd.shopelia.v1");
-        sHttpClient.addHeader("X-Shopelia-ApiKey", API_KEY);
-
-        /*
-         * Timeouts and retries
-         */
-
-        sHttpClient.setConnectionTimeout(CONNECTION_TIMEOUT);
-        sHttpClient.setReadTimeout(READ_TIMEOUT);
-        sHttpClient.setMaxRetries(MAX_RETRIES);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
-            CookieManager cm = new CookieManager();
-            cm.setCookiePolicy(CookiePolicy.ACCEPT_NONE);
-            CookieHandler.setDefault(cm);
-        }
-
-        /*
-         * Logger
-         */
-
-        sHttpClient.setRequestLogger(new LogcatRequestLogger(LOG_TAG, Config.INFO_LOGS_ENABLED));
+        reset();
     }
 
     private ShopeliaRestClient() {
@@ -200,10 +171,41 @@ public final class ShopeliaRestClient {
 
     public static final void reset() {
 
-        if (sHttpClient != null) {
-            // sHttpClient.clearHeaders();
+        sHttpClient = new AndroidHttpClient(ROOT);
+        sHttpClient.clearHeaders();
+
+        if (AndroidHttpClient.getCookieManager() != null) {
+            AndroidHttpClient.getCookieManager().setCookiePolicy(CookiePolicy.ACCEPT_NONE);
         }
 
+        /*
+         * Build shopelia HTTP header
+         */
+
+        sHttpClient.addHeader("Content-Type", "application/json");
+        sHttpClient.addHeader("Accept", "application/json");
+        sHttpClient.addHeader("Accept", "application/vnd.shopelia.v1");
+        sHttpClient.addHeader("X-Shopelia-ApiKey", API_KEY);
+
+        /*
+         * Timeouts and retries
+         */
+
+        sHttpClient.setConnectionTimeout(CONNECTION_TIMEOUT);
+        sHttpClient.setReadTimeout(READ_TIMEOUT);
+        sHttpClient.setMaxRetries(MAX_RETRIES);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
+            CookieManager cm = new CookieManager();
+            cm.setCookiePolicy(CookiePolicy.ACCEPT_NONE);
+            CookieHandler.setDefault(cm);
+        }
+
+        /*
+         * Logger
+         */
+
+        sHttpClient.setRequestLogger(new LogcatRequestLogger(LOG_TAG, Config.INFO_LOGS_ENABLED));
     }
 
 }

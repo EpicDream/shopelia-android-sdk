@@ -14,6 +14,7 @@ import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
+import com.turbomanage.httpclient.ParameterMap;
 
 public class UserAPI extends ApiHandler {
 
@@ -197,12 +198,18 @@ public class UserAPI extends ApiHandler {
     }
 
     public void signOut(final String email) {
-        JSONObject params = new JSONObject();
-        try {
-            params.putOpt(User.Api.EMAIL, email);
-        } catch (JSONException e) {
+        ParameterMap params = ShopeliaRestClient.newParams();
+        params.add(User.Api.EMAIL, email);
+        ShopeliaRestClient.authenticate(getContext());
+        ShopeliaRestClient.delete(Command.V1.Users.SignOut(), params, new AsyncCallback() {
 
-        }
+            @Override
+            public void onComplete(HttpResponse httpResponse) {
+                if (hasCallback()) {
+                    getCallback().onSignOut();
+                }
+            }
+        });
 
     }
 }

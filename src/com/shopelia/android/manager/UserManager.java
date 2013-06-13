@@ -11,6 +11,7 @@ import android.util.Log;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
+import com.shopelia.android.remote.api.UserAPI;
 
 public class UserManager {
 
@@ -75,7 +76,6 @@ public class UserManager {
     }
 
     public void setAuthToken(String token) {
-        Log.d(null, "SET TOKEN " + token);
         Editor editor = mPreferences.edit();
         editor.putString(PREFS_AUTH_TOKEN, token);
         editor.commit();
@@ -86,6 +86,7 @@ public class UserManager {
     }
 
     public void logout() {
+        new UserAPI(mContext, null).signOut(mUser.email);
         mUser = null;
         ShopeliaRestClient.reset();
         Editor editor = mPreferences.edit();

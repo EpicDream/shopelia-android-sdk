@@ -35,6 +35,8 @@ public class ApiHandler {
 
         public void onRetrieveMerchants(ArrayList<Merchant> merchants);
 
+        public void onSignOut();
+
     }
 
     public static class CallbackAdapter implements Callback {
@@ -81,6 +83,11 @@ public class ApiHandler {
 
         @Override
         public void onRetrieveMerchants(ArrayList<Merchant> merchants) {
+
+        }
+
+        @Override
+        public void onSignOut() {
 
         }
 
