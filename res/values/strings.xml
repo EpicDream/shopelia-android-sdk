@@ -23,7 +23,7 @@
     <string name="shopelia_form_main_address">Adresse</string>
     <string name="shopelia_form_main_header_text" formatted="false">
 <![CDATA[
-	    Votre commande va être préparée automatiquement sur le site <b>%s</b> avec le service <b>Shopelia</b>
+	    Votre commande va être préparée automatiquement sur le site <b>%s</b> avec le service <b>Shopelia</b>, partenaire de <b>Prixing</b>
 	    ]]>
     </string>
     <string name="shopelia_form_main_footer_text">
