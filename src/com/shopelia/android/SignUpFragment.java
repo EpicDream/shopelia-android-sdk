@@ -23,6 +23,7 @@ import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
@@ -253,14 +254,16 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                                 addressWithPhone.phone = number;
                                 field.setAddress(addressWithPhone);
                             }
-                        } catch (JSONException e) {
+                        } catch (Exception e) {
                             onError(e);
                         }
                     }
 
                     public void onError(Exception e) {
                         mCurrentNumber = "";
-                        e.printStackTrace();
+                        if (Config.INFO_LOGS_ENABLED) {
+                            e.printStackTrace();
+                        }
                     };
 
                 });
@@ -298,20 +301,26 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 
                     @Override
                     public void onComplete(HttpResponse httpResponse) {
-                        if (httpResponse.getStatus() == 204 && getActivity() != null) {
-                            Bundle arguments = new Bundle();
-                            arguments.putString(SignInFragment.ARGS_EMAIL, email);
-                            emailField.setError(getString(R.string.shopelia_error_user_already_exists, email));
-                            if (getContract().getSignInViewCount() == 0) {
-                                getContract().requestSignIn(arguments);
-                                Toast.makeText(getActivity(), getString(R.string.shopelia_error_user_already_exists, email),
-                                        Toast.LENGTH_LONG).show();
+                        try {
+                            if (httpResponse.getStatus() == 204 && getActivity() != null) {
+                                Bundle arguments = new Bundle();
+                                arguments.putString(SignInFragment.ARGS_EMAIL, email);
+                                emailField.setError(getString(R.string.shopelia_error_user_already_exists, email));
+                                if (getContract().getSignInViewCount() == 0) {
+                                    getContract().requestSignIn(arguments);
+                                    Toast.makeText(getActivity(), getString(R.string.shopelia_error_user_already_exists, email),
+                                            Toast.LENGTH_LONG).show();
+                                }
                             }
+                        } catch (Exception e) {
+                            onError(e);
                         }
                     }
 
                     public void onError(Exception e) {
-                        e.printStackTrace();
+                        if (Config.INFO_LOGS_ENABLED) {
+                            e.printStackTrace();
+                        }
                     };
 
                 });

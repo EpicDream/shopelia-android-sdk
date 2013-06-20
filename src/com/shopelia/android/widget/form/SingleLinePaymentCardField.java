@@ -368,7 +368,7 @@ public class SingleLinePaymentCardField extends FormField {
             } else if (Y > calendar.get(Calendar.YEAR) % 100 + MAX_CARD_VALIDITY_YEAR) {
                 // Fire error
                 isValid = false;
-            } else if (M < 1 || M > MAX_MONTH_VALUE) {
+            } else if (M < 0 || M > MAX_MONTH_VALUE) {
                 // Fire error
                 isValid = false;
             } else if (Y < calendar.get(Calendar.YEAR) % 100) {
