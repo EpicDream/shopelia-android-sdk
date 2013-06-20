@@ -21,7 +21,6 @@ import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.api.ShopeliaActivityPath;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.utils.DigestUtils;
@@ -54,7 +53,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     public static final int MODE_BLOCKED = 1 << 1;
 
     private Order mOrder;
-    private ShopeliaActivityPath mCurrentActivity;
     private FrameLayout mRootView;
     private ActionBar mActionBar;
     private Handler mHandler = new Handler();
@@ -98,9 +96,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         }
 
         if (savedInstanceState == null) {
-            mCurrentActivity = new ShopeliaActivityPath();
-            mCurrentActivity.setActivityName(getActivityName());
-            mCurrentActivity.startRecording();
+
         }
 
     }
@@ -369,10 +365,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     public void setOrder(Order order) {
         mOrder = order;
-    }
-
-    public void stopRecording() {
-        mCurrentActivity.stopRecording();
     }
 
     public ActionBar getShopeliaActionBar() {

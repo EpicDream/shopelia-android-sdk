@@ -427,7 +427,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         imm.hideSoftInputFromWindow(findViewById(R.id.fragment_container).getWindowToken(), 0);
     }
 
-    private void switchFragmentsNow(final ShopeliaFragment<?> inFragment, final ShopeliaFragment<?> outFragment, boolean forceExecute) {
+    public void switchFragmentsNow(final ShopeliaFragment<?> inFragment, final ShopeliaFragment<?> outFragment, boolean forceExecute) {
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         try {
