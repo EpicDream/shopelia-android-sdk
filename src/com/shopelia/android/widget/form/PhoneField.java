@@ -1,11 +1,16 @@
 package com.shopelia.android.widget.form;
 
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 import android.content.Context;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
 import android.util.AttributeSet;
+
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 public class PhoneField extends EditTextField {
 
@@ -42,13 +47,20 @@ public class PhoneField extends EditTextField {
     @Override
     public boolean onValidation(boolean fireError) {
         String content = (String) getResult();
-        boolean out = super.onValidation(fireError) && PHONE_PATTERN.matcher(content).matches();
+        PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+        PhoneNumber number;
+        try {
+            number = util.parse(content, Locale.getDefault().getCountry());
+        } catch (NumberParseException e) {
+            number = new PhoneNumber();
+        }
+        boolean out = super.onValidation(fireError) && PhoneNumberUtil.getInstance().isValidNumber(number);
         return out;
     }
 
     @Override
     public Object getResult() {
-        return super.getResult() != null ? ((String) super.getResult()).replace(" ", "") : "";
+        return super.getResult() != null ? PhoneNumberUtil.normalizeDigitsOnly((String) super.getResult()) : "";
     }
 
 }
