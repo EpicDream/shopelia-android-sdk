@@ -3,6 +3,7 @@ package com.shopelia.android.widget;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.shopelia.android.PrepareOrderActivity;
@@ -107,8 +108,7 @@ public class ProductSheetWrapper {
 
         mProductName.setText(mArguments.getString(PrepareOrderActivity.EXTRA_PRODUCT_TITLE));
         mProductDescription.setText(mArguments.getString(PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION));
-        mProductDescription
-                .setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION) ? View.VISIBLE : View.GONE);
+        mProductDescription.setVisibility(!TextUtils.isEmpty(mProductDescription.getText()) ? View.VISIBLE : View.GONE);
         mProductPrice.setText(currency.format(mArguments.getFloat(PrepareOrderActivity.EXTRA_PRICE)));
         mProductShippingInfo.setText(mArguments.getString(PrepareOrderActivity.EXTRA_SHIPPING_INFO));
         mProductShippingInfo.setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_SHIPPING_INFO) ? View.VISIBLE : View.GONE);

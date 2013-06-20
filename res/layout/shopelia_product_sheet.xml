@@ -17,7 +17,7 @@
         app:shopelia_defaultSrc="@drawable/shopelia_default_product" />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="60"
         android:orientation="vertical" >

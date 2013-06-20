@@ -134,6 +134,16 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         }
         findViewById(R.id.address_city_and_country, TextView.class).setText(
                 mOrder.address.zipcode + ", " + mOrder.address.city + ", " + mOrder.address.getDisplayCountry());
+        String number = mOrder.address.phone;
+        try {
+            PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+            PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
+            number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
+        } catch (NumberParseException e) {
+            e.printStackTrace();
+        }
+
+        findViewById(R.id.user_phone_number, TextView.class).setText(number);
     }
 
     private void setupPaymentCardUi() {
@@ -155,16 +165,6 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     private void setupUserUi() {
         findViewById(R.id.user_email, TextView.class).setText(mOrder.user.email);
-        String number = mOrder.address.phone;
-        try {
-            PhoneNumberUtil util = PhoneNumberUtil.getInstance();
-            PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
-            number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
-        } catch (NumberParseException e) {
-            e.printStackTrace();
-        }
-
-        findViewById(R.id.user_phone_number, TextView.class).setText(number);
     }
 
     private void setupPriceUi() {

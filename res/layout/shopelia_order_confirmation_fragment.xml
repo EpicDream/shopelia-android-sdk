@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/shopelia_margin_large"
                 android:layout_marginRight="@dimen/shopelia_margin_large"
-                layout="@layout/shopelia_confirmation_address" />
+                layout="@layout/shopelia_confirmation_user" />
 
             <View
                 android:layout_width="match_parent"
@@ -69,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/shopelia_margin_large"
                 android:layout_marginRight="@dimen/shopelia_margin_large"
-                layout="@layout/shopelia_confirmation_user" />
+                layout="@layout/shopelia_confirmation_address" />
 
             <View
                 android:layout_width="match_parent"
