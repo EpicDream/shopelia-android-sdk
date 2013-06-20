@@ -1,5 +1,6 @@
 package com.shopelia.android.widget;
 
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -7,6 +8,7 @@ import android.view.View;
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.R;
 import com.shopelia.android.model.Merchant;
+import com.shopelia.android.model.Product;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 
@@ -27,6 +29,8 @@ public class ProductSheetWrapper {
     private FontableTextView mProductPrice;
     private FontableTextView mTax;
 
+    private boolean mHasBackground = true;
+
     public ProductSheetWrapper(View view) {
         mRootView = view;
         mProductName = findViewById(R.id.product_name);
@@ -46,8 +50,29 @@ public class ProductSheetWrapper {
         refreshView();
     }
 
-    public void setArguments(Bundle args) {
+    public ProductSheetWrapper setArguments(Bundle args) {
         mArguments = args;
+        return this;
+    }
+
+    public ProductSheetWrapper setProductInfo(Product product) {
+        Bundle args = new Bundle();
+        args.putString(PrepareOrderActivity.EXTRA_PRODUCT_TITLE, product.name);
+        args.putString(PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION, product.description);
+        args.putParcelable(PrepareOrderActivity.EXTRA_PRODUCT_IMAGE, product.image);
+        args.putFloat(PrepareOrderActivity.EXTRA_PRICE, product.productPrice);
+        args.putFloat(PrepareOrderActivity.EXTRA_SHIPPING_PRICE, product.deliveryPrice);
+        args.putString(PrepareOrderActivity.EXTRA_SHIPPING_INFO, product.shippingExtra);
+        args.putParcelable(PrepareOrderActivity.EXTRA_TAX, product.tax);
+        args.putParcelable(PrepareOrderActivity.EXTRA_CURRENCY, product.currency);
+        args.putParcelable(PrepareOrderActivity.EXTRA_MERCHANT, product.merchant);
+        setArguments(args);
+        return this;
+    }
+
+    public ProductSheetWrapper noBackground() {
+        mHasBackground = false;
+        return this;
     }
 
     public void refreshView() {
@@ -93,6 +118,9 @@ public class ProductSheetWrapper {
             mProductImage.setImageURI((Uri) image);
         }
         mVendorLogo.setUrl(vendor.logo);
+        if (!mHasBackground) {
+            mRootView.setBackgroundColor(Color.TRANSPARENT);
+        }
     }
 
     @SuppressWarnings("unchecked")

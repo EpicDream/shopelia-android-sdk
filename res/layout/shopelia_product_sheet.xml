@@ -1,125 +1,117 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/product_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shopelia_field_normal"
-    android:orientation="vertical"
+    android:orientation="horizontal"
     android:padding="@dimen/shopelia_margin_large" >
 
+    <com.shopelia.android.widget.AsyncImageView
+        android:id="@+id/product_image"
+        android:layout_width="130dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="@dimen/shopelia_margin_normal"
+        android:scaleType="centerInside"
+        app:shopelia_defaultSrc="@drawable/shopelia_default_product" />
+
     <LinearLayout
-        android:id="@+id/product_sheet"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-       >
+        android:layout_weight="60"
+        android:orientation="vertical" >
 
-        <com.shopelia.android.widget.AsyncImageView
-            android:id="@+id/product_image"
-            android:layout_width="130dp"
-            android:layout_height="match_parent"
-            android:layout_marginRight="@dimen/shopelia_margin_normal"
-            android:scaleType="centerInside"
-            app:shopelia_defaultSrc="@drawable/shopelia_default_product" />
-
-        <LinearLayout
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/product_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="60"
-            android:orientation="vertical" >
+            android:layout_marginBottom="@dimen/shopelia_margin_small"
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="Canard ultra vibrant"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal"
+            android:textStyle="bold"
+            app:shopelia_fontStyle="bold" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/product_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/shopelia_margin_extra_small"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:text="Le meilleur ami de votre femme"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_small" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/shopelia_margin_small"
+            android:gravity="top" >
 
             <com.shopelia.android.widget.FontableTextView
-                android:id="@+id/product_name"
+                android:id="@+id/product_price"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/shopelia_margin_small"
-                android:ellipsize="end"
-                android:maxLines="3"
-                android:text="Canard ultra vibrant"
-                android:textColor="@color/shopelia_dark"
-                android:textSize="@dimen/shopelia_font_size_normal"
+                android:text="1642€"
+                android:textColor="@color/shopelia_red"
+                android:textSize="@dimen/shopelia_font_size_xxl"
                 android:textStyle="bold"
                 app:shopelia_fontStyle="bold" />
 
             <com.shopelia.android.widget.FontableTextView
-                android:id="@+id/product_description"
+                android:id="@+id/product_tax"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/shopelia_margin_extra_small"
-                android:ellipsize="end"
-                android:maxLines="2"
-                android:text="Le meilleur ami de votre femme"
-                android:textColor="@color/shopelia_dark"
-                android:textSize="@dimen/shopelia_font_size_small" />
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:text="HT"
+                android:textSize="@dimen/shopelia_font_size_extra_small" />
+        </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/shopelia_margin_small"
-                android:gravity="top" >
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/product_shipping_fees"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/shopelia_margin_extra_small"
+            android:text="Frais de livraison 10€"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_small"
+            app:shopelia_fontStyle="bold" />
 
-                <com.shopelia.android.widget.FontableTextView
-                    android:id="@+id/product_price"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="1642€"
-                    android:textColor="@color/shopelia_red"
-                    android:textSize="@dimen/shopelia_font_size_xxl"
-                    android:textStyle="bold"
-                    app:shopelia_fontStyle="bold" />
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/product_shipping_info"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/shopelia_margin_extra_small"
+            android:text="En stock"
+            android:textColor="@color/shopelia_green"
+            android:textSize="@dimen/shopelia_font_size_small"
+            app:shopelia_fontStyle="bold" />
 
-                <com.shopelia.android.widget.FontableTextView
-                    android:id="@+id/product_tax"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="top"
-                    android:gravity="top"
-                    android:text="HT"
-                    android:textSize="@dimen/shopelia_font_size_extra_small" />
-            </LinearLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
 
             <com.shopelia.android.widget.FontableTextView
-                android:id="@+id/product_shipping_fees"
+                android:id="@+id/product_vendor_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/shopelia_margin_extra_small"
-                android:text="Frais de livraison 10€"
+                android:text="chez"
                 android:textColor="@color/shopelia_dark"
                 android:textSize="@dimen/shopelia_font_size_small"
                 app:shopelia_fontStyle="bold" />
 
-            <com.shopelia.android.widget.FontableTextView
-                android:id="@+id/product_shipping_info"
+            <com.shopelia.android.widget.AsyncImageView
+                android:id="@+id/product_vendor_icon"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/shopelia_margin_extra_small"
-                android:text="En stock"
-                android:textColor="@color/shopelia_green"
-                android:textSize="@dimen/shopelia_font_size_small"
-                app:shopelia_fontStyle="bold" />
-            
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
-
-                <com.shopelia.android.widget.FontableTextView
-                    android:id="@+id/product_vendor_text"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="chez"
-                    android:textColor="@color/shopelia_dark"
-                    android:textSize="@dimen/shopelia_font_size_small"
-                    app:shopelia_fontStyle="bold" />
-
-               <com.shopelia.android.widget.AsyncImageView
-                   android:id="@+id/product_vendor_icon"
-                   android:layout_width="wrap_content"
-                   android:layout_height="20dp"
-                   android:layout_marginLeft="@dimen/shopelia_margin_normal"
-                   android:scaleType="fitStart"
-                   app:shopelia_crossFadingEnabled="true" />
-
-            </LinearLayout>
+                android:layout_height="20dp"
+                android:layout_marginLeft="@dimen/shopelia_margin_normal"
+                android:scaleType="fitStart"
+                app:shopelia_crossFadingEnabled="true" />
         </LinearLayout>
     </LinearLayout>
 

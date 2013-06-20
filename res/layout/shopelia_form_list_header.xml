@@ -27,6 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="top"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:background="@drawable/shopelia_field_normal"
         layout="@layout/shopelia_product_sheet" />
 
 

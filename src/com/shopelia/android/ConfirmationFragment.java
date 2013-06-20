@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,7 +26,7 @@ import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
-import com.shopelia.android.widget.AsyncImageView;
+import com.shopelia.android.widget.ProductSheetWrapper;
 import com.shopelia.android.widget.actionbar.ActionBar;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
@@ -118,13 +117,12 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     }
 
     private void setupProductUi() {
-        findViewById(R.id.product_name, TextView.class).setText(mOrder.product.name);
-        findViewById(R.id.product_description, TextView.class).setText(mOrder.product.description);
-        if (TextUtils.isEmpty(mOrder.product.description)) {
-            findViewById(R.id.product_description, TextView.class).setVisibility(View.GONE);
-        }
-        findViewById(R.id.product_image, ImageView.class).setImageURI(mOrder.product.image);
-        findViewById(R.id.product_vendor_icon, AsyncImageView.class).setUrl(mOrder.product.merchant.logo);
+        //@formatter:off
+        new ProductSheetWrapper(findViewById(R.id.product_sheet))
+            .setProductInfo(mOrder.product)
+            .noBackground()
+            .refreshView();
+        //@formatter:on
     }
 
     private void setupAddressUi() {
