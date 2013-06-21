@@ -320,7 +320,6 @@ public class SingleLinePaymentCardField extends FormField {
         }
         if (card != null) {
             card.number = number;
-            // mErrorMessage.setVisibility(View.GONE);
         }
 
         return isValid;
@@ -342,7 +341,6 @@ public class SingleLinePaymentCardField extends FormField {
             }
             isValid = false;
         } else if (date.length() != 5) {
-            // mExpiryField.setError(true);
             isValid = false;
         } else {
             expMonth = date.substring(0, 2);
