@@ -108,6 +108,8 @@ public class SingleLinePaymentCardField extends FormField {
                 if (checkCardNumber(null, false)) {
                     setValid(mSegmentedEditText.isChecked());
                     return true;
+                } else {
+                    setValid(false);
                 }
                 return false;
             }
@@ -135,6 +137,8 @@ public class SingleLinePaymentCardField extends FormField {
                 if (checkExpiryDate(null, false)) {
                     setValid(mSegmentedEditText.isChecked());
                     return true;
+                } else {
+                    setValid(false);
                 }
                 return false;
             }
@@ -159,6 +163,8 @@ public class SingleLinePaymentCardField extends FormField {
                     InputMethodManager imm = (InputMethodManager) segment.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
                     imm.hideSoftInputFromWindow(segment.getView().getWindowToken(), 0);
                     return true;
+                } else {
+                    setValid(false);
                 }
                 return false;
             }
