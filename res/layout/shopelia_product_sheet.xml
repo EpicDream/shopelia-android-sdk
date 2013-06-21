@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="20dp"
                 android:layout_marginLeft="@dimen/shopelia_margin_normal"
-                android:scaleType="fitStart"
+                android:scaleType="fitCenter"
                 app:shopelia_crossFadingEnabled="true" />
         </LinearLayout>
     </LinearLayout>
