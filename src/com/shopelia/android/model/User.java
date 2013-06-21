@@ -14,7 +14,7 @@ import com.shopelia.android.config.Config;
 import com.shopelia.android.utils.JsonUtils;
 import com.shopelia.android.utils.ParcelUtils;
 
-public class User implements JsonData, Parcelable {
+public class User implements BaseModel {
 
     private static final String LOG_TAG = "Model$User";
 
@@ -40,6 +40,8 @@ public class User implements JsonData, Parcelable {
         String CC_MONTH = "cc_month";
         String CC_YEAR = "cc_year";
     }
+
+    public static final String IDENTIFIER = User.class.getName();
 
     public static final long NO_ID = -1;
 

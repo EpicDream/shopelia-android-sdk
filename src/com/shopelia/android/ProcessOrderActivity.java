@@ -30,8 +30,10 @@ public class ProcessOrderActivity extends ShopeliaActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        setResult(RESULT_OK, data);
-        finish();
+        if (requestCode == REQUEST_CHECKOUT) {
+            setResult(RESULT_OK, data);
+            finish();
+        }
     }
 
     @Override

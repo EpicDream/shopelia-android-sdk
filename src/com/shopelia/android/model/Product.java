@@ -11,13 +11,15 @@ import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.ParcelUtils;
 import com.shopelia.android.utils.Tax;
 
-public class Product implements JsonData, Parcelable {
+public class Product implements BaseModel {
 
     public interface Api {
         String NAME = "name";
         String URL = "url";
         String IMAGE_URL = "image_url";
     }
+
+    public static final String IDENTIFIER = Product.class.getName();
 
     public String url;
     public String name;

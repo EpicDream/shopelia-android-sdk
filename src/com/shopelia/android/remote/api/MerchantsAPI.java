@@ -85,7 +85,7 @@ public class MerchantsAPI extends ApiHandler {
                         if (hasCallback()) {
                             getCallback().onRetrieveMerchants(mMerchants);
                         }
-                    } catch (JSONException e) {
+                    } catch (Exception e) {
                         if (Config.ERROR_LOGS_ENABLED) {
                             e.printStackTrace();
                         }
@@ -95,7 +95,9 @@ public class MerchantsAPI extends ApiHandler {
                 @Override
                 public void onError(Exception e) {
                     super.onError(e);
-                    e.printStackTrace();
+                    if (Config.ERROR_LOGS_ENABLED) {
+                        e.printStackTrace();
+                    }
                 }
 
             });

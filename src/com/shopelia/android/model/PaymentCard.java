@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PaymentCard implements JsonData, Parcelable {
+public class PaymentCard implements BaseModel {
 
     public interface Api {
         String PAYMENT_CARD = "payment_card";
@@ -28,6 +28,8 @@ public class PaymentCard implements JsonData, Parcelable {
         String EXPIRY_DATE = "expiry_date";
 
     }
+
+    public static final String IDENTIFIER = PaymentCard.class.getName();
 
     public static final long INVALID_ID = -1;
 

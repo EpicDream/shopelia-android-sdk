@@ -17,7 +17,7 @@ import com.shopelia.android.config.Config;
  * 
  * @author Pierre Pollastri
  */
-public class Merchant implements Parcelable, JsonData {
+public class Merchant implements BaseModel {
 
     public interface Api {
         String ID = "id";
@@ -25,6 +25,8 @@ public class Merchant implements Parcelable, JsonData {
         String LOGO = "logo";
         String URL = "url";
     }
+
+    public static final String IDENTIFIER = Merchant.class.getName();
 
     public static final long INVALID_ID = -1;
 

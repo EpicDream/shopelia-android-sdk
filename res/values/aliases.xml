@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    
     <item name="shopelia_process_order_activity" type="layout" >@layout/__shopelia_fragment_container</item>
     <item name="shopelia_pincode_activity" type="layout" >@layout/__shopelia_fragment_container</item>
+    <item name="shopelia_resource_list_activity" type="layout" >@layout/__shopelia_fragment_container</item>
+    
+    <item name="shopelia_resource_list_fragment" type="layout">@layout/__shopelia_list_container</item>
+    
 </resources>

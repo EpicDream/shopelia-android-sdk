@@ -4,11 +4,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 
 import com.shopelia.android.utils.ParcelUtils;
 
-public class Order implements Parcelable {
+public class Order implements BaseModel {
 
     public interface Api {
         String UUID = "uuid";
@@ -82,7 +81,7 @@ public class Order implements Parcelable {
             order.product = Product.inflate(object.getJSONObject(Api.PRODUCT));
         } catch (JSONException e) {
             // Nothing to be done
-        }   
+        }
         if (object.has(Api.ADDRESS)) {
             try {
                 order.address = Address.inflate(object.getJSONObject(Api.ADDRESS));
@@ -105,6 +104,17 @@ public class Order implements Parcelable {
             }
         }
         return order;
+    }
+
+    @Override
+    public JSONObject toJson() throws JSONException {
+        JSONObject object = new JSONObject();
+        object.put(Api.UUID, uuid);
+        object.put(Api.ADDRESS, address != null ? address.toJson() : null);
+        object.put(Api.USER, user != null ? user.toJson() : null);
+        object.put(Api.PRODUCT, product != null ? product.toJson() : null);
+        object.put(Api.PAYMENT_CARD, card != null ? card.toJson() : null);
+        return object;
     }
 
 }

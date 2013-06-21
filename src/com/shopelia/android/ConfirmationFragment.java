@@ -23,6 +23,7 @@ import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
+import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
@@ -144,6 +145,16 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         }
 
         findViewById(R.id.user_phone_number, TextView.class).setText(number);
+        findViewById(R.id.address_edit).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View arg0) {
+                Intent intent = new Intent(getActivity(), ResourceListActivity.class);
+                intent.putExtra(ResourceListActivity.EXTRA_RESOURCE, Address.IDENTIFIER);
+                intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_ALL);
+                startActivityForResult(intent, 0);
+            }
+        });
     }
 
     private void setupPaymentCardUi() {

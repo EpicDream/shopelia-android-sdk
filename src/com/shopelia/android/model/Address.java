@@ -8,10 +8,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Parcel;
-import android.os.Parcelable;
 import android.text.TextUtils;
 
-public final class Address implements JsonData, Parcelable {
+public final class Address implements BaseModel {
 
     public interface Api {
         String ADDRESS = "address";
@@ -37,6 +36,8 @@ public final class Address implements JsonData, Parcelable {
         String ADDRESS_ID = "address_id";
 
     }
+
+    public static final String IDENTIFIER = Address.class.getName();
 
     public static final long NO_ID = -1;
 
