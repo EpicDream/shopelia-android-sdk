@@ -330,7 +330,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             @Override
             public void onSignIn(User user) {
                 super.onSignIn(user);
-                stopWaiting();
                 Order order = getOrder();
                 order.user = user;
                 checkoutOrder(order);
