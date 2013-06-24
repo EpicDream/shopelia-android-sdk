@@ -3,7 +3,9 @@ package com.shopelia.android.model.adapter;
 import java.util.List;
 
 import android.content.Context;
+import android.content.Intent;
 
+import com.shopelia.android.AddAddressActivity;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.BaseModel;
 import com.shopelia.android.model.PaymentCard;
@@ -21,10 +23,23 @@ public enum ModelAdapterFactory {
             return user.addresses;
         }
 
+        @Override
+        public Intent getAddRequestIntent(Context context) {
+            Intent intent = new Intent(context, AddAddressActivity.class);
+            return intent;
+        }
+
     },
     PAYMENT_CARD(PaymentCard.IDENTIFIER, PaymentCard.class) {
         @Override
         public BaseModelAdapter<?> getAdapter(Context context) {
+            return null;
+        }
+
+        @Override
+        public Intent getAddRequestIntent(Context context) {
+            Intent intent = new Intent(context, null);
+
             return null;
         }
     };
@@ -38,6 +53,8 @@ public enum ModelAdapterFactory {
     }
 
     public abstract BaseModelAdapter<? extends BaseModel> getAdapter(Context context);
+
+    public abstract Intent getAddRequestIntent(Context context);
 
     public List<? extends BaseModel> getListFromUser(User user) {
         return null;

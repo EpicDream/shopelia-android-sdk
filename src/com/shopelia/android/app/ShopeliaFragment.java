@@ -3,6 +3,7 @@ package com.shopelia.android.app;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
@@ -87,6 +88,22 @@ public class ShopeliaFragment<Contract> extends Fragment {
         if (activity != null) {
             activity.startWaiting(message, blockUi, isCancelable);
         }
+    }
+
+    @Override
+    public void startActivity(Intent intent) {
+        if (intent != null) {
+            intent.putExtra(ShopeliaActivity.EXTRA_SESSION_ID, getBaseActivity().getSessionId());
+        }
+        super.startActivity(intent);
+    }
+
+    @Override
+    public void startActivityForResult(Intent intent, int requestCode) {
+        if (intent != null) {
+            intent.putExtra(ShopeliaActivity.EXTRA_SESSION_ID, getBaseActivity().getSessionId());
+        }
+        super.startActivityForResult(intent, requestCode);
     }
 
     public void stopWaiting() {

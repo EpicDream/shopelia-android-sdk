@@ -15,6 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
+        android:clickable="true"
         app:shopelia_enable_dispatch_drawable_state="false" >
 
         <ImageButton

@@ -42,7 +42,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     protected static final String EXTRA_INIT_ORDER = Config.EXTRA_PREFIX + "INIT_ORDER";
     public static final String EXTRA_USER = Config.EXTRA_PREFIX + "USER";
 
-    private static final String EXTRA_SESSION_ID = Config.EXTRA_PREFIX + "PRIVATE_SESSION_ID";
+    public static final String EXTRA_SESSION_ID = Config.EXTRA_PREFIX + "PRIVATE_SESSION_ID";
 
     public static final int REQUEST_CHECKOUT = 0x1602;
     public static final int RESULT_FAILURE = 0xfa15e;

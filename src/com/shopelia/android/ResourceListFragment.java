@@ -15,12 +15,18 @@ import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.BaseModel;
 import com.shopelia.android.model.adapter.BaseModelAdapter;
 import com.shopelia.android.model.adapter.ModelAdapterFactory;
+import com.shopelia.android.widget.actionbar.ActionBar;
+import com.shopelia.android.widget.actionbar.ActionBar.Item;
+import com.shopelia.android.widget.actionbar.TextButtonItem;
 
 public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListener> {
+
+    public static final int REQUEST_ADD = 0x100;
 
     private String mResourceIdentifier;
     private int mOptions = ResourceListActivity.OPTION_SELECT;
     private ListView mListView;
+    private ModelAdapterFactory mFactory;
 
     public static ResourceListFragment newInstance(Bundle arguments) {
         ResourceListFragment f = new ResourceListFragment();
@@ -33,6 +39,23 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         super.onCreate(savedInstanceState);
         mResourceIdentifier = getArguments().getString(ResourceListActivity.EXTRA_RESOURCE);
         mOptions = getArguments().getInt(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_SELECT);
+    }
+
+    @Override
+    protected void onCreateShopeliaActionBar(ActionBar actionBar) {
+        super.onCreateShopeliaActionBar(actionBar);
+        actionBar.clear();
+        actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_add, getActivity(), R.string.shopelia_action_bar_add));
+        actionBar.commit();
+    }
+
+    @Override
+    protected void onActionItemSelected(Item item) {
+        super.onActionItemSelected(item);
+        ModelAdapterFactory factory = getFactory();
+        if (item.getId() == R.id.shopelia_action_bar_add) {
+            startActivityForResult(factory.getAddRequestIntent(getActivity()), REQUEST_ADD);
+        }
     }
 
     @Override
@@ -62,6 +85,21 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         adapter.setOptions(mOptions);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
+    }
+
+    public ModelAdapterFactory getFactory() {
+        ModelAdapterFactory factory = mFactory;
+        List<? extends BaseModel> list = null;
+        if (factory == null) {
+            if (getArguments().containsKey(ResourceListActivity.EXTRA_RESOURCE)) {
+                factory = ModelAdapterFactory.getInstance(getArguments().getString(ResourceListActivity.EXTRA_RESOURCE));
+                list = factory.getListFromUser(com.shopelia.android.manager.UserManager.get(getActivity()).getUser());
+            } else if (getArguments().containsKey(ResourceListActivity.EXTRA_LIST)) {
+                list = getArguments().getParcelableArrayList(ResourceListActivity.EXTRA_LIST);
+                factory = ModelAdapterFactory.getInstance(list.get(0).getClass());
+            }
+        }
+        return factory;
     }
 
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {

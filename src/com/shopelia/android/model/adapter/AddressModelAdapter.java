@@ -1,5 +1,7 @@
 package com.shopelia.android.model.adapter;
 
+import java.util.Locale;
+
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -8,6 +10,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.i18n.phonenumbers.NumberParseException;
+import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
+import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.shopelia.android.R;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.widget.FontableTextView;
@@ -30,7 +36,15 @@ public class AddressModelAdapter extends BaseModelAdapter<Address> {
         holder.city_and_country.setText(data.zipcode + ", " + data.city + ", " + data.getDisplayCountry());
         holder.extras.setText(data.extras);
         holder.extras.setVisibility(TextUtils.isEmpty(holder.extras.getText()) ? View.GONE : View.VISIBLE);
-        holder.phone.setText(data.phone);
+        String number = data.phone;
+        try {
+            PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+            PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
+            number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
+        } catch (NumberParseException e) {
+            e.printStackTrace();
+        }
+        holder.phone.setText(number);
         holder.username.setText(data.firstname + " " + data.name);
         holder.username.setVisibility(TextUtils.isEmpty(data.firstname) ? View.GONE : View.VISIBLE);
     }
