@@ -5,7 +5,7 @@
     android:animateLayoutChanges="true"
     android:orientation="vertical" >
 
-    <com.shopelia.android.widget.FormEditText
+    <com.shopelia.android.widget.FormAutocompleteEditText
         android:id="@+id/edit_text"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
         style="@style/Theme.Shopelia.Widget.EditText"
@@ -16,8 +16,7 @@
         android:saveEnabled="false"
         android:ellipsize="end"
         android:scrollHorizontally="true"
-        android:ems="10" >
-    </com.shopelia.android.widget.FormEditText>
+        android:ems="10" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/error"

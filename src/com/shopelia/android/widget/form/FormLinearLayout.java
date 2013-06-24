@@ -10,6 +10,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
@@ -83,7 +84,7 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
         final int size = mFields.size();
         for (; index < size; index++) {
             FormField f = mFields.get(index);
-            if (!f.isValid() && !f.isSectionHeader()) {
+            if ((!f.isValid() || TextUtils.isEmpty(f.getResultAsString())) && !f.isSectionHeader()) {
                 f.onNextField();
                 return true;
             }

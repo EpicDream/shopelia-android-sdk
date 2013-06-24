@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+import org.json.JSONException;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -17,10 +19,7 @@ import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AutoCompleteTextView;
 import android.widget.BaseAdapter;
-import android.widget.Checkable;
-import android.widget.EditText;
 import android.widget.Filter;
 import android.widget.Filterable;
 import android.widget.TextView;
@@ -35,11 +34,13 @@ import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.AddressesAPI;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.PlacesAutoCompleteAPI;
-import com.shopelia.android.widget.Errorable;
+import com.shopelia.android.widget.FormAutocompleteEditText;
 import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.form.EditTextField;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.NameField;
+import com.shopelia.android.widget.form.NumberField;
+import com.shopelia.android.widget.form.PhoneField;
 
 public class AddAddressActivity extends ShopeliaActivity {
 
@@ -56,6 +57,7 @@ public class AddAddressActivity extends ShopeliaActivity {
     public static final String EXTRA_CITY = Config.EXTRA_PREFIX + "CITY";
     public static final String EXTRA_COUNTRY = Config.EXTRA_PREFIX + "COUNTRY";
     public static final String EXTRA_REFERENCE = Config.EXTRA_PREFIX + "REFERENCE";
+    public static final String EXTRA_PHONE = Config.EXTRA_PREFIX + "PHONE";
 
     public static final String EXTRA_ADDRESS_OBJECT = Config.EXTRA_PREFIX + "OBJECT";
     public static final String EXTRA_MODE = Config.EXTRA_PREFIX + "MODE";
@@ -79,7 +81,7 @@ public class AddAddressActivity extends ShopeliaActivity {
     }
 
     // Views
-    private AutoCompleteTextView mAddressField;
+    private FormAutocompleteEditText mAddressField;
     private FormLinearLayout mFormLayout;
 
     private String mReferencedText;
@@ -121,16 +123,27 @@ public class AddAddressActivity extends ShopeliaActivity {
             .setJsonPath(Address.Api.COUNTRY)
             .mandatory()
             .setContentText(new Locale("", !TextUtils.isEmpty(extras.getString(EXTRA_COUNTRY)) ? extras.getString(EXTRA_COUNTRY) : Locale.getDefault().getCountry()).getDisplayCountry());
-        mFormLayout.findFieldById(R.id.zipcode, EditTextField.class)
+        mFormLayout.findFieldById(R.id.zipcode, NumberField.class)
+            .setMinLength(5)
             .setJsonPath(Address.Api.ZIP)
             .mandatory()
             .setContentText(extras.getString(EXTRA_ZIPCODE));
-        
-        mAddressField = (AutoCompleteTextView) findViewById(R.id.address);
+        mFormLayout.findFieldById(R.id.phone, PhoneField.class)
+            .mandatory()
+            .setJsonPath(Address.Api.PHONE)
+            .setContentText(extras.getString(EXTRA_PHONE));
+        mFormLayout.findFieldById(R.id.address, EditTextField.class)
+            .setJsonPath(Address.Api.ADDRESS1)
+            .mandatory();
+        mAddressField = (FormAutocompleteEditText) mFormLayout.findFieldById(R.id.address).getEditText();
 
         mAddressField.setAdapter(mAutocompletionAdapter);
         mAddressField.setOnItemClickListener(mOnSuggestionClickListener);
 
+        if (getActivityMode() == MODE_CREATE) {
+            mFormLayout.removeView(mFormLayout.findViewById(R.id.phone));
+        }
+        
         // Add focus change listener for automatic validation
         mAddressField.setOnFocusChangeListener(mOnFocusChangeListener);
 
@@ -179,7 +192,6 @@ public class AddAddressActivity extends ShopeliaActivity {
         } else {
         }
 
-        validate(false);
     }
 
     @Override
@@ -339,54 +351,17 @@ public class AddAddressActivity extends ShopeliaActivity {
     };
 
     private boolean validate(boolean fireError) {
-       /* mResult = new Address();
-        mResult.name = mNameField.getText().toString();
-        mResult.firstname = mFirstNameField.getText().toString();
-        mResult.address = mAddressField.getText().toString();
-        mResult.extras = mAddressExtrasField.getText().toString();
-        mResult.zipcode = mPostalCodeField.getText().toString();
-        mResult.city = mCityField.getText().toString();
-        mResult.country = LocaleUtils.getCountryISO2Code(mCountryField.getText().toString());
-        if (mAddressField.getTag() != null) {
-            mResult.reference = (String) mAddressField.getTag();
-        }
-        boolean out = mResult.reference != null ? validateFields(fireError, mAddressField, mNameField, mFirstNameField) : validateFields(
-                fireError, mAddressField, mNameField, mFirstNameField, mCityField, mCountryField, mPostalCodeField);
-        if (out) {
-            mHeaderTitle.setTextColor(getResources().getColor(R.color.shopelia_headerTitleSectionOkColor));
-            mHeaderIcon.setImageResource(R.drawable.shopelia_check_ok);
-        } else {
-            mHeaderTitle.setTextColor(getResources().getColor(R.color.shopelia_headerTitleSectionRegularColor));
-            mHeaderIcon.setImageResource(R.drawable.shopelia_pin);
-        }
-        if (fireError && TextUtils.isEmpty(mResult.country) && mResult.reference == null) {
-            mCountryField.setError(true);
-        }
-        return out;*/
-        return false;
-    }
-
-    private static boolean validateFields(boolean fireError, EditText... fields) {
-        boolean out = true;
-        for (int index = 0; index < fields.length; index++) {
-            if (TextUtils.isEmpty(fields[index].getText().toString())) {
-                out = false;
-                if (fields[index] instanceof Checkable) {
-                    ((Checkable) fields[index]).setChecked(false);
-                }
-
-                if (fireError && fields[index] instanceof Errorable) {
-                    ((Errorable) fields[index]).setError(true);
-                }
-            } else {
-                if (fields[index] instanceof Checkable) {
-                    ((Checkable) fields[index]).setChecked(true);
-                }
-                if (fireError && fields[index] instanceof Errorable) {
-                    ((Errorable) fields[index]).setError(false);
-                }
-            }
-        }
+       boolean out = mFormLayout.validate();
+       if (out) {
+           try {
+               mResult = Address.inflate(mFormLayout.toJson());
+               mResult.country = new Locale("" , mResult.country).getCountry();
+           } catch (JSONException e) {
+               if (Config.INFO_LOGS_ENABLED) {
+                   e.printStackTrace();
+               }
+           }
+       }
         return out;
     }
 
@@ -394,7 +369,6 @@ public class AddAddressActivity extends ShopeliaActivity {
 
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            validate(false);
             if (hasFocus) {
                 String action = CLICK_ON.get(v.getId());
                 if (action != null) {

@@ -15,6 +15,8 @@ import android.widget.FrameLayout;
 import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.adapter.FormAdapter.Field;
 import com.shopelia.android.widget.Errorable;
+import com.shopelia.android.widget.FormAutocompleteEditText;
+import com.shopelia.android.widget.form.EditTextField.ViewHolder;
 
 public abstract class FormField extends FrameLayout implements Errorable {
 
@@ -259,6 +261,15 @@ public abstract class FormField extends FrameLayout implements Errorable {
      */
     public View getBoundedView() {
         return mBoundedView;
+    }
+
+    public FormAutocompleteEditText getEditText() {
+        View v = getBoundedView();
+        if (v == null || v.getTag() == null) {
+            return null;
+        }
+        ViewHolder holder = (ViewHolder) v.getTag();
+        return holder.editText;
     }
 
     /**

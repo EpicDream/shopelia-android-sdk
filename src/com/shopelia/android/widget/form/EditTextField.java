@@ -15,14 +15,13 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.shopelia.android.R;
 import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.widget.FontableTextView;
-import com.shopelia.android.widget.FormEditText;
+import com.shopelia.android.widget.FormAutocompleteEditText;
 
 public class EditTextField extends FormField {
 
@@ -62,7 +61,7 @@ public class EditTextField extends FormField {
 
     private int mMaxLength = INVALID_LENGTH;
 
-    private EditText mBoundedEditText;
+    private FormAutocompleteEditText mBoundedEditText;
 
     public EditTextField(Context context) {
         this(context, null);
@@ -154,7 +153,7 @@ public class EditTextField extends FormField {
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         View view = inflater.inflate(R.layout.shopelia_form_field_edit_text, viewGroup, false);
         ViewHolder holder = new ViewHolder();
-        holder.editText = (FormEditText) view.findViewById(R.id.edit_text);
+        holder.editText = (FormAutocompleteEditText) view.findViewById(R.id.edit_text);
         mBoundedEditText = holder.editText;
         holder.error = (FontableTextView) view.findViewById(R.id.error);
         view.setTag(holder);
@@ -247,7 +246,7 @@ public class EditTextField extends FormField {
     }
 
     public static class ViewHolder {
-        FormEditText editText;
+        FormAutocompleteEditText editText;
         TextWatcher textWatcher;
         EditTextField boundedField;
         FontableTextView error;
@@ -303,7 +302,7 @@ public class EditTextField extends FormField {
             setValid(onValidation(false));
             if (getBoundedView() != null) {
                 ViewHolder holder = (ViewHolder) getBoundedView().getTag();
-                holder.editText.setChecked(isValid());
+                holder.editText.setChecked(isValid() && !TextUtils.isEmpty(mContentText));
             }
             for (TextWatcher textWatcher : mTextWatchers) {
                 textWatcher.afterTextChanged(s);
@@ -317,9 +316,9 @@ public class EditTextField extends FormField {
         public void onFocusChange(View view, boolean hasFocus) {
             if (!hasFocus) {
                 setContentText(((TextView) view).getText().toString());
-                FormEditText editText = (FormEditText) view;
+                FormAutocompleteEditText editText = (FormAutocompleteEditText) view;
                 if (isValid()) {
-                    editText.setChecked(true);
+                    editText.setChecked(true && !TextUtils.isEmpty(mContentText));
                 } else {
                     editText.setChecked(false);
                 }
