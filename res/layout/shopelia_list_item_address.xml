@@ -5,22 +5,29 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/shopelia_field"
+    android:clickable="true"
     android:orientation="horizontal"
     android:padding="@dimen/shopelia_margin_normal" >
 
-    <ImageButton
+    <com.shopelia.android.widget.ExtendedFrameLayout
         android:id="@+id/address_edit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
-        android:background="@drawable/shopelia_grey_button_background"
-        android:focusable="false"
-        android:clickable="false"
-        android:padding="@dimen/shopelia_margin_small"
-        android:scaleType="centerInside"
-        android:src="@drawable/shopelia_pen"
-        android:visibility="visible" />
+        app:shopelia_enable_dispatch_drawable_state="false" >
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shopelia_grey_button_background"
+            android:clickable="false"
+            android:focusable="false"
+            android:padding="@dimen/shopelia_margin_small"
+            android:scaleType="centerInside"
+            android:src="@drawable/shopelia_pen"
+            android:visibility="visible" />
+    </com.shopelia.android.widget.ExtendedFrameLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"

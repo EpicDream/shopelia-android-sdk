@@ -60,4 +60,8 @@
         <attr name="shopelia_segment_width" />
     </declare-styleable>
     
+    <declare-styleable name="ExtendedFrameLayout">
+        <attr name="shopelia_enable_dispatch_drawable_state" format="boolean" />
+    </declare-styleable>
+    
 </resources>
