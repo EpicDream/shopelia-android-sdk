@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,6 +35,7 @@ import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.AddressesAPI;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.PlacesAutoCompleteAPI;
+import com.shopelia.android.utils.LocaleUtils;
 import com.shopelia.android.widget.FormAutocompleteEditText;
 import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.form.EditTextField;
@@ -136,14 +138,14 @@ public class AddAddressActivity extends ShopeliaActivity {
             .setJsonPath(Address.Api.ADDRESS1)
             .mandatory();
         mAddressField = (FormAutocompleteEditText) mFormLayout.findFieldById(R.id.address).getEditText();
-
+        //@formatter:on
         mAddressField.setAdapter(mAutocompletionAdapter);
         mAddressField.setOnItemClickListener(mOnSuggestionClickListener);
 
         if (getActivityMode() == MODE_CREATE) {
             mFormLayout.removeView(mFormLayout.findViewById(R.id.phone));
         }
-        
+
         // Add focus change listener for automatic validation
         mAddressField.setOnFocusChangeListener(mOnFocusChangeListener);
 
@@ -169,7 +171,7 @@ public class AddAddressActivity extends ShopeliaActivity {
         });
 
         mFormLayout.onCreate(saveState);
-        
+
         ValidationButton validationButton = (ValidationButton) findViewById(R.id.validate);
         validationButton.setOnClickListener(mOnValidateClickListener);
         if (getActivityMode() == MODE_ADD) {
@@ -351,17 +353,18 @@ public class AddAddressActivity extends ShopeliaActivity {
     };
 
     private boolean validate(boolean fireError) {
-       boolean out = mFormLayout.validate();
-       if (out) {
-           try {
-               mResult = Address.inflate(mFormLayout.toJson());
-               mResult.country = new Locale("" , mResult.country).getCountry();
-           } catch (JSONException e) {
-               if (Config.INFO_LOGS_ENABLED) {
-                   e.printStackTrace();
-               }
-           }
-       }
+        boolean out = mFormLayout.validate();
+        if (out) {
+            try {
+                mResult = Address.inflate(mFormLayout.toJson());
+                mResult.country = LocaleUtils.getCountryISO2Code(mResult.country);
+                Log.d(null, "GOT " + mResult.country);
+            } catch (JSONException e) {
+                if (Config.INFO_LOGS_ENABLED) {
+                    e.printStackTrace();
+                }
+            }
+        }
         return out;
     }
 
