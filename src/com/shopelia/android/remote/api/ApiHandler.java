@@ -37,6 +37,12 @@ public class ApiHandler {
 
         public void onSignOut();
 
+        public void onAddressAdded(Address address);
+
+        public void onAddressEdited(Address address);
+
+        public void onAddressDeleted(long id);
+
     }
 
     public static class CallbackAdapter implements Callback {
@@ -91,6 +97,21 @@ public class ApiHandler {
 
         }
 
+        @Override
+        public void onAddressAdded(Address address) {
+
+        }
+
+        @Override
+        public void onAddressEdited(Address address) {
+
+        }
+
+        @Override
+        public void onAddressDeleted(long id) {
+
+        }
+
     }
 
     public static class ErrorInflater {
@@ -124,6 +145,7 @@ public class ApiHandler {
     public static final int STEP_WAITING_CONFIRMATION = 6;
     public static final int STEP_RETRIEVE_USER = 7;
     public static final int STEP_SIGN_IN = 8;
+    public static final int STEP_ADDRESS = 9;
 
     public static final int STATE_RUNNING = 0;
     public static final int STATE_PAUSED = 1;
