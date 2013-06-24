@@ -5,7 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <LinearLayout
+    <com.shopelia.android.widget.form.FormLinearLayout
+        android:id="@+id/form"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -14,38 +15,43 @@
         android:paddingRight="@dimen/shopelia_margin_large"
         android:paddingTop="@dimen/shopelia_margin_normal" >
 
-        <include
+        <com.shopelia.android.widget.form.HeaderField
             android:id="@+id/header_frame"
-            layout="@layout/shopelia_form_field_title_header" />
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shopelia_text="@string/shopelia_form_address_address"
+            app:shopelia_icon="@drawable/shopelia_pin"/>
+
+        <com.shopelia.android.widget.form.PhoneField
+            android:id="@+id/phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:shopelia_hint="@string/shopelia_form_main_phone" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/shopelia_margin_large"
             android:weightSum="100" >
 
-            <com.shopelia.android.widget.FormEditText
+            <com.shopelia.android.widget.form.NameField
                 android:id="@+id/first_name"
-                style="@style/Theme.Shopelia.Widget.EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/shopelia_margin_small"
                 android:layout_weight="50"
                 android:ems="10"
-                android:hint="@string/shopelia_form_address_first_name"
+                app:shopelia_hint="@string/shopelia_form_address_first_name"
                 android:inputType="textCapSentences|textNoSuggestions|textPersonName"
-                android:nextFocusDown="@+id/name" >
-            </com.shopelia.android.widget.FormEditText>
+                android:nextFocusDown="@+id/name" />
 
-            <com.shopelia.android.widget.FormEditText
+            <com.shopelia.android.widget.form.NameField
                 android:id="@+id/name"
-                style="@style/Theme.Shopelia.Widget.EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/shopelia_margin_small"
                 android:layout_weight="50"
                 android:ems="10"
-                android:hint="@string/shopelia_form_address_name"
+                app:shopelia_hint="@string/shopelia_form_address_name"
                 android:inputType="textCapSentences|textNoSuggestions|textPersonName"
                 android:nextFocusDown="@+id/address" />
         </LinearLayout>
@@ -63,59 +69,49 @@
             android:nextFocusDown="@+id/extras"
             android:singleLine="true" />
 
-        <com.shopelia.android.widget.FormEditText
+        <com.shopelia.android.widget.form.EditTextField
             android:id="@+id/extras"
-            style="@style/Theme.Shopelia.Widget.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/shopelia_margin_normal"
             android:ems="10"
-            android:hint="@string/shopelia_form_address_extra_informations"
             android:nextFocusDown="@+id/zipcode"
-            android:singleLine="true" >
-        </com.shopelia.android.widget.FormEditText>
+            android:singleLine="true"
+            app:shopelia_hint="@string/shopelia_form_address_extra_informations" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:weightSum="100" >
 
-            <com.shopelia.android.widget.FormEditText
+            <com.shopelia.android.widget.form.NumberField
                 android:id="@+id/zipcode"
-                style="@style/Theme.Shopelia.Widget.EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/shopelia_margin_small"
-                android:layout_marginTop="@dimen/shopelia_margin_normal"
                 android:layout_weight="50"
                 android:ems="10"
-                android:hint="@string/shopelia_form_address_zipcode"
+                app:shopelia_hint="@string/shopelia_form_address_zipcode"
                 android:inputType="number"
                 android:nextFocusDown="@+id/city" />
 
-            <com.shopelia.android.widget.FormEditText
+            <com.shopelia.android.widget.form.NameField
                 android:id="@+id/city"
-                style="@style/Theme.Shopelia.Widget.EditText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/shopelia_margin_small"
-                android:layout_marginTop="@dimen/shopelia_margin_normal"
                 android:layout_weight="50"
                 android:ems="10"
-                android:hint="@string/shopelia_form_address_city"
+                app:shopelia_hint="@string/shopelia_form_address_city"
                 android:inputType="textPersonName|textCapSentences" />
         </LinearLayout>
 
-        <com.shopelia.android.widget.FormEditText
+        <com.shopelia.android.widget.form.NameField
             android:id="@+id/country"
-            style="@style/Theme.Shopelia.Widget.EditText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/shopelia_margin_normal"
             android:ems="10"
-            android:hint="@string/shopelia_form_address_country"
-            android:inputType="textPersonName|textCapSentences" >
-        </com.shopelia.android.widget.FormEditText>
+            app:shopelia_hint="@string/shopelia_form_address_country"
+            android:inputType="textPersonName|textCapSentences" />
         
         <com.shopelia.android.widget.ValidationButton
             android:id="@+id/validate"
@@ -132,6 +128,6 @@
             layout="@layout/shopelia_include_footer"
             android:layout_marginBottom="20dp" />
 
-    </LinearLayout>
+    </com.shopelia.android.widget.form.FormLinearLayout>
 
 </ScrollView>

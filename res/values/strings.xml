@@ -55,7 +55,11 @@
     <string name="shopelia_form_address_zipcode">Code postal</string>
     <string name="shopelia_form_address_country">Pays</string>
     <string name="shopelia_form_address_validate">Enregistrer mon adresse</string>
-
+	<string name="shopelia_form_address_validate_add">Ajouter mon adresse</string>
+	<string name="shopelia_form_address_validate_edit">Modifier mon adresse</string>
+    <string name="shopelia_form_address_wait_for_adding">Création de votre nouvelle adresse</string>
+    <string name="shopelia_form_address_wait_for_editting">Modification de votre adresse en cours</string>
+	
     <!-- Payment card creation form -->
     <string name="shopelia_form_payment_card_number">Numéro de la carte</string>
     <string name="shopelia_form_payment_card_expiry_date">MM/AA</string>

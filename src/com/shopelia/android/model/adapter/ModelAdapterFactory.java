@@ -26,6 +26,7 @@ public enum ModelAdapterFactory {
         @Override
         public Intent getAddRequestIntent(Context context) {
             Intent intent = new Intent(context, AddAddressActivity.class);
+            intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_ADD);
             return intent;
         }
 

@@ -177,7 +177,7 @@ public class EditTextField extends FormField {
             holder.editText.setText(mContentText);
         }
         holder.editText.setOnEditorActionListener(mOnEditorActionListener);
-        holder.editText.setChecked(isValid());
+        holder.editText.setChecked(isValid() && !TextUtils.isEmpty(mContentText));
         holder.editText.setError(hasError());
         holder.boundedField = this;
         if (!isInEditMode()) {

@@ -73,7 +73,7 @@ public class ValidationButton extends FrameLayout {
     }
 
     public void setText(int resId) {
-        mLabel.setText(resId);
+        setText(getContext().getString(resId));
     }
 
     public void setIcon(Drawable drawable) {
