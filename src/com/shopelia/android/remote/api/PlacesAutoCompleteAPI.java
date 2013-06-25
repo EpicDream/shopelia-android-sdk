@@ -9,9 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationListener;
 import android.location.LocationManager;
-import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 
@@ -61,38 +59,15 @@ public final class PlacesAutoCompleteAPI {
 
     public static List<Address> autocomplete(final Context context, final String input, final int cursorOffset) {
 
+        if (TextUtils.isEmpty(input) || input.length() < 3) {
+            return null;
+        }
+
         final LocationManager lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 
-        if (location != null) {
-            lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, new LocationListener() {
-
-                @Override
-                public void onStatusChanged(String provider, int status, Bundle extras) {
-
-                }
-
-                @Override
-                public void onProviderEnabled(String provider) {
-
-                }
-
-                @Override
-                public void onProviderDisabled(String provider) {
-
-                }
-
-                @Override
-                public void onLocationChanged(Location location) {
-                    lm.removeUpdates(this);
-                }
-            });
-        } else {
+        if (location == null) {
             location = new Location(LocationManager.NETWORK_PROVIDER);
-        }
-
-        if (TextUtils.isEmpty(input)) {
-            return null;
         }
 
         ParameterMap params = ShopeliaRestClient.newParams();
