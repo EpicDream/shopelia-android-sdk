@@ -51,6 +51,7 @@ public class AddAddressActivity extends ShopeliaActivity {
     /*
      * Form informations extras/saves
      */
+    public static final String EXTRA_ID = Config.EXTRA_PREFIX + "ID";
     public static final String EXTRA_NAME = Config.EXTRA_PREFIX + "NAME";
     public static final String EXTRA_FIRSTNAME = Config.EXTRA_PREFIX + "FIRSTNAME";
     public static final String EXTRA_ADDRESS = Config.EXTRA_PREFIX + "ADDRESS";
@@ -177,6 +178,11 @@ public class AddAddressActivity extends ShopeliaActivity {
             validationButton.setText(R.string.shopelia_form_address_validate_edit);
         }
         initUi(saveState == null ? getIntent().getExtras() : saveState);
+
+        if (getActivityMode() == MODE_EDIT) {
+            mResult = getIntent().getParcelableExtra(EXTRA_ADDRESS_OBJECT);
+        }
+
     }
 
     private void initUi(Bundle bundle) {
@@ -332,7 +338,7 @@ public class AddAddressActivity extends ShopeliaActivity {
                         break;
 
                     case MODE_EDIT:
-
+                        editAddress();
                         break;
 
                     default:
@@ -372,6 +378,34 @@ public class AddAddressActivity extends ShopeliaActivity {
                 };
 
             }).addAddress(mResult);
+        }
+
+        public void editAddress() {
+            startWaiting(getString(R.string.shopelia_form_address_loading_editing), true, false);
+            long id = getIntent().getLongExtra(EXTRA_ID, Address.NO_ID);
+            mResult.id = id;
+            new AddressesAPI(AddAddressActivity.this, new CallbackAdapter() {
+
+                public void onAddressEdited(Address address) {
+                    stopWaiting();
+                    User user = UserManager.get(AddAddressActivity.this).getUser();
+                    long id = getIntent().getLongExtra(EXTRA_ID, Address.NO_ID);
+                    for (Address item : user.addresses) {
+                        if (item.id == id && id != Address.NO_ID) {
+                            item.merge(mResult);
+                            break;
+                        }
+                    }
+                    UserManager.get(AddAddressActivity.this).saveUser();
+                    createAddress();
+                };
+
+                public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response,
+                        Exception e) {
+                    stopWaiting();
+                };
+
+            }).editAddress(mResult);
         }
 
     };

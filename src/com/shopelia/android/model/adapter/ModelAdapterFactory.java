@@ -31,6 +31,7 @@ public enum ModelAdapterFactory {
             } else {
                 Address address = (Address) item;
                 intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_EDIT);
+                intent.putExtra(AddAddressActivity.EXTRA_ID, address.id);
                 intent.putExtra(AddAddressActivity.EXTRA_ADDRESS, address.address);
                 intent.putExtra(AddAddressActivity.EXTRA_ZIPCODE, address.zipcode);
                 intent.putExtra(AddAddressActivity.EXTRA_ADDRESS_EXTRAS, address.extras);

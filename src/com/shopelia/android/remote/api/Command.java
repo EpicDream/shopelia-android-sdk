@@ -75,7 +75,7 @@ public final class Command {
         public static final class Addresses {
             public static final String $ = V1.$ + "/addresses";
 
-            public static String Edit(long id) {
+            public static String Address(long id) {
                 return $ + "/" + String.valueOf(id);
             }
 

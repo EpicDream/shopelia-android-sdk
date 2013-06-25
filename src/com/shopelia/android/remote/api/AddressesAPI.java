@@ -50,8 +50,30 @@ public class AddressesAPI extends ApiHandler {
 
     }
 
-    public void editAddress(Address address) {
+    public void editAddress(final Address address) {
+        if (address == null) {
+            return;
+        }
+        JSONObject params = new JSONObject();
+        try {
+            JSONObject addressObject = address.toJson();
+            params.put(Order.Api.ADDRESS, addressObject);
+            ShopeliaRestClient.authenticate(getContext());
+            ShopeliaRestClient.put(Command.V1.Addresses.Address(address.id), params, new AddressAsyncCallback(204) {
 
+                @Override
+                public void onSuccess(int status, JSONObject object, Address a) {
+                    if (hasCallback()) {
+                        getCallback().onAddressEdited(address);
+                    }
+                }
+
+            });
+        } catch (JSONException e) {
+            if (Config.INFO_LOGS_ENABLED) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private abstract class AddressAsyncCallback extends AsyncCallback {
@@ -70,14 +92,15 @@ public class AddressesAPI extends ApiHandler {
             try {
                 object = new JSONObject(httpResponse.getBodyAsString());
             } catch (JSONException e) {
-                onError(e);
+                onSuccess(httpResponse.getStatus(), object, null);
+                return;
             }
             if (mSuccessCode.contains(Integer.valueOf(httpResponse.getStatus()))) {
                 try {
                     Address address = Address.inflate(object.getJSONObject(Address.Api.ADDRESS));
                     onSuccess(httpResponse.getStatus(), object, address);
                 } catch (JSONException e) {
-                    onError(e);
+
                 }
             } else if (hasCallback()) {
                 getCallback().onError(STEP_ADDRESS, httpResponse, object, null);

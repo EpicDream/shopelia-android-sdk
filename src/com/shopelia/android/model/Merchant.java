@@ -17,7 +17,7 @@ import com.shopelia.android.config.Config;
  * 
  * @author Pierre Pollastri
  */
-public class Merchant implements BaseModel {
+public class Merchant implements BaseModel<Merchant> {
 
     public interface Api {
         String ID = "id";
@@ -113,6 +113,12 @@ public class Merchant implements BaseModel {
             return this.id == m.id && m.id != INVALID_ID;
         }
         return super.equals(o);
+    }
+
+    @Override
+    public void merge(Merchant item) {
+        // TODO Auto-generated method stub
+
     }
 
 }

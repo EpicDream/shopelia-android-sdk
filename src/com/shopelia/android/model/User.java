@@ -14,7 +14,7 @@ import com.shopelia.android.config.Config;
 import com.shopelia.android.utils.JsonUtils;
 import com.shopelia.android.utils.ParcelUtils;
 
-public class User implements BaseModel {
+public class User implements BaseModel<User> {
 
     private static final String LOG_TAG = "Model$User";
 
@@ -182,5 +182,10 @@ public class User implements BaseModel {
             return new User(source);
         }
     };
+
+    @Override
+    public void merge(User item) {
+
+    }
 
 }

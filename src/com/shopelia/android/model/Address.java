@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.text.TextUtils;
 
-public final class Address implements BaseModel {
+public final class Address implements BaseModel<Address> {
 
     public interface Api {
         String ADDRESS = "address";
@@ -169,6 +169,19 @@ public final class Address implements BaseModel {
 
     public String getDisplayCountry() {
         return new Locale("", country).getDisplayCountry();
+    }
+
+    @Override
+    public void merge(Address item) {
+        country = item.country;
+        address = item.address;
+        city = item.city;
+        zipcode = item.zipcode;
+        phone = item.phone;
+        extras = item.extras;
+        reference = item.reference;
+        name = item.name;
+        firstname = item.firstname;
     }
 
 }

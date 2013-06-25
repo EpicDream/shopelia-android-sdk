@@ -11,7 +11,7 @@ import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.ParcelUtils;
 import com.shopelia.android.utils.Tax;
 
-public class Product implements BaseModel {
+public class Product implements BaseModel<Product> {
 
     public interface Api {
         String NAME = "name";
@@ -101,6 +101,11 @@ public class Product implements BaseModel {
         product.url = object.optString(Api.URL);
         product.image = Uri.parse(object.optString(Api.IMAGE_URL));
         return product;
+    }
+
+    @Override
+    public void merge(Product item) {
+        // TODO Auto-generated method stub
     }
 
 }

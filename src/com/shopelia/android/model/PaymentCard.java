@@ -9,7 +9,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class PaymentCard implements BaseModel {
+public class PaymentCard implements BaseModel<PaymentCard> {
 
     public interface Api {
         String PAYMENT_CARD = "payment_card";
@@ -112,6 +112,12 @@ public class PaymentCard implements BaseModel {
             cards.add(PaymentCard.inflate(array.getJSONObject(index)));
         }
         return cards;
+    }
+
+    @Override
+    public void merge(PaymentCard item) {
+        // TODO Auto-generated method stub
+
     }
 
 }

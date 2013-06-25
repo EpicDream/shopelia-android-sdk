@@ -7,7 +7,7 @@ import android.os.Parcel;
 
 import com.shopelia.android.utils.ParcelUtils;
 
-public class Order implements BaseModel {
+public class Order implements BaseModel<Order> {
 
     public interface Api {
         String UUID = "uuid";
@@ -115,6 +115,12 @@ public class Order implements BaseModel {
         object.put(Api.PRODUCT, product != null ? product.toJson() : null);
         object.put(Api.PAYMENT_CARD, card != null ? card.toJson() : null);
         return object;
+    }
+
+    @Override
+    public void merge(Order item) {
+        // TODO Auto-generated method stub
+
     }
 
 }
