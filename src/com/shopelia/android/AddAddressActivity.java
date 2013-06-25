@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +34,7 @@ import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.AddressesAPI;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.PlacesAutoCompleteAPI;
+import com.shopelia.android.remote.api.PlacesAutoCompleteAPI.OnAddressDetailsListener;
 import com.shopelia.android.utils.LocaleUtils;
 import com.shopelia.android.widget.FormAutocompleteEditText;
 import com.shopelia.android.widget.ValidationButton;
@@ -73,8 +73,7 @@ public class AddAddressActivity extends ShopeliaActivity {
 
     static {
         CLICK_ON = new SparseArray<String>();
-        CLICK_ON.put(R.id.first_name, Analytics.Properties.ClickOn.SigningUp.ADDRESS_NAME);
-        CLICK_ON.put(R.id.name, Analytics.Properties.ClickOn.SigningUp.ADDRESS_LAST_NAME);
+        CLICK_ON.put(R.id.name, Analytics.Properties.ClickOn.SigningUp.ADDRESS_NAME);
         CLICK_ON.put(R.id.address, Analytics.Properties.ClickOn.SigningUp.ADDRESS_LINE_1);
         CLICK_ON.put(R.id.extras, Analytics.Properties.ClickOn.SigningUp.ADDRESS_LINE_2);
         CLICK_ON.put(R.id.country, Analytics.Properties.ClickOn.SigningUp.ADDRESS_COUNTRY);
@@ -110,10 +109,6 @@ public class AddAddressActivity extends ShopeliaActivity {
             .setJsonPath(Address.Api.NAME)
             .mandatory()
             .setContentText(extras.getString(EXTRA_NAME));
-        mFormLayout.findFieldById(R.id.first_name, NameField.class)
-            .setJsonPath(Address.Api.FIRSTNAME)
-            .mandatory()
-            .setContentText(extras.getString(EXTRA_FIRSTNAME));
         mFormLayout.findFieldById(R.id.city, NameField.class)
             .setJsonPath(Address.Api.CITY)
             .mandatory()
@@ -169,7 +164,7 @@ public class AddAddressActivity extends ShopeliaActivity {
             }
 
         });
-
+        mFormLayout.commit();
         mFormLayout.onCreate(saveState);
 
         ValidationButton validationButton = (ValidationButton) findViewById(R.id.validate);
@@ -290,9 +285,35 @@ public class AddAddressActivity extends ShopeliaActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long itemId) {
             Address address = (Address) mAutocompletionAdapter.getItem(position);
-            mAddressField.setTag(address.reference);
             mReferencedText = address.address;
-            validate(false);
+            try {
+                int index = address.address.lastIndexOf(',');
+                index = address.address.lastIndexOf(',', index - 1);
+                mAddressField.setText(address.address.subSequence(0, index));
+            } catch (Exception e) {
+                // Do nothing
+            }
+            startWaiting(getString(R.string.shopelia_form_address_loading_autocomplete), true, false);
+            AddAddressActivity.this.closeSoftKeyboard();
+            mAddressField.clearFocus();
+            PlacesAutoCompleteAPI.getAddressDetails(address.reference, new OnAddressDetailsListener() {
+
+                @Override
+                public void onError() {
+                    stopWaiting();
+                }
+
+                @Override
+                public void onAddressDetails(Address address) {
+                    stopWaiting();
+                    mFormLayout.findFieldById(R.id.zipcode, EditTextField.class).setContentText(address.zipcode);
+                    mFormLayout.findFieldById(R.id.city, EditTextField.class).setContentText(address.city);
+                    mFormLayout.findFieldById(R.id.address, EditTextField.class).setContentText(address.address);
+                    mFormLayout.findFieldById(R.id.country, EditTextField.class).setContentText(
+                            LocaleUtils.getCountryDisplayName(address.country));
+                }
+            });
+
         }
 
     };
@@ -336,6 +357,7 @@ public class AddAddressActivity extends ShopeliaActivity {
             new AddressesAPI(AddAddressActivity.this, new CallbackAdapter() {
 
                 public void onAddressAdded(Address address) {
+                    stopWaiting();
                     User user = UserManager.get(AddAddressActivity.this).getUser();
                     user.addresses.add(address);
                     UserManager.get(AddAddressActivity.this).saveUser();
@@ -358,7 +380,16 @@ public class AddAddressActivity extends ShopeliaActivity {
             try {
                 mResult = Address.inflate(mFormLayout.toJson());
                 mResult.country = LocaleUtils.getCountryISO2Code(mResult.country);
-                Log.d(null, "GOT " + mResult.country);
+                int first_space = mResult.name.indexOf(' ');
+                if (first_space != -1) {
+                    mResult.firstname = mResult.name.substring(0, first_space).trim();
+                    mResult.name = mResult.name.substring(first_space + 1).trim();
+                }
+                if (TextUtils.isEmpty(mResult.name) || TextUtils.isEmpty(mResult.firstname)) {
+                    out = false;
+                    mFormLayout.findFieldById(R.id.name, EditTextField.class)
+                            .setError(getString(R.string.shopelia_form_address_error_name));
+                }
             } catch (JSONException e) {
                 if (Config.INFO_LOGS_ENABLED) {
                     e.printStackTrace();

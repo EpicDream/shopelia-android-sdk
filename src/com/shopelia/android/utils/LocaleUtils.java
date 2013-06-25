@@ -19,4 +19,9 @@ public final class LocaleUtils {
         }
         return null;
     }
+
+    public static String getCountryDisplayName(String iso) {
+        return new Locale("", iso).getDisplayCountry();
+    }
+
 }

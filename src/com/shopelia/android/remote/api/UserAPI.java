@@ -29,7 +29,7 @@ public class UserAPI extends ApiHandler {
 
         try {
             params.put(Order.Api.USER, User.createObjectForAccountCreation(user, address, card));
-
+            Log.d(null, "SEND " + params.toString(2));
         } catch (JSONException e) {
             fireError(STEP_ACCOUNT_CREATION, null, null, e);
             return;
@@ -40,7 +40,6 @@ public class UserAPI extends ApiHandler {
 
             @Override
             public void onComplete(HttpResponse response, JSONObject object) {
-                Log.d(null, "RECEIVE TOKEN " + object.optString(User.Api.AUTH_TOKEN));
                 if (hasCallback() && object.has(User.Api.USER) && object.has(User.Api.AUTH_TOKEN)) {
                     User user = User.inflate(object.optJSONObject(User.Api.USER));
                     UserManager.get(getContext()).login(user);

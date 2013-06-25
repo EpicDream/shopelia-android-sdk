@@ -95,8 +95,7 @@ public interface Analytics {
                 String EMAIL = "Email";
                 String PHONE = "Phone";
                 String ADDRESS = "Address";
-                String ADDRESS_NAME = "Address First Name";
-                String ADDRESS_LAST_NAME = "Address Last Name";
+                String ADDRESS_NAME = "Address Name";
                 String ADDRESS_LINE_1 = "Address Line 1";
                 String ADDRESS_LINE_2 = "Address Line 2";
                 String ADDRESS_ZIP = "Address Zip Code";

@@ -47,8 +47,7 @@
     <string name="shopelia_sign_in_waiting">Connexion en cours</string>
 
     <!-- Address creation form -->
-    <string name="shopelia_form_address_name">Nom</string>
-    <string name="shopelia_form_address_first_name">Prénom</string>
+    <string name="shopelia_form_address_first_name_and_last_name">Prénom Nom</string>
     <string name="shopelia_form_address_address">Adresse</string>
     <string name="shopelia_form_address_extra_informations">Complément d\'informations</string>
     <string name="shopelia_form_address_city">Ville</string>
@@ -59,6 +58,10 @@
 	<string name="shopelia_form_address_validate_edit">Modifier mon adresse</string>
     <string name="shopelia_form_address_wait_for_adding">Création de votre nouvelle adresse</string>
     <string name="shopelia_form_address_wait_for_editting">Modification de votre adresse en cours</string>
+    <string name="shopelia_form_address_error_name">Veuillez entrer votre prénom suivi de votre nom</string>
+	<string name="shopelia_form_address_loading_autocomplete">Veuillez patienter</string>
+    <string name="shopelia_form_address_loading_editing">Modification de votre adresse</string>
+    <string name="shopelia_form_address_loading_adding">Ajout de votre nouvelle adresse</string>
 	
     <!-- Payment card creation form -->
     <string name="shopelia_form_payment_card_number">Numéro de la carte</string>

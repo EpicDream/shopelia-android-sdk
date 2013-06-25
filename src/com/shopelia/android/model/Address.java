@@ -91,7 +91,9 @@ public final class Address implements BaseModel {
         if (!TextUtils.isEmpty(extras)) {
             json.put(Api.EXTRAS, extras);
         }
-        json.put(Api.PHONE, phone);
+        if (!TextUtils.isEmpty(phone)) {
+            json.put(Api.PHONE, phone);
+        }
         return json;
     }
 

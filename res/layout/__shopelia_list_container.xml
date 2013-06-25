@@ -6,9 +6,8 @@
     android:background="@android:color/transparent"
     android:paddingLeft="@dimen/shopelia_activity_horizontal_margin"
     android:paddingRight="@dimen/shopelia_activity_horizontal_margin"
-    android:paddingTop="@dimen/shopelia_activity_vertical_margin"
-    android:paddingBottom="@dimen/shopelia_activity_vertical_margin"
     android:divider="@android:color/transparent"
-    android:dividerHeight="0dp" >
+    android:dividerHeight="@dimen/shopelia_margin_normal"
+    android:scrollbarStyle="outsideOverlay" >
 
 </ListView>

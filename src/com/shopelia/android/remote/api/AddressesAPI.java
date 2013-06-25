@@ -74,7 +74,7 @@ public class AddressesAPI extends ApiHandler {
             }
             if (mSuccessCode.contains(Integer.valueOf(httpResponse.getStatus()))) {
                 try {
-                    Address address = Address.inflate(object);
+                    Address address = Address.inflate(object.getJSONObject(Address.Api.ADDRESS));
                     onSuccess(httpResponse.getStatus(), object, address);
                 } catch (JSONException e) {
                     onError(e);
