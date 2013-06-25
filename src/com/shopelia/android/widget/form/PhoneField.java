@@ -6,10 +6,12 @@ import java.util.regex.Pattern;
 import android.content.Context;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
+import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 public class PhoneField extends EditTextField {
@@ -41,6 +43,23 @@ public class PhoneField extends EditTextField {
             if (mPhoneNumberFormattingTextWatcher != null) {
                 holder.editText.addTextChangedListener(mPhoneNumberFormattingTextWatcher);
             }
+        }
+    }
+
+    @Override
+    public void setContentText(CharSequence contentText) {
+        if (TextUtils.isEmpty(contentText)) {
+            super.setContentText(contentText);
+            return;
+        }
+        try {
+            String number = contentText.toString();
+            PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+            PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
+            number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
+            super.setContentText(number);
+        } catch (Exception e) {
+            super.setContentText(contentText);
         }
     }
 
