@@ -41,4 +41,8 @@ public interface FormContainer {
 
     public FormField findFieldByPath(String... path);
 
+    public boolean removeField(int id);
+
+    public boolean removeField(FormField field);
+
 }
