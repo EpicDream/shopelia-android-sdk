@@ -138,7 +138,9 @@ public class AddAddressActivity extends ShopeliaActivity {
         mAddressField.setOnItemClickListener(mOnSuggestionClickListener);
 
         if (getActivityMode() == MODE_CREATE) {
-            mFormLayout.removeView(mFormLayout.findViewById(R.id.phone));
+            mFormLayout.removeField(R.id.phone);
+        } else {
+            mFormLayout.removeField(R.id.name);
         }
 
         // Add focus change listener for automatic validation
@@ -380,21 +382,24 @@ public class AddAddressActivity extends ShopeliaActivity {
             try {
                 mResult = Address.inflate(mFormLayout.toJson());
                 mResult.country = LocaleUtils.getCountryISO2Code(mResult.country);
-                int first_space = mResult.name.indexOf(' ');
-                if (first_space != -1) {
-                    mResult.firstname = mResult.name.substring(0, first_space).trim();
-                    mResult.name = mResult.name.substring(first_space + 1).trim();
-                }
-                if (TextUtils.isEmpty(mResult.name) || TextUtils.isEmpty(mResult.firstname)) {
-                    out = false;
-                    mFormLayout.findFieldById(R.id.name, EditTextField.class)
-                            .setError(getString(R.string.shopelia_form_address_error_name));
+                if (getActivityMode() == MODE_CREATE) {
+                    int first_space = mResult.name.indexOf(' ');
+                    if (first_space != -1) {
+                        mResult.firstname = mResult.name.substring(0, first_space).trim();
+                        mResult.name = mResult.name.substring(first_space + 1).trim();
+                    }
+                    if (TextUtils.isEmpty(mResult.name) || TextUtils.isEmpty(mResult.firstname)) {
+                        out = false;
+                        mFormLayout.findFieldById(R.id.name, EditTextField.class).setError(
+                                getString(R.string.shopelia_form_address_error_name));
+                    }
                 }
             } catch (JSONException e) {
                 if (Config.INFO_LOGS_ENABLED) {
                     e.printStackTrace();
                 }
             }
+
         }
         return out;
     }

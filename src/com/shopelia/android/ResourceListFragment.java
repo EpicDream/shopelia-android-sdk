@@ -2,6 +2,8 @@ package com.shopelia.android;
 
 import java.util.List;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,6 +29,7 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     private int mOptions = ResourceListActivity.OPTION_SELECT;
     private ListView mListView;
     private ModelAdapterFactory mFactory;
+    private List<? extends BaseModel> mList;
 
     public static ResourceListFragment newInstance(Bundle arguments) {
         ResourceListFragment f = new ResourceListFragment();
@@ -59,6 +62,18 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     }
 
     @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_ADD && resultCode == Activity.RESULT_OK) {
+            ModelAdapterFactory factory = getFactory();
+            BaseModelAdapter<? extends BaseModel> adapter = factory.getAdapter(getActivity());
+            mList = factory.getListFromUser(com.shopelia.android.manager.UserManager.get(getActivity()).getUser());
+            adapter.setContent(mList);
+            mListView.setAdapter(adapter);
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.shopelia_resource_list_fragment, container, false);
     }
@@ -80,6 +95,7 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
             getActivity().finish();
             return;
         }
+        mList = list;
         BaseModelAdapter<? extends BaseModel> adapter = factory.getAdapter(getActivity());
         adapter.setContent(list);
         adapter.setOptions(mOptions);

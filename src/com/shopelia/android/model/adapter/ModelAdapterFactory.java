@@ -30,6 +30,11 @@ public enum ModelAdapterFactory {
             return intent;
         }
 
+        @Override
+        public BaseModel getModelFromIntent(Intent data) {
+            return data.getParcelableExtra(AddAddressActivity.EXTRA_ADDRESS_OBJECT);
+        }
+
     },
     PAYMENT_CARD(PaymentCard.IDENTIFIER, PaymentCard.class) {
         @Override
@@ -41,6 +46,11 @@ public enum ModelAdapterFactory {
         public Intent getAddRequestIntent(Context context) {
             Intent intent = new Intent(context, null);
 
+            return null;
+        }
+
+        @Override
+        public BaseModel getModelFromIntent(Intent data) {
             return null;
         }
     };
@@ -56,6 +66,8 @@ public enum ModelAdapterFactory {
     public abstract BaseModelAdapter<? extends BaseModel> getAdapter(Context context);
 
     public abstract Intent getAddRequestIntent(Context context);
+
+    public abstract BaseModel getModelFromIntent(Intent data);
 
     public List<? extends BaseModel> getListFromUser(User user) {
         return null;
