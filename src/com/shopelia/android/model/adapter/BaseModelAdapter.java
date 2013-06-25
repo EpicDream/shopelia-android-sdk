@@ -20,15 +20,32 @@ import com.shopelia.android.model.BaseModel;
 
 public abstract class BaseModelAdapter<T extends BaseModel> extends BaseAdapter {
 
+    public interface OnEditItemClickListener {
+        public void onEditItemClick(View v, BaseModel model);
+    }
+
     private Context mContext;
     private LayoutInflater mLayoutInflater;
     private ArrayList<T> mContent = new ArrayList<T>();
     private int mOptions = OPTION_SELECT;
+    private OnEditItemClickListener mEditItemClickListener;
 
     public BaseModelAdapter(Context context) {
         super();
         mContext = context;
         mLayoutInflater = LayoutInflater.from(mContext);
+    }
+
+    public void setOnEditItemClickListener(OnEditItemClickListener l) {
+        mEditItemClickListener = l;
+    }
+
+    protected OnEditItemClickListener getOnEditItemClickListener() {
+        return mEditItemClickListener;
+    }
+
+    protected boolean hasOnEditItemClickListener() {
+        return mEditItemClickListener != null;
     }
 
     public void setOptions(int options) {

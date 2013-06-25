@@ -8,14 +8,18 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 import com.google.i18n.phonenumbers.NumberParseException;
 import com.google.i18n.phonenumbers.PhoneNumberUtil;
 import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
 import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.shopelia.android.R;
+import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
+import com.shopelia.android.model.BaseModel;
 import com.shopelia.android.widget.FontableTextView;
 
 public class AddressModelAdapter extends BaseModelAdapter<Address> {
@@ -42,11 +46,16 @@ public class AddressModelAdapter extends BaseModelAdapter<Address> {
             PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
             number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
         } catch (NumberParseException e) {
-            e.printStackTrace();
+            if (Config.INFO_LOGS_ENABLED) {
+                e.printStackTrace();
+            }
         }
         holder.phone.setText(number);
         holder.username.setText(data.firstname + " " + data.name);
         holder.username.setVisibility(TextUtils.isEmpty(data.firstname) ? View.GONE : View.VISIBLE);
+        holder.edit.setTag(data);
+        holder.edit.setVisibility(hasOnEditItemClickListener() ? View.VISIBLE : View.INVISIBLE);
+        holder.edit.setOnClickListener(mOnClickListener);
     }
 
     @Override
@@ -58,6 +67,7 @@ public class AddressModelAdapter extends BaseModelAdapter<Address> {
         holder.city_and_country = (FontableTextView) v.findViewById(R.id.address_city_and_country);
         holder.extras = (FontableTextView) v.findViewById(R.id.address_extras);
         holder.phone = (FontableTextView) v.findViewById(R.id.user_phone_number);
+        holder.edit = (ImageButton) v.findViewById(R.id.edit);
         v.setTag(holder);
         return v;
     }
@@ -68,6 +78,17 @@ public class AddressModelAdapter extends BaseModelAdapter<Address> {
         public FontableTextView extras;
         public FontableTextView phone;
         public FontableTextView city_and_country;
+        public ImageButton edit;
     }
+
+    private OnClickListener mOnClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            if (hasOnEditItemClickListener()) {
+                getOnEditItemClickListener().onEditItemClick(v, (BaseModel) v.getTag());
+            }
+        }
+    };
 
 }

@@ -24,15 +24,23 @@ public enum ModelAdapterFactory {
         }
 
         @Override
-        public Intent getAddRequestIntent(Context context) {
+        public Intent getIntent(Context context, BaseModel item) {
             Intent intent = new Intent(context, AddAddressActivity.class);
-            intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_ADD);
+            if (item == null) {
+                intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_ADD);
+            } else {
+                Address address = (Address) item;
+                intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_EDIT);
+                intent.putExtra(AddAddressActivity.EXTRA_ADDRESS, address.address);
+                intent.putExtra(AddAddressActivity.EXTRA_ZIPCODE, address.zipcode);
+                intent.putExtra(AddAddressActivity.EXTRA_ADDRESS_EXTRAS, address.extras);
+                intent.putExtra(AddAddressActivity.EXTRA_CITY, address.city);
+                intent.putExtra(AddAddressActivity.EXTRA_COUNTRY, address.country);
+                intent.putExtra(AddAddressActivity.EXTRA_FIRSTNAME, address.firstname);
+                intent.putExtra(AddAddressActivity.EXTRA_NAME, address.name);
+                intent.putExtra(AddAddressActivity.EXTRA_PHONE, address.phone);
+            }
             return intent;
-        }
-
-        @Override
-        public BaseModel getModelFromIntent(Intent data) {
-            return data.getParcelableExtra(AddAddressActivity.EXTRA_ADDRESS_OBJECT);
         }
 
     },
@@ -43,14 +51,9 @@ public enum ModelAdapterFactory {
         }
 
         @Override
-        public Intent getAddRequestIntent(Context context) {
+        public Intent getIntent(Context context, BaseModel item) {
             Intent intent = new Intent(context, null);
 
-            return null;
-        }
-
-        @Override
-        public BaseModel getModelFromIntent(Intent data) {
             return null;
         }
     };
@@ -65,9 +68,7 @@ public enum ModelAdapterFactory {
 
     public abstract BaseModelAdapter<? extends BaseModel> getAdapter(Context context);
 
-    public abstract Intent getAddRequestIntent(Context context);
-
-    public abstract BaseModel getModelFromIntent(Intent data);
+    public abstract Intent getIntent(Context context, BaseModel item);
 
     public List<? extends BaseModel> getListFromUser(User user) {
         return null;

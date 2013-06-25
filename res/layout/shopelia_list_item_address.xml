@@ -19,6 +19,7 @@
         app:shopelia_enable_dispatch_drawable_state="false" >
 
         <ImageButton
+            android:id="@+id/edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shopelia_grey_button_background"
@@ -28,6 +29,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/shopelia_pen"
             android:visibility="visible" />
+
     </com.shopelia.android.widget.ExtendedFrameLayout>
 
     <LinearLayout

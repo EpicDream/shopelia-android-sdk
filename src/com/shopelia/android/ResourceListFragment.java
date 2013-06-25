@@ -16,6 +16,7 @@ import android.widget.ListView;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.BaseModel;
 import com.shopelia.android.model.adapter.BaseModelAdapter;
+import com.shopelia.android.model.adapter.BaseModelAdapter.OnEditItemClickListener;
 import com.shopelia.android.model.adapter.ModelAdapterFactory;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
@@ -24,6 +25,7 @@ import com.shopelia.android.widget.actionbar.TextButtonItem;
 public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListener> {
 
     public static final int REQUEST_ADD = 0x100;
+    public static final int REQUEST_EDIT = 0x101;
 
     private String mResourceIdentifier;
     private int mOptions = ResourceListActivity.OPTION_SELECT;
@@ -57,19 +59,20 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         super.onActionItemSelected(item);
         ModelAdapterFactory factory = getFactory();
         if (item.getId() == R.id.shopelia_action_bar_add) {
-            startActivityForResult(factory.getAddRequestIntent(getActivity()), REQUEST_ADD);
+            startActivityForResult(factory.getIntent(getActivity(), null), REQUEST_ADD);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_ADD && resultCode == Activity.RESULT_OK) {
+        if ((requestCode == REQUEST_ADD || requestCode == REQUEST_EDIT) && resultCode == Activity.RESULT_OK) {
             ModelAdapterFactory factory = getFactory();
             BaseModelAdapter<? extends BaseModel> adapter = factory.getAdapter(getActivity());
             mList = factory.getListFromUser(com.shopelia.android.manager.UserManager.get(getActivity()).getUser());
             adapter.setContent(mList);
             mListView.setAdapter(adapter);
+            adapter.setOnEditItemClickListener(mOnEditItemClickListener);
         }
     }
 
@@ -101,6 +104,7 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         adapter.setOptions(mOptions);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
+        adapter.setOnEditItemClickListener(mOnEditItemClickListener);
     }
 
     public ModelAdapterFactory getFactory() {
@@ -121,8 +125,18 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     private OnItemClickListener mOnItemClickListener = new OnItemClickListener() {
 
         @Override
-        public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+        public void onItemClick(AdapterView<?> adapterView, View v, int position, long itemId) {
 
+        }
+
+    };
+
+    private OnEditItemClickListener mOnEditItemClickListener = new OnEditItemClickListener() {
+
+        @Override
+        public void onEditItemClick(View v, BaseModel model) {
+            ModelAdapterFactory f = getFactory();
+            startActivityForResult(f.getIntent(getActivity(), model), REQUEST_EDIT);
         }
 
     };
