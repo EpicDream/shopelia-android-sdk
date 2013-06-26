@@ -85,16 +85,17 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                     getBaseActivity().getOrder().address = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
                 } else {
                     User user = UserManager.get(getActivity()).getUser();
-                    Address address = mOrder.address;
+                    Address address = null;
                     for (Address item : user.addresses) {
-                        if (address.equals(item)) {
-                            address = null;
+                        if (mOrder.address.id == item.id) {
+                            address = item;
                             break;
                         }
                     }
                     if (address == null) {
-                        getBaseActivity().getOrder().address = user.getDefaultAddress();
+                        address = user.getDefaultAddress();
                     }
+                    getBaseActivity().getOrder().address = address;
                 }
                 mOrder = getBaseActivity().getOrder();
                 setupUi();
