@@ -3,6 +3,8 @@ package com.shopelia.android;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ListView;
 
@@ -27,7 +30,6 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     public static final int REQUEST_ADD = 0x100;
     public static final int REQUEST_EDIT = 0x101;
 
-    private String mResourceIdentifier;
     private int mOptions = ResourceListActivity.OPTION_SELECT;
     private ListView mListView;
     private ModelAdapterFactory mFactory;
@@ -42,7 +44,6 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mResourceIdentifier = getArguments().getString(ResourceListActivity.EXTRA_RESOURCE);
         mOptions = getArguments().getInt(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_SELECT);
     }
 
@@ -81,6 +82,10 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         return inflater.inflate(R.layout.shopelia_resource_list_fragment, container, false);
     }
 
+    protected void deleteItem(int position) {
+        BaseModel item = (BaseModel) mListView.getItemAtPosition(position);
+    }
+
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -104,6 +109,7 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         adapter.setOptions(mOptions);
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
+        mListView.setOnItemLongClickListener(mOnItemLongClickListener);
         adapter.setOnEditItemClickListener(mOnEditItemClickListener);
     }
 
@@ -126,7 +132,12 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
 
         @Override
         public void onItemClick(AdapterView<?> adapterView, View v, int position, long itemId) {
-
+            BaseModel<?> model = (BaseModel<?>) adapterView.getAdapter().getItem(position);
+            Activity activity = getActivity();
+            Intent data = new Intent();
+            data.putExtra(ResourceListActivity.EXTRA_SELECTED_ITEM, model);
+            activity.setResult(Activity.RESULT_OK, data);
+            activity.finish();
         }
 
     };
@@ -139,6 +150,28 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
             startActivityForResult(f.getIntent(getActivity(), model), REQUEST_EDIT);
         }
 
+    };
+
+    private OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
+        @Override
+        public boolean onItemLongClick(final AdapterView<?> adapterView, final View v, final int position, long itemId) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.shopelia_dialog_title).setItems(R.array.shopelia_form_address_item_actions,
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int which) {
+                            switch (which) {
+                                case 0:
+                                    mOnEditItemClickListener.onEditItemClick(v, (BaseModel) adapterView.getItemAtPosition(position));
+                                    break;
+                                case 1:
+
+                                    break;
+                            }
+                        }
+                    });
+            builder.create().show();
+            return true;
+        }
     };
 
 }

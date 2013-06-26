@@ -3,6 +3,7 @@ package com.shopelia.android;
 import java.util.Locale;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,8 @@ import com.shopelia.android.widget.ProductSheetWrapper;
 import com.shopelia.android.widget.actionbar.ActionBar;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
+
+    public static final int REQUEST_SELECT_ADDRESS = 0x100;
 
     private Order mOrder;
 
@@ -68,8 +71,18 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     protected void onCreateShopeliaActionBar(ActionBar actionBar) {
         super.onCreateShopeliaActionBar(actionBar);
         actionBar.clear();
-
         actionBar.commit();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_SELECT_ADDRESS && resultCode == Activity.RESULT_OK) {
+            getBaseActivity().getOrder().address = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
+            mOrder = getBaseActivity().getOrder();
+            setupUi();
+
+        }
     }
 
     private OnClickListener mOnConfirmClickListener = new OnClickListener() {
@@ -152,7 +165,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                 Intent intent = new Intent(getActivity(), ResourceListActivity.class);
                 intent.putExtra(ResourceListActivity.EXTRA_RESOURCE, Address.IDENTIFIER);
                 intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_ALL);
-                startActivityForResult(intent, 0);
+                startActivityForResult(intent, REQUEST_SELECT_ADDRESS);
             }
         });
     }

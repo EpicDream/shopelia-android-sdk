@@ -11,6 +11,7 @@
     android:scrollbarStyle="outsideOverlay"
     android:clipToPadding="false"
     android:divider="@android:color/transparent"
+    android:listSelector="@android:color/transparent"
     android:dividerHeight="@dimen/shopelia_margin_normal" >
 
 </ListView>

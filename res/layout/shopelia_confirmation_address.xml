@@ -33,7 +33,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginLeft="@dimen/shopelia_margin_normal"
         android:layout_marginRight="@dimen/shopelia_margin_normal"
-        android:layout_toLeftOf="@+id/user_edit"
+        android:layout_toLeftOf="@+id/address_edit"
         android:layout_toRightOf="@+id/imageView1"
         android:orientation="vertical" >
 

@@ -151,6 +151,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         if (savedInstanceState == null) {
             createSessionId(System.currentTimeMillis(), getIntent().getStringExtra(EXTRA_PRODUCT_URL));
             if (!UserManager.get(this).isLogged()) {
+
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 if (UserManager.get(this).getLoginsCount() > 0) {
                     ft.add(R.id.fragment_container, mSignInFragment, mSignInFragment.getName());
@@ -164,10 +165,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 startActivityForResult(intent, REQUEST_AUTH_PINCODE);
             }
         }
+        startService(new Intent(ShopeliaService.ACTION));
         new FormListHeader(this).setView(findViewById(R.id.header));
         new FormListFooter(this).setView(findViewById(R.id.footer));
         new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getIntent().getExtras());
-        startService(new Intent(ShopeliaService.ACTION));
     }
 
     @Override

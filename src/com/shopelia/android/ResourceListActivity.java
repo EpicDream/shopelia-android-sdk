@@ -34,6 +34,8 @@ public class ResourceListActivity extends ShopeliaActivity {
      */
     public static final String EXTRA_LIST = Config.EXTRA_PREFIX + "LIST";
 
+    public static final String EXTRA_SELECTED_ITEM = Config.EXTRA_PREFIX + "SELECTED";
+
     public static final int OPTION_ADD = 0x1;
     public static final int OPTION_DELETE = OPTION_ADD << 1;
     public static final int OPTION_EDIT = OPTION_DELETE << 1;
