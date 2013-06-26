@@ -56,6 +56,7 @@ public class AddressModelAdapter extends BaseModelAdapter<Address> {
         holder.edit.setTag(data);
         holder.edit.setVisibility(hasOnEditItemClickListener() ? View.VISIBLE : View.INVISIBLE);
         holder.edit.setOnClickListener(mOnClickListener);
+        holder.edit.setFocusable(false);
     }
 
     @Override
