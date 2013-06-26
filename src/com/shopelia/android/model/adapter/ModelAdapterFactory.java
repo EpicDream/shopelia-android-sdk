@@ -6,10 +6,15 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.shopelia.android.AddAddressActivity;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.BaseModel;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
+import com.shopelia.android.remote.api.Command;
+import com.shopelia.android.remote.api.ShopeliaRestClient;
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
 
 public enum ModelAdapterFactory {
     ADDRESS(Address.IDENTIFIER, Address.class) {
@@ -44,6 +49,29 @@ public enum ModelAdapterFactory {
             return intent;
         }
 
+        @Override
+        public void delete(Context context, BaseModel<?> item) {
+            final Address toDelete = (Address) item;
+            ShopeliaRestClient.authenticate(context);
+            ShopeliaRestClient.delete(Command.V1.Addresses.Address(toDelete.id), null, new AsyncCallback() {
+
+                @Override
+                public void onComplete(HttpResponse httpResponse) {
+
+                }
+
+            });
+            UserManager um = UserManager.get(context);
+            User user = um.getUser();
+            for (Address address : user.addresses) {
+                if (toDelete.id == address.id) {
+                    user.addresses.remove(address);
+                    break;
+                }
+            }
+            um.saveUser();
+        }
+
     },
     PAYMENT_CARD(PaymentCard.IDENTIFIER, PaymentCard.class) {
         @Override
@@ -56,6 +84,12 @@ public enum ModelAdapterFactory {
             Intent intent = new Intent(context, null);
 
             return null;
+        }
+
+        @Override
+        public void delete(Context context, BaseModel<?> item) {
+            // TODO Auto-generated method stub
+
         }
     };
 
@@ -70,6 +104,8 @@ public enum ModelAdapterFactory {
     public abstract BaseModelAdapter<? extends BaseModel> getAdapter(Context context);
 
     public abstract Intent getIntent(Context context, BaseModel item);
+
+    public abstract void delete(Context context, BaseModel<?> item);
 
     public List<? extends BaseModel> getListFromUser(User user) {
         return null;

@@ -24,8 +24,10 @@ import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
 import com.shopelia.android.widget.ProductSheetWrapper;
@@ -77,12 +79,28 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_SELECT_ADDRESS && resultCode == Activity.RESULT_OK) {
-            getBaseActivity().getOrder().address = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
-            mOrder = getBaseActivity().getOrder();
-            setupUi();
-
+        switch (requestCode) {
+            case REQUEST_SELECT_ADDRESS:
+                if (resultCode == Activity.RESULT_OK) {
+                    getBaseActivity().getOrder().address = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
+                } else {
+                    User user = UserManager.get(getActivity()).getUser();
+                    Address address = mOrder.address;
+                    for (Address item : user.addresses) {
+                        if (address.equals(item)) {
+                            address = null;
+                            break;
+                        }
+                    }
+                    if (address == null) {
+                        getBaseActivity().getOrder().address = user.getDefaultAddress();
+                    }
+                }
+                mOrder = getBaseActivity().getOrder();
+                setupUi();
+                break;
         }
+
     }
 
     private OnClickListener mOnConfirmClickListener = new OnClickListener() {

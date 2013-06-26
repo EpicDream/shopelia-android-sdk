@@ -68,12 +68,7 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if ((requestCode == REQUEST_ADD || requestCode == REQUEST_EDIT) && resultCode == Activity.RESULT_OK) {
-            ModelAdapterFactory factory = getFactory();
-            BaseModelAdapter<? extends BaseModel> adapter = factory.getAdapter(getActivity());
-            mList = factory.getListFromUser(com.shopelia.android.manager.UserManager.get(getActivity()).getUser());
-            adapter.setContent(mList);
-            mListView.setAdapter(adapter);
-            adapter.setOnEditItemClickListener(mOnEditItemClickListener);
+            refresh();
         }
     }
 
@@ -83,7 +78,10 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     }
 
     protected void deleteItem(int position) {
-        BaseModel item = (BaseModel) mListView.getItemAtPosition(position);
+        BaseModel<?> item = (BaseModel<?>) mListView.getItemAtPosition(position);
+        ModelAdapterFactory factory = getFactory();
+        factory.delete(getActivity(), item);
+        refresh();
     }
 
     @Override
@@ -110,6 +108,15 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         mListView.setAdapter(adapter);
         mListView.setOnItemClickListener(mOnItemClickListener);
         mListView.setOnItemLongClickListener(mOnItemLongClickListener);
+        adapter.setOnEditItemClickListener(mOnEditItemClickListener);
+    }
+
+    public void refresh() {
+        ModelAdapterFactory factory = getFactory();
+        BaseModelAdapter<? extends BaseModel> adapter = factory.getAdapter(getActivity());
+        mList = factory.getListFromUser(com.shopelia.android.manager.UserManager.get(getActivity()).getUser());
+        adapter.setContent(mList);
+        mListView.setAdapter(adapter);
         adapter.setOnEditItemClickListener(mOnEditItemClickListener);
     }
 
@@ -155,6 +162,9 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     private OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(final AdapterView<?> adapterView, final View v, final int position, long itemId) {
+            if (mList.size() == 1) {
+                return false;
+            }
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.shopelia_dialog_title).setItems(R.array.shopelia_form_address_item_actions,
                     new DialogInterface.OnClickListener() {
@@ -164,7 +174,7 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
                                     mOnEditItemClickListener.onEditItemClick(v, (BaseModel) adapterView.getItemAtPosition(position));
                                     break;
                                 case 1:
-
+                                    deleteItem(position);
                                     break;
                             }
                         }

@@ -191,7 +191,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         switch (requestCode) {
             case REQUEST_CHECKOUT:
                 Intent result = new Intent();
-                // TODO : add product
+                // TODO : add product in result
                 setResult(RESULT_OK, result);
                 finish();
                 return;

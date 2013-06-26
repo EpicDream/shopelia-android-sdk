@@ -103,6 +103,11 @@ public class User implements BaseModel<User> {
         return json;
     }
 
+    public Address getDefaultAddress() {
+        // TODO Better selection;
+        return addresses.get(0);
+    }
+
     public static User inflate(JSONObject json) {
         User user = new User();
         user.id = json.optLong(Api.ID, NO_ID);

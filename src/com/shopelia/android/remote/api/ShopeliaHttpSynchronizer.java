@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.os.Build;
 import android.util.Base64;
 
@@ -21,8 +22,15 @@ public class ShopeliaHttpSynchronizer {
 
     }
 
-    public static void delete(String command, JSONObject params, String notificationId) {
+    private static ShopeliaHttpSynchronizer getInstance(Context context) {
+        if (sInstance == null) {
+            sInstance = new ShopeliaHttpSynchronizer();
+        }
+        return sInstance;
+    }
 
+    public static void delete(Context context, String command, JSONObject params, String notificationId) {
+        ShopeliaHttpSynchronizer synchronizer = getInstance(context);
     }
 
     private static class Query implements JsonData {

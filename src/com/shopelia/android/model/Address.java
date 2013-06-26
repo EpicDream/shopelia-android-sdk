@@ -184,4 +184,15 @@ public final class Address implements BaseModel<Address> {
         firstname = item.firstname;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof Address) {
+            Address address = (Address) o;
+            if (address.id == id && id != NO_ID) {
+                return true;
+            }
+        }
+        return super.equals(o);
+    }
+
 }
