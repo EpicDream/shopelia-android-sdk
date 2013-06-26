@@ -12,6 +12,15 @@
     <string name="shopelia_action_bar_add_address">Ajouter une adresse</string>
 	<string name="shopelia_action_bar_add_payment_card">Ajouter une carte de paiement</string>
     
+	<!-- Welcome -->
+	<string-array name="shopelia_welcome_list">
+	    <item >100% sécurisé</item>
+	    <item>Optimisé pour les téléphones</item>
+	    <item>Ergonomie incroyable</item>
+	    <item>Utilise vulcain</item>
+	    <item>Cliques !</item>
+	</string-array>
+	
     <!-- Main form -->
     <string name="shopelia_form_main_waiting">Création de votre compte Shopelia</string>
     <string name="shopelia_form_main_phone">Numéro de téléphone</string>

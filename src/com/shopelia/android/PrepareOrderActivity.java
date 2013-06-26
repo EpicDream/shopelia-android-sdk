@@ -119,8 +119,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
      */
     public static final String EXTRA_USER_PHONE = Config.EXTRA_PREFIX + "USER_PHONE";
 
-    private static final int REQUEST_CREATE_PINCODE = 0x3110;
-    private static final int REQUEST_AUTH_PINCODE = 0x0216;
+    private static final int REQUEST_CREATE_PINCODE = 0x101;
+    private static final int REQUEST_AUTH_PINCODE = 0x0102;
 
     private SignInFragment mSignInFragment = new SignInFragment();
     private SignUpFragment mSignUpFragment = new SignUpFragment();
@@ -151,7 +151,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         if (savedInstanceState == null) {
             createSessionId(System.currentTimeMillis(), getIntent().getStringExtra(EXTRA_PRODUCT_URL));
             if (!UserManager.get(this).isLogged()) {
-
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 if (UserManager.get(this).getLoginsCount() > 0) {
                     ft.add(R.id.fragment_container, mSignInFragment, mSignInFragment.getName());
@@ -169,6 +168,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         new FormListHeader(this).setView(findViewById(R.id.header));
         new FormListFooter(this).setView(findViewById(R.id.footer));
         new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getIntent().getExtras());
+
     }
 
     @Override
@@ -178,21 +178,18 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         }
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (resultCode == ShopeliaActivity.RESULT_LOGOUT) {
-            if (fragment == mSignUpFragment) {
-                switchFragments(mSignInFragment, mSignUpFragment);
-            } else if (fragment == null) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.fragment_container, mSignInFragment);
-                ft.commit();
-            }
-            return;
+        if (resultCode == ShopeliaActivity.RESULT_LOGOUT && fragment == mSignUpFragment) {
+            switchFragments(mSignInFragment, mSignUpFragment);
+        } else if (fragment == null) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.add(R.id.fragment_container, mSignUpFragment);
+            ft.commit();
         }
         switch (requestCode) {
             case REQUEST_CHECKOUT:
                 Intent result = new Intent();
                 // TODO : add product in result
-                setResult(RESULT_OK, result);
+                setResult(resultCode, result);
                 finish();
                 return;
             case REQUEST_CREATE_PINCODE:
@@ -279,7 +276,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         }).sendPaymentInformation(getOrder().user, card);
     }
 
-    private void checkoutOrder(Order order) {
+    private void prepareOrder(Order order) {
         order.product.productPrice = getIntent().getFloatExtra(EXTRA_PRICE, 0);
         order.product.deliveryPrice = getIntent().getFloatExtra(EXTRA_SHIPPING_PRICE, 0);
         order.product.shippingExtra = getIntent().getStringExtra(EXTRA_SHIPPING_INFO);
@@ -301,7 +298,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         }
 
         order.user = UserManager.get(this).getUser();
+    }
 
+    private void checkoutOrder(Order order) {
+        prepareOrder(order);
         // TODO REMOVE THIS ONLY FOR TESTING
         order.address = order.user.addresses.get(0);
 

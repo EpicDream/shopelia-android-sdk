@@ -11,8 +11,10 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import com.shopelia.android.PrepareOrderActivity;
+import com.shopelia.android.WelcomeActivity;
 import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaTracker;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Merchant;
 import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.MerchantsAPI;
@@ -135,7 +137,11 @@ public final class Shopelia implements Parcelable {
         if (data == null) {
             data = new Intent();
         }
-        data.setClass(context, PrepareOrderActivity.class);
+        if (UserManager.get(context).getLoginsCount() == 0) {
+            data.setClass(context, WelcomeActivity.class);
+        } else {
+            data.setClass(context, PrepareOrderActivity.class);
+        }
         if (productUrl != null) {
             data.putExtra(EXTRA_PRODUCT_URL, productUrl);
         }

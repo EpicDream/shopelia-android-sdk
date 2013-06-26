@@ -47,11 +47,19 @@
         android:allowBackup="true"
         android:theme="@style/Theme.Shopelia" >
         <activity
+            android:name="com.shopelia.android.WelcomeActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        
+        <activity
             android:name="com.shopelia.android.PrepareOrderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Shopelia"
             android:windowSoftInputMode="adjustResize|stateHidden" />
+        
         <activity
             android:name="com.shopelia.android.AddAddressActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

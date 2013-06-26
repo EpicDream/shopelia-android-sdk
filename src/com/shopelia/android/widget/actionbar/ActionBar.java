@@ -146,6 +146,10 @@ public class ActionBar {
         invalidate();
     }
 
+    public void hide() {
+        mActionBarWidget.setVisibility(View.GONE);
+    }
+
     private OnClickListener mOnClickListener = new OnClickListener() {
 
         @Override
