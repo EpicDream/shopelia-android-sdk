@@ -36,7 +36,7 @@
     <string name="shopelia_form_main_address">Adresse</string>
     <string name="shopelia_form_main_header_text" formatted="false">
 <![CDATA[
-	    Votre commande va être préparée automatiquement sur le site <b>%s</b> avec le service <b>Shopelia</b>, partenaire de <b>Prixing</b>
+	    Votre commande va être préparée automatiquement avec <b>Shopelia</b> sur le site <b>%s</b>.
 	    ]]>
     </string>
     <string name="shopelia_form_main_footer_text">
@@ -170,6 +170,13 @@
     <string name="shopelia_logout_positive">Se déconnecter</string>
     <string name="shopelia_logout_cancel">Annuler</string>
 
+    <!--  Call Us -->
+     <string name="shopelia_include_phone_text">
+<![CDATA[
+	  Notre service client est disponible au <font color="#0098ce">01 82 09 15 44</font>
+	    ]]>
+    </string>
+    
     <!-- Errors -->
     <string name="shopelia_error_network_error">Une erreur réseau est survenue</string>
     <string name="shopelia_error_server_broke_down">Les serveurs shopelia ne répondent pas</string>

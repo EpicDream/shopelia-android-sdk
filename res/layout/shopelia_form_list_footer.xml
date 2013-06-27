@@ -18,6 +18,8 @@
 
     <include layout="@layout/shopelia_include_logos"/>
     
+    <include layout="@layout/shopelia_include_company_phone" />
+    
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/login"
         android:visibility="gone"

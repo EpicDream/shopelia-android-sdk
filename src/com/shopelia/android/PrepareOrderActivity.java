@@ -6,6 +6,7 @@ import java.util.Map;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
@@ -15,8 +16,10 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -24,6 +27,7 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
@@ -168,6 +172,25 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         new FormListHeader(this).setView(findViewById(R.id.header));
         new FormListFooter(this).setView(findViewById(R.id.footer));
         new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getIntent().getExtras());
+        initPhoneLayout();
+    }
+
+    private void initPhoneLayout() {
+        TextView phone = (TextView) findViewById(R.id.call_shopelia);
+        phone.setText(Html.fromHtml(phone.getText().toString()));
+        phone.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:01.82.09.15.44"));
+                    startActivity(callIntent);
+                } catch (ActivityNotFoundException e) {
+
+                }
+            }
+        });
 
     }
 

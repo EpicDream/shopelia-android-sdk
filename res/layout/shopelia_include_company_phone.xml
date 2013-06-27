@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="horizontal"
+    android:padding="@dimen/shopelia_margin_normal" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/shopelia_phone" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/call_shopelia"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/shopelia_margin_small"
+        android:text="@string/shopelia_include_phone_text"
+        android:textColor="@color/shopelia_dark"
+        android:textIsSelectable="true"
+        android:gravity="center"
+        android:textSize="@dimen/shopelia_font_size_small" />
+
+</LinearLayout>
