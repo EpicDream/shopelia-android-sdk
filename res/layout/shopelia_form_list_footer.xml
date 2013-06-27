@@ -16,35 +16,7 @@
         app:shopelia_icon="@drawable/shopelia_bill_white"
         app:shopelia_text="@string/shopelia_form_main_validate" />
 
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_marginTop="@dimen/shopelia_margin_normal"
-         android:gravity="bottom|center" >
-
-            <ImageView
-                android:id="@+id/imageView1"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/shopelia_margin_small"
-                android:layout_marginRight="@dimen/shopelia_margin_normal"
-                android:src="@drawable/shopelia_logos_visa_big" />
-
-            <ImageView
-                android:id="@+id/imageView2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/shopelia_margin_small"
-                android:layout_marginRight="@dimen/shopelia_margin_normal"
-                android:src="@drawable/shopelia_logos_mc_big" />
-
-            <ImageView
-                android:id="@+id/imageView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:src="@drawable/shopelia_logos_cma_big" />
-
-        </LinearLayout>
+    <include layout="@layout/shopelia_include_logos"/>
     
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/login"

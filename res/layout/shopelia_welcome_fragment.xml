@@ -63,31 +63,7 @@
                 android:orientation="vertical" >
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
-                android:layout_marginTop="@dimen/shopelia_margin_large"
-                android:gravity="bottom|center" >
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/shopelia_margin_large"
-                    android:src="@drawable/shopelia_logos_visa_big" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="@dimen/shopelia_margin_large"
-                    android:src="@drawable/shopelia_logos_mc_big" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/shopelia_logos_cma_big" />
-            </LinearLayout>
+       		<include layout="@layout/shopelia_include_logos"/>
 
             <com.shopelia.android.widget.ValidationButton
                 android:id="@+id/continue_with_shopelia"
