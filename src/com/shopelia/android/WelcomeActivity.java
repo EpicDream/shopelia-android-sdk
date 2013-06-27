@@ -23,6 +23,8 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
     public static final int REQUEST_SHOPELIA = 0x100;
     public static final int REQUEST_MERCHANT = 0x101;
 
+    public boolean mIsCanceling = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -79,6 +81,10 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
 
     @Override
     public void cancel() {
+        if (mIsCanceling) {
+            return;
+        }
+        mIsCanceling = true;
         View frame = findViewById(R.id.frame);
         if (frame != null) {
             Animation anim = AnimationUtils.loadAnimation(this, R.anim.shopelia_pop_out);
