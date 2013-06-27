@@ -50,7 +50,7 @@
             android:name="com.shopelia.android.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.Shopelia"
+            android:theme="@style/Theme.Shopelia.Transparent"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         
         <activity

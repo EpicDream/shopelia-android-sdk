@@ -10,6 +10,7 @@
     <color name="shopelia_dividerColor">#e5e5e5</color>
     <color name="shopelia_dark">#333333</color>
     <color name="shopelia_dark_translucent_60">#96333333</color>
+     <color name="shopelia_dark_translucent_30">#4d333333</color>
     <color name="shopelia_red">#d5263b</color>
     <color name="shopelia_blue">#0099cc</color>
     <color name="shopelia_green">#29b153</color>

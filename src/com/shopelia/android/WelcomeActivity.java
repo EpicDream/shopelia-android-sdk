@@ -1,16 +1,23 @@
 package com.shopelia.android;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.shopelia.android.WelcomeFragment.WelcomeParent;
+import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.model.Merchant;
 
-public class WelcomeActivity extends ShopeliaActivity {
+public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
 
     public static final String ACTIVITY_NAME = "Welcome Activity";
+
+    public static final int REQUEST_SHOPELIA = 0x100;
+    public static final int REQUEST_MERCHANT = 0x101;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +55,22 @@ public class WelcomeActivity extends ShopeliaActivity {
     @Override
     protected boolean isPartOfOrderWorkFlow() {
         return false;
+    }
+
+    @Override
+    public void continueWithShopelia() {
+        startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
+    }
+
+    @Override
+    public void continueWithMerchant() {
+        String url = getIntent().getExtras().getString(Shopelia.EXTRA_PRODUCT_URL);
+        super.startActivityForResult(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), REQUEST_MERCHANT);
+    }
+
+    @Override
+    public Merchant getMerchant() {
+        return getIntent().getExtras().getParcelable(Shopelia.EXTRA_MERCHANT);
     }
 
 }

@@ -14,8 +14,16 @@
 
     <!-- Application theme. -->
     <style name="Theme.Shopelia" parent="Theme.Legacy.ShopeliaBaseTheme">
-		<item name="android:windowBackground">@color/shopelia_windowsBackground</item>
-		<item name="android:background">@android:color/transparent</item>
+        <item name="android:windowBackground">@color/shopelia_windowsBackground</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
+    <style name="Theme.Shopelia.Transparent" parent="android:Theme.Translucent">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@color/shopelia_dark_translucent_60</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
     </style>
 
     <style name="Theme.Shopelia.Widget"></style>

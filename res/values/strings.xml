@@ -14,11 +14,9 @@
     
 	<!-- Welcome -->
 	<string-array name="shopelia_welcome_list">
-	    <item >100% sécurisé</item>
-	    <item>Optimisé pour les téléphones</item>
-	    <item>Ergonomie incroyable</item>
-	    <item>Utilise vulcain</item>
-	    <item>Cliques !</item>
+	    <item>Interface optimisée pour commander chez votre marchand</item>
+	    <item>Service rapide et gratuit</item>
+	    <item>Transaction 100% sécurisée par un organisme agrée auprès de la Banque de France</item>
 	</string-array>
 	
     <!-- Main form -->
