@@ -173,7 +173,7 @@
     <!--  Call Us -->
      <string name="shopelia_include_phone_text">
 <![CDATA[
-	  Notre service client est disponible au <font color="#0098ce">01 82 09 15 44</font>
+	  Notre service client est disponible <br/> au <font color="#0098ce">01 82 09 15 44</font>
 	    ]]>
     </string>
     

@@ -19,7 +19,6 @@
         android:layout_marginLeft="@dimen/shopelia_margin_small"
         android:text="@string/shopelia_include_phone_text"
         android:textColor="@color/shopelia_dark"
-        android:textIsSelectable="true"
         android:gravity="center"
         android:textSize="@dimen/shopelia_font_size_small" />
 

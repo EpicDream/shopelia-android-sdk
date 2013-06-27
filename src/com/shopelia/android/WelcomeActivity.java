@@ -49,6 +49,9 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_MERCHANT) {
+            resultCode = Shopelia.RESULT_REDIRECT_ON_MERCHANT;
+        }
         setResult(resultCode, data);
         finish();
     }
@@ -84,6 +87,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
         if (mIsCanceling) {
             return;
         }
+        setResult(Shopelia.RESULT_CANCELED);
         mIsCanceling = true;
         View frame = findViewById(R.id.frame);
         if (frame != null) {

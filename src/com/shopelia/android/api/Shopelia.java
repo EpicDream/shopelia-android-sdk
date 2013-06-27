@@ -2,6 +2,7 @@ package com.shopelia.android.api;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.app.Fragment.SavedState;
 import android.content.Context;
 import android.content.Intent;
@@ -13,6 +14,7 @@ import android.os.Parcelable;
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.WelcomeActivity;
 import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Merchant;
@@ -113,6 +115,12 @@ public final class Shopelia implements Parcelable {
      */
     public static final String EXTRA_USER_PHONE = PrepareOrderActivity.EXTRA_USER_PHONE;
 
+    public static final int RESULT_SUCCESS = Activity.RESULT_OK;
+    public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
+    public static final int RESULT_REDIRECT_ON_MERCHANT = 0x1602;
+
+    public static final int REQUEST_SHOPELIA = ShopeliaActivity.REQUEST_CHECKOUT;
+
     private Intent mData;
     private Context mContext;
 
@@ -133,7 +141,7 @@ public final class Shopelia implements Parcelable {
      * @param productUrl The product URL
      * @param data Extra data or null if unnecessary
      */
-    public static final void checkout(Context context, String productUrl, Intent data) {
+    public static final void checkout(Context context, String productUrl, Intent data, int requestCode) {
         if (data == null) {
             data = new Intent();
         }
@@ -145,13 +153,20 @@ public final class Shopelia implements Parcelable {
         if (productUrl != null) {
             data.putExtra(EXTRA_PRODUCT_URL, productUrl);
         }
-        // Android can be stupid sometimes -_-
         data.setExtrasClassLoader(Merchant.class.getClassLoader());
-        context.startActivity(data);
+        if (context instanceof Activity) {
+            ((Activity) context).startActivityForResult(data, requestCode);
+        } else {
+            context.startActivity(data);
+        }
     }
 
     public void checkout(Context context) {
-        checkout(context, null, mData);
+        checkout(context, null, mData, REQUEST_SHOPELIA);
+    }
+
+    public void checkout(Context context, int requestCode) {
+        checkout(context, null, mData, requestCode);
     }
 
     /**
