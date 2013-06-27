@@ -17,9 +17,10 @@
         app:shopelia_text="@string/shopelia_form_main_validate" />
 
      <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="bottom|center" >
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="@dimen/shopelia_margin_normal"
+         android:gravity="bottom|center" >
 
             <ImageView
                 android:id="@+id/imageView1"

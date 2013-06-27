@@ -131,7 +131,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 		 * Payment methods
 		 */
 		mFormContainer.findFieldById(R.id.header_payment_method,
-				HeaderField.class);
+				HeaderField.class).displayLock();
 		mFormContainer.findFieldById(R.id.payment_card, SingleLinePaymentCardField.class)
 				.setJsonPath(Order.Api.PAYMENT_CARD)
 				.setListener(mTrackingListener)
