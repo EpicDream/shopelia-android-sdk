@@ -13,11 +13,14 @@
 	<string name="shopelia_action_bar_add_payment_card">Ajouter une carte de paiement</string>
     
 	<!-- Welcome -->
+	<string name="shopelia_welcome_introduction">Découvrez Shopelia, le nouveau service pour commander facilement en ligne !</string>
 	<string-array name="shopelia_welcome_list">
-	    <item>Interface optimisée pour commander chez votre marchand</item>
+	    <item>Interface optimisée pour votre smartphone</item>
 	    <item>Service rapide et gratuit</item>
 	    <item>Transaction 100% sécurisée par un organisme agrée auprès de la Banque de France</item>
 	</string-array>
+	<string name="shopelia_welcome_or">ou </string>
+	<string name="shopelia_welcome_continue_on" formatted="false">continuer sur le site %s</string>
 	
     <!-- Main form -->
     <string name="shopelia_form_main_waiting">Création de votre compte Shopelia</string>

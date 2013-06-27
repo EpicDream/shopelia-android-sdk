@@ -52,6 +52,10 @@ public class WelcomeFragment extends ShopeliaFragment<WelcomeParent> {
         });
         frame.setVisibility(View.VISIBLE);
         frame.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_pop_up));
+
+        findViewById(R.id.continue_with_merchant_site, TextView.class).setText(
+                getResources().getString(R.string.shopelia_welcome_continue_on, getContract().getMerchant().name));
+
     }
 
     protected void addItemInViewGroup(LayoutInflater inflater, ViewGroup container, String item) {

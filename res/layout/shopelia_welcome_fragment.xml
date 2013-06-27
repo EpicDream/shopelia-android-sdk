@@ -50,7 +50,7 @@
             <com.shopelia.android.widget.FontableTextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Découvrez Shopelia, le nouveau service qui vous simplifie l&apos;achat en ligne !"
+                android:text="@string/shopelia_welcome_introduction"
                 android:textColor="@color/shopelia_dark"
                 android:textSize="@dimen/shopelia_font_size_small"
                 app:shopelia_fontStyle="bold" />
@@ -111,7 +111,7 @@
                 <com.shopelia.android.widget.FontableTextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="ou "
+                    android:text="@string/shopelia_welcome_or"
                     android:textColor="@color/shopelia_dark"
                     android:textSize="@dimen/shopelia_font_size_small" />
 
@@ -119,9 +119,11 @@
                     android:id="@+id/continue_with_merchant_site"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="continuer sur le site Amazon France"
+                    android:layout_marginLeft="@dimen/shopelia_margin_small"
+                    android:text="@string/shopelia_welcome_continue_on"
                     android:textColor="@color/shopelia_link_text_color"
                     android:textSize="@dimen/shopelia_font_size_small" />
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
