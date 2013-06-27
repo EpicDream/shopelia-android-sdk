@@ -38,6 +38,7 @@ public class ValidationButton extends FrameLayout {
     }
 
     private void init(AttributeSet attrs) {
+        setClickable(true);
         LayoutInflater.from(getContext()).inflate(R.layout.shopelia_validation_button, this, true);
         try {
             mIcon = (ImageView) findViewById(R.id.icon);
