@@ -5,6 +5,10 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 
 import com.shopelia.android.WelcomeFragment.WelcomeParent;
 import com.shopelia.android.api.Shopelia;
@@ -71,6 +75,39 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
     @Override
     public Merchant getMerchant() {
         return getIntent().getExtras().getParcelable(Shopelia.EXTRA_MERCHANT);
+    }
+
+    @Override
+    public void cancel() {
+        View frame = findViewById(R.id.frame);
+        if (frame != null) {
+            Animation anim = AnimationUtils.loadAnimation(this, R.anim.shopelia_pop_out);
+            anim.setAnimationListener(new AnimationListener() {
+
+                @Override
+                public void onAnimationStart(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation animation) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation animation) {
+                    finish();
+                }
+            });
+            frame.startAnimation(anim);
+        } else {
+            // finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        cancel();
     }
 
 }

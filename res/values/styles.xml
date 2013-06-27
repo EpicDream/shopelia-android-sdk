@@ -13,17 +13,24 @@
     </style>
 
     <!-- Application theme. -->
+
+    <style name="Animation.Shopelia.FloatingFrame" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/shopelia_fade_in_short</item>
+        <item name="android:windowExitAnimation">@anim/shopelia_fade_out_short</item>
+    </style>
+
     <style name="Theme.Shopelia" parent="Theme.Legacy.ShopeliaBaseTheme">
         <item name="android:windowBackground">@color/shopelia_windowsBackground</item>
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="Theme.Shopelia.Transparent" parent="android:Theme.Translucent">
+    <style name="Theme.Shopelia.FloatingFrame" parent="android:Theme.Translucent">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/shopelia_dark_translucent_60</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:windowAnimationStyle">@style/Animation.Shopelia.FloatingFrame</item>
     </style>
 
     <style name="Theme.Shopelia.Widget"></style>

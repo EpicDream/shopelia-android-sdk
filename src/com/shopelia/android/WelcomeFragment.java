@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.shopelia.android.WelcomeFragment.WelcomeParent;
@@ -19,6 +20,8 @@ public class WelcomeFragment extends ShopeliaFragment<WelcomeParent> {
         public void continueWithMerchant();
 
         public Merchant getMerchant();
+
+        public void cancel();
     }
 
     @Override
@@ -38,7 +41,17 @@ public class WelcomeFragment extends ShopeliaFragment<WelcomeParent> {
 
         findViewById(R.id.continue_with_shopelia).setOnClickListener(mOnContinueWithShopeliaClickListener);
         findViewById(R.id.continue_with_merchant).setOnClickListener(mOnContinueWithMerchantClickListener);
+        findViewById(R.id.outside_area).setOnClickListener(mOnOutsideAreaClickListener);
+        View frame = findViewById(R.id.frame);
+        frame.setOnClickListener(new OnClickListener() {
 
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        frame.setVisibility(View.VISIBLE);
+        frame.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_pop_up));
     }
 
     protected void addItemInViewGroup(LayoutInflater inflater, ViewGroup container, String item) {
@@ -61,6 +74,14 @@ public class WelcomeFragment extends ShopeliaFragment<WelcomeParent> {
         @Override
         public void onClick(View v) {
             getContract().continueWithMerchant();
+        }
+    };
+
+    private OnClickListener mOnOutsideAreaClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            getContract().cancel();
         }
     };
 
