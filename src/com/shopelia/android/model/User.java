@@ -162,7 +162,6 @@ public class User implements BaseModel<User> {
 
         JSONArray cards = new JSONArray();
         JSONObject cardObject = card.toJson();
-        cardObject.put(PaymentCard.Api.NAME, user.lastname);
         cards.put(cardObject);
 
         out.put(User.Api.PAYMENT_CARDS_ATTRIBUTES, cards);

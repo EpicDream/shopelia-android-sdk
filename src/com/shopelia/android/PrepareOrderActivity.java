@@ -221,6 +221,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             case REQUEST_AUTH_PINCODE:
                 if (resultCode == RESULT_OK) {
                     checkoutOrder(getOrder());
+                } else if (resultCode == RESULT_CANCELED) {
+                    finish();
+                    return;
                 }
                 break;
             default:
