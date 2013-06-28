@@ -1,6 +1,7 @@
 package com.shopelia.android;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -54,14 +55,14 @@ public class WelcomeFragment extends ShopeliaFragment<WelcomeParent> {
         frame.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_pop_up));
 
         findViewById(R.id.continue_with_merchant_site, TextView.class).setText(
-                getResources().getString(R.string.shopelia_welcome_continue_on, getContract().getMerchant().name));
+                Html.fromHtml(getResources().getString(R.string.shopelia_welcome_continue_on, getContract().getMerchant().name)));
 
     }
 
     protected void addItemInViewGroup(LayoutInflater inflater, ViewGroup container, String item) {
         View v = inflater.inflate(R.layout.shopelia_welcome_list_item, container, false);
         TextView textView = (TextView) v.findViewById(android.R.id.text1);
-        textView.setText(item);
+        textView.setText(Html.fromHtml(item));
         container.addView(v, container.getChildCount());
     }
 

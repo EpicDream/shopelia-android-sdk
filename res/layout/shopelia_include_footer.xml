@@ -23,4 +23,15 @@
         android:layout_height="wrap_content"
         android:src="@drawable/shopelia_logo_bottom" />
 
+    <com.shopelia.android.widget.FontableTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textSize="@dimen/shopelia_font_size_xxs"
+        android:textColor="@color/shopelia_grey"
+        android:layout_marginLeft="@dimen/shopelia_margin_mid_large"
+        android:layout_marginRight="@dimen/shopelia_margin_mid_large"
+        android:layout_marginTop="@dimen/shopelia_margin_small"
+        android:text="@string/shopelia_footer_rcs" />
+
 </LinearLayout>

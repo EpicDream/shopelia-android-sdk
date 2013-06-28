@@ -6,11 +6,11 @@
     android:gravity="left|center_vertical" >
 
     <ImageView
-        android:layout_width="6dp"
-        android:layout_height="6dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/shopelia_margin_normal"
         android:layout_marginRight="@dimen/shopelia_margin_normal"
-        android:src="@drawable/shopelia_list_indicator" />
+        android:src="@drawable/shopelia_green_check" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@android:id/text1"
