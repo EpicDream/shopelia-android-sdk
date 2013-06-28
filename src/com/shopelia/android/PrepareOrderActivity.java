@@ -201,7 +201,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         }
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (!UserManager.get(this).isLogged()) {
+        if (!UserManager.get(this).isLogged() && resultCode != RESULT_LOGOUT) {
             if (resultCode == ShopeliaActivity.RESULT_LOGOUT && fragment == mSignUpFragment) {
                 switchFragments(mSignInFragment, mSignUpFragment);
             } else if (fragment == null) {
