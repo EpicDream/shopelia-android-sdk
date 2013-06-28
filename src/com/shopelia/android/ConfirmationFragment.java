@@ -4,9 +4,12 @@ import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -67,6 +70,26 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         }
         mOrder = getBaseActivity().getOrder();
         setupUi();
+        initPhoneLayout();
+    }
+
+    private void initPhoneLayout() {
+        TextView phone = (TextView) findViewById(R.id.call_shopelia);
+        phone.setText(Html.fromHtml(phone.getText().toString()));
+        phone.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:01.82.09.15.44"));
+                    startActivity(callIntent);
+                } catch (ActivityNotFoundException e) {
+
+                }
+            }
+        });
+
     }
 
     @Override

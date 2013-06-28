@@ -1,11 +1,16 @@
 package com.shopelia.android;
 
+import android.content.ActivityNotFoundException;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.analytics.AnalyticsBuilder;
@@ -36,6 +41,26 @@ public class CloseCheckoutFragment extends ShopeliaFragment<Void> {
                 getActivity().finish();
             }
         });
+        initPhoneLayout();
+    }
+
+    private void initPhoneLayout() {
+        TextView phone = (TextView) findViewById(R.id.call_shopelia);
+        phone.setText(Html.fromHtml(phone.getText().toString()));
+        phone.setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                try {
+                    Intent callIntent = new Intent(Intent.ACTION_DIAL);
+                    callIntent.setData(Uri.parse("tel:01.82.09.15.44"));
+                    startActivity(callIntent);
+                } catch (ActivityNotFoundException e) {
+
+                }
+            }
+        });
+
     }
 
     @Override

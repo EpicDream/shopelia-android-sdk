@@ -51,6 +51,8 @@
 
     </com.shopelia.android.widget.ValidationButton>
 
+    <include layout="@layout/shopelia_include_company_phone" />
+    
     <include
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
