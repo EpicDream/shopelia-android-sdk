@@ -94,7 +94,6 @@
     <string name="shopelia_form_address_delete">Supprimer</string>
 
     <string-array name="shopelia_form_address_item_actions">
-        <item>@string/shopelia_form_address_edit</item>
         <item>@string/shopelia_form_address_delete</item>
     </string-array>
 

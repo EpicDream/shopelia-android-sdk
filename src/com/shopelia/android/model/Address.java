@@ -122,6 +122,7 @@ public final class Address implements BaseModel<Address> {
         address.lastname = object.optString(Api.LASTNAME);
         address.firstname = object.optString(Api.FIRSTNAME);
         address.address = object.optString(Api.ADDRESS1);
+        address.extras = object.optString(Api.EXTRAS);
         address.city = object.optString(Api.CITY);
         address.country = object.optString(Api.COUNTRY);
         address.zipcode = object.optString(Api.ZIP);

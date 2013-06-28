@@ -54,8 +54,10 @@ public class AddressModelAdapter extends BaseModelAdapter<Address> {
         holder.username.setText(data.firstname + " " + data.lastname);
         holder.username.setVisibility(TextUtils.isEmpty(data.firstname) ? View.GONE : View.VISIBLE);
         holder.edit.setTag(data);
-        holder.edit.setVisibility(hasOnEditItemClickListener() ? View.VISIBLE : View.INVISIBLE);
-        holder.edit.setOnClickListener(mOnClickListener);
+        // holder.edit.setVisibility(hasOnEditItemClickListener() ? View.VISIBLE
+        // : View.INVISIBLE);
+        holder.edit.setVisibility(View.INVISIBLE);
+        // holder.edit.setOnClickListener(mOnClickListener);
         holder.edit.setFocusable(false);
     }
 

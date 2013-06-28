@@ -170,10 +170,10 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
                     new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             switch (which) {
-                                case 0:
+                                case -1:
                                     mOnEditItemClickListener.onEditItemClick(v, (BaseModel) adapterView.getItemAtPosition(position));
                                     break;
-                                case 1:
+                                case 0:
                                     deleteItem(position);
                                     break;
                             }
