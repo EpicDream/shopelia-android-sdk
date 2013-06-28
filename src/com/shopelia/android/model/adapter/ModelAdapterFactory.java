@@ -43,7 +43,7 @@ public enum ModelAdapterFactory {
                 intent.putExtra(AddAddressActivity.EXTRA_CITY, address.city);
                 intent.putExtra(AddAddressActivity.EXTRA_COUNTRY, address.country);
                 intent.putExtra(AddAddressActivity.EXTRA_FIRSTNAME, address.firstname);
-                intent.putExtra(AddAddressActivity.EXTRA_NAME, address.name);
+                intent.putExtra(AddAddressActivity.EXTRA_LASTNAME, address.lastname);
                 intent.putExtra(AddAddressActivity.EXTRA_PHONE, address.phone);
             }
             return intent;

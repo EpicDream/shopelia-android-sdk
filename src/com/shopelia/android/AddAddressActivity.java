@@ -52,7 +52,7 @@ public class AddAddressActivity extends ShopeliaActivity {
      * Form informations extras/saves
      */
     public static final String EXTRA_ID = Config.EXTRA_PREFIX + "ID";
-    public static final String EXTRA_NAME = Config.EXTRA_PREFIX + "NAME";
+    public static final String EXTRA_LASTNAME = Config.EXTRA_PREFIX + "LASTNAME";
     public static final String EXTRA_FIRSTNAME = Config.EXTRA_PREFIX + "FIRSTNAME";
     public static final String EXTRA_ADDRESS = Config.EXTRA_PREFIX + "ADDRESS";
     public static final String EXTRA_ADDRESS_EXTRAS = Config.EXTRA_PREFIX + "ADDRESS_EXTRAS";
@@ -104,12 +104,13 @@ public class AddAddressActivity extends ShopeliaActivity {
         mFormLayout = (FormLinearLayout) findViewById(R.id.form);
 
         Bundle extras = getIntent().getExtras() != null ? getIntent().getExtras() : new Bundle();
-
+        String name = (extras.getString(EXTRA_FIRSTNAME) + " " + extras.getString(EXTRA_LASTNAME)).trim();
+        name = extras.getString(EXTRA_FIRSTNAME) == null || extras.getString(EXTRA_LASTNAME) == null ? "" : name;
         //@formatter:off
         mFormLayout.findFieldById(R.id.name, NameField.class)
-            .setJsonPath(Address.Api.NAME)
+            .setJsonPath(Address.Api.LASTNAME)
             .mandatory()
-            .setContentText(extras.getString(EXTRA_NAME));
+            .setContentText(name);
         mFormLayout.findFieldById(R.id.city, NameField.class)
             .setJsonPath(Address.Api.CITY)
             .mandatory()
@@ -141,7 +142,7 @@ public class AddAddressActivity extends ShopeliaActivity {
         if (getActivityMode() == MODE_CREATE) {
             mFormLayout.removeField(R.id.phone);
         } else {
-            mFormLayout.removeField(R.id.name);
+
         }
 
         // Add focus change listener for automatic validation
@@ -416,18 +417,18 @@ public class AddAddressActivity extends ShopeliaActivity {
             try {
                 mResult = Address.inflate(mFormLayout.toJson());
                 mResult.country = LocaleUtils.getCountryISO2Code(mResult.country);
-                if (getActivityMode() == MODE_CREATE) {
-                    int first_space = mResult.name.indexOf(' ');
-                    if (first_space != -1) {
-                        mResult.firstname = mResult.name.substring(0, first_space).trim();
-                        mResult.name = mResult.name.substring(first_space + 1).trim();
-                    }
-                    if (TextUtils.isEmpty(mResult.name) || TextUtils.isEmpty(mResult.firstname)) {
-                        out = false;
-                        mFormLayout.findFieldById(R.id.name, EditTextField.class).setError(
-                                getString(R.string.shopelia_form_address_error_name));
-                    }
+
+                int first_space = mResult.lastname.indexOf(' ');
+                if (first_space != -1) {
+                    mResult.firstname = mResult.lastname.substring(0, first_space).trim();
+                    mResult.lastname = mResult.lastname.substring(first_space + 1).trim();
                 }
+                if (TextUtils.isEmpty(mResult.lastname) || TextUtils.isEmpty(mResult.firstname)) {
+                    out = false;
+                    mFormLayout.findFieldById(R.id.name, EditTextField.class)
+                            .setError(getString(R.string.shopelia_form_address_error_name));
+                }
+
             } catch (JSONException e) {
                 if (Config.INFO_LOGS_ENABLED) {
                     e.printStackTrace();

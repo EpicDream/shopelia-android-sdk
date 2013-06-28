@@ -26,9 +26,9 @@ public final class Address implements BaseModel<Address> {
 
         String COUNTRY_ISO = "country_iso";
 
-        String ADDRESS_NAME = "name";
+        String ADDRESS_NAME = "lastname";
 
-        String NAME = "last_name";
+        String LASTNAME = "last_name";
         String FIRSTNAME = "first_name";
 
         String REFERENCE = "reference";
@@ -50,7 +50,7 @@ public final class Address implements BaseModel<Address> {
 
     public String reference;
 
-    public String name;
+    public String lastname;
     public String firstname;
     public String extras;
 
@@ -66,7 +66,7 @@ public final class Address implements BaseModel<Address> {
         city = source.readString();
         country = source.readString();
         reference = source.readString();
-        name = source.readString();
+        lastname = source.readString();
         firstname = source.readString();
         phone = source.readString();
         extras = source.readString();
@@ -78,7 +78,7 @@ public final class Address implements BaseModel<Address> {
         if (id != NO_ID) {
             json.put(Api.ID, id);
         }
-        json.put(Api.NAME, name);
+        json.put(Api.LASTNAME, lastname);
         json.put(Api.FIRSTNAME, firstname);
         if (reference == null) {
             json.put(Api.ADDRESS1, address);
@@ -110,7 +110,7 @@ public final class Address implements BaseModel<Address> {
         dest.writeString(city);
         dest.writeString(country);
         dest.writeString(reference);
-        dest.writeString(name);
+        dest.writeString(lastname);
         dest.writeString(firstname);
         dest.writeString(phone);
         dest.writeString(extras);
@@ -119,7 +119,7 @@ public final class Address implements BaseModel<Address> {
     public static Address inflate(JSONObject object) throws JSONException {
         Address address = new Address();
         address.id = object.optLong(Api.ID, NO_ID);
-        address.name = object.optString(Api.NAME);
+        address.lastname = object.optString(Api.LASTNAME);
         address.firstname = object.optString(Api.FIRSTNAME);
         address.address = object.optString(Api.ADDRESS1);
         address.city = object.optString(Api.CITY);
@@ -162,7 +162,7 @@ public final class Address implements BaseModel<Address> {
 
     public boolean isValid() {
         return !TextUtils.isEmpty(firstname)
-                && !TextUtils.isEmpty(name)
+                && !TextUtils.isEmpty(lastname)
                 && (!TextUtils.isEmpty(reference) || (!TextUtils.isEmpty(address) && !TextUtils.isEmpty(country)
                         && !TextUtils.isEmpty(city) && !TextUtils.isEmpty(zipcode)));
     };
@@ -180,7 +180,7 @@ public final class Address implements BaseModel<Address> {
         phone = item.phone;
         extras = item.extras;
         reference = item.reference;
-        name = item.name;
+        lastname = item.lastname;
         firstname = item.firstname;
     }
 

@@ -51,7 +51,7 @@ public class AddressModelAdapter extends BaseModelAdapter<Address> {
             }
         }
         holder.phone.setText(number);
-        holder.username.setText(data.firstname + " " + data.name);
+        holder.username.setText(data.firstname + " " + data.lastname);
         holder.username.setVisibility(TextUtils.isEmpty(data.firstname) ? View.GONE : View.VISIBLE);
         holder.edit.setTag(data);
         holder.edit.setVisibility(hasOnEditItemClickListener() ? View.VISIBLE : View.INVISIBLE);

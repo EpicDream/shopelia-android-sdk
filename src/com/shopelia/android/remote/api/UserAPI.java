@@ -121,7 +121,7 @@ public class UserAPI extends ApiHandler {
         setCurrentStep(STEP_SEND_PAYMENT_INFORMATION);
         try {
             JSONObject cardObject = card.toJson();
-            cardObject.put(PaymentCard.Api.NAME, user.lastName);
+            cardObject.put(PaymentCard.Api.NAME, user.lastname);
             params.put(PaymentCard.Api.PAYMENT_CARD, cardObject);
 
         } catch (JSONException e) {

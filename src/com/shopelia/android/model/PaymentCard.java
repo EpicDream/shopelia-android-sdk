@@ -21,7 +21,7 @@ public class PaymentCard implements BaseModel<PaymentCard> {
         String EXP_YEAR = "exp_year";
         String CVV = "cvv";
 
-        String NAME = "name";
+        String NAME = "lastname";
 
         String PAYMENT_CARD_ID = "payment_card_id";
 

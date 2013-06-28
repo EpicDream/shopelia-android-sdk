@@ -110,7 +110,7 @@ public class AddressField extends ButtonField {
                 intent.putExtra(AddAddressActivity.EXTRA_CITY, mAddress.city);
                 intent.putExtra(AddAddressActivity.EXTRA_COUNTRY, mAddress.country);
                 intent.putExtra(AddAddressActivity.EXTRA_FIRSTNAME, mAddress.firstname);
-                intent.putExtra(AddAddressActivity.EXTRA_NAME, mAddress.name);
+                intent.putExtra(AddAddressActivity.EXTRA_LASTNAME, mAddress.lastname);
                 intent.putExtra(AddAddressActivity.EXTRA_REFERENCE, mAddress.reference);
             }
             activity.startActivityForResult(intent, REQUEST_ADDRESS);

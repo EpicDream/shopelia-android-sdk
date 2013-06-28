@@ -47,8 +47,8 @@ public class User implements BaseModel<User> {
 
     public long id = NO_ID;
     public String email;
-    public String firstName;
-    public String lastName;
+    public String firstname;
+    public String lastname;
     public String password;
     public String pincode;
 
@@ -63,16 +63,16 @@ public class User implements BaseModel<User> {
         this();
         id = json.getLong(Api.ID);
         email = json.getString(Api.EMAIL);
-        firstName = json.getString(Api.FIRST_NAME);
-        lastName = json.getString(Api.LAST_NAME);
+        firstname = json.getString(Api.FIRST_NAME);
+        lastname = json.getString(Api.LAST_NAME);
     }
 
     @SuppressWarnings("unchecked")
     private User(Parcel source) {
         id = source.readLong();
         email = source.readString();
-        firstName = source.readString();
-        lastName = source.readString();
+        firstname = source.readString();
+        lastname = source.readString();
         pincode = source.readString();
         password = source.readString();
         ParcelUtils.readParcelableList(source, addresses, Address.class.getClassLoader());
@@ -83,8 +83,8 @@ public class User implements BaseModel<User> {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeLong(id);
         dest.writeString(email);
-        dest.writeString(firstName);
-        dest.writeString(lastName);
+        dest.writeString(firstname);
+        dest.writeString(lastname);
         dest.writeString(pincode);
         dest.writeString(password);
         ParcelUtils.writeParcelableList(dest, addresses, flags);
@@ -96,8 +96,8 @@ public class User implements BaseModel<User> {
         JSONObject json = new JSONObject();
         json.put(Api.ID, id);
         json.put(Api.EMAIL, email);
-        json.put(Api.FIRST_NAME, firstName);
-        json.put(Api.LAST_NAME, lastName);
+        json.put(Api.FIRST_NAME, firstname);
+        json.put(Api.LAST_NAME, lastname);
         json.put(Api.ADDRESSES, JsonUtils.toJson(addresses));
         json.put(Api.PAYMENT_CARDS, JsonUtils.toJson(paymentCards));
         return json;
@@ -112,8 +112,8 @@ public class User implements BaseModel<User> {
         User user = new User();
         user.id = json.optLong(Api.ID, NO_ID);
         user.email = json.optString(Api.EMAIL);
-        user.firstName = json.optString(Api.FIRST_NAME);
-        user.lastName = json.optString(Api.LAST_NAME);
+        user.firstname = json.optString(Api.FIRST_NAME);
+        user.lastname = json.optString(Api.LAST_NAME);
         user.password = json.optString(Api.PASSWORD);
         if (json.has(Api.ADDRESSES)) {
             try {
@@ -143,11 +143,11 @@ public class User implements BaseModel<User> {
     }
 
     public static JSONObject createObjectForAccountCreation(User user, Address address, PaymentCard card) throws JSONException {
-        user.firstName = address.firstname;
-        user.lastName = address.name;
+        user.firstname = address.firstname;
+        user.lastname = address.lastname;
         JSONObject out = new JSONObject();
-        out.put(User.Api.FIRST_NAME, user.firstName);
-        out.put(User.Api.LAST_NAME, user.lastName);
+        out.put(User.Api.FIRST_NAME, user.firstname);
+        out.put(User.Api.LAST_NAME, user.lastname);
         out.put(User.Api.EMAIL, user.email);
         out.put(Api.PINCODE, user.pincode);
         JSONArray addresses = new JSONArray();
@@ -162,7 +162,7 @@ public class User implements BaseModel<User> {
 
         JSONArray cards = new JSONArray();
         JSONObject cardObject = card.toJson();
-        cardObject.put(PaymentCard.Api.NAME, user.lastName);
+        cardObject.put(PaymentCard.Api.NAME, user.lastname);
         cards.put(cardObject);
 
         out.put(User.Api.PAYMENT_CARDS_ATTRIBUTES, cards);

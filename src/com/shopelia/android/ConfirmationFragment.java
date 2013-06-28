@@ -160,7 +160,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     }
 
     private void setupAddressUi() {
-        findViewById(R.id.address_user_name, TextView.class).setText(mOrder.user.firstName + " " + mOrder.user.lastName);
+        findViewById(R.id.address_user_name, TextView.class).setText(mOrder.address.firstname + " " + mOrder.address.lastname);
         findViewById(R.id.address_address, TextView.class).setText(mOrder.address.address);
         findViewById(R.id.address_extras, TextView.class).setText(mOrder.address.extras);
         if (TextUtils.isEmpty(mOrder.address.extras)) {

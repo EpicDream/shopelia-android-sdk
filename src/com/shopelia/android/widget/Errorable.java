@@ -4,7 +4,7 @@ import android.widget.Checkable;
 
 /**
  * Defines an extension for views that make them errorable. Actually it is the
- * same as {@link Checkable} for error with an ugly name
+ * same as {@link Checkable} for error with an ugly lastname
  * 
  * @author Pierre Pollastri
  */
