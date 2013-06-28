@@ -74,7 +74,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     }
 
     private void initPhoneLayout() {
-        TextView phone = (TextView) findViewById(R.id.call_shopelia);
+        TextView phone = findViewById(R.id.call_shopelia);
         phone.setText(Html.fromHtml(phone.getText().toString()));
         phone.setOnClickListener(new OnClickListener() {
 

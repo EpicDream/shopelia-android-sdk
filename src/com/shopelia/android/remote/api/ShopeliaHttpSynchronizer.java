@@ -18,19 +18,33 @@ public class ShopeliaHttpSynchronizer {
 
     private static ShopeliaHttpSynchronizer sInstance;
 
-    private ShopeliaHttpSynchronizer() {
+    private Context mContext;
 
+    private ShopeliaHttpSynchronizer() {
     }
 
     private static ShopeliaHttpSynchronizer getInstance(Context context) {
         if (sInstance == null) {
             sInstance = new ShopeliaHttpSynchronizer();
         }
+        sInstance.attach(context);
         return sInstance;
     }
 
     public static void delete(Context context, String command, JSONObject params, String notificationId) {
         ShopeliaHttpSynchronizer synchronizer = getInstance(context);
+    }
+
+    public static void flush(Context context) {
+
+    }
+
+    private void attach(Context context) {
+        mContext = context;
+    }
+
+    private void detach() {
+        mContext = null;
     }
 
     private static class Query implements JsonData {
@@ -44,6 +58,10 @@ public class ShopeliaHttpSynchronizer {
             String DATA = "data";
             // String PARAMS = "params";
         }
+
+        public static final String METHOD_DELETE = "DELETE";
+        public static final String METHOD_POST = "POST";
+        public static final String METHOD_PUT = "PUT";
 
         public String method;
         public String notificationId;
