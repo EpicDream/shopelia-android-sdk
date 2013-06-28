@@ -19,6 +19,7 @@ public class UserManager {
     private static final String PREFS_USER_JSON = "user:json";
     private static final String PREFS_AUTH_TOKEN = "user:authToken";
     private static final String PREFS_LOGINS_COUNT = "user:loginsCount";
+    private static final String PREFS_CHECKOUT_COUNT = "user:checkoutCount";
 
     private static UserManager sInstance = null;
 
@@ -59,6 +60,12 @@ public class UserManager {
         saveUser();
     }
 
+    public void notifyCheckoutSucceed() {
+        Editor editor = mPreferences.edit();
+        editor.putInt(PREFS_CHECKOUT_COUNT, getCheckoutCount() + 1);
+        editor.commit();
+    }
+
     public void saveUser() {
         try {
             Editor editor = mPreferences.edit();
@@ -73,6 +80,10 @@ public class UserManager {
 
     public int getLoginsCount() {
         return mPreferences.getInt(PREFS_LOGINS_COUNT, 0);
+    }
+
+    public int getCheckoutCount() {
+        return mPreferences.getInt(PREFS_CHECKOUT_COUNT, 0);
     }
 
     public void setAuthToken(String token) {

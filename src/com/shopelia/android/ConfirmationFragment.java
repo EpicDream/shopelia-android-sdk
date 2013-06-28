@@ -118,6 +118,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
                 public void onOrderConfirmation(boolean succeed) {
                     stopWaiting();
+                    UserManager.get(getActivity()).notifyCheckoutSucceed();
                     track(Analytics.Events.Steps.Confirmation.END);
                     Intent intent = new Intent(getActivity(), CloseCheckoutActivity.class);
                     intent.putExtra(ShopeliaActivity.EXTRA_ORDER, mOrder);

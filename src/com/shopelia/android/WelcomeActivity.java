@@ -28,7 +28,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (UserManager.get(this).getLoginsCount() > 0) {
+        if (UserManager.get(this).getCheckoutCount() > 0) {
             startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
         } else {
             setHostContentView(R.layout.shopelia_welcome_activity);
