@@ -22,8 +22,10 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
+import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
+import com.shopelia.android.remote.api.UserAPI;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -264,13 +266,17 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
         @Override
         public void onComplete(HttpResponse response) {
             if (response.getStatus() == 204) {
-                releaseOrder();
-                Intent intent = new Intent();
-                setResult(RESULT_OK, intent);
-                finish();
-                if (mPincodeHandlerCallback != null) {
-                    mPincodeHandlerCallback.onPincodeCheckDone(true);
-                }
+                new UserAPI(PincodeActivity.this, new ApiHandler.CallbackAdapter() {
+                    public void onUserUpdateDone() {
+                        releaseOrder();
+                        Intent intent = new Intent();
+                        setResult(RESULT_OK, intent);
+                        finish();
+                        if (mPincodeHandlerCallback != null) {
+                            mPincodeHandlerCallback.onPincodeCheckDone(true);
+                        } 
+                    };
+                }).updateUser(UserManager.get(PincodeActivity.this).getUser().id);
             } else {
                 stopWaiting();
                 if (response.getStatus() == 503) {

@@ -27,6 +27,8 @@ public class ApiHandler {
 
         public void onUserRetrieved(User user);
 
+        public void onUserUpdateDone();
+
         public void onUserDestroyed(long userId);
 
         public void onSignIn(User user);
@@ -109,6 +111,11 @@ public class ApiHandler {
 
         @Override
         public void onAddressDeleted(long id) {
+
+        }
+
+        @Override
+        public void onUserUpdateDone() {
 
         }
 

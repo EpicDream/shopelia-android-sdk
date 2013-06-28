@@ -87,7 +87,7 @@ public class UserAPI extends ApiHandler {
         });
     }
 
-    public void retrieveUser(long id) {
+    public void updateUser(long id) {
         if (id == User.NO_ID) {
             throw new IllegalAccessError("Cannot retrieve invalid user");
         }
@@ -101,6 +101,7 @@ public class UserAPI extends ApiHandler {
                     UserManager.get(getContext()).login(user);
                     if (hasCallback()) {
                         getCallback().onUserRetrieved(user);
+                        getCallback().onUserUpdateDone();
                     }
                 } catch (JSONException e) {
                     onError(e);
@@ -111,6 +112,9 @@ public class UserAPI extends ApiHandler {
             public void onError(Exception e) {
                 super.onError(e);
                 fireError(STEP_RETRIEVE_USER, null, null, e);
+                if (hasCallback()) {
+                    getCallback().onUserUpdateDone();
+                }
             }
 
         });

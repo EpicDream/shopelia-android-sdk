@@ -201,15 +201,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         }
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
-        if (!UserManager.get(this).isLogged() && resultCode != RESULT_LOGOUT) {
-            if (resultCode == ShopeliaActivity.RESULT_LOGOUT && fragment == mSignUpFragment) {
-                switchFragments(mSignInFragment, mSignUpFragment);
-            } else if (fragment == null) {
-                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                ft.add(R.id.fragment_container, mSignUpFragment);
-                ft.commit();
-            }
-        }
         switch (requestCode) {
             case REQUEST_CHECKOUT:
                 Intent result = new Intent();
@@ -230,8 +221,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             case REQUEST_AUTH_PINCODE:
                 if (resultCode == RESULT_OK) {
                     checkoutOrder(getOrder());
-                } else {
-                    finish();
                 }
                 break;
             default:
@@ -239,6 +228,15 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                     fragment.onActivityResult(requestCode, resultCode, data);
                 }
                 break;
+        }
+        if (!UserManager.get(this).isLogged() && !isFinishing()) {
+            if (resultCode == ShopeliaActivity.RESULT_LOGOUT && fragment == mSignUpFragment) {
+                switchFragments(mSignInFragment, mSignUpFragment);
+            } else if (fragment == null) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.add(R.id.fragment_container, mSignUpFragment);
+                ft.commit();
+            }
         }
     }
 

@@ -14,7 +14,7 @@ import com.shopelia.android.utils.Tax;
 public class Product implements BaseModel<Product> {
 
     public interface Api {
-        String NAME = "lastname";
+        String NAME = "name";
         String URL = "url";
         String IMAGE_URL = "image_url";
     }
