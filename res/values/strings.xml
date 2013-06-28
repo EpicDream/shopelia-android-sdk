@@ -179,8 +179,8 @@
     </plurals>
 
     <!-- Close checkout -->
-    <string name="shopelia_close_checkout_main_text">Votre commande a bien été prise en compte !</string>
-    <string name="shopelia_close_checkout_sub_text">Vous allez recevoir la confirmation de la commande dans votre boîte mail.\n \n Merci d\'avoir utilisé le service Shopelia !</string>
+    <string name="shopelia_close_checkout_main_text">Votre commande a bien\nété prise en compte !</string>
+    <string name="shopelia_close_checkout_sub_text">Vous allez recevoir une confirmation de la part du marchand dans les minutes qui viennent.\n \n Merci d\'avoir utilisé le service Shopelia !</string>
     <string name="shopelia_close_checkout_validation" formatted="false">REVENIR SUR PRIXING</string>
 
     <!-- Log Out -->
