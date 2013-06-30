@@ -91,6 +91,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
         mIsCanceling = true;
         View frame = findViewById(R.id.frame);
         if (frame != null) {
+	    try {
             Animation anim = AnimationUtils.loadAnimation(this, R.anim.shopelia_pop_out);
             anim.setAnimationListener(new AnimationListener() {
 
@@ -110,6 +111,10 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
                 }
             });
             frame.startAnimation(anim);
+	    } catch (Exception e) {
+		// XML Pull Parser failed to load the Animation
+		finish();
+	    }
         } else {
             // finish();
         }
