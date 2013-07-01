@@ -233,10 +233,11 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 break;
         }
         if (!UserManager.get(this).isLogged() && !isFinishing()) {
-            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_container, mSignInFragment);
-            ft.commit();
-
+            if (fragment == null) {
+                FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+                ft.replace(R.id.fragment_container, resultCode == RESULT_LOGOUT ? mSignInFragment : mSignUpFragment);
+                ft.commit();
+            }
         }
     }
 
