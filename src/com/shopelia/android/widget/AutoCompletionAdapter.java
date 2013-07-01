@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -97,7 +98,7 @@ public class AutoCompletionAdapter<T> extends BaseAdapter implements Filterable 
             String compare = FormatUtils.stripAccents(constraint.toString());
             for (T item : mData) {
                 String stripped = FormatUtils.stripAccents(item.toString());
-                if (stripped.contains(compare)) {
+                if (stripped.contains(compare) && !TextUtils.isEmpty(stripped)) {
                     mDisplayed.add(item);
                 }
             }
