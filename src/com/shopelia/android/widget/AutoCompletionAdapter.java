@@ -95,9 +95,9 @@ public class AutoCompletionAdapter<T> extends BaseAdapter implements Filterable 
         protected FilterResults performFiltering(CharSequence constraint) {
             FilterResults results = new FilterResults();
             mDisplayed.clear();
-            String compare = FormatUtils.stripAccents(constraint.toString());
+            String compare = FormatUtils.stripAccents(constraint.toString()).toLowerCase();
             for (T item : mData) {
-                String stripped = FormatUtils.stripAccents(item.toString());
+                String stripped = FormatUtils.stripAccents(item.toString()).toLowerCase();
                 if (stripped.contains(compare) && !TextUtils.isEmpty(stripped)) {
                     mDisplayed.add(item);
                 }
