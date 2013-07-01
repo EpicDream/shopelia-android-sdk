@@ -40,7 +40,7 @@ public class ShopeliaHttpSynchronizer {
     }
 
     private void attach(Context context) {
-        mContext = context;
+        mContext = context.getApplicationContext();
     }
 
     private void detach() {

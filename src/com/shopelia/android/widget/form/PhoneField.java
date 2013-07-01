@@ -1,6 +1,5 @@
 package com.shopelia.android.widget.form;
 
-import java.util.Locale;
 import java.util.regex.Pattern;
 
 import android.content.Context;
@@ -8,11 +7,6 @@ import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;
-
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 
 public class PhoneField extends EditTextField {
 
@@ -31,7 +25,8 @@ public class PhoneField extends EditTextField {
     public PhoneField(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         if (!isInEditMode()) {
-            mPhoneNumberFormattingTextWatcher = new PhoneNumberFormattingTextWatcher();
+            // mPhoneNumberFormattingTextWatcher = new
+            // PhoneNumberFormattingTextWatcher();
         }
     }
 
@@ -54,9 +49,6 @@ public class PhoneField extends EditTextField {
         }
         try {
             String number = contentText.toString();
-            PhoneNumberUtil util = PhoneNumberUtil.getInstance();
-            PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
-            number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
             super.setContentText(number);
         } catch (Exception e) {
             super.setContentText(contentText);
@@ -66,20 +58,13 @@ public class PhoneField extends EditTextField {
     @Override
     public boolean onValidation(boolean fireError) {
         String content = (String) getResult();
-        PhoneNumberUtil util = PhoneNumberUtil.getInstance();
-        PhoneNumber number;
-        try {
-            number = util.parse(content, Locale.getDefault().getCountry());
-        } catch (NumberParseException e) {
-            number = new PhoneNumber();
-        }
-        boolean out = super.onValidation(fireError) && PhoneNumberUtil.getInstance().isValidNumber(number);
-        return out;
+        boolean out = super.onValidation(fireError);
+        return out && content.length() >= 8;
     }
 
     @Override
     public Object getResult() {
-        return super.getResult() != null ? PhoneNumberUtil.normalizeDigitsOnly((String) super.getResult()) : "";
+        return super.getResult() != null ? ((String) super.getResult()).toString().replace("(", "").replace(")", "").replace(" ", "")
+                .replace("-", "") : "";
     }
-
 }
