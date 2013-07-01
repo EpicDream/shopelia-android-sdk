@@ -36,6 +36,7 @@ import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.PlacesAutoCompleteAPI;
 import com.shopelia.android.remote.api.PlacesAutoCompleteAPI.OnAddressDetailsListener;
 import com.shopelia.android.utils.LocaleUtils;
+import com.shopelia.android.widget.AutoCompletionAdapter;
 import com.shopelia.android.widget.FormAutocompleteEditText;
 import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.form.EditTextField;
@@ -122,6 +123,7 @@ public class AddAddressActivity extends ShopeliaActivity {
             .setJsonPath(Address.Api.COUNTRY)
             .mandatory()
             .setContentText(new Locale("", !TextUtils.isEmpty(extras.getString(EXTRA_COUNTRY)) ? extras.getString(EXTRA_COUNTRY) : Locale.getDefault().getCountry()).getDisplayCountry());
+        mFormLayout.findFieldById(R.id.country, EditTextField.class).getEditText().setAdapter(new AutoCompletionAdapter<String>(this, R.layout.shopelia_autocompletion_list_item, LocaleUtils.getCountries()));
         mFormLayout.findFieldById(R.id.zipcode, NumberField.class)
             .setMinLength(5)
             .setJsonPath(Address.Api.ZIP)
@@ -246,10 +248,10 @@ public class AddAddressActivity extends ShopeliaActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup viewGroup) {
             if (convertView == null) {
-                convertView = mLayoutInflater.inflate(R.layout.shopelia_form_address_place_item, viewGroup, false);
+                convertView = mLayoutInflater.inflate(R.layout.shopelia_autocompletion_list_item, viewGroup, false);
                 ViewHolder holder = new ViewHolder();
                 convertView.setTag(holder);
-                holder.description = (TextView) convertView.findViewById(R.id.address);
+                holder.description = (TextView) convertView.findViewById(android.R.id.text1);
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
             Address address = (Address) getItem(position);
