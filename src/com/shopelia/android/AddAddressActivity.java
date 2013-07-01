@@ -40,6 +40,7 @@ import com.shopelia.android.widget.AutoCompletionAdapter;
 import com.shopelia.android.widget.FormAutocompleteEditText;
 import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.form.EditTextField;
+import com.shopelia.android.widget.form.EditTextField.OnValidateListener;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.NameField;
 import com.shopelia.android.widget.form.NumberField;
@@ -123,6 +124,7 @@ public class AddAddressActivity extends ShopeliaActivity {
             .setJsonPath(Address.Api.COUNTRY)
             .mandatory()
             .setContentText(new Locale("", !TextUtils.isEmpty(extras.getString(EXTRA_COUNTRY)) ? extras.getString(EXTRA_COUNTRY) : Locale.getDefault().getCountry()).getDisplayCountry());
+        mFormLayout.findFieldById(R.id.country, EditTextField.class).setOnValidateListener(mOnCountryValidateListener);
         mFormLayout.findFieldById(R.id.country, EditTextField.class).getEditText().setAdapter(new AutoCompletionAdapter<String>(this, R.layout.shopelia_autocompletion_list_item, LocaleUtils.getCountries()));
         mFormLayout.findFieldById(R.id.zipcode, NumberField.class)
             .setMinLength(5)
@@ -458,6 +460,18 @@ public class AddAddressActivity extends ShopeliaActivity {
                 // mCountryField.setVisibility(View.VISIBLE);
             }
 
+        }
+    };
+
+    private OnValidateListener mOnCountryValidateListener = new OnValidateListener() {
+
+        @Override
+        public boolean onValidate(EditTextField editTextField, boolean shouldFireError) {
+            boolean isValid = LocaleUtils.getCountryISO2Code((String) editTextField.getResult()) != null;
+            if (shouldFireError && !isValid) {
+                editTextField.setError(getString(R.string.shopelia_form_address_country_not_found));
+            }
+            return isValid;
         }
     };
 

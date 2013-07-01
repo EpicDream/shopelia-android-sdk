@@ -92,7 +92,8 @@
     <string name="shopelia_form_address_loading_adding">Ajout de votre nouvelle adresse</string>
     <string name="shopelia_form_address_edit">Editer</string>
     <string name="shopelia_form_address_delete">Supprimer</string>
-
+	<string name="shopelia_form_address_country_not_found">Ce pays est indisponnible</string>
+    
     <string-array name="shopelia_form_address_item_actions">
         <item>@string/shopelia_form_address_delete</item>
     </string-array>
