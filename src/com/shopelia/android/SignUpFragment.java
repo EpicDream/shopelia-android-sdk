@@ -290,6 +290,9 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                     return;
                 }
                 mCheckedEmails.add(email);
+                if (email.equals("test@shopelia.fr")) {
+                    return;
+                }
                 JSONObject params = new JSONObject();
                 try {
                     params.put(User.Api.EMAIL, email);
