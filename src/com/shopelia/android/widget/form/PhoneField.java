@@ -59,7 +59,7 @@ public class PhoneField extends EditTextField {
     public boolean onValidation(boolean fireError) {
         String content = (String) getResult();
         boolean out = super.onValidation(fireError);
-        return out && content.length() >= 8;
+        return out && content.length() >= 10;
     }
 
     @Override
