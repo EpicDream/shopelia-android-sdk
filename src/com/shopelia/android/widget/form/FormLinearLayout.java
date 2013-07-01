@@ -19,7 +19,6 @@ import android.view.ViewParent;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
-import com.shopelia.android.R;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.utils.JsonUtils;
 
@@ -81,13 +80,11 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
 
     @Override
     public boolean nextField(FormField fromField) {
-        Log.d(null, "NEXT FIELD");
         int index = indexOf(fromField) + 1;
         final int size = mFields.size();
         for (; index < size; index++) {
             FormField f = mFields.get(index);
             if ((!f.isValid() || TextUtils.isEmpty(f.getResultAsString())) && !f.isSectionHeader()) {
-                Log.d(null, "NEXT FIELD CONFIRMED " + f.getId() + " " + R.id.name);
                 f.onNextField();
                 return true;
             }
