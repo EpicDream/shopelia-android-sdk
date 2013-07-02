@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.shopelia.android.widget.form.FormLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/FormLinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.shopelia.android.widget.form.HeaderField
+        android:id="@+id/headerField1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shopelia_text="@string/shopelia_form_main_payment_method"
+        app:shopelia_icon="@drawable/shopelia_card" >
+    </com.shopelia.android.widget.form.HeaderField>
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/shopelia_margin_large"
+        android:layout_marginRight="@dimen/shopelia_margin_large"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
+        android:gravity="center"
+        android:text="@string/shopelia_form_payment_card_scan_or_fill"
+        android:textColor="@color/shopelia_dark"
+        android:textSize="@dimen/shopelia_font_size_small" />
+
+    <com.shopelia.android.widget.form.SingleLinePaymentCardField
+        android:id="@+id/singleLinePaymentCardField1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal" >
+
+    </com.shopelia.android.widget.form.SingleLinePaymentCardField>
+
+    <com.shopelia.android.widget.ValidationButton
+        android:id="@+id/validationButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
+        app:shopelia_icon="@drawable/shopelia_card_white"
+        app:shopelia_text="@string/shopelia_form_payment_card_validate" >
+
+    </com.shopelia.android.widget.ValidationButton>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/shopelia_include_logos" />
+
+    <com.shopelia.android.widget.ShopeliaSupportInclude
+        android:id="@+id/shopeliaSupportInclude1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </com.shopelia.android.widget.ShopeliaSupportInclude>
+
+    <include
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        layout="@layout/shopelia_include_footer" />
+
+</com.shopelia.android.widget.form.FormLinearLayout>
