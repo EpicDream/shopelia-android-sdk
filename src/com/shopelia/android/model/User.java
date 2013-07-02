@@ -104,7 +104,11 @@ public class User implements BaseModel<User> {
     }
 
     public Address getDefaultAddress() {
-        // TODO Better selection;
+        for (Address address : addresses) {
+            if (address.is_default) {
+                return address;
+            }
+        }
         return addresses.get(0);
     }
 
