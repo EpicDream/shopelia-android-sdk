@@ -153,10 +153,6 @@ public class User implements BaseModel<User> {
         JSONArray addresses = new JSONArray();
         JSONObject addressObject = address.toJson();
 
-        addressObject.remove(Address.Api.COUNTRY);
-        // TODO Handle multiple ISO
-        addressObject.put(Address.Api.COUNTRY_ISO, "FR");
-
         addresses.put(addressObject);
         out.put(User.Api.ADDRESSES_ATTRIBUTES, addresses);
 

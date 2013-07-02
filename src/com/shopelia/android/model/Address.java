@@ -85,6 +85,7 @@ public final class Address implements BaseModel<Address> {
             json.put(Api.ZIP, zipcode);
             json.put(Api.CITY, city);
             json.put(Api.COUNTRY, country);
+            json.put(Api.COUNTRY_ISO, country);
         } else {
             json.put(Api.REFERENCE, reference);
         }
