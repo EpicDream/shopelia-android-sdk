@@ -24,6 +24,8 @@ public final class Address implements BaseModel<Address> {
         String COUNTRY = "country";
         String EXTRAS = "address2";
 
+        String IS_DEFAULT = "is_default";
+
         String COUNTRY_ISO = "country_iso";
 
         String ADDRESS_NAME = "lastname";
@@ -54,6 +56,8 @@ public final class Address implements BaseModel<Address> {
     public String firstname;
     public String extras;
 
+    public boolean is_default;
+
     public Address() {
 
     }
@@ -70,6 +74,7 @@ public final class Address implements BaseModel<Address> {
         firstname = source.readString();
         phone = source.readString();
         extras = source.readString();
+        is_default = source.readByte() == 1 ? true : false;
     }
 
     @Override
@@ -95,6 +100,7 @@ public final class Address implements BaseModel<Address> {
         if (!TextUtils.isEmpty(phone)) {
             json.put(Api.PHONE, phone);
         }
+        json.put(Api.IS_DEFAULT, is_default ? 1 : 0);
         return json;
     }
 
@@ -115,6 +121,7 @@ public final class Address implements BaseModel<Address> {
         dest.writeString(firstname);
         dest.writeString(phone);
         dest.writeString(extras);
+        dest.writeByte((byte) (is_default ? 1 : 0));
     }
 
     public static Address inflate(JSONObject object) throws JSONException {
@@ -132,6 +139,7 @@ public final class Address implements BaseModel<Address> {
         if (TextUtils.isEmpty(address.country)) {
             address.country = Locale.getDefault().getCountry();
         }
+        address.is_default = object.optBoolean(Api.IS_DEFAULT, false);
         return address;
     }
 

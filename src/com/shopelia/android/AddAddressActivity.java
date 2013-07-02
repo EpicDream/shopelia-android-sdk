@@ -427,6 +427,7 @@ public class AddAddressActivity extends ShopeliaActivity {
                     mResult.firstname = mResult.lastname.substring(0, first_space).trim();
                     mResult.lastname = mResult.lastname.substring(first_space + 1).trim();
                 }
+                mResult.is_default = true;
                 if (TextUtils.isEmpty(mResult.lastname) || TextUtils.isEmpty(mResult.firstname)) {
                     out = false;
                     mFormLayout.findFieldById(R.id.name, EditTextField.class)

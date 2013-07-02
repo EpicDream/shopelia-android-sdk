@@ -288,8 +288,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     private void checkoutOrder(Order order) {
         prepareOrder(order);
-        // TODO REMOVE THIS ONLY FOR TESTING
-        order.address = order.user.addresses.get(0);
+        order.address = order.user.getDefaultAddress();
 
         if (order.user.paymentCards.size() > 0) {
             order.card = order.user.paymentCards.get(0);
