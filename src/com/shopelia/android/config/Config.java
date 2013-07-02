@@ -59,6 +59,8 @@ public final class Config {
      */
     public static final boolean ERROR_LOGS_ENABLED = WARNING_LOGS_ENABLED || (LOG_LEVEL == LOG_LEVEL_ERROR);
 
+    public static final String PREFERENCES_NAME = "ShopeliaGlobalPreferences";
+
     // /////////////////////////////////////////////////////////////
     //
     // Extras

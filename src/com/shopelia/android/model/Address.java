@@ -139,7 +139,7 @@ public final class Address implements BaseModel<Address> {
         if (TextUtils.isEmpty(address.country)) {
             address.country = Locale.getDefault().getCountry();
         }
-        address.is_default = object.optBoolean(Api.IS_DEFAULT, false);
+        address.is_default = object.optInt(Api.IS_DEFAULT, 0) >= 1;
         return address;
     }
 

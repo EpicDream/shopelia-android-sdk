@@ -103,6 +103,15 @@ public class User implements BaseModel<User> {
         return json;
     }
 
+    public void addAddress(Address address) {
+        if (address.is_default) {
+            for (Address item : addresses) {
+                item.is_default = false;
+            }
+        }
+        addresses.add(address);
+    }
+
     public Address getDefaultAddress() {
         for (Address address : addresses) {
             if (address.is_default) {

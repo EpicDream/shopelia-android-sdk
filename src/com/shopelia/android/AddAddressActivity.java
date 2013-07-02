@@ -372,7 +372,7 @@ public class AddAddressActivity extends ShopeliaActivity {
                 public void onAddressAdded(Address address) {
                     stopWaiting();
                     User user = UserManager.get(AddAddressActivity.this).getUser();
-                    user.addresses.add(address);
+                    user.addAddress(address);
                     UserManager.get(AddAddressActivity.this).saveUser();
                     createAddress();
                 };

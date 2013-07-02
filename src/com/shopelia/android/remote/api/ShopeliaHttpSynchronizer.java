@@ -1,6 +1,7 @@
 package com.shopelia.android.remote.api;
 
-import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,17 +9,23 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.Base64;
 
+import com.shopelia.android.config.Config;
 import com.shopelia.android.model.JsonData;
 import com.turbomanage.httpclient.ParameterMap;
 
 public class ShopeliaHttpSynchronizer {
 
+    public static final String PREFERENCES = "ShopeliaHttpSynchronizer";
+
     private static ShopeliaHttpSynchronizer sInstance;
 
     private Context mContext;
+    private List<Query> mQueries = new LinkedList<ShopeliaHttpSynchronizer.Query>();
 
     private ShopeliaHttpSynchronizer() {
     }
@@ -33,18 +40,54 @@ public class ShopeliaHttpSynchronizer {
 
     public static void delete(Context context, String command, JSONObject params, String notificationId) {
         ShopeliaHttpSynchronizer synchronizer = getInstance(context);
+
+        flush(context);
     }
 
     public static void flush(Context context) {
+        ShopeliaHttpSynchronizer synchronizer = getInstance(context);
 
+        synchronizer.detach();
     }
 
     private void attach(Context context) {
         mContext = context.getApplicationContext();
     }
 
+    public void save() {
+        try {
+            JSONArray array = new JSONArray();
+            for (Query query : mQueries) {
+                array.put(query.toJson());
+            }
+            SharedPreferences.Editor editor = getContext().getSharedPreferences(Config.PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+            editor.putString(PREFERENCES, array.toString());
+            editor.commit();
+        } catch (JSONException e) {
+
+        }
+    }
+
+    public void load() {
+        if (mQueries.size() == 0) {
+            SharedPreferences preferences = getContext().getSharedPreferences(Config.PREFERENCES_NAME, Context.MODE_PRIVATE);
+            String array = preferences.getString(PREFERENCES, "").trim();
+            if (!TextUtils.isEmpty(array)) {
+                try {
+                    mQueries = Query.inflate(new JSONArray(array));
+                } catch (Exception e) {
+
+                }
+            }
+        }
+    }
+
     private void detach() {
         mContext = null;
+    }
+
+    public Context getContext() {
+        return mContext;
     }
 
     private static class Query implements JsonData {
@@ -116,9 +159,9 @@ public class ShopeliaHttpSynchronizer {
             return out;
         }
 
-        public static ArrayList<Query> inflate(JSONArray array) {
+        public static LinkedList<Query> inflate(JSONArray array) {
             final int size = array.length();
-            ArrayList<Query> queries = new ArrayList<ShopeliaHttpSynchronizer.Query>(size);
+            LinkedList<Query> queries = new LinkedList<ShopeliaHttpSynchronizer.Query>();
             for (int index = 0; index < size; index++) {
                 try {
                     queries.add(Query.inflate(array.optJSONObject(index)));
