@@ -112,9 +112,13 @@
                 app:shopelia_textSize="@dimen/shopelia_font_size_normal" >
             </com.shopelia.android.widget.ValidationButton>
 
-            <include layout="@layout/shopelia_include_logos" />
+            <com.shopelia.android.widget.ShopeliaSupportInclude
+                android:id="@+id/shopeliaSupportInclude1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+            </com.shopelia.android.widget.ShopeliaSupportInclude>
 
-            <include layout="@layout/shopelia_include_company_phone" />
+            <include layout="@layout/shopelia_include_logos" />
 
             <include
                 android:layout_width="match_parent"

@@ -18,8 +18,6 @@
 
     <include layout="@layout/shopelia_include_logos"/>
     
-    <include layout="@layout/shopelia_include_company_phone" />
-    
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/login"
         android:visibility="gone"
@@ -36,6 +34,12 @@
         android:textSize="@dimen/shopelia_font_size_small"
         app:shopelia_fontFamily="normal"
         app:shopelia_fontStyle="normal" />
+
+    <com.shopelia.android.widget.ShopeliaSupportInclude
+        android:id="@+id/shopeliaSupportInclude1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </com.shopelia.android.widget.ShopeliaSupportInclude>
 
     <include
         android:layout_width="match_parent"
