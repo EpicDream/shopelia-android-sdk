@@ -37,7 +37,6 @@ import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.Order;
-import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
@@ -261,19 +260,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             }
 
         }).createAccount(order.user, order.address, order.card);
-    }
-
-    private void sendPaymentInformations(PaymentCard card, final Order order) {
-        new UserAPI(PrepareOrderActivity.this, new CallbackAdapter() {
-            @Override
-            public void onPaymentInformationSent(PaymentCard paymentInformation) {
-                super.onPaymentInformationSent(paymentInformation);
-                User user = UserManager.get(PrepareOrderActivity.this).getUser();
-                user.paymentCards.add(paymentInformation);
-                UserManager.get(PrepareOrderActivity.this).login(user);
-                checkoutOrder(order);
-            }
-        }).sendPaymentInformation(getOrder().user, card);
     }
 
     private void prepareOrder(Order order) {
