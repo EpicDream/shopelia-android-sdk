@@ -23,6 +23,7 @@ import com.shopelia.android.R;
 import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.remote.api.ShopeliaHttpSynchronizer;
 import com.shopelia.android.utils.DigestUtils;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
@@ -120,9 +121,16 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        ShopeliaHttpSynchronizer.flush(this);
+    }
+
+    @Override
     protected void onDestroy() {
         super.onDestroy();
         mTrackingObject.flush();
+        ShopeliaHttpSynchronizer.flush(this);
     }
 
     public void track(String eventName, JSONObject properties) {
