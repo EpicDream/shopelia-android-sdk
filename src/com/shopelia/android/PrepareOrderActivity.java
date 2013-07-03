@@ -37,6 +37,7 @@ import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
@@ -120,6 +121,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
 
     private static final int REQUEST_CREATE_PINCODE = 0x101;
     private static final int REQUEST_AUTH_PINCODE = 0x0102;
+    private static final int REQUEST_ADD_PAYMENT_CARD = 0x0103;
 
     private SignInFragment mSignInFragment = new SignInFragment();
     private SignUpFragment mSignUpFragment = new SignUpFragment();
@@ -201,6 +203,15 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                     return;
                 }
                 break;
+            case REQUEST_ADD_PAYMENT_CARD:
+                if (resultCode == RESULT_OK) {
+                    getOrder().user.addPaymentCard((PaymentCard) data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD));
+                    checkoutOrder(getOrder());
+                } else {
+                    setResult(RESULT_CANCELED);
+                    finish();
+                }
+                break;
             default:
                 if (fragment != null) {
                     fragment.onActivityResult(requestCode, resultCode, data);
@@ -245,7 +256,12 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 track(Analytics.Events.Steps.SignUp.END);
                 stopWaiting();
                 order.user = user;
-                checkoutOrder(order);
+                if (user.paymentCards.size() == 0) {
+                    Intent intent = new Intent(PrepareOrderActivity.this, AddPaymentCardActivity.class);
+                    startActivityForResult(intent, REQUEST_ADD_PAYMENT_CARD);
+                } else {
+                    checkoutOrder(order);
+                }
             }
 
             @Override

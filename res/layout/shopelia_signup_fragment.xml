@@ -48,6 +48,8 @@
         android:id="@+id/header_payment_method"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+		android:enabled="false"
+		android:visibility="gone"
         app:shopelia_icon="@drawable/shopelia_card"
         app:shopelia_text="@string/shopelia_form_main_payment_method" />
 
@@ -55,6 +57,8 @@
         android:id="@+id/payment_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
+        android:visibility="gone"
         android:layout_marginBottom="@dimen/shopelia_margin_normal" >
 
     </com.shopelia.android.widget.form.SingleLinePaymentCardField>

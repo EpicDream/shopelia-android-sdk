@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.shopelia.android.widget.form.FormLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/FormLinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/shopelia_margin_normal"
+    android:paddingLeft="@dimen/shopelia_margin_large"
+    android:paddingRight="@dimen/shopelia_margin_large"
+    android:paddingTop="@dimen/shopelia_margin_normal" >
 
     <com.shopelia.android.widget.form.HeaderField
         android:id="@+id/headerField1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:shopelia_text="@string/shopelia_form_main_payment_method"
-        app:shopelia_icon="@drawable/shopelia_card" >
+        app:shopelia_icon="@drawable/shopelia_card"
+        app:shopelia_text="@string/shopelia_form_main_payment_method" >
     </com.shopelia.android.widget.form.HeaderField>
 
     <com.shopelia.android.widget.FontableTextView
@@ -30,7 +35,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_normal" >
-
     </com.shopelia.android.widget.form.SingleLinePaymentCardField>
 
     <com.shopelia.android.widget.ValidationButton
@@ -40,7 +44,6 @@
         android:layout_marginTop="@dimen/shopelia_margin_large"
         app:shopelia_icon="@drawable/shopelia_card_white"
         app:shopelia_text="@string/shopelia_form_payment_card_validate" >
-
     </com.shopelia.android.widget.ValidationButton>
 
     <include

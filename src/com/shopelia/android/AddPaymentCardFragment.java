@@ -11,7 +11,7 @@ public class AddPaymentCardFragment extends ShopeliaFragment<Void> {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.shopelia_add_payment_card_fragment, container, false);
     }
 
     @Override

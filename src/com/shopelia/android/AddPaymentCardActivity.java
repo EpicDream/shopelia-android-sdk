@@ -5,10 +5,22 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.app.ShopeliaActivity;
+import com.shopelia.android.config.Config;
+import com.shopelia.android.model.PaymentCard;
 
 public class AddPaymentCardActivity extends ShopeliaActivity {
 
     public static final String ACTIVITY_NAME = "Add Payment Card";
+    /**
+     * A boolean stating if a payment card has to be added or not in order to
+     * continue the checkout process
+     */
+    public static final String EXTRA_REQUIRED = Config.EXTRA_PREFIX + "REQUIRED";
+
+    /**
+     * The {@link PaymentCard} returned by the activity
+     */
+    public static final String EXTRA_PAYMENT_CARD = Config.EXTRA_PREFIX + "PAYMENT_CARD";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,7 +39,7 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
 
     @Override
     protected boolean isPartOfOrderWorkFlow() {
-        return super.isPartOfOrderWorkFlow();
+        return false;
     }
 
 }
