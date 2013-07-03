@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
@@ -29,7 +28,6 @@ public class UserAPI extends ApiHandler {
 
         try {
             params.put(Order.Api.USER, User.createObjectForAccountCreation(user, address, card));
-            Log.d(null, "SEND " + params.toString(2));
         } catch (JSONException e) {
             fireError(STEP_ACCOUNT_CREATION, null, null, e);
             return;
@@ -118,44 +116,6 @@ public class UserAPI extends ApiHandler {
             }
 
         });
-    }
-
-    public void sendPaymentInformation(final User user, PaymentCard card) {
-        JSONObject params = new JSONObject();
-        setCurrentStep(STEP_SEND_PAYMENT_INFORMATION);
-        try {
-            JSONObject cardObject = card.toJson();
-            cardObject.put(PaymentCard.Api.NAME, user.lastname);
-            params.put(PaymentCard.Api.PAYMENT_CARD, cardObject);
-
-        } catch (JSONException e) {
-            fireError(STEP_SEND_PAYMENT_INFORMATION, null, null, e);
-            return;
-        }
-        ShopeliaRestClient.authenticate(getContext());
-        ShopeliaRestClient.post(Command.V1.PaymentCards.$, params, new JsonAsyncCallback() {
-
-            @Override
-            public void onComplete(HttpResponse response, JSONObject object) {
-                try {
-                    PaymentCard card = PaymentCard.inflate(object.getJSONObject(PaymentCard.Api.PAYMENT_CARD));
-                    user.paymentCards.add(card);
-                    if (hasCallback()) {
-                        getCallback().onPaymentInformationSent(card);
-                    }
-                } catch (JSONException e) {
-                    fireError(STEP_SEND_PAYMENT_INFORMATION, response, null, e);
-                }
-            }
-
-            @Override
-            public void onError(Exception e) {
-                super.onError(e);
-                fireError(STEP_SEND_PAYMENT_INFORMATION, null, null, e);
-            }
-
-        });
-
     }
 
     public void signIn(User user) {

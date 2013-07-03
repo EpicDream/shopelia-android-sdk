@@ -1,14 +1,16 @@
 package com.shopelia.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.shopelia.android.AddPaymentCardFragment.OnPaymentCardAddedListener;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.PaymentCard;
 
-public class AddPaymentCardActivity extends ShopeliaActivity {
+public class AddPaymentCardActivity extends ShopeliaActivity implements OnPaymentCardAddedListener {
 
     public static final String ACTIVITY_NAME = "Add Payment Card";
     /**
@@ -40,6 +42,14 @@ public class AddPaymentCardActivity extends ShopeliaActivity {
     @Override
     protected boolean isPartOfOrderWorkFlow() {
         return false;
+    }
+
+    @Override
+    public void onPaymentCardAdded(PaymentCard card) {
+        Intent data = new Intent();
+        data.putExtra(EXTRA_PAYMENT_CARD, card);
+        setResult(RESULT_OK, data);
+        finish();
     }
 
 }

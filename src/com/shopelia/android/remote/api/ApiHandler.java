@@ -19,7 +19,7 @@ public class ApiHandler {
     public interface Callback {
         public void onAccountCreationSucceed(User user, Address address);
 
-        public void onPaymentInformationSent(PaymentCard paymentInformation);
+        public void onPaymentCardAdded(PaymentCard paymentCard);
 
         public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e);
 
@@ -51,11 +51,6 @@ public class ApiHandler {
 
         @Override
         public void onAccountCreationSucceed(User user, Address address) {
-
-        }
-
-        @Override
-        public void onPaymentInformationSent(PaymentCard paymentInformation) {
 
         }
 
@@ -116,6 +111,11 @@ public class ApiHandler {
 
         @Override
         public void onUserUpdateDone() {
+
+        }
+
+        @Override
+        public void onPaymentCardAdded(PaymentCard paymentCard) {
 
         }
 

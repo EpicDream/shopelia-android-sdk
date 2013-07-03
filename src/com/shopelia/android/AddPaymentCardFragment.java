@@ -1,20 +1,24 @@
 package com.shopelia.android;
 
+import org.json.JSONException;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
+import com.shopelia.android.AddPaymentCardFragment.OnPaymentCardAddedListener;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
+import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.PaymentAPI;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.HeaderField;
 import com.shopelia.android.widget.form.SingleLinePaymentCardField;
 
-public class AddPaymentCardFragment extends ShopeliaFragment<Void> {
+public class AddPaymentCardFragment extends ShopeliaFragment<OnPaymentCardAddedListener> {
 
     public interface OnPaymentCardAddedListener {
         public void onPaymentCardAdded(PaymentCard card);
@@ -43,7 +47,25 @@ public class AddPaymentCardFragment extends ShopeliaFragment<Void> {
         @Override
         public void onClick(View v) {
             if (mFormContainer.validate()) {
-                Toast.makeText(getActivity(), "Ça marche !", Toast.LENGTH_SHORT).show();
+                try {
+                    PaymentCard card = PaymentCard.inflate(mFormContainer.toJson().getJSONObject(Order.Api.PAYMENT_CARD));
+                    new PaymentAPI(getActivity(), new CallbackAdapter() {
+
+                        @Override
+                        public void onPaymentCardAdded(PaymentCard paymentCard) {
+                            getContract().onPaymentCardAdded(paymentCard);
+                        };
+
+                        @Override
+                        public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response,
+                                Exception e) {
+
+                        };
+
+                    }).addPaymentCard(card);
+                } catch (JSONException e) {
+
+                }
             }
         }
     };
