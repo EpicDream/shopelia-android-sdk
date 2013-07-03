@@ -72,7 +72,7 @@ public abstract class FormField extends FrameLayout implements Errorable {
 
     protected <T extends View> T grabView(View root, int id) {
         @SuppressWarnings("unchecked")
-        T out = (T) findViewById(id);
+        T out = (T) root.findViewById(id);
         out.setId(View.NO_ID);
         return out;
     }
