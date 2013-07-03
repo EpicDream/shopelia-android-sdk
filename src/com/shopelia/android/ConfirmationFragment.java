@@ -36,6 +36,7 @@ import com.shopelia.android.widget.actionbar.ActionBar;
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     public static final int REQUEST_SELECT_ADDRESS = 0x100;
+    public static final int REQUEST_ADD_PAYMENT_CARD = 0x101;
 
     private Order mOrder;
 
@@ -100,6 +101,14 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                 mOrder = getBaseActivity().getOrder();
                 setupUi();
                 break;
+            case REQUEST_ADD_PAYMENT_CARD:
+                if (resultCode == Activity.RESULT_OK) {
+                    getBaseActivity().getOrder().card = data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD);
+                    setupUi();
+                } else {
+                    getActivity().finish();
+                }
+                break;
         }
 
     }
@@ -143,9 +152,9 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     // ////////////////////////////////////////////////////////////////
 
     private void setupUi() {
+        setupPaymentCardUi();
         setupProductUi();
         setupAddressUi();
-        setupPaymentCardUi();
         setupPriceUi();
         setupUserUi();
     }
@@ -191,20 +200,26 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     }
 
     private void setupPaymentCardUi() {
-        StringBuilder number = new StringBuilder(mOrder.card.number);
-        int relativeIndex = 0;
-        for (int index = 0; index < number.length(); index++) {
-            if (index < number.length() - 4) {
-                number.replace(index, index + 1, "*");
+        if (mOrder.card != null) {
+            StringBuilder number = new StringBuilder(mOrder.card.number);
+            int relativeIndex = 0;
+            for (int index = 0; index < number.length(); index++) {
+                if (index < number.length() - 4) {
+                    number.replace(index, index + 1, "*");
+                }
+                if (index > 0 && relativeIndex % 4 == 0) {
+                    number.insert(index, " ");
+                    index++;
+                    relativeIndex = 0;
+                }
+                relativeIndex++;
             }
-            if (index > 0 && relativeIndex % 4 == 0) {
-                number.insert(index, " ");
-                index++;
-                relativeIndex = 0;
-            }
-            relativeIndex++;
+            findViewById(R.id.payment_card_number, TextView.class).setText(number);
+        } else {
+            Intent intent = new Intent(getActivity(), AddPaymentCardActivity.class);
+            intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
+            startActivityForResult(intent, REQUEST_ADD_PAYMENT_CARD);
         }
-        findViewById(R.id.payment_card_number, TextView.class).setText(number);
     }
 
     private void setupUserUi() {

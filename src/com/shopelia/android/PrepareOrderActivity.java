@@ -258,6 +258,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 order.user = user;
                 if (user.paymentCards.size() == 0) {
                     Intent intent = new Intent(PrepareOrderActivity.this, AddPaymentCardActivity.class);
+                    intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
                     startActivityForResult(intent, REQUEST_ADD_PAYMENT_CARD);
                 } else {
                     checkoutOrder(order);
