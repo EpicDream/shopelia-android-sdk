@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.shopelia.android.widget.form.FormLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/FormLinearLayout1"
+    android:id="@+id/form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
@@ -11,7 +11,7 @@
     android:paddingTop="@dimen/shopelia_margin_normal" >
 
     <com.shopelia.android.widget.form.HeaderField
-        android:id="@+id/headerField1"
+        android:id="@+id/header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:shopelia_icon="@drawable/shopelia_card"
@@ -31,14 +31,14 @@
         android:textSize="@dimen/shopelia_font_size_small" />
 
     <com.shopelia.android.widget.form.SingleLinePaymentCardField
-        android:id="@+id/singleLinePaymentCardField1"
+        android:id="@+id/payment_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_normal" >
     </com.shopelia.android.widget.form.SingleLinePaymentCardField>
 
     <com.shopelia.android.widget.ValidationButton
-        android:id="@+id/validationButton1"
+        android:id="@+id/validate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_large"
