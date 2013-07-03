@@ -84,10 +84,10 @@ public class HeaderField extends FormField {
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         View out = inflater.inflate(R.layout.shopelia_form_field_title_header, viewGroup, false);
         ViewHolder holder = new ViewHolder();
-        holder.title = (TextView) out.findViewById(R.id.title);
-        holder.icon = (ImageView) out.findViewById(R.id.icon);
-        holder.lock = (ImageView) out.findViewById(R.id.lock);
-        holder.scroller = (LinearLayout) out.findViewById(R.id.scroller);
+        holder.title = grabView(out, R.id.title);
+        holder.icon = grabView(out, R.id.icon);
+        holder.lock = grabView(out, R.id.lock);
+        holder.scroller = grabView(out, R.id.scroller);
         out.setTag(holder);
         return out;
     }

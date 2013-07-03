@@ -152,12 +152,10 @@ public class EditTextField extends FormField {
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
         View view = inflater.inflate(R.layout.shopelia_form_field_edit_text, viewGroup, false);
         ViewHolder holder = new ViewHolder();
-        holder.editText = (FormAutocompleteEditText) view.findViewById(R.id.edit_text);
+        holder.editText = grabView(view, R.id.edit_text);
         mBoundedEditText = holder.editText;
-        holder.error = (FontableTextView) view.findViewById(R.id.error);
+        holder.error = grabView(view, R.id.error);
         view.setTag(holder);
-        holder.editText.setId(View.NO_ID);
-        holder.error.setId(View.NO_ID);
         return view;
     }
 
