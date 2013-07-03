@@ -1,7 +1,6 @@
 package com.shopelia.android.remote.api;
 
 import java.util.LinkedList;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -13,21 +12,27 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.text.TextUtils;
 import android.util.Base64;
+import android.util.Log;
 
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.JsonData;
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
 
-public class ShopeliaHttpSynchronizer {
+public final class ShopeliaHttpSynchronizer {
 
     public static final String PREFERENCES = "ShopeliaHttpSynchronizer";
+    public static final String LOG_TAG = "ShopeliaHttpSynchronizer";
 
     private static ShopeliaHttpSynchronizer sInstance;
 
     private Context mContext;
-    private List<Query> mQueries = new LinkedList<ShopeliaHttpSynchronizer.Query>();
+    private LinkedList<Query> mQueries = new LinkedList<ShopeliaHttpSynchronizer.Query>();
+    private boolean mIsFlushing = false;
 
     private ShopeliaHttpSynchronizer() {
+        load();
     }
 
     private static ShopeliaHttpSynchronizer getInstance(Context context) {
@@ -38,16 +43,70 @@ public class ShopeliaHttpSynchronizer {
         return sInstance;
     }
 
+    public static void reset(Context context) {
+        SharedPreferences.Editor editor = context.getSharedPreferences(Config.PREFERENCES_NAME, Context.MODE_PRIVATE).edit();
+        editor.putString(PREFERENCES, "");
+        editor.commit();
+        getInstance(context).mQueries.clear();
+    }
+
     public static void delete(Context context, String command, JSONObject params, String notificationId) {
         ShopeliaHttpSynchronizer synchronizer = getInstance(context);
+        synchronizer.addQuery(new Query(Query.METHOD_DELETE, notificationId, command, params));
+        synchronizer.flush();
+    }
 
-        flush(context);
+    public static void put(Context context, String command, JSONObject params, String notificationId) {
+        ShopeliaHttpSynchronizer synchronizer = getInstance(context);
+        synchronizer.addQuery(new Query(Query.METHOD_PUT, notificationId, command, params));
+        synchronizer.flush();
     }
 
     public static void flush(Context context) {
-        ShopeliaHttpSynchronizer synchronizer = getInstance(context);
+        getInstance(context).flush();
+    }
 
-        synchronizer.detach();
+    private void flush() {
+        if (mIsFlushing) {
+            return;
+        }
+        if (mQueries.size() == 0) {
+            detach();
+            return;
+        }
+        mIsFlushing = true;
+        final Query query = mQueries.getFirst();
+        query.execute(getContext(), new AsyncCallback() {
+
+            @Override
+            public void onComplete(HttpResponse httpResponse) {
+                synchronized (mQueries) {
+                    mQueries.removeFirst();
+                }
+                notifyQuerySent(query);
+                mIsFlushing = false;
+                flush();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                super.onError(e);
+            }
+
+        });
+    }
+
+    private void notifyQuerySent(Query query) {
+        if (Config.INFO_LOGS_ENABLED) {
+            Log.i(LOG_TAG, "Query sent : \n" + query.toString());
+            Log.i(LOG_TAG, "Remaining queries : " + mQueries.size());
+        }
+    }
+
+    public void addQuery(Query query) {
+        synchronized (mQueries) {
+            mQueries.add(query);
+        }
     }
 
     private void attach(Context context) {
@@ -144,6 +203,35 @@ public class ShopeliaHttpSynchronizer {
             this.params = params;
         }
 
+        public void execute(Context context, AsyncCallback callback) {
+            if (method.equals(METHOD_DELETE)) {
+                delete(context, callback);
+            } else if (method.equals(METHOD_POST)) {
+                post(context, callback);
+            } else if (method.equals(METHOD_PUT)) {
+                put(context, callback);
+            }
+        }
+
+        protected void put(Context context, AsyncCallback callback) {
+            ShopeliaRestClient.authenticate(context);
+            if (object != null) {
+                ShopeliaRestClient.put(command, object, callback);
+            }
+        }
+
+        protected void delete(Context context, AsyncCallback callback) {
+            ShopeliaRestClient.authenticate(context);
+            ShopeliaRestClient.delete(command, params, callback);
+        }
+
+        protected void post(Context context, AsyncCallback callback) {
+            ShopeliaRestClient.authenticate(context);
+            if (object != null) {
+                ShopeliaRestClient.post(command, object, callback);
+            }
+        }
+
         @SuppressLint("NewApi")
         public static Query inflate(JSONObject object) throws JSONException {
             Query out = new Query();
@@ -187,6 +275,14 @@ public class ShopeliaHttpSynchronizer {
             // TODO : Serialize ParameterMap
             return out;
         }
+
+        @Override
+        public String toString() {
+            StringBuilder builder = new StringBuilder();
+            builder.append(method).append(" ").append(command).append("\n");
+            return builder.toString();
+        }
+
     }
 
 }
