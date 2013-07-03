@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.shopelia.android.AddAddressActivity;
+import com.shopelia.android.AddPaymentCardActivity;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.BaseModel;
@@ -66,21 +67,35 @@ public enum ModelAdapterFactory {
     PAYMENT_CARD(PaymentCard.IDENTIFIER, PaymentCard.class) {
         @Override
         public BaseModelAdapter<?> getAdapter(Context context) {
-            return null;
+            return new PaymentCardsModelAdapter(context);
         }
 
         @Override
         public Intent getIntent(Context context, BaseModel item) {
-            Intent intent = new Intent(context, null);
-
-            return null;
+            Intent intent = new Intent(context, AddPaymentCardActivity.class);
+            return intent;
         }
 
         @Override
         public void delete(Context context, BaseModel<?> item) {
-            // TODO Auto-generated method stub
-
+            final PaymentCard toDelete = (PaymentCard) item;
+            ShopeliaHttpSynchronizer.delete(context, Command.V1.PaymentCards.PaymentCard(toDelete.id), null, null);
+            UserManager um = UserManager.get(context);
+            User user = um.getUser();
+            for (PaymentCard card : user.paymentCards) {
+                if (card.id == toDelete.id) {
+                    user.paymentCards.remove(card);
+                    break;
+                }
+            }
+            um.saveUser();
         }
+
+        @Override
+        public List<? extends BaseModel> getListFromUser(User user) {
+            return user.paymentCards;
+        }
+
     };
 
     private String mIdentifier;

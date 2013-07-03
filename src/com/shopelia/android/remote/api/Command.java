@@ -32,6 +32,10 @@ public final class Command {
 
         public static final class PaymentCards {
             public static final String $ = V1.$ + "/payment_cards";
+
+            public static String PaymentCard(long id) {
+                return $ + "/" + id;
+            }
         }
 
         public static final class Orders {

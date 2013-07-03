@@ -4,7 +4,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
@@ -27,7 +26,6 @@ public class PaymentAPI extends ApiHandler {
             cardObject.put(PaymentCard.Api.NAME, user.lastname);
             params.put(PaymentCard.Api.PAYMENT_CARD, cardObject);
             params = cardObject;
-            Log.d(null, "SEND " + params.toString(2));
         } catch (JSONException e) {
             fireError(STEP_SEND_PAYMENT_INFORMATION, null, null, e);
             return;

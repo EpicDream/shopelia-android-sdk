@@ -27,6 +27,7 @@ import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
+import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
@@ -36,7 +37,8 @@ import com.shopelia.android.widget.actionbar.ActionBar;
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     public static final int REQUEST_SELECT_ADDRESS = 0x100;
-    public static final int REQUEST_ADD_PAYMENT_CARD = 0x101;
+    public static final int REQUEST_SELECT_PAYMENT_CARD = 0x101;
+    public static final int REQUEST_ADD_PAYMENT_CARD = 0x102;
 
     private Order mOrder;
 
@@ -215,6 +217,16 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                 relativeIndex++;
             }
             findViewById(R.id.payment_card_number, TextView.class).setText(number);
+            findViewById(R.id.payment_card_edit).setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    Intent intent = new Intent(getActivity(), ResourceListActivity.class);
+                    intent.putExtra(ResourceListActivity.EXTRA_RESOURCE, PaymentCard.IDENTIFIER);
+                    intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_ALL);
+                    startActivityForResult(intent, REQUEST_SELECT_PAYMENT_CARD);
+                }
+            });
         } else {
             Intent intent = new Intent(getActivity(), AddPaymentCardActivity.class);
             intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
