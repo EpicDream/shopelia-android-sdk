@@ -123,6 +123,9 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
         boolean out = true;
         for (FormField field : mFields) {
             boolean before = out;
+            if (!field.isEnabled()) {
+                continue;
+            }
             out = out & field.validate();
             if (before != out) {
                 requestFocus(field);
@@ -135,7 +138,7 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
     public JSONObject toJson() {
         JSONObject result = new JSONObject();
         for (FormField field : mFields) {
-            if (field.getJsonPath() != null) {
+            if (field.getJsonPath() != null && field.isEnabled()) {
                 put(result, field.getJsonPath(), field.getResult());
             }
         }
