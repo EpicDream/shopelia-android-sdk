@@ -112,6 +112,10 @@ public class User implements BaseModel<User> {
         addresses.add(address);
     }
 
+    public void addPaymentCard(PaymentCard card) {
+        paymentCards.add(card);
+    }
+
     public Address getDefaultAddress() {
         for (Address address : addresses) {
             if (address.is_default) {
@@ -119,6 +123,11 @@ public class User implements BaseModel<User> {
             }
         }
         return addresses.get(0);
+    }
+
+    public PaymentCard getDefaultPaymentCard() {
+        // TODO Better payment card selection
+        return paymentCards.get(0);
     }
 
     public static User inflate(JSONObject json) {
@@ -169,12 +178,13 @@ public class User implements BaseModel<User> {
         addresses.put(addressObject);
         out.put(User.Api.ADDRESSES_ATTRIBUTES, addresses);
 
-        JSONArray cards = new JSONArray();
-        JSONObject cardObject = card.toJson();
-        cards.put(cardObject);
+        if (card != null) {
+            JSONArray cards = new JSONArray();
+            JSONObject cardObject = card.toJson();
+            cards.put(cardObject);
 
-        out.put(User.Api.PAYMENT_CARDS_ATTRIBUTES, cards);
-
+            out.put(User.Api.PAYMENT_CARDS_ATTRIBUTES, cards);
+        }
         return out;
     }
 
