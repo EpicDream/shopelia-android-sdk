@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewDebug.ExportedProperty;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
@@ -290,6 +291,12 @@ public abstract class FormField extends FrameLayout implements Errorable {
         if (getBoundedView() != null) {
             bindView(mBoundedView);
         }
+    }
+
+    @Override
+    @ExportedProperty
+    public boolean isEnabled() {
+        return super.isEnabled() && getVisibility() == View.VISIBLE;
     }
 
     @Override

@@ -68,7 +68,7 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
                 isSectionValid = true;
                 field.invalidate();
             } else {
-                isSectionValid = isSectionValid && field.isValid();
+                isSectionValid = isSectionValid && (field.isValid() || !field.isEnabled());
             }
         }
     }
@@ -84,6 +84,9 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
         final int size = mFields.size();
         for (; index < size; index++) {
             FormField f = mFields.get(index);
+            if (!f.isEnabled()) {
+                continue;
+            }
             if ((!f.isValid() || TextUtils.isEmpty(f.getResultAsString())) && !f.isSectionHeader()) {
                 f.onNextField();
                 return true;
@@ -126,7 +129,7 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
             if (!field.isEnabled()) {
                 continue;
             }
-            out = out & field.validate();
+            out = field.validate() && out;
             if (before != out) {
                 requestFocus(field);
             }
