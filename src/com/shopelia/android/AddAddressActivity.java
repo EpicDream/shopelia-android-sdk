@@ -100,7 +100,7 @@ public class AddAddressActivity extends ShopeliaActivity {
     protected void onCreate(Bundle saveState) {
         super.onCreate(saveState);
 
-        setHostContentView(R.layout.shopelia_create_address_activity);
+        setHostContentView(R.layout.shopelia_add_address_activity);
         mLayoutInflater = LayoutInflater.from(this);
 
         mFormLayout = (FormLinearLayout) findViewById(R.id.form);
