@@ -19,7 +19,6 @@ import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
 import com.shopelia.android.R;
-import com.shopelia.android.adapter.FormAdapter;
 import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.FormAutocompleteEditText;
 
@@ -113,7 +112,7 @@ public class EditTextField extends FormField {
         if (jsonPath != null) {
             for (String item : jsonPath) {
                 builder.append(item);
-                builder.append(FormAdapter.PATH_SEPARATOR);
+                builder.append(FormContainer.PATH_SEPARATOR);
             }
             if (builder.length() > 0) {
                 builder.deleteCharAt(builder.length() - 1);

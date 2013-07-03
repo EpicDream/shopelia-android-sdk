@@ -12,8 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 
-import com.shopelia.android.adapter.FormAdapter;
-import com.shopelia.android.adapter.FormAdapter.Field;
 import com.shopelia.android.widget.Errorable;
 import com.shopelia.android.widget.FormAutocompleteEditText;
 import com.shopelia.android.widget.form.EditTextField.ViewHolder;

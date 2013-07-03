@@ -5,8 +5,6 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.shopelia.android.adapter.FormAdapter.Field;
-
 public interface FormContainer {
 
     /**
