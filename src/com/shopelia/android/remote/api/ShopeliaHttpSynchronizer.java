@@ -31,13 +31,14 @@ public final class ShopeliaHttpSynchronizer {
     private LinkedList<Query> mQueries = new LinkedList<ShopeliaHttpSynchronizer.Query>();
     private boolean mIsFlushing = false;
 
-    private ShopeliaHttpSynchronizer() {
+    private ShopeliaHttpSynchronizer(Context context) {
+        attach(context);
         load();
     }
 
     private static ShopeliaHttpSynchronizer getInstance(Context context) {
         if (sInstance == null) {
-            sInstance = new ShopeliaHttpSynchronizer();
+            sInstance = new ShopeliaHttpSynchronizer(context);
         }
         sInstance.attach(context);
         return sInstance;
@@ -91,6 +92,8 @@ public final class ShopeliaHttpSynchronizer {
             @Override
             public void onError(Exception e) {
                 super.onError(e);
+                detach();
+                mIsFlushing = false;
             }
 
         });
@@ -142,6 +145,7 @@ public final class ShopeliaHttpSynchronizer {
     }
 
     private void detach() {
+        save();
         mContext = null;
     }
 
