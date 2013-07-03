@@ -12,9 +12,7 @@ import com.shopelia.android.model.BaseModel;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.Command;
-import com.shopelia.android.remote.api.ShopeliaRestClient;
-import com.turbomanage.httpclient.AsyncCallback;
-import com.turbomanage.httpclient.HttpResponse;
+import com.shopelia.android.remote.api.ShopeliaHttpSynchronizer;
 
 public enum ModelAdapterFactory {
     ADDRESS(Address.IDENTIFIER, Address.class) {
@@ -52,15 +50,7 @@ public enum ModelAdapterFactory {
         @Override
         public void delete(Context context, BaseModel<?> item) {
             final Address toDelete = (Address) item;
-            ShopeliaRestClient.authenticate(context);
-            ShopeliaRestClient.delete(Command.V1.Addresses.Address(toDelete.id), null, new AsyncCallback() {
-
-                @Override
-                public void onComplete(HttpResponse httpResponse) {
-
-                }
-
-            });
+            ShopeliaHttpSynchronizer.delete(context, Command.V1.Addresses.Address(toDelete.id), null, null);
             UserManager um = UserManager.get(context);
             User user = um.getUser();
             for (Address address : user.addresses) {
