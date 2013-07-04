@@ -39,6 +39,7 @@ public class PaymentCardsModelAdapter extends BaseModelAdapter<PaymentCard> {
             holder.brandLogo.setVisibility(View.INVISIBLE);
         }
         holder.cardNumber.setText(FormatUtils.formatCardNumber(data.number, '*', 4, 8));
+        holder.expiryDate.setText(data.getDisplayableExpiryDate());
     }
 
     @Override
@@ -48,6 +49,7 @@ public class PaymentCardsModelAdapter extends BaseModelAdapter<PaymentCard> {
         holder.brandLogo = (ImageView) v.findViewById(R.id.card_brand_logo);
         holder.isDefault = (ImageView) v.findViewById(R.id.is_default);
         holder.cardNumber = (TextView) v.findViewById(R.id.payment_card_number);
+        holder.expiryDate = (TextView) v.findViewById(R.id.expiry_date);
         v.setTag(holder);
         return v;
     }
@@ -56,6 +58,7 @@ public class PaymentCardsModelAdapter extends BaseModelAdapter<PaymentCard> {
         public ImageView brandLogo;
         public ImageView isDefault;
         public TextView cardNumber;
+        public TextView expiryDate;
     }
 
 }
