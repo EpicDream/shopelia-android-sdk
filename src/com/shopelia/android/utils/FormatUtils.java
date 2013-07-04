@@ -22,6 +22,24 @@ public final class FormatUtils {
         return String.valueOf(intPrice / 100) + "." + String.valueOf(price % 100);
     }
 
+    public static CharSequence formatCardNumber(CharSequence number, char obfuscationChar, final int visibleCharCount, int finalLenght) {
+        StringBuilder builder = new StringBuilder(finalLenght);
+        final int length = number.length();
+        int j = 0;
+        for (int index = 1; index <= finalLenght; index++) {
+            j = length - index;
+            if ((index - 1) % 4 == 0) {
+                builder.insert(0, " ");
+            }
+            if (index <= visibleCharCount) {
+                builder.insert(0, number.charAt(j));
+            } else {
+                builder.insert(0, obfuscationChar);
+            }
+        }
+        return builder;
+    }
+
     // From
     // http://stackoverflow.com/questions/3211974/ignoring-diacritic-characters-when-comparing-words-with-special-caracters-e-e
 
