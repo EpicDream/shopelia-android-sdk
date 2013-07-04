@@ -34,6 +34,12 @@ public class ResourceListActivity extends ShopeliaActivity {
      */
     public static final String EXTRA_LIST = Config.EXTRA_PREFIX + "LIST";
 
+    /**
+     * The long id of the default item to select (or {@link BaseModel#NO_ID} if
+     * there is no default item.
+     */
+    public static final String EXTRA_DEFAULT_ITEM = Config.EXTRA_PREFIX + "DEFAULT_ID";
+
     public static final String EXTRA_SELECTED_ITEM = Config.EXTRA_PREFIX + "SELECTED";
 
     public static final int OPTION_ADD = 0x1;

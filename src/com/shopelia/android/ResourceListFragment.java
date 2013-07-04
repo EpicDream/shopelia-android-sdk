@@ -103,6 +103,7 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         }
         mList = list;
         BaseModelAdapter<? extends BaseModel> adapter = factory.getAdapter(getActivity());
+        adapter.setDefaultId(getSelectedItem());
         adapter.setContent(list);
         adapter.setOptions(mOptions);
         mListView.setAdapter(adapter);
@@ -114,10 +115,15 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     public void refresh() {
         ModelAdapterFactory factory = getFactory();
         BaseModelAdapter<? extends BaseModel> adapter = factory.getAdapter(getActivity());
+        adapter.setDefaultId(getSelectedItem());
         mList = factory.getListFromUser(com.shopelia.android.manager.UserManager.get(getActivity()).getUser());
         adapter.setContent(mList);
         mListView.setAdapter(adapter);
         adapter.setOnEditItemClickListener(mOnEditItemClickListener);
+    }
+
+    public long getSelectedItem() {
+        return getArguments().getLong(ResourceListActivity.EXTRA_DEFAULT_ITEM, BaseModel.NO_ID);
     }
 
     public ModelAdapterFactory getFactory() {
