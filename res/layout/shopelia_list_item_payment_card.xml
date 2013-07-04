@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shopelia_field"
+    android:orientation="horizontal"
+    android:padding="@dimen/shopelia_margin_normal" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/address_edit"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/shopelia_margin_normal"
+        android:paddingLeft="@dimen/shopelia_margin_normal"
+        android:paddingRight="@dimen/shopelia_margin_normal"
+        android:paddingTop="@dimen/shopelia_margin_normal" >
+
+        <ImageView
+            android:id="@+id/card_brand_logo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/shopelia_ic_mastercard" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/payment_card_number"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:layout_weight="1"
+            android:gravity="center_vertical"
+            android:text="**** 1311"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal"
+            app:shopelia_fontStyle="normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/fontableTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/shopelia_margin_large"
+            android:gravity="center_vertical"
+            android:text="12/13"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal"
+            app:shopelia_fontStyle="normal" />
+
+        <ImageView
+            android:id="@+id/is_default"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:src="@drawable/shopelia_green_check" />
+    </LinearLayout>
+
+</RelativeLayout>
