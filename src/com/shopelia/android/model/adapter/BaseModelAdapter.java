@@ -29,6 +29,7 @@ public abstract class BaseModelAdapter<T extends BaseModel> extends BaseAdapter 
     private ArrayList<T> mContent = new ArrayList<T>();
     private int mOptions = OPTION_SELECT;
     private OnEditItemClickListener mEditItemClickListener;
+    private long mDefaultId = BaseModel.NO_ID;
 
     public BaseModelAdapter(Context context) {
         super();
@@ -42,6 +43,14 @@ public abstract class BaseModelAdapter<T extends BaseModel> extends BaseAdapter 
 
     protected OnEditItemClickListener getOnEditItemClickListener() {
         return mEditItemClickListener;
+    }
+
+    public void setDefaultId(long id) {
+        mDefaultId = id;
+    }
+
+    public long getDefaultId() {
+        return mDefaultId;
     }
 
     protected boolean hasOnEditItemClickListener() {
