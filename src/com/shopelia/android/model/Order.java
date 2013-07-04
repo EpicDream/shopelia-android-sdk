@@ -20,9 +20,7 @@ public class Order implements BaseModel<Order> {
         String ORDER = "order";
     }
 
-    public static final String NO_ID = null;
-
-    public String uuid = NO_ID;
+    public String uuid = NO_UUID;
 
     public Product product = new Product();
 
@@ -76,7 +74,7 @@ public class Order implements BaseModel<Order> {
 
     public static Order inflate(JSONObject object) {
         Order order = new Order();
-        order.uuid = object.optString(Api.UUID, NO_ID);
+        order.uuid = object.optString(Api.UUID, NO_UUID);
         try {
             order.product = Product.inflate(object.getJSONObject(Api.PRODUCT));
         } catch (JSONException e) {
@@ -121,6 +119,11 @@ public class Order implements BaseModel<Order> {
     public void merge(Order item) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public long getId() {
+        return uuid != NO_UUID ? uuid.hashCode() : NO_ID;
     }
 
 }

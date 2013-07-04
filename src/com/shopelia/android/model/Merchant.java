@@ -28,8 +28,6 @@ public class Merchant implements BaseModel<Merchant> {
 
     public static final String IDENTIFIER = Merchant.class.getName();
 
-    public static final long INVALID_ID = -1;
-
     public long id = INVALID_ID;
     public String name;
     public String logo;
@@ -119,6 +117,11 @@ public class Merchant implements BaseModel<Merchant> {
     public void merge(Merchant item) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 
 }

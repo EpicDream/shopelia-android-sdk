@@ -31,8 +31,6 @@ public class PaymentCard implements BaseModel<PaymentCard> {
 
     public static final String IDENTIFIER = PaymentCard.class.getName();
 
-    public static final long INVALID_ID = -1;
-
     public long id = INVALID_ID;
     public String number;
     public String expMonth;
@@ -118,6 +116,11 @@ public class PaymentCard implements BaseModel<PaymentCard> {
     public void merge(PaymentCard item) {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 
 }

@@ -108,4 +108,9 @@ public class Product implements BaseModel<Product> {
         // TODO Auto-generated method stub
     }
 
+    @Override
+    public long getId() {
+        return url.hashCode();
+    }
+
 }

@@ -43,8 +43,6 @@ public class User implements BaseModel<User> {
 
     public static final String IDENTIFIER = User.class.getName();
 
-    public static final long NO_ID = -1;
-
     public long id = NO_ID;
     public String email;
     public String firstname;
@@ -209,6 +207,11 @@ public class User implements BaseModel<User> {
     @Override
     public void merge(User item) {
 
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 
 }

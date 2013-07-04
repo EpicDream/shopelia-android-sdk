@@ -41,8 +41,6 @@ public final class Address implements BaseModel<Address> {
 
     public static final String IDENTIFIER = Address.class.getName();
 
-    public static final long NO_ID = -1;
-
     public long id = NO_ID;
     public String address;
     public String zipcode;
@@ -203,6 +201,11 @@ public final class Address implements BaseModel<Address> {
             }
         }
         return super.equals(o);
+    }
+
+    @Override
+    public long getId() {
+        return id;
     }
 
 }
