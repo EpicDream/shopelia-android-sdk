@@ -1,6 +1,7 @@
 package com.shopelia.android.model;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -110,6 +111,14 @@ public class PaymentCard implements BaseModel<PaymentCard> {
             cards.add(PaymentCard.inflate(array.getJSONObject(index)));
         }
         return cards;
+    }
+
+    public String getDisplayableExpiryDate() {
+        return getDisplayableExpiryDate(Locale.getDefault());
+    }
+
+    public String getDisplayableExpiryDate(Locale locale) {
+        return expMonth + "/" + expYear;
     }
 
     @Override
