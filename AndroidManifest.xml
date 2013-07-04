@@ -49,7 +49,6 @@
         <activity
             android:name="com.shopelia.android.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Shopelia.FloatingFrame"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
