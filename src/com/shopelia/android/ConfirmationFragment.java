@@ -111,6 +111,27 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                     getActivity().finish();
                 }
                 break;
+            case REQUEST_SELECT_PAYMENT_CARD: {
+                if (resultCode == Activity.RESULT_OK) {
+                    getBaseActivity().getOrder().card = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
+                } else {
+                    User user = UserManager.get(getActivity()).getUser();
+                    PaymentCard card = null;
+                    for (PaymentCard item : user.paymentCards) {
+                        if (mOrder.card.id == item.id) {
+                            card = item;
+                            break;
+                        }
+                    }
+                    if (card == null) {
+                        card = user.getDefaultPaymentCard();
+                    }
+                    getBaseActivity().getOrder().card = card;
+                }
+                mOrder = getBaseActivity().getOrder();
+                setupUi();
+                break;
+            }
         }
 
     }
@@ -224,6 +245,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                     Intent intent = new Intent(getActivity(), ResourceListActivity.class);
                     intent.putExtra(ResourceListActivity.EXTRA_RESOURCE, PaymentCard.IDENTIFIER);
                     intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_ALL);
+                    intent.putExtra(ResourceListActivity.EXTRA_DEFAULT_ITEM, mOrder.card.id);
                     startActivityForResult(intent, REQUEST_SELECT_PAYMENT_CARD);
                 }
             });
