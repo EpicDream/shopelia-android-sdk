@@ -88,7 +88,7 @@ public abstract class BaseModelAdapter<T extends BaseModel> extends BaseAdapter 
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return mContent.get(position).getId();
     }
 
     @Override
