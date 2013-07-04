@@ -39,6 +39,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     public static final int REQUEST_SELECT_ADDRESS = 0x100;
     public static final int REQUEST_SELECT_PAYMENT_CARD = 0x101;
     public static final int REQUEST_ADD_PAYMENT_CARD = 0x102;
+    public static final int REQUEST_ADD_ADDRESS = 0x103;
 
     private Order mOrder;
 
@@ -83,6 +84,15 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case REQUEST_ADD_ADDRESS:
+                if (resultCode == Activity.RESULT_OK) {
+                    getBaseActivity().getOrder().address = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
+                    setupUi();
+                } else {
+                    getActivity().setResult(Activity.RESULT_CANCELED);
+                    getActivity().finish();
+                }
+                break;
             case REQUEST_SELECT_ADDRESS:
                 if (resultCode == Activity.RESULT_OK) {
                     getBaseActivity().getOrder().address = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
@@ -108,6 +118,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                     getBaseActivity().getOrder().card = data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD);
                     setupUi();
                 } else {
+                    getActivity().setResult(Activity.RESULT_CANCELED);
                     getActivity().finish();
                 }
                 break;
@@ -192,34 +203,41 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     }
 
     private void setupAddressUi() {
-        findViewById(R.id.address_user_name, TextView.class).setText(mOrder.address.firstname + " " + mOrder.address.lastname);
-        findViewById(R.id.address_address, TextView.class).setText(mOrder.address.address);
-        findViewById(R.id.address_extras, TextView.class).setText(mOrder.address.extras);
-        if (TextUtils.isEmpty(mOrder.address.extras)) {
-            findViewById(R.id.address_extras).setVisibility(View.GONE);
-        }
-        findViewById(R.id.address_city_and_country, TextView.class).setText(
-                mOrder.address.zipcode + ", " + mOrder.address.city + ", " + mOrder.address.getDisplayCountry());
-        String number = mOrder.address.phone;
-        try {
-            PhoneNumberUtil util = PhoneNumberUtil.getInstance();
-            PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
-            number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
-        } catch (NumberParseException e) {
-            e.printStackTrace();
-        }
-
-        findViewById(R.id.user_phone_number, TextView.class).setText(number);
-        findViewById(R.id.address_edit).setOnClickListener(new OnClickListener() {
-
-            @Override
-            public void onClick(View arg0) {
-                Intent intent = new Intent(getActivity(), ResourceListActivity.class);
-                intent.putExtra(ResourceListActivity.EXTRA_RESOURCE, Address.IDENTIFIER);
-                intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_ALL);
-                startActivityForResult(intent, REQUEST_SELECT_ADDRESS);
+        if (mOrder.address != null) {
+            findViewById(R.id.address_user_name, TextView.class).setText(mOrder.address.firstname + " " + mOrder.address.lastname);
+            findViewById(R.id.address_address, TextView.class).setText(mOrder.address.address);
+            findViewById(R.id.address_extras, TextView.class).setText(mOrder.address.extras);
+            if (TextUtils.isEmpty(mOrder.address.extras)) {
+                findViewById(R.id.address_extras).setVisibility(View.GONE);
             }
-        });
+            findViewById(R.id.address_city_and_country, TextView.class).setText(
+                    mOrder.address.zipcode + ", " + mOrder.address.city + ", " + mOrder.address.getDisplayCountry());
+            String number = mOrder.address.phone;
+            try {
+                PhoneNumberUtil util = PhoneNumberUtil.getInstance();
+                PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
+                number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
+            } catch (NumberParseException e) {
+                e.printStackTrace();
+            }
+
+            findViewById(R.id.user_phone_number, TextView.class).setText(number);
+            findViewById(R.id.address_edit).setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View arg0) {
+                    Intent intent = new Intent(getActivity(), ResourceListActivity.class);
+                    intent.putExtra(ResourceListActivity.EXTRA_RESOURCE, Address.IDENTIFIER);
+                    intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_ALL);
+                    startActivityForResult(intent, REQUEST_SELECT_ADDRESS);
+                }
+            });
+        } else {
+            Intent intent = new Intent(getActivity(), AddAddressActivity.class);
+            intent.putExtra(AddAddressActivity.EXTRA_REQUIRED, true);
+            intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_ADD);
+            startActivityForResult(intent, REQUEST_ADD_ADDRESS);
+        }
     }
 
     private void setupPaymentCardUi() {

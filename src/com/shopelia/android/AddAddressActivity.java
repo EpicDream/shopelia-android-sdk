@@ -66,6 +66,8 @@ public class AddAddressActivity extends ShopeliaActivity {
 
     public static final String EXTRA_ADDRESS_OBJECT = Config.EXTRA_PREFIX + "OBJECT";
     public static final String EXTRA_MODE = Config.EXTRA_PREFIX + "MODE";
+    public static final String EXTRA_REQUIRED = Config.EXTRA_PREFIX + "REQUIRED";
+
     public static final String LOG_TAG = "AddAddressActivity";
 
     public static final int MODE_CREATE = 0x0;
@@ -414,6 +416,10 @@ public class AddAddressActivity extends ShopeliaActivity {
         }
 
     };
+
+    public boolean isRequired() {
+        return getIntent().getBooleanExtra(EXTRA_REQUIRED, false);
+    }
 
     private boolean validate(boolean fireError) {
         boolean out = mFormLayout.validate();
