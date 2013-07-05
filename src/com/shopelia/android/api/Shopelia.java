@@ -148,11 +148,13 @@ public final class Shopelia implements Parcelable {
         if (UserManager.get(context).getCheckoutCount() == 0) {
             data.setClass(context, WelcomeActivity.class);
         } else {
-            data.setClass(context, PrepareOrderActivity.class);
+            // data.setClass(context, PrepareOrderActivity.class);
+            data.setClass(context, WelcomeActivity.class);
         }
         if (productUrl != null) {
             data.putExtra(EXTRA_PRODUCT_URL, productUrl);
         }
+        data.putExtra(ShopeliaActivity.EXTRA_STYLE, ShopeliaActivity.STYLE_DIALOG);
         data.setExtrasClassLoader(Merchant.class.getClassLoader());
         if (context instanceof Activity) {
             ((Activity) context).startActivityForResult(data, requestCode);
