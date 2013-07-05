@@ -1,30 +1,89 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.shopelia.android.widget.form.FormLinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:background="@android:color/transparent"
+    android:cacheColorHint="@android:color/transparent"
+    android:divider="@null"
+    android:listSelector="@android:color/transparent"
+    android:orientation="vertical"
+    android:scrollbarStyle="outsideOverlay" >
 
-    <com.shopelia.android.widget.ProductSheetWidget
-        android:id="@+id/product_sheet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
-    </com.shopelia.android.widget.ProductSheetWidget>
-
-    <com.shopelia.android.widget.form.PasswordField
-        android:id="@+id/passwordField1"
+    <com.shopelia.android.widget.form.HeaderField
+        android:id="@+id/header_personal_informations"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </com.shopelia.android.widget.form.PasswordField>
+        android:layout_height="wrap_content"
+        app:shopelia_icon="@drawable/shopelia_user"
+        app:shopelia_text="Authentification" >
+    </com.shopelia.android.widget.form.HeaderField>
 
-    <com.shopelia.android.widget.ValidationButton
-        android:id="@+id/validationButton1"
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/fontableTextView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:shopelia_text="Continuer"
-        app:shopelia_icon="@drawable/shopelia_cart_white"
-        android:layout_marginTop="@dimen/shopelia_margin_large" >
+        android:text="pierre.pollastri@prixing.fr"
+        android:textColor="@color/shopelia_dark" />
 
-    </com.shopelia.android.widget.ValidationButton>
+    <com.shopelia.android.widget.form.PasswordField
+        android:id="@+id/password"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        app:shopelia_hint="Votre mot de passe Shopelia" >
+
+    </com.shopelia.android.widget.form.PasswordField>
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/forgotPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="all"
+        android:gravity="center"
+        android:linksClickable="false"
+        android:padding="@dimen/shopelia_margin_normal"
+        android:text="@string/shopelia_sign_in_forgot_password"
+        android:textColor="@color/shopelia_link_text_color"
+        android:textSize="@dimen/shopelia_font_size_small"
+        app:shopelia_fontFamily="normal"
+        app:shopelia_fontStyle="normal" />
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:button="@drawable/shopelia_btn_check_holo_light"
+        android:text="NE PLUS ME LE DEMANDER"
+        android:textColor="@color/shopelia_dark"
+        android:textSize="@dimen/shopelia_font_size_extra_small" />
+    
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:scaleType="fitStart"
+            android:src="@drawable/shopelia_logo_bottom" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/button1"
+            android:layout_width="wrap_content"
+            android:layout_height="35dp"
+            android:background="@drawable/shopelia_validation_button_background"
+            android:gravity="center"
+            android:paddingLeft="@dimen/shopelia_margin_normal"
+            android:paddingRight="@dimen/shopelia_margin_normal"
+            android:text="CONFIRMER"
+            android:textColor="@color/shopelia_validation_button_text_color"
+            android:textSize="@dimen/shopelia_font_size_small"
+            app:shopelia_fontStyle="bold" />
+    </LinearLayout>
 
 </com.shopelia.android.widget.form.FormLinearLayout>

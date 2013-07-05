@@ -10,7 +10,9 @@
         android:id="@+id/outside_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="false"
         android:clipToPadding="false"
+        android:focusable="false"
         android:gravity="center"
         android:orientation="vertical"
         android:paddingBottom="@dimen/shopelia_activity_vertical_margin"
@@ -19,33 +21,39 @@
         android:paddingTop="@dimen/shopelia_activity_vertical_margin"
         tools:context=".WelcomeActivity" >
 
-        <LinearLayout
-            android:id="@+id/frame"
-            android:layout_width="match_parent"
+        <com.shopelia.android.widget.ExtendedFrameLayout
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/shopelia_floating_frame_dark_top_corner_background"
-            android:clickable="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:orientation="vertical" >
+            app:shopelia_enable_dispatch_drawable_state="false" >
 
-            <com.shopelia.android.widget.actionbar.ActionBarWidget
-                android:id="@+id/action_bar"
+            <LinearLayout
+                android:id="@+id/frame"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/shopelia_title_bar_height"
-                android:background="@drawable/shopelia_floating_frame_header" >
-            </com.shopelia.android.widget.actionbar.ActionBarWidget>
+                android:layout_height="wrap_content"
+                android:background="@drawable/shopelia_floating_frame_dark_top_corner_background"
+                android:clickable="false"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:orientation="vertical" >
 
-            <FrameLayout
-                android:id="@+id/host_container"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@android:color/transparent"
-                android:paddingBottom="@dimen/shopelia_activity_vertical_margin"
-                android:paddingLeft="@dimen/shopelia_activity_horizontal_margin"
-                android:paddingRight="@dimen/shopelia_activity_horizontal_margin" >
-            </FrameLayout>
-        </LinearLayout>
+                <com.shopelia.android.widget.actionbar.ActionBarWidget
+                    android:id="@+id/action_bar"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/shopelia_title_bar_height"
+                    android:background="@drawable/shopelia_floating_frame_header" >
+                </com.shopelia.android.widget.actionbar.ActionBarWidget>
+
+                <FrameLayout
+                    android:id="@+id/host_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@android:color/transparent"
+                    android:paddingBottom="@dimen/shopelia_activity_vertical_margin"
+                    android:paddingLeft="@dimen/shopelia_activity_horizontal_margin"
+                    android:paddingRight="@dimen/shopelia_activity_horizontal_margin" >
+                </FrameLayout>
+            </LinearLayout>
+        </com.shopelia.android.widget.ExtendedFrameLayout>
     </LinearLayout>
 
 </ScrollView>

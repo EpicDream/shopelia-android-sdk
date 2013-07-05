@@ -123,7 +123,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     private static final int REQUEST_AUTH_PINCODE = 0x0102;
     private static final int REQUEST_ADD_PAYMENT_CARD = 0x0103;
 
-    private SignInFragment mSignInFragment = new SignInFragment();
+    private AuthenticateFragment mSignInFragment = new AuthenticateFragment();
     private SignUpFragment mSignUpFragment = new SignUpFragment();
     private ScrollView mScrollView;
 
@@ -140,6 +140,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         getIntent().putExtra(EXTRA_INIT_ORDER, true);
+        setActivityStyle(STYLE_FULLSCREEN);
         super.onCreate(savedInstanceState);
         setHostContentView(R.layout.shopelia_prepare_order_activity);
         mScrollView = (ScrollView) findViewById(R.id.scrollview);

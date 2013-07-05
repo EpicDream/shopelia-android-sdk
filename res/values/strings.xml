@@ -9,6 +9,7 @@
     <string name="shopelia_action_bar_sign_up">Première commande ?</string>
     <string name="shopelia_action_bar_sign_out">Se déconnecter</string>
     <string name="shopelia_action_bar_add">Ajouter</string>
+    <string name="shopelia_action_bar_switch_account">Changer de compte</string>
     <string name="shopelia_action_bar_add_address">Ajouter une adresse</string>
     <string name="shopelia_action_bar_add_payment_card">Ajouter une carte de paiement</string>
 

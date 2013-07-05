@@ -39,12 +39,14 @@ public class ProductSheetWidget extends FrameLayout {
 
     public ProductSheetWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mRootView = onCreateView(LayoutInflater.from(context));
-        onViewCreated();
-        if (context instanceof Activity) {
-            Activity activity = (Activity) context;
-            if (activity.getIntent().getExtras() != null) {
-                setArguments(activity.getIntent().getExtras());
+        if (mRootView == null) {
+            mRootView = onCreateView(LayoutInflater.from(context));
+            onViewCreated();
+            if (context instanceof Activity) {
+                Activity activity = (Activity) context;
+                if (activity.getIntent().getExtras() != null) {
+                    setArguments(activity.getIntent().getExtras());
+                }
             }
         }
     }
@@ -132,7 +134,9 @@ public class ProductSheetWidget extends FrameLayout {
         if (image != null && image instanceof Uri) {
             mProductImage.setImageURI((Uri) image);
         }
-        mVendorLogo.setUrl(vendor.logo);
+        if (vendor != null) {
+            mVendorLogo.setUrl(vendor.logo);
+        }
         if (!mHasBackground) {
             mRootView.setBackgroundColor(Color.TRANSPARENT);
         }
