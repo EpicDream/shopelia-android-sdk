@@ -3,8 +3,10 @@ package com.shopelia.android;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.TextView;
@@ -44,19 +46,19 @@ public class WelcomeFragment extends ShopeliaFragment<WelcomeParent> {
         findViewById(R.id.continue_with_merchant).setOnClickListener(mOnContinueWithMerchantClickListener);
         findViewById(R.id.outside_area).setOnClickListener(mOnOutsideAreaClickListener);
         View frame = findViewById(R.id.frame);
-        frame.setOnClickListener(new OnClickListener() {
+        frame.setOnTouchListener(new OnTouchListener() {
 
             @Override
-            public void onClick(View v) {
-
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
             }
         });
         frame.setVisibility(View.VISIBLE);
-	try {
-	    frame.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_pop_up));
-	} catch (Exception e) {
-	    // XML Pull parser failed to load the animation
-	}
+        try {
+            frame.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_pop_up));
+        } catch (Exception e) {
+            // XML Pull parser failed to load the animation
+        }
         findViewById(R.id.continue_with_merchant_site, TextView.class).setText(
                 Html.fromHtml(getResources().getString(R.string.shopelia_welcome_continue_on, getContract().getMerchant().name)));
 

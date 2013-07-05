@@ -28,7 +28,14 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (UserManager.get(this).getCheckoutCount() > 0) {
+        if (UserManager.get(this).getLoginsCount() > 0) {
+            setHostContentView(R.layout.shopelia_welcome_activity);
+            getShopeliaActionBar().hide();
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.replace(R.id.fragment_container, new WelcomeFragment());
+            ft.commit();
+        } else if (UserManager.get(this).getCheckoutCount() > 0) {
             startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
         } else {
             setHostContentView(R.layout.shopelia_welcome_activity);
@@ -91,30 +98,30 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
         mIsCanceling = true;
         View frame = findViewById(R.id.frame);
         if (frame != null) {
-	    try {
-            Animation anim = AnimationUtils.loadAnimation(this, R.anim.shopelia_pop_out);
-            anim.setAnimationListener(new AnimationListener() {
+            try {
+                Animation anim = AnimationUtils.loadAnimation(this, R.anim.shopelia_pop_out);
+                anim.setAnimationListener(new AnimationListener() {
 
-                @Override
-                public void onAnimationStart(Animation animation) {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationRepeat(Animation animation) {
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
 
-                }
+                    }
 
-                @Override
-                public void onAnimationEnd(Animation animation) {
-                    finish();
-                }
-            });
-            frame.startAnimation(anim);
-	    } catch (Exception e) {
-		// XML Pull Parser failed to load the Animation
-		finish();
-	    }
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+                        finish();
+                    }
+                });
+                frame.startAnimation(anim);
+            } catch (Exception e) {
+                // XML Pull Parser failed to load the Animation
+                finish();
+            }
         } else {
             // finish();
         }

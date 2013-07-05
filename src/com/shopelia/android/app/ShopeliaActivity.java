@@ -15,7 +15,10 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
@@ -45,9 +48,14 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     public static final String EXTRA_SESSION_ID = Config.EXTRA_PREFIX + "PRIVATE_SESSION_ID";
 
+    public static final String EXTRA_STYLE = Config.EXTRA_PREFIX + "STYLE";
+
     public static final int REQUEST_CHECKOUT = 0x1602;
     public static final int RESULT_FAILURE = 0xfa15e;
     public static final int RESULT_LOGOUT = 0xd04e;
+
+    public static final int STYLE_FULLSCREEN = 0x0;
+    public static final int STYLE_DIALOG = 0x1;
 
     public static final int MODE_CLEARED = 0x0;
     public static final int MODE_WAITING = 1 << 0;
@@ -85,7 +93,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
             }
         }
 
-        setContentView(R.layout.shopelia_host_activity);
+        setContentView(getActivityStyle() == STYLE_FULLSCREEN ? R.layout.shopelia_host_activity : R.layout.shopelia_host_activity_dialog);
         mRootView = (FrameLayout) super.findViewById(R.id.host_container);
         mActionBar.bindWidget((ActionBarWidget) super.findViewById(R.id.action_bar));
         mActionBar.setOnItemClickListener(mOnActionBarItemClickListener);
@@ -98,6 +106,23 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
         if (savedInstanceState == null) {
 
+        }
+
+        if (getActivityStyle() == STYLE_DIALOG) {
+            findViewById(R.id.frame).setOnTouchListener(new OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+                    return true;
+                }
+            });
+            findViewById(R.id.outside_area).setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    onBackPressed();
+                }
+            });
         }
 
     }
@@ -377,6 +402,10 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     public ActionBar getShopeliaActionBar() {
         return mActionBar;
+    }
+
+    public int getActivityStyle() {
+        return getIntent().getIntExtra(EXTRA_STYLE, STYLE_FULLSCREEN);
     }
 
     public void closeSoftKeyboard() {
