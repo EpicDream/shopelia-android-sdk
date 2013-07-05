@@ -5,10 +5,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
 
 import com.shopelia.android.WelcomeFragment.WelcomeParent;
 import com.shopelia.android.api.Shopelia;
@@ -34,10 +30,9 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
         super.onCreate(savedInstanceState);
         if (um.getLoginsCount() > 0) {
             setHostContentView(R.layout.shopelia_welcome_activity);
-            getShopeliaActionBar().hide();
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.fragment_container, new WelcomeFragment());
+            ft.replace(R.id.fragment_container, new AuthenticateFragment());
             ft.commit();
         } else if (um.getCheckoutCount() > 0) {
             startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
@@ -95,45 +90,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
 
     @Override
     public void cancel() {
-        if (mIsCanceling) {
-            return;
-        }
-        setResult(Shopelia.RESULT_CANCELED);
-        mIsCanceling = true;
-        View frame = findViewById(R.id.frame);
-        if (frame != null) {
-            try {
-                Animation anim = AnimationUtils.loadAnimation(this, R.anim.shopelia_pop_out);
-                anim.setAnimationListener(new AnimationListener() {
-
-                    @Override
-                    public void onAnimationStart(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationRepeat(Animation animation) {
-
-                    }
-
-                    @Override
-                    public void onAnimationEnd(Animation animation) {
-                        finish();
-                    }
-                });
-                frame.startAnimation(anim);
-            } catch (Exception e) {
-                // XML Pull Parser failed to load the Animation
-                finish();
-            }
-        } else {
-            // finish();
-        }
-    }
-
-    @Override
-    public void onBackPressed() {
-        cancel();
+        onBackPressed();
     }
 
 }

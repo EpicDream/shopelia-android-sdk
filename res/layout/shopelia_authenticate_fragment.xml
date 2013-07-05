@@ -5,10 +5,26 @@
     android:layout_height="match_parent"
     android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <com.shopelia.android.widget.ProductSheetWidget
+        android:id="@+id/product_sheet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </com.shopelia.android.widget.ProductSheetWidget>
+
+    <com.shopelia.android.widget.form.PasswordField
+        android:id="@+id/passwordField1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+    </com.shopelia.android.widget.form.PasswordField>
+
     <com.shopelia.android.widget.ValidationButton
         android:id="@+id/validationButton1"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        app:shopelia_text="Continuer"
+        app:shopelia_icon="@drawable/shopelia_cart_white"
+        android:layout_marginTop="@dimen/shopelia_margin_large" >
+
     </com.shopelia.android.widget.ValidationButton>
 
 </com.shopelia.android.widget.form.FormLinearLayout>

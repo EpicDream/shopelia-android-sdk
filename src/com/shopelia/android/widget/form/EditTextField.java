@@ -150,6 +150,9 @@ public class EditTextField extends FormField {
 
     @Override
     public View createView(Context context, LayoutInflater inflater, ViewGroup viewGroup) {
+        if (isInEditMode() && getBoundedView() != null) {
+            return getBoundedView();
+        }
         View view = inflater.inflate(R.layout.shopelia_form_field_edit_text, viewGroup, false);
         ViewHolder holder = new ViewHolder();
         holder.editText = grabView(view, R.id.edit_text);

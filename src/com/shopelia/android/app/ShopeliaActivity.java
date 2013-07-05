@@ -19,11 +19,15 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
 import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.remote.api.ShopeliaHttpSynchronizer;
@@ -65,6 +69,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     private Order mOrder;
     private FrameLayout mRootView;
     private ActionBar mActionBar;
+    private boolean mIsCanceling = false;
     private Handler mHandler = new Handler();
     private int mMode = MODE_CLEARED;
     @SuppressWarnings("rawtypes")
@@ -417,6 +422,47 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         if (getCurrentFocus() != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (getActivityStyle() == STYLE_DIALOG || getActivityStyle() == STYLE_TRANSLUCENT) {
+            if (mIsCanceling) {
+                return;
+            }
+            setResult(Shopelia.RESULT_CANCELED);
+            mIsCanceling = true;
+            View frame = super.findViewById(R.id.frame);
+            if (frame != null) {
+                try {
+                    Animation anim = AnimationUtils.loadAnimation(this, R.anim.shopelia_pop_out);
+                    anim.setAnimationListener(new AnimationListener() {
+
+                        @Override
+                        public void onAnimationStart(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationRepeat(Animation animation) {
+
+                        }
+
+                        @Override
+                        public void onAnimationEnd(Animation animation) {
+                            finish();
+                        }
+                    });
+                    frame.startAnimation(anim);
+                } catch (Exception e) {
+                    finish();
+                }
+            } else {
+                super.onBackPressed();
+            }
+        } else {
+            super.onBackPressed();
         }
     }
 

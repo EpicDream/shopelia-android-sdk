@@ -51,7 +51,7 @@ import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedLis
 import com.shopelia.android.widget.ExtendedFrameLayout;
 import com.shopelia.android.widget.FormListFooter;
 import com.shopelia.android.widget.FormListHeader;
-import com.shopelia.android.widget.ProductSheetWrapper;
+import com.shopelia.android.widget.ProductSheetWidget;
 import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.form.SingleLinePaymentCardField;
 import com.turbomanage.httpclient.HttpResponse;
@@ -168,7 +168,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         startService(new Intent(ShopeliaService.ACTION));
         new FormListHeader(this).setView(findViewById(R.id.header));
         new FormListFooter(this).setView(findViewById(R.id.footer));
-        new ProductSheetWrapper(findViewById(R.id.header).findViewById(R.id.product_sheet), getIntent().getExtras());
+        ((ProductSheetWidget) findViewById(R.id.product_sheet)).setArguments(getIntent().getExtras());
     }
 
     @Override

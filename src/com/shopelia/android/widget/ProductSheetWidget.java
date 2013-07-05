@@ -1,10 +1,15 @@
 package com.shopelia.android.widget;
 
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.R;
@@ -13,7 +18,7 @@ import com.shopelia.android.model.Product;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 
-public class ProductSheetWrapper {
+public class ProductSheetWidget extends FrameLayout {
 
     private View mRootView;
     private Bundle mArguments;
@@ -32,31 +37,41 @@ public class ProductSheetWrapper {
 
     private boolean mHasBackground = true;
 
-    public ProductSheetWrapper(View view) {
-        mRootView = view;
-        mProductName = findViewById(R.id.product_name);
-        mProductDescription = findViewById(R.id.product_description);
-        mProductShippingInfo = findViewById(R.id.product_shipping_info);
-        mShippingFees = findViewById(R.id.product_shipping_fees);
-        mProductImage = findViewById(R.id.product_image);
-        mProductPrice = findViewById(R.id.product_price);
-        mVendorLogo = findViewById(R.id.product_vendor_icon);
-        mVendorText = findViewById(R.id.product_vendor_text);
-        mTax = findViewById(R.id.product_tax);
+    public ProductSheetWidget(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        mRootView = onCreateView(LayoutInflater.from(context));
+        onViewCreated();
+        if (context instanceof Activity) {
+            Activity activity = (Activity) context;
+            if (activity.getIntent().getExtras() != null) {
+                setArguments(activity.getIntent().getExtras());
+            }
+        }
     }
 
-    public ProductSheetWrapper(View view, Bundle args) {
-        this(view);
-        setArguments(args);
-        refreshView();
+    public View onCreateView(LayoutInflater inflater) {
+        return inflater.inflate(R.layout.shopelia_product_sheet, this, true);
     }
 
-    public ProductSheetWrapper setArguments(Bundle args) {
+    public void onViewCreated() {
+        mProductName = (FontableTextView) findViewById(R.id.product_name);
+        mProductDescription = (FontableTextView) findViewById(R.id.product_description);
+        mProductShippingInfo = (FontableTextView) findViewById(R.id.product_shipping_info);
+        mShippingFees = (FontableTextView) findViewById(R.id.product_shipping_fees);
+        mProductImage = (AsyncImageView) findViewById(R.id.product_image);
+        mProductPrice = (FontableTextView) findViewById(R.id.product_price);
+        mVendorLogo = (AsyncImageView) findViewById(R.id.product_vendor_icon);
+        mVendorText = (FontableTextView) findViewById(R.id.product_vendor_text);
+        mTax = (FontableTextView) findViewById(R.id.product_tax);
+    }
+
+    public ProductSheetWidget setArguments(Bundle args) {
         mArguments = args;
+        refreshView();
         return this;
     }
 
-    public ProductSheetWrapper setProductInfo(Product product) {
+    public ProductSheetWidget setProductInfo(Product product) {
         Bundle args = new Bundle();
         args.putString(PrepareOrderActivity.EXTRA_PRODUCT_TITLE, product.name);
         args.putString(PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION, product.description);
@@ -71,7 +86,7 @@ public class ProductSheetWrapper {
         return this;
     }
 
-    public ProductSheetWrapper noBackground() {
+    public ProductSheetWidget noBackground() {
         mHasBackground = false;
         return this;
     }
@@ -121,14 +136,6 @@ public class ProductSheetWrapper {
         if (!mHasBackground) {
             mRootView.setBackgroundColor(Color.TRANSPARENT);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    public <T extends View> T findViewById(int id) {
-        if (mRootView == null) {
-            return null;
-        }
-        return (T) mRootView.findViewById(id);
     }
 
     public String getString(int id) {

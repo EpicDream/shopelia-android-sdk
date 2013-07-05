@@ -32,7 +32,7 @@ import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
 import com.shopelia.android.widget.FontableTextView;
-import com.shopelia.android.widget.ProductSheetWrapper;
+import com.shopelia.android.widget.ProductSheetWidget;
 import com.shopelia.android.widget.actionbar.ActionBar;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
@@ -196,7 +196,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     private void setupProductUi() {
         //@formatter:off
-        new ProductSheetWrapper(findViewById(R.id.product_sheet))
+        findViewById(R.id.product_sheet, ProductSheetWidget.class)
             .setProductInfo(mOrder.product)
             .noBackground()
             .refreshView();
