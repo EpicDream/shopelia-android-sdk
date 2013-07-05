@@ -56,6 +56,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     public static final int STYLE_FULLSCREEN = 0x0;
     public static final int STYLE_DIALOG = 0x1;
+    public static final int STYLE_TRANSLUCENT = STYLE_FULLSCREEN;
 
     public static final int MODE_CLEARED = 0x0;
     public static final int MODE_WAITING = 1 << 0;
@@ -109,14 +110,14 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         }
 
         if (getActivityStyle() == STYLE_DIALOG) {
-            findViewById(R.id.frame).setOnTouchListener(new OnTouchListener() {
+            super.findViewById(R.id.frame).setOnTouchListener(new OnTouchListener() {
 
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
                     return true;
                 }
             });
-            findViewById(R.id.outside_area).setOnClickListener(new OnClickListener() {
+            super.findViewById(R.id.outside_area).setOnClickListener(new OnClickListener() {
 
                 @Override
                 public void onClick(View v) {
@@ -402,6 +403,10 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     public ActionBar getShopeliaActionBar() {
         return mActionBar;
+    }
+
+    public void setActivityStyle(int style) {
+        getIntent().putExtra(EXTRA_STYLE, style);
     }
 
     public int getActivityStyle() {
