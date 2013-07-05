@@ -23,7 +23,7 @@
             android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shopelia_floating_frame_background"
+            android:background="@drawable/shopelia_floating_frame_dark_top_corner_background"
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"

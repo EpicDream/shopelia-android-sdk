@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.view.View;
 
 import com.shopelia.android.widget.actionbar.ActionBar;
@@ -16,7 +16,7 @@ import com.shopelia.android.widget.actionbar.ActionBar.Item;
  * 
  * @author Pierre Pollastri
  */
-public class ShopeliaFragment<Contract> extends DialogFragment {
+public class ShopeliaFragment<Contract> extends Fragment {
 
     private Contract mContract;
 

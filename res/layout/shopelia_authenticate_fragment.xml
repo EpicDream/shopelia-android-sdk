@@ -5,5 +5,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical" xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <com.shopelia.android.widget.ValidationButton
+        android:id="@+id/validationButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+    </com.shopelia.android.widget.ValidationButton>
 
 </com.shopelia.android.widget.form.FormLinearLayout>
