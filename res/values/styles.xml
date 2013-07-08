@@ -29,7 +29,8 @@
         <item name="android:windowBackground">@color/shopelia_dark_translucent_60</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
-        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:backgroundDimAmount">0.5</item>
         <item name="android:windowAnimationStyle">@style/Animation.Shopelia.FloatingFrame</item>
     </style>
 

@@ -11,6 +11,7 @@ import org.json.JSONObject;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
@@ -19,6 +20,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
@@ -85,6 +88,10 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         mActionBar = new ActionBar(this);
         super.onCreate(savedInstanceState);
+
+        Window w = getWindow();
+        w.setFormat(PixelFormat.RGBA_8888);
+        w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
 
         if (savedInstanceState != null) {
             mSessionId = savedInstanceState.getString(EXTRA_SESSION_ID);

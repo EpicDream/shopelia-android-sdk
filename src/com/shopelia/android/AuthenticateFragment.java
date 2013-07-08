@@ -170,10 +170,14 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
         @Override
         public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message) {
             stopWaiting();
-            mPasswordField.setError(false);
+            if (mPasswordField.hasError()) {
+                mPasswordField.setError(false);
+            }
             if (locked) {
-                mPasswordField.setEnabled(false);
-                mErrorMessage.setVisibility(View.VISIBLE);
+                if (mPasswordField.isEnabled() || mErrorMessage.getVisibility() == View.GONE) {
+                    mPasswordField.setEnabled(false);
+                    mErrorMessage.setVisibility(View.VISIBLE);
+                }
                 mErrorMessage.setText(message);
             } else {
                 mErrorMessage.setVisibility(View.GONE);
