@@ -73,7 +73,7 @@
             android:src="@drawable/shopelia_logo_bottom" />
 
         <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/button1"
+            android:id="@+id/validate"
             android:layout_width="wrap_content"
             android:layout_height="35dp"
             android:background="@drawable/shopelia_validation_button_background"
