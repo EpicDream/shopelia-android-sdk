@@ -41,6 +41,13 @@
         ]]>
     </string>
 
+    <!-- Authenticate -->
+    <string name="shopelia_authenticate_remove_check">Si vous désactivez la fonctionalité de protection par mot de passe, il est possible que des achats non autorisés soient effectués. Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
+	<string name="shopelia_authenticate_title">Authentification</string>
+	<string name="shopelia_authenticate_remember_me">NE PLUS ME LE DEMANDER</string>
+	<string name="shopelia_authenticate_validate">CONFIRMER</string>
+	<string name="shopelia_authenticate_your_password">Votre mot de passe Shopelia</string>
+	
     <!-- Main form -->
     <string name="shopelia_form_main_waiting">Création de votre compte Shopelia</string>
     <string name="shopelia_form_main_phone">Numéro de téléphone</string>
@@ -93,8 +100,8 @@
     <string name="shopelia_form_address_loading_adding">Ajout de votre nouvelle adresse</string>
     <string name="shopelia_form_address_edit">Editer</string>
     <string name="shopelia_form_address_delete">Supprimer</string>
-	<string name="shopelia_form_address_country_not_found">Ce pays est indisponnible</string>
-    
+    <string name="shopelia_form_address_country_not_found">Ce pays est indisponnible</string>
+
     <string-array name="shopelia_form_address_item_actions">
         <item>@string/shopelia_form_address_delete</item>
     </string-array>
@@ -130,8 +137,8 @@
     <string name="shopelia_confirmation_shipping_fees">Frais de livraison</string>
     <string name="shopelia_confirmation_total_price">TOTAL</string>
     <string name="shopelia_confirmation_error">Une erreur est survenue. Impossible de valider votre commande.</string>
-	<string name="shopelia_confirmation_free">Gratuit</string>
-    
+    <string name="shopelia_confirmation_free">Gratuit</string>
+
     <!-- Pin code -->
     <string name="shopelia_pincode_create">CRÉEZ VOTRE CODE D\'ACCÈS</string>
     <string name="shopelia_pincode_re_enter">VÉRIFIEZ VOTRE CODE D\'ACCÈS</string>
@@ -200,7 +207,7 @@
 
     <!-- Footer -->
     <string name="shopelia_footer_rcs">RCS 529991119 - SAS au capital de  291 676€</string>
-    
+
     <!-- Errors -->
     <string name="shopelia_error_network_error">Une erreur réseau est survenue</string>
     <string name="shopelia_error_server_broke_down">Les serveurs shopelia ne répondent pas</string>

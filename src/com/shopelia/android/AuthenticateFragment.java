@@ -7,6 +7,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.shopelia.android.analytics.Analytics;
@@ -48,6 +51,9 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
         mFormContainer.findFieldById(R.id.password, PasswordField.class).setJsonPath(User.Api.PASSWORD);
         mFormContainer.setOnSubmitListener(mOnSubmitListener);
         mFormContainer.onCreate(savedInstanceState);
+
+        findViewById(R.id.remember_me, CheckBox.class).setOnCheckedChangeListener(mOnCheckedChangeListener);
+
     }
 
     @Override
@@ -123,6 +129,15 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
                 });
                 startWaiting("Authentification...", false, false);
             }
+        }
+    };
+
+    private OnCheckedChangeListener mOnCheckedChangeListener = new OnCheckedChangeListener() {
+
+        @Override
+        public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            View v = findViewById(R.id.disclaimer);
+            v.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         }
     };
 

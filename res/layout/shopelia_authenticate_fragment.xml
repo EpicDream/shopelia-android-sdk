@@ -9,6 +9,7 @@
     android:divider="@null"
     android:listSelector="@android:color/transparent"
     android:orientation="vertical"
+    android:animateLayoutChanges="true"
     android:scrollbarStyle="outsideOverlay" >
 
     <com.shopelia.android.widget.form.HeaderField
@@ -16,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:shopelia_icon="@drawable/shopelia_user"
-        app:shopelia_text="Authentification" >
+        app:shopelia_text="@string/shopelia_authenticate_title" >
     </com.shopelia.android.widget.form.HeaderField>
 
     <com.shopelia.android.widget.FontableTextView
@@ -31,8 +32,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
-        app:shopelia_hint="Votre mot de passe Shopelia" >
-
+        app:shopelia_hint="@string/shopelia_authenticate_your_password" >
     </com.shopelia.android.widget.form.PasswordField>
 
     <com.shopelia.android.widget.FontableTextView
@@ -43,22 +43,38 @@
         android:gravity="center"
         android:linksClickable="false"
         android:padding="@dimen/shopelia_margin_normal"
-        app:shopelia_htmlText="@string/shopelia_sign_in_forgot_password"
         android:textColor="@color/shopelia_link_text_color"
         android:textSize="@dimen/shopelia_font_size_small"
         app:shopelia_fontFamily="normal"
-        app:shopelia_fontStyle="normal" />
+        app:shopelia_fontStyle="normal"
+        app:shopelia_htmlText="@string/shopelia_sign_in_forgot_password" />
 
     <CheckBox
         android:id="@+id/remember_me"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:button="@drawable/shopelia_btn_check_holo_light"
-        android:text="NE PLUS ME LE DEMANDER"
+        android:text="@string/shopelia_authenticate_remember_me"
         android:textColor="@color/shopelia_dark"
         android:textSize="@dimen/shopelia_font_size_extra_small" />
-    
-    
+
+    <LinearLayout
+        android:id="@+id/disclaimer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:gravity="start|clip_vertical"
+            android:layout_marginBottom="@dimen/shopelia_margin_normal"
+            android:text="@string/shopelia_authenticate_remove_check"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_extra_small" />
+    </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -80,7 +96,7 @@
             android:gravity="center"
             android:paddingLeft="@dimen/shopelia_margin_normal"
             android:paddingRight="@dimen/shopelia_margin_normal"
-            android:text="CONFIRMER"
+            android:text="@string/shopelia_authenticate_validate"
             android:textColor="@color/shopelia_validation_button_text_color"
             android:textSize="@dimen/shopelia_font_size_small"
             app:shopelia_fontStyle="bold" />
