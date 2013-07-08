@@ -198,7 +198,6 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         //@formatter:off
         findViewById(R.id.product_sheet, ProductSheetWidget.class)
             .setProductInfo(mOrder.product)
-            .noBackground()
             .refreshView();
         //@formatter:on
     }

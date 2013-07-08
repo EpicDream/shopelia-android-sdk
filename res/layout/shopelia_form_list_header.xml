@@ -23,6 +23,7 @@
 
     <com.shopelia.android.widget.ProductSheetWidget
         android:id="@+id/product_sheet"
+        android:background="@drawable/shopelia_field_normal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
     </com.shopelia.android.widget.ProductSheetWidget>

@@ -24,7 +24,7 @@
         <item name="android:background">@android:color/transparent</item>
     </style>
 
-    <style name="Theme.Shopelia.FloatingFrame" parent="android:Theme.Translucent">
+    <style name="Theme.Shopelia.FloatingFrame" parent="Theme.Shopelia">
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowBackground">@color/shopelia_dark_translucent_60</item>
         <item name="android:windowContentOverlay">@null</item>

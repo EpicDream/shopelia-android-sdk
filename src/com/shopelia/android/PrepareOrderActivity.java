@@ -120,10 +120,9 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     public static final String EXTRA_USER_PHONE = Config.EXTRA_PREFIX + "USER_PHONE";
 
     private static final int REQUEST_CREATE_PINCODE = 0x101;
-    private static final int REQUEST_AUTH_PINCODE = 0x0102;
     private static final int REQUEST_ADD_PAYMENT_CARD = 0x0103;
 
-    private AuthenticateFragment mSignInFragment = new AuthenticateFragment();
+    private SignInFragment mSignInFragment = new SignInFragment();
     private SignUpFragment mSignUpFragment = new SignUpFragment();
     private ScrollView mScrollView;
 
@@ -161,9 +160,7 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 }
                 ft.commit();
             } else {
-                Intent intent = new Intent(this, PincodeActivity.class);
-                intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, false);
-                startActivityForResult(intent, REQUEST_AUTH_PINCODE);
+                checkoutOrder(getOrder());
             }
         }
         startService(new Intent(ShopeliaService.ACTION));
@@ -194,14 +191,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                     createAccount();
                     track(Analytics.Events.Steps.SignUp.SIGNING_UP,
                             AnalyticsBuilder.prepareStepPackage(this, Analytics.Properties.Steps.SigningUp.PINCODE));
-                }
-                break;
-            case REQUEST_AUTH_PINCODE:
-                if (resultCode == RESULT_OK) {
-                    checkoutOrder(getOrder());
-                } else if (resultCode == RESULT_CANCELED) {
-                    finish();
-                    return;
                 }
                 break;
             case REQUEST_ADD_PAYMENT_CARD:

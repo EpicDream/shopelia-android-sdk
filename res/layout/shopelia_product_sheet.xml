@@ -4,7 +4,6 @@
     android:id="@+id/product_sheet"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/shopelia_field_normal"
     android:orientation="horizontal"
     android:padding="@dimen/shopelia_margin_large" >
 

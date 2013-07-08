@@ -54,8 +54,10 @@ public class FontableTextView extends TextView {
         final String htmlText = a.getString(R.styleable.FontableTextView_shopelia_htmlText);
         setTypeface(getTypeface(fontFamily, fontStyle));
 
-        if (htmlText != null) {
+        if (htmlText != null && !isInEditMode()) {
             setText(Html.fromHtml(htmlText));
+        } else if (htmlText != null && isInEditMode()) {
+            setText(htmlText);
         }
 
         a.recycle();

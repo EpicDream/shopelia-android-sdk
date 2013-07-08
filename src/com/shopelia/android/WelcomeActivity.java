@@ -28,7 +28,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
             setActivityStyle(STYLE_TRANSLUCENT);
         }
         super.onCreate(savedInstanceState);
-        if (um.getLoginsCount() > 0) {
+        if (um.getLoginsCount() > 0 && um.isLogged() && um.getUser() != null) {
             setHostContentView(R.layout.shopelia_welcome_activity);
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();

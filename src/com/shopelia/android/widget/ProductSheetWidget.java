@@ -2,7 +2,6 @@ package com.shopelia.android.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -88,11 +87,6 @@ public class ProductSheetWidget extends FrameLayout {
         return this;
     }
 
-    public ProductSheetWidget noBackground() {
-        mHasBackground = false;
-        return this;
-    }
-
     public void refreshView() {
         if (mRootView == null || mArguments == null) {
             return;
@@ -136,9 +130,6 @@ public class ProductSheetWidget extends FrameLayout {
         }
         if (vendor != null) {
             mVendorLogo.setUrl(vendor.logo);
-        }
-        if (!mHasBackground) {
-            mRootView.setBackgroundColor(Color.TRANSPARENT);
         }
     }
 

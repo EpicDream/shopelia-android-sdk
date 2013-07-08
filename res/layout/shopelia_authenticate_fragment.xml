@@ -20,7 +20,7 @@
     </com.shopelia.android.widget.form.HeaderField>
 
     <com.shopelia.android.widget.FontableTextView
-        android:id="@+id/fontableTextView1"
+        android:id="@+id/email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="pierre.pollastri@prixing.fr"
@@ -43,14 +43,14 @@
         android:gravity="center"
         android:linksClickable="false"
         android:padding="@dimen/shopelia_margin_normal"
-        android:text="@string/shopelia_sign_in_forgot_password"
+        app:shopelia_htmlText="@string/shopelia_sign_in_forgot_password"
         android:textColor="@color/shopelia_link_text_color"
         android:textSize="@dimen/shopelia_font_size_small"
         app:shopelia_fontFamily="normal"
         app:shopelia_fontStyle="normal" />
 
     <CheckBox
-        android:id="@+id/checkBox1"
+        android:id="@+id/remember_me"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:button="@drawable/shopelia_btn_check_holo_light"
