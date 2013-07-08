@@ -43,4 +43,10 @@ public interface FormContainer {
 
     public boolean removeField(FormField field);
 
+    public void setOnSubmitListener(OnSubmitListener l);
+
+    public interface OnSubmitListener {
+        public void onSubmit(FormContainer container);
+    }
+
 }

@@ -28,6 +28,7 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
 
     private List<FormField> mFields = new ArrayList<FormField>();
     private ScrollView mParentScrollable;
+    private OnSubmitListener mListener = new OnSubmitAdapter();
 
     public FormLinearLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -92,6 +93,7 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
                 return true;
             }
         }
+        mListener.onSubmit(this);
         return false;
     }
 
@@ -271,4 +273,27 @@ public class FormLinearLayout extends LinearLayout implements FormContainer {
         }
         return false;
     }
+
+    @Override
+    public void setOnSubmitListener(OnSubmitListener l) {
+        mListener = l;
+    }
+
+    private class OnSubmitAdapter implements OnSubmitListener {
+
+        private OnSubmitListener mListener;
+
+        public void set(OnSubmitListener l) {
+            mListener = l;
+        }
+
+        @Override
+        public void onSubmit(FormContainer container) {
+            if (mListener != null) {
+                mListener.onSubmit(container);
+            }
+        }
+
+    }
+
 }
