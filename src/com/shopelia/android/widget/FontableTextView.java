@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.AssetManager;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
+import android.text.Html;
 import android.util.AttributeSet;
 import android.util.SparseArray;
 import android.widget.TextView;
@@ -33,6 +34,8 @@ public class FontableTextView extends TextView {
 
     private static final SparseArray<SparseArray<Typeface>> sTypefaces = new SparseArray<SparseArray<Typeface>>(3);
 
+    private boolean mIsHtml;
+
     public FontableTextView(Context context) {
         this(context, null);
     }
@@ -48,10 +51,25 @@ public class FontableTextView extends TextView {
 
         final int fontFamily = a.getInt(R.styleable.FontableTextView_shopelia_fontFamily, FAMILY_NORMAL);
         final int fontStyle = a.getInt(R.styleable.FontableTextView_shopelia_fontStyle, STYLE_NORMAL);
-
+        final String htmlText = a.getString(R.styleable.FontableTextView_shopelia_htmlText);
         setTypeface(getTypeface(fontFamily, fontStyle));
 
+        if (htmlText != null) {
+            setText(Html.fromHtml(htmlText));
+        }
+
         a.recycle();
+    }
+
+    public boolean isFromHtml() {
+        return mIsHtml;
+    }
+
+    public void setFromHtml(boolean fromHtml) {
+        if (mIsHtml != fromHtml) {
+            mIsHtml = fromHtml;
+            setText(getText());
+        }
     }
 
     /**

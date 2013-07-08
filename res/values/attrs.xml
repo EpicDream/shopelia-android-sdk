@@ -12,6 +12,7 @@
             <enum name="condensed" value="1" />
             <enum name="light" value="2" />
         </attr>
+        <attr name="shopelia_htmlText" format="string" />
     </declare-styleable>
 
     <attr name="shopelia_text" format="string" />
