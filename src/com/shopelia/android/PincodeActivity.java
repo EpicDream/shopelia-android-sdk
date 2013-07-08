@@ -14,7 +14,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.shopelia.android.PincodeFragment.PincodeHandler;
@@ -281,7 +280,6 @@ public class PincodeActivity extends ShopeliaActivity implements PincodeHandler 
                 stopWaiting();
                 if (response.getStatus() == 503) {
                     try {
-                        Log.d(null, response.getBodyAsString());
                         JSONObject object = new JSONObject(response.getBodyAsString());
                         forbidOrder(object.optLong(JSON_DELAY, 300) * SECONDS);
                     } catch (JSONException e) {

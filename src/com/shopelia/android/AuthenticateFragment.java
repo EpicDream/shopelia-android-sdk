@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -17,22 +18,27 @@ import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.Command;
-import com.shopelia.android.remote.api.ShopeliaRestClient;
+import com.shopelia.android.remote.api.ApiHandler;
+import com.shopelia.android.remote.api.VerifyAPI;
 import com.shopelia.android.utils.DialogHelper;
+import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
+import com.shopelia.android.widget.form.EditTextField;
+import com.shopelia.android.widget.form.EditTextField.OnValidateListener;
 import com.shopelia.android.widget.form.FormContainer;
 import com.shopelia.android.widget.form.FormContainer.OnSubmitListener;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.PasswordField;
-import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
 public class AuthenticateFragment extends ShopeliaFragment<Void> {
 
     private FormLinearLayout mFormContainer;
+    private VerifyAPI mVerifyAPI;
+    private FontableTextView mErrorMessage;
+    private PasswordField mPasswordField;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -52,8 +58,13 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
         mFormContainer.setOnSubmitListener(mOnSubmitListener);
         mFormContainer.onCreate(savedInstanceState);
 
+        mPasswordField = mFormContainer.findFieldById(R.id.password);
+
         findViewById(R.id.remember_me, CheckBox.class).setOnCheckedChangeListener(mOnCheckedChangeListener);
 
+        mErrorMessage = findViewById(R.id.error);
+
+        mVerifyAPI = new VerifyAPI(getActivity(), mApiCallback);
     }
 
     @Override
@@ -106,28 +117,11 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
         @Override
         public void onSubmit(FormContainer container) {
             if (mFormContainer.validate()) {
-                ShopeliaRestClient.authenticate(getActivity());
-                ShopeliaRestClient.post(Command.V1.Users.Verify.$, mFormContainer.toJson(), new AsyncCallback() {
-
-                    @Override
-                    public void onComplete(HttpResponse httpResponse) {
-                        if (httpResponse.getStatus() == 204) {
-                            getActivity().startActivityForResult(new Intent(getActivity(), PrepareOrderActivity.class), 12);
-                        }
-                        onDone();
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        onDone();
-                    }
-
-                    public void onDone() {
-                        stopWaiting();
-                    }
-
-                });
-                startWaiting("Authentification...", false, false);
+                if (mVerifyAPI.verify(mFormContainer.toJson())) {
+                    mErrorMessage.setVisibility(View.GONE);
+                    mPasswordField.setEnabled(false);
+                    startWaiting("Authentification...", false, false);
+                }
             }
         }
     };
@@ -139,6 +133,61 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
             View v = findViewById(R.id.disclaimer);
             v.setVisibility(isChecked ? View.VISIBLE : View.GONE);
         }
+    };
+
+    private ApiHandler.CallbackAdapter mApiCallback = new ApiHandler.CallbackAdapter() {
+
+        @Override
+        public void onVerifySucceed() {
+            mPasswordField.setValid(true);
+            getActivity().startActivityForResult(new Intent(getActivity(), PrepareOrderActivity.class), 12);
+        };
+
+        @Override
+        public void onVerifyFailed() {
+            mPasswordField.setEnabled(true);
+            mErrorMessage.setVisibility(View.VISIBLE);
+            mErrorMessage.setText(R.string.shopelia_authenticate_wrong_password);
+            mPasswordField.setError(true);
+            mPasswordField.setContentText("");
+            mFormContainer.findFieldById(R.id.password).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup));
+            mPasswordField.setOnValidateListener(new OnValidateListener() {
+
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    mPasswordField.setOnValidateListener(null);
+                    mPasswordField.setError(false);
+                    mErrorMessage.setVisibility(View.GONE);
+                };
+
+                @Override
+                public boolean onValidate(EditTextField editTextField, boolean shouldFireError) {
+                    return true;
+                }
+            });
+            stopWaiting();
+        };
+
+        @Override
+        public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message) {
+            stopWaiting();
+            mPasswordField.setError(false);
+            if (locked) {
+                mPasswordField.setEnabled(false);
+                mErrorMessage.setVisibility(View.VISIBLE);
+                mErrorMessage.setText(message);
+            } else {
+                mErrorMessage.setVisibility(View.GONE);
+                mPasswordField.setEnabled(true);
+            }
+        };
+
+        @Override
+        public void onError(int step, HttpResponse httpResponse, org.json.JSONObject response, Exception e) {
+            mErrorMessage.setVisibility(View.VISIBLE);
+            mErrorMessage.setText(R.string.shopelia_error_network_error);
+            stopWaiting();
+        };
+
     };
 
 }

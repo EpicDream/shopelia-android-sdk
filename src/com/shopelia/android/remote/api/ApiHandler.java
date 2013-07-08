@@ -45,6 +45,12 @@ public class ApiHandler {
 
         public void onAddressDeleted(long id);
 
+        public void onVerifyFailed();
+
+        public void onVerifySucceed();
+
+        public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message);
+
     }
 
     public static class CallbackAdapter implements Callback {
@@ -119,6 +125,21 @@ public class ApiHandler {
 
         }
 
+        @Override
+        public void onVerifyFailed() {
+
+        }
+
+        @Override
+        public void onVerifySucceed() {
+
+        }
+
+        @Override
+        public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message) {
+
+        }
+
     }
 
     public static class ErrorInflater {
@@ -153,6 +174,7 @@ public class ApiHandler {
     public static final int STEP_RETRIEVE_USER = 7;
     public static final int STEP_SIGN_IN = 8;
     public static final int STEP_ADDRESS = 9;
+    public static final int STEP_VERIFY = 10;
 
     public static final int STATE_RUNNING = 0;
     public static final int STATE_PAUSED = 1;

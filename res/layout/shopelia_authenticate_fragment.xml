@@ -4,12 +4,12 @@
     android:id="@+id/form"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:background="@android:color/transparent"
     android:cacheColorHint="@android:color/transparent"
     android:divider="@null"
     android:listSelector="@android:color/transparent"
     android:orientation="vertical"
-    android:animateLayoutChanges="true"
     android:scrollbarStyle="outsideOverlay" >
 
     <com.shopelia.android.widget.form.HeaderField
@@ -34,6 +34,19 @@
         android:layout_marginTop="@dimen/shopelia_margin_normal"
         app:shopelia_hint="@string/shopelia_authenticate_your_password" >
     </com.shopelia.android.widget.form.PasswordField>
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/error"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginLeft="@dimen/shopelia_margin_extra_small"
+        android:layout_marginRight="@dimen/shopelia_margin_extra_small"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:gravity="center"
+        android:textColor="@color/shopelia_red"
+        android:textSize="@dimen/shopelia_font_size_small"
+        android:visibility="gone" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/forgotPassword"
@@ -68,8 +81,8 @@
         <com.shopelia.android.widget.FontableTextView
             android:layout_width="match_parent"
             android:layout_height="80dp"
-            android:gravity="start|clip_vertical"
             android:layout_marginBottom="@dimen/shopelia_margin_normal"
+            android:gravity="start|clip_vertical"
             android:text="@string/shopelia_authenticate_remove_check"
             android:textColor="@color/shopelia_dark"
             android:textSize="@dimen/shopelia_font_size_extra_small" />
