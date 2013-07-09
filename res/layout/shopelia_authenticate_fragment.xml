@@ -80,7 +80,7 @@
 
         <com.shopelia.android.widget.FontableTextView
             android:layout_width="match_parent"
-            android:layout_height="80dp"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/shopelia_margin_normal"
             android:gravity="start|clip_vertical"
             android:text="@string/shopelia_authenticate_remove_check"

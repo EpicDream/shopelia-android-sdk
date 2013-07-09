@@ -56,6 +56,7 @@ public final class ShopeliaRestClient {
     }
 
     public static void authenticate(Context context) {
+        prepare();
         if (UserManager.get(context).isLogged()) {
             sHttpClient.addHeader("X-Shopelia-AuthToken", UserManager.get(context).getAuthToken());
         } else {
@@ -72,7 +73,10 @@ public final class ShopeliaRestClient {
      * @return
      */
     public static HttpResponse get(String path, ParameterMap params) {
-        return sHttpClient.get(path, params);
+        prepare();
+        HttpResponse response = sHttpClient.get(path, params);
+        release();
+        return response;
     }
 
     /**
@@ -84,7 +88,9 @@ public final class ShopeliaRestClient {
      * @param callback
      */
     public static void get(String path, ParameterMap params, AsyncCallback callback) {
+        prepare();
         sHttpClient.get(path, params, callback);
+        release();
     }
 
     /**
@@ -94,7 +100,10 @@ public final class ShopeliaRestClient {
      * @param params
      */
     public static HttpResponse post(String path, ParameterMap params) {
-        return sHttpClient.post(path, params);
+        prepare();
+        HttpResponse r = sHttpClient.post(path, params);
+        release();
+        return r;
     }
 
     /**
@@ -106,7 +115,9 @@ public final class ShopeliaRestClient {
      * @param callback
      */
     public static void post(String path, ParameterMap params, AsyncCallback callback) {
+        prepare();
         sHttpClient.post(path, params, callback);
+        release();
     }
 
     /**
@@ -116,7 +127,10 @@ public final class ShopeliaRestClient {
      * @param params
      */
     public static HttpResponse post(String path, JSONObject json) {
-        return sHttpClient.post(path, "application/json", json.toString().getBytes());
+        prepare();
+        HttpResponse r = sHttpClient.post(path, "application/json", json.toString().getBytes());
+        release();
+        return r;
     }
 
     /**
@@ -128,7 +142,9 @@ public final class ShopeliaRestClient {
      * @param callback
      */
     public static void post(String path, JSONObject object, AsyncCallback callback) {
+        prepare();
         sHttpClient.post(path, "application/json", object.toString().getBytes(), callback);
+        release();
     }
 
     /**
@@ -138,7 +154,10 @@ public final class ShopeliaRestClient {
      * @param params
      */
     public static HttpResponse post(String path, byte[] object) {
-        return sHttpClient.post(path, "application/json", object);
+        prepare();
+        HttpResponse r = sHttpClient.post(path, "application/json", object);
+        release();
+        return r;
     }
 
     /**
@@ -150,11 +169,15 @@ public final class ShopeliaRestClient {
      * @param callback
      */
     public static void post(String path, byte[] object, AsyncCallback callback) {
+        prepare();
         sHttpClient.post(path, "application/json", object, callback);
+        release();
     }
 
     public static void put(String path, JSONObject object, AsyncCallback callback) {
+        prepare();
         sHttpClient.put(path, "application/json", object.toString().getBytes(), callback);
+        release();
     }
 
     /**
@@ -166,7 +189,9 @@ public final class ShopeliaRestClient {
      * @param callback
      */
     public static void delete(String path, ParameterMap params, AsyncCallback callback) {
+        prepare();
         sHttpClient.delete(path, params, callback);
+        release();
     }
 
     public static final void reset() {
@@ -206,6 +231,18 @@ public final class ShopeliaRestClient {
          */
 
         sHttpClient.setRequestLogger(new LogcatRequestLogger(LOG_TAG, Config.INFO_LOGS_ENABLED));
+    }
+
+    private static final void prepare() {
+        if (sHttpClient == null) {
+            reset();
+        }
+    }
+
+    private static final void release() {
+        if (sHttpClient != null) {
+            sHttpClient = null;
+        }
     }
 
 }
