@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
@@ -186,7 +185,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             case REQUEST_CREATE_PINCODE:
                 if (resultCode == RESULT_OK) {
                     final Order order = getOrder();
-                    order.user.pincode = data.getStringExtra(PincodeActivity.EXTRA_PINCODE);
                     mCachedPincode = order.user.pincode;
                     createAccount();
                     track(Analytics.Events.Steps.SignUp.SIGNING_UP,
@@ -220,14 +218,8 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
     @Override
     public void onSignUp(JSONObject result) {
         setOrder(Order.inflate(result));
-        if (TextUtils.isEmpty(mCachedPincode)) {
-            Intent intent = new Intent(this, PincodeActivity.class);
-            intent.putExtra(PincodeActivity.EXTRA_CREATE_PINCODE, true);
-            startActivityForResult(intent, REQUEST_CREATE_PINCODE);
-        } else {
-            getOrder().user.pincode = mCachedPincode;
-            createAccount();
-        }
+        getOrder().user.pincode = mCachedPincode;
+        createAccount();
     }
 
     private void createAccount() {

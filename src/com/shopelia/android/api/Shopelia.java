@@ -149,7 +149,6 @@ public final class Shopelia implements Parcelable {
         if (UserManager.get(context).getCheckoutCount() == 0) {
             data.setClass(context, WelcomeActivity.class);
         } else {
-            // data.setClass(context, PrepareOrderActivity.class);
             data.setClass(context, WelcomeActivity.class);
         }
         if (productUrl != null) {
