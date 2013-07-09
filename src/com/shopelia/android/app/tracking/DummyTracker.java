@@ -5,6 +5,7 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.shopelia.android.app.ShopeliaTracker;
+import com.shopelia.android.model.User;
 
 public class DummyTracker implements ShopeliaTracker {
 
@@ -40,6 +41,16 @@ public class DummyTracker implements ShopeliaTracker {
 
     @Override
     public void flush() {
+
+    }
+
+    @Override
+    public void identify(User user) {
+
+    }
+
+    @Override
+    public void unidentify() {
 
     }
 
