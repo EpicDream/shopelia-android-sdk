@@ -76,7 +76,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     private ProgressDialog mProgressDialog;
 
     private String mSessionId;
-    private ShopeliaTracker mTrackingObject = ShopeliaTracker.Factory.create(ShopeliaTracker.MIXPANEL);
+    private ShopeliaTracker mTrackingObject = ShopeliaTracker.Factory.create(ShopeliaTracker.PROVIDER_DEFAULT);
 
     private Runnable mWaitModeRunnable;
 
