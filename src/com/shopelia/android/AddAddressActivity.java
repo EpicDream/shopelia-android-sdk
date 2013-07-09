@@ -88,8 +88,6 @@ public class AddAddressActivity extends ShopeliaActivity {
     private FormAutocompleteEditText mAddressField;
     private FormLinearLayout mFormLayout;
 
-    private String mReferencedText;
-
     // Backend
     private LayoutInflater mLayoutInflater;
     private AutocompletionAdapter mAutocompletionAdapter = new AutocompletionAdapter(null);
@@ -191,7 +189,6 @@ public class AddAddressActivity extends ShopeliaActivity {
         if (bundle != null) {
             mAddressField.setText(bundle.getString(EXTRA_ADDRESS));
             mAddressField.setTag(bundle.getString(EXTRA_REFERENCE));
-            mReferencedText = bundle.getString(EXTRA_REFERENCE);
         }
 
         if (!TextUtils.isEmpty(mAddressField.getText()) && mAddressField.getTag() == null) {
@@ -294,7 +291,6 @@ public class AddAddressActivity extends ShopeliaActivity {
         @Override
         public void onItemClick(AdapterView<?> adapterView, View view, int position, long itemId) {
             Address address = (Address) mAutocompletionAdapter.getItem(position);
-            mReferencedText = address.address;
             try {
                 int index = address.address.lastIndexOf(',');
                 index = address.address.lastIndexOf(',', index - 1);
