@@ -246,8 +246,7 @@ public final class Shopelia implements Parcelable {
     }
 
     public void display() {
-        ShopeliaTracker tracking = ShopeliaTracker.Factory.create(ShopeliaTracker.MIXPANEL);
-        tracking.init(mContext);
+        ShopeliaTracker tracking = ShopeliaTracker.Factory.getDefault(mContext);
         tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
         tracking.flush();
     }
