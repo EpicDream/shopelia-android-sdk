@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaActivity;
 
 public class CloseCheckoutActivity extends ShopeliaActivity {
@@ -16,7 +15,7 @@ public class CloseCheckoutActivity extends ShopeliaActivity {
         super.onCreate(saveState);
         setHostContentView(R.layout.shopelia_close_checkout_activity);
         if (saveState == null) {
-            track(Analytics.Events.Steps.Finalize.BEGIN);
+            getTracker().track(Analytics.Events.Steps.ORDER_COMPLETED);
         }
     }
 
@@ -40,8 +39,6 @@ public class CloseCheckoutActivity extends ShopeliaActivity {
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        track(Analytics.Events.Steps.Finalize.END,
-                AnalyticsBuilder.prepareMethodPackage(this, Analytics.Properties.Steps.Finalizing.Method.BACK_ON_APPLICATION));
     }
 
 }

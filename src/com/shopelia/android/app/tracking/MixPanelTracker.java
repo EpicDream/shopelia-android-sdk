@@ -11,7 +11,6 @@ import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.config.Build;
-import com.shopelia.android.utils.JsonUtils;
 
 public class MixPanelTracker implements ShopeliaTracker {
 
@@ -32,6 +31,21 @@ public class MixPanelTracker implements ShopeliaTracker {
         if (context instanceof ShopeliaActivity) {
             mSessionId = ((ShopeliaActivity) context).getSessionId();
         }
+        mMixpanelInstance.registerSuperProperties(getSuperProperties(context));
+    }
+
+    public JSONObject getSuperProperties(Context context) {
+        JSONObject properties = new JSONObject();
+        try {
+            properties.put(Analytics.Properties.SDK, Build.SDK);
+            properties.put(Analytics.Properties.SDK_VERSION, Build.VERSION.RELEASE);
+            if (!TextUtils.isEmpty(mSessionId)) {
+                properties.put(Analytics.Properties.SESSION, mSessionId);
+            }
+        } catch (JSONException e) {
+            // Do nothing
+        }
+        return properties;
     }
 
     public void track(String eventName) {
@@ -40,14 +54,6 @@ public class MixPanelTracker implements ShopeliaTracker {
 
     public void track(String eventName, JSONObject object) {
         if (mMixpanelInstance != null) {
-            try {
-                if (!TextUtils.isEmpty(mSessionId)) {
-                    object = JsonUtils.insert(object, Analytics.Properties.SESSION, mSessionId);
-                }
-                object = JsonUtils.insert(object, Analytics.Properties.SDK_INT, Build.VERSION.SDK_INT);
-            } catch (JSONException e) {
-
-            }
             mMixpanelInstance.track(eventName, object);
         }
     }
@@ -56,6 +62,21 @@ public class MixPanelTracker implements ShopeliaTracker {
         if (mMixpanelInstance != null) {
             mMixpanelInstance.flush();
         }
+    }
+
+    @Override
+    public void onDisplay(String activityName) {
+        track(Analytics.Events.Activities.DISPLAY + " " + activityName);
+    }
+
+    @Override
+    public void onFocusIn(String fieldName) {
+        track(Analytics.Events.UserInteractions.FOCUS_IN + " " + fieldName);
+    }
+
+    @Override
+    public void onValidate(String fieldName) {
+        track(Analytics.Events.UserInteractions.OK + " " + fieldName);
     }
 
 }

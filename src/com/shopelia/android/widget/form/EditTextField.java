@@ -186,7 +186,7 @@ public class EditTextField extends FormField {
         holder.error.setText(getErrorMessage());
     }
 
-    public void setContentText(CharSequence contentText) {
+    public EditTextField setContentText(CharSequence contentText) {
         if (contentText != null) {
             mContentText = contentText.toString();
             if (mAutoTrim) {
@@ -199,6 +199,7 @@ public class EditTextField extends FormField {
         if (getBoundedView() != null) {
             bindView(getBoundedView());
         }
+        return this;
     }
 
     protected void setViewStyle(ViewHolder holder) {

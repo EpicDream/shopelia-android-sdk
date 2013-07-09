@@ -28,7 +28,6 @@ import android.widget.Toast;
 import com.shopelia.android.SignInFragment.OnSignInListener;
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.config.Config;
@@ -187,8 +186,6 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                     final Order order = getOrder();
                     mCachedPincode = order.user.pincode;
                     createAccount();
-                    track(Analytics.Events.Steps.SignUp.SIGNING_UP,
-                            AnalyticsBuilder.prepareStepPackage(this, Analytics.Properties.Steps.SigningUp.PINCODE));
                 }
                 break;
             case REQUEST_ADD_PAYMENT_CARD:
@@ -231,11 +228,10 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             public void onAccountCreationSucceed(final User user, Address address) {
                 super.onAccountCreationSucceed(user, address);
                 if (mCardScanned) {
-                    track(Analytics.Events.AddPaymentCardMethod.CARD_SCANNED);
+                    getTracker().track(Analytics.Events.AddPaymentCardMethod.CARD_SCANNED);
                 } else {
-                    track(Analytics.Events.AddPaymentCardMethod.CARD_NOT_SCANNED);
+                    getTracker().track(Analytics.Events.AddPaymentCardMethod.CARD_NOT_SCANNED);
                 }
-                track(Analytics.Events.Steps.SignUp.END);
                 stopWaiting();
                 order.user = user;
                 if (user.paymentCards.size() == 0) {

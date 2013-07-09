@@ -8,14 +8,11 @@ import org.json.JSONException;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.TextUtils;
-import android.text.TextWatcher;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnFocusChangeListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -25,7 +22,6 @@ import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
@@ -41,6 +37,8 @@ import com.shopelia.android.widget.FormAutocompleteEditText;
 import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.form.EditTextField;
 import com.shopelia.android.widget.form.EditTextField.OnValidateListener;
+import com.shopelia.android.widget.form.FormField;
+import com.shopelia.android.widget.form.FormField.ListenerAdapter;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.NameField;
 import com.shopelia.android.widget.form.NumberField;
@@ -74,16 +72,16 @@ public class AddAddressActivity extends ShopeliaActivity {
     public static final int MODE_ADD = 0x1;
     public static final int MODE_EDIT = 0x2;
 
-    private static final SparseArray<String> CLICK_ON;
+    private static final SparseArray<String> TRACKER_NAME;
 
     static {
-        CLICK_ON = new SparseArray<String>();
-        CLICK_ON.put(R.id.name, Analytics.Properties.ClickOn.SigningUp.ADDRESS_NAME);
-        CLICK_ON.put(R.id.address, Analytics.Properties.ClickOn.SigningUp.ADDRESS_LINE_1);
-        CLICK_ON.put(R.id.extras, Analytics.Properties.ClickOn.SigningUp.ADDRESS_LINE_2);
-        CLICK_ON.put(R.id.country, Analytics.Properties.ClickOn.SigningUp.ADDRESS_COUNTRY);
-        CLICK_ON.put(R.id.city, Analytics.Properties.ClickOn.SigningUp.ADDRESS_CITY);
-        CLICK_ON.put(R.id.zipcode, Analytics.Properties.ClickOn.SigningUp.ADDRESS_ZIP);
+        TRACKER_NAME = new SparseArray<String>();
+        TRACKER_NAME.put(R.id.name, Analytics.Events.UserInteractions.Fields.NAME);
+        TRACKER_NAME.put(R.id.address, Analytics.Events.UserInteractions.Fields.ADDRESS_1);
+        TRACKER_NAME.put(R.id.extras, Analytics.Events.UserInteractions.Fields.ADDRESS_2);
+        TRACKER_NAME.put(R.id.country, Analytics.Events.UserInteractions.Fields.COUNTRY);
+        TRACKER_NAME.put(R.id.city, Analytics.Events.UserInteractions.Fields.CITY);
+        TRACKER_NAME.put(R.id.zipcode, Analytics.Events.UserInteractions.Fields.ZIP);
     }
 
     // Views
@@ -114,32 +112,51 @@ public class AddAddressActivity extends ShopeliaActivity {
         mFormLayout.findFieldById(R.id.name, NameField.class)
             .setJsonPath(Address.Api.LASTNAME)
             .mandatory()
-            .setContentText(name);
+            .setContentText(name)
+            .setListener(mTrackingListener)
+            .setOnClickListener(mOnClickListener);
         mFormLayout.findFieldById(R.id.city, NameField.class)
             .setJsonPath(Address.Api.CITY)
             .mandatory()
-            .setContentText(extras.getString(EXTRA_CITY));
+            .setContentText(extras.getString(EXTRA_CITY))
+            .setListener(mTrackingListener)
+            .setOnClickListener(mOnClickListener);
         mFormLayout.findFieldById(R.id.extras, EditTextField.class)
             .setJsonPath(Address.Api.EXTRAS)
-            .setContentText(extras.getString(EXTRA_ADDRESS_EXTRAS));
+            .setContentText(extras.getString(EXTRA_ADDRESS_EXTRAS))
+            .setListener(mTrackingListener)
+            .setOnClickListener(mOnClickListener);
         mFormLayout.findFieldById(R.id.country, EditTextField.class)
             .setJsonPath(Address.Api.COUNTRY)
             .mandatory()
-            .setContentText(new Locale("", !TextUtils.isEmpty(extras.getString(EXTRA_COUNTRY)) ? extras.getString(EXTRA_COUNTRY) : Locale.getDefault().getCountry()).getDisplayCountry());
-        mFormLayout.findFieldById(R.id.country, EditTextField.class).setOnValidateListener(mOnCountryValidateListener);
-        mFormLayout.findFieldById(R.id.country, EditTextField.class).getEditText().setAdapter(new AutoCompletionAdapter<String>(this, R.layout.shopelia_autocompletion_list_item, LocaleUtils.getCountries()));
+            .setContentText(new Locale("", !TextUtils.isEmpty(extras.getString(EXTRA_COUNTRY)) ? extras.getString(EXTRA_COUNTRY) : Locale.getDefault().getCountry()).getDisplayCountry())
+            .setListener(mTrackingListener)
+            .setOnClickListener(mOnClickListener);;
+        mFormLayout.findFieldById(R.id.country, EditTextField.class)
+            .setOnValidateListener(mOnCountryValidateListener)
+            .setListener(mTrackingListener)
+            .setOnClickListener(mOnClickListener);
+        mFormLayout.findFieldById(R.id.country, EditTextField.class)
+            .getEditText()
+            .setAdapter(new AutoCompletionAdapter<String>(this, R.layout.shopelia_autocompletion_list_item, LocaleUtils.getCountries()));
         mFormLayout.findFieldById(R.id.zipcode, NumberField.class)
             .setMinLength(5)
             .setJsonPath(Address.Api.ZIP)
             .mandatory()
-            .setContentText(extras.getString(EXTRA_ZIPCODE));
+            .setContentText(extras.getString(EXTRA_ZIPCODE))
+            .setListener(mTrackingListener)
+            .setOnClickListener(mOnClickListener);
         mFormLayout.findFieldById(R.id.phone, PhoneField.class)
             .mandatory()
             .setJsonPath(Address.Api.PHONE)
-            .setContentText(extras.getString(EXTRA_PHONE));
+            .setContentText(extras.getString(EXTRA_PHONE))
+            .setListener(mTrackingListener)
+            .setOnClickListener(mOnClickListener);
         mFormLayout.findFieldById(R.id.address, EditTextField.class)
             .setJsonPath(Address.Api.ADDRESS1)
-            .mandatory();
+            .mandatory()
+            .setListener(mTrackingListener)
+            .setOnClickListener(mOnClickListener);
         mAddressField = (FormAutocompleteEditText) mFormLayout.findFieldById(R.id.address).getEditText();
         //@formatter:on
         mAddressField.setAdapter(mAutocompletionAdapter);
@@ -151,29 +168,6 @@ public class AddAddressActivity extends ShopeliaActivity {
 
         }
 
-        // Add focus change listener for automatic validation
-        mAddressField.setOnFocusChangeListener(mOnFocusChangeListener);
-
-        mAddressField.addTextChangedListener(new TextWatcher() {
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (mReferencedText != null && !s.toString().equals(mReferencedText)) {
-                    mAddressField.setTag(null);
-                }
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-        });
         mFormLayout.commit();
         mFormLayout.onCreate(saveState);
 
@@ -363,7 +357,7 @@ public class AddAddressActivity extends ShopeliaActivity {
             setResult(RESULT_OK, data);
             String method = TextUtils.isEmpty(mResult.reference) ? Analytics.Properties.AddAddressMethod.MANUAL
                     : Analytics.Properties.AddAddressMethod.PLACES_AUTOCOMPLETE;
-            track(Analytics.Events.ADD_ADDRESS_METHOD, AnalyticsBuilder.prepareMethodPackage(AddAddressActivity.this, method));
+            // @formatter:on
             finish();
         }
 
@@ -450,24 +444,28 @@ public class AddAddressActivity extends ShopeliaActivity {
         return out;
     }
 
-    private OnFocusChangeListener mOnFocusChangeListener = new OnFocusChangeListener() {
+    private OnClickListener mOnClickListener = new OnClickListener() {
 
         @Override
-        public void onFocusChange(View v, boolean hasFocus) {
-            if (hasFocus) {
-                String action = CLICK_ON.get(v.getId());
-                if (action != null) {
-                    track(Analytics.Events.Steps.SignUp.SIGN_UP_ACTION,
-                            AnalyticsBuilder.prepareClickOnPackage(AddAddressActivity.this, action));
-                }
+        public void onClick(View v) {
+            String action = TRACKER_NAME.get(v.getId());
+            if (action != null) {
+                getTracker().onFocusIn(action);
             }
-            if (v == mAddressField && !TextUtils.isEmpty(mAddressField.getText()) && v.getTag() == null) {
-                // mPostalCodeField.setVisibility(View.VISIBLE);
-                // mCityField.setVisibility(View.VISIBLE);
-                // mCountryField.setVisibility(View.VISIBLE);
-            }
-
         }
+    };
+
+    private FormField.ListenerAdapter mTrackingListener = new ListenerAdapter() {
+
+        @Override
+        public void onValidChanged(FormField field) {
+            String event = TRACKER_NAME.get(field.getId());
+            if (event != null && field.isValid() && field.getResult() != null) {
+                getTracker().onValidate(event);
+                field.setListener(null);
+            }
+        };
+
     };
 
     private OnValidateListener mOnCountryValidateListener = new OnValidateListener() {

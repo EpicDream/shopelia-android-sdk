@@ -5,9 +5,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -29,7 +26,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
-import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
@@ -149,13 +145,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         if (screenName == null) {
             return;
         }
-        JSONObject properties = new JSONObject();
-        try {
-            properties.put(Analytics.Properties.SCREEN_NAME, screenName);
-        } catch (JSONException e) {
-
-        }
-        track(Analytics.Events.Activities.SCREEN_SEEN, properties);
+        getTracker().onDisplay(screenName);
     }
 
     @Override
@@ -171,12 +161,8 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         ShopeliaHttpSynchronizer.flush(this);
     }
 
-    public void track(String eventName, JSONObject properties) {
-        mTrackingObject.track(eventName, properties);
-    }
-
-    public void track(String eventName) {
-        mTrackingObject.track(eventName);
+    public ShopeliaTracker getTracker() {
+        return mTrackingObject;
     }
 
     /**

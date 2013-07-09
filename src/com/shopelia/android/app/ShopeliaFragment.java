@@ -1,13 +1,12 @@
 package com.shopelia.android.app;
 
-import org.json.JSONObject;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.View;
 
+import com.shopelia.android.app.tracking.DummyTracker;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 
@@ -49,18 +48,12 @@ public class ShopeliaFragment<Contract> extends Fragment {
 
     }
 
-    public void track(String eventName, JSONObject properties) {
+    public ShopeliaTracker getTracker() {
         ShopeliaActivity activity = (ShopeliaActivity) getContract();
         if (activity != null) {
-            activity.track(eventName, properties);
+            return activity.getTracker();
         }
-    }
-
-    public void track(String eventName) {
-        ShopeliaActivity activity = (ShopeliaActivity) getContract();
-        if (activity != null) {
-            activity.track(eventName);
-        }
+        return new DummyTracker();
     }
 
     public void fireScreenSeenEvent(final String screenName) {

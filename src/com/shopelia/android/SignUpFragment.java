@@ -21,7 +21,6 @@ import android.widget.Toast;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
@@ -61,21 +60,12 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 
     public static final String FRAGMENT_NAME = "SignUp";
 
-    private static final SparseArray<String> EVENTS;
-    private static final SparseArray<String> CLICK_ON;
+    private static final SparseArray<String> TRACKER_NAME;
 
     static {
-        EVENTS = new SparseArray<String>();
-        EVENTS.put(R.id.email, Analytics.Properties.Steps.SigningUp.EMAIL);
-        EVENTS.put(R.id.phone, Analytics.Properties.Steps.SigningUp.PHONE);
-        EVENTS.put(R.id.address, Analytics.Properties.Steps.SigningUp.ADDRESS);
-        EVENTS.put(R.id.payment_card, Analytics.Properties.Steps.SigningUp.PAYMENT_CARD);
-
-        CLICK_ON = new SparseArray<String>();
-        CLICK_ON.put(R.id.email, Analytics.Properties.ClickOn.SigningUp.EMAIL);
-        CLICK_ON.put(R.id.phone, Analytics.Properties.ClickOn.SigningUp.PHONE);
-        CLICK_ON.put(R.id.address, Analytics.Properties.ClickOn.SigningUp.ADDRESS);
-        CLICK_ON.put(R.id.payment_card, Analytics.Properties.ClickOn.SigningUp.PAYMENT_CARD);
+        TRACKER_NAME = new SparseArray<String>();
+        TRACKER_NAME.put(R.id.email, Analytics.Events.UserInteractions.Fields.EMAIL);
+        TRACKER_NAME.put(R.id.phone, Analytics.Events.UserInteractions.Fields.PHONE);
     }
 
     private FormLinearLayout mFormContainer;
@@ -91,7 +81,6 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             }
         } else {
             fireScreenSeenEvent(FRAGMENT_NAME);
-            track(Analytics.Events.Steps.SignUp.BEGIN);
         }
     }
 
@@ -247,8 +236,8 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                             if (field != null) {
                                 Address addressWithPhone = Address.inflate(address);
                                 if (addressWithPhone.isValid()) {
-                                    track(Analytics.Events.ADD_ADDRESS_METHOD, AnalyticsBuilder.prepareMethodPackage(getActivity(),
-                                            Analytics.Properties.AddAddressMethod.REVERSE_DIRECTORY));
+                                    // Could track REVERSE DIRECTORY ADD ADDRESS
+                                    // METHOD
                                 }
                                 addressWithPhone.phone = number;
                                 field.setAddress(addressWithPhone);
@@ -335,9 +324,10 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
 
         @Override
         public void onValidChanged(FormField field) {
-            String event = EVENTS.get(field.getId());
+            String event = TRACKER_NAME.get(field.getId());
             if (event != null && field.isValid() && field.getResult() != null) {
-                track(Analytics.Events.Steps.SignUp.SIGNING_UP, AnalyticsBuilder.prepareStepPackage(getActivity(), event));
+                getTracker().onValidate(event);
+                field.setListener(null);
             }
         };
 
@@ -348,9 +338,10 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
         @Override
         public void onClick(View v) {
 
-            String action = CLICK_ON.get(v.getId());
+            String action = TRACKER_NAME.get(v.getId());
             if (action != null) {
-                track(Analytics.Events.Steps.SignUp.SIGN_UP_ACTION, AnalyticsBuilder.prepareClickOnPackage(getActivity(), action));
+                getTracker().onFocusIn(action);
+                v.setOnClickListener(null);
             }
         }
     };

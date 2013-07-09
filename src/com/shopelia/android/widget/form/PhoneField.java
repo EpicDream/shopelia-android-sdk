@@ -42,10 +42,10 @@ public class PhoneField extends EditTextField {
     }
 
     @Override
-    public void setContentText(CharSequence contentText) {
+    public EditTextField setContentText(CharSequence contentText) {
         if (TextUtils.isEmpty(contentText)) {
             super.setContentText(contentText);
-            return;
+            return this;
         }
         try {
             String number = contentText.toString();
@@ -53,6 +53,7 @@ public class PhoneField extends EditTextField {
         } catch (Exception e) {
             super.setContentText(contentText);
         }
+        return this;
     }
 
     @Override

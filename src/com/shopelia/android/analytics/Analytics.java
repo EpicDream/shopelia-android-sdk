@@ -6,31 +6,28 @@ public interface Analytics {
 
         public interface Steps {
 
-            public interface SignUp {
-                String BEGIN = "Begin Sign Up";
-                String SIGNING_UP = "Signing Up";
-                String SIGN_UP_ACTION = "Sign Up User Action";
-                String END = "Signed Up";
-            }
+            public String ORDER_COMPLETED = "Order Completed";
 
-            public interface SignIn {
-                String BEGIN = "Begin Sign In";
-                String END = "Signed In";
-            }
+        }
 
-            public interface Confirmation {
-                String BEGIN = "Display Summary";
-                String END = "Checkout";
-            }
+        public interface UserInteractions {
+            String FOCUS_IN = "In";
+            String OK = "OK";
 
-            public interface Finalize {
-                String BEGIN = "Display Thank you";
-                String END = "Worklow Completed";
+            public interface Fields {
+                String EMAIL = "Email";
+                String PHONE = "Phone";
+                String NAME = "Full name";
+                String ADDRESS_1 = "Address 1";
+                String ADDRESS_2 = "Address 2";
+                String ZIP = "Zip";
+                String COUNTRY = "Country";
+                String CITY = "City";
+                String CARD_NUMBER = "Card Number";
+                String EXPIRY_DATE = "Expiry Date";
+                String CVV = "CVV";
+                String SCAN_CARD = "Scan Card";
             }
-
-            String SIGNING_IN = "Signing In";
-            String CONFIRMING = "Confirming order";
-            String FINALIZING = "Finalizing";
 
         }
 
@@ -40,7 +37,7 @@ public interface Analytics {
         }
 
         public interface Activities {
-            String SCREEN_SEEN = "Screen seen";
+            String DISPLAY = "Display";
         }
 
         public interface UInterface {
@@ -53,62 +50,14 @@ public interface Analytics {
     }
 
     public interface Properties {
-        String SCREEN_NAME = "Screen Name";
-        String STEP = "Step";
-        String SESSION = "session_id";
-        String SDK_INT = "sdk_version";
-        String CLICK_ON = "Click On";
-        String METHOD = "Method";
-
-        public interface Steps {
-
-            public interface SigningUp {
-                String BEGIN = "Begin";
-                String ACCOUNT_CREATED = "Account Created";
-                String EMAIL = "Email OK";
-                String PHONE = "Phone OK";
-                String ADDRESS = "Address OK";
-                String PAYMENT_CARD = "Payment Card OK";
-                String PINCODE = "Pincode OK";
-            }
-
-            public interface Finalizing {
-
-                public interface Method {
-                    String BACK_ON_APPLICATION = "Back On Application";
-                    String SIGN_OUT = "Sign Out";
-                }
-
-            }
-
-        }
+        String SESSION = "Session ID";
+        String SDK = "SDK";
+        String SDK_VERSION = "SDK_VERSION";
 
         public interface AddAddressMethod {
             String PLACES_AUTOCOMPLETE = "Places Autocompletion";
             String REVERSE_DIRECTORY = "Reverse Directory";
             String MANUAL = "Manual";
-        }
-
-        public interface ClickOn {
-
-            public interface SigningUp {
-                String EMAIL = "Email";
-                String PHONE = "Phone";
-                String ADDRESS = "Address";
-                String ADDRESS_NAME = "Address Name";
-                String ADDRESS_LINE_1 = "Address Line 1";
-                String ADDRESS_LINE_2 = "Address Line 2";
-                String ADDRESS_ZIP = "Address Zip Code";
-                String ADDRESS_COUNTRY = "Address Country";
-                String ADDRESS_CITY = "Address City";
-                String PINCODE = "Pincode";
-                String PAYMENT_CARD = "Payment Card";
-                String PAYMENT_NUMBER = "Payment Number";
-                String PAYMENT_DATE = "Payment Expiry Date";
-                String PAYMENT_CVV = "Payment CVV";
-                String PAYMENT_SCANNED = "Payment Scanned";
-            }
-
         }
 
     }

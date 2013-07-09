@@ -4,12 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
-import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 
 public class ProcessOrderActivity extends ShopeliaActivity {
 
-    public static final String ACTIVITY_NAME = "Order Summary";
+    public static final String ACTIVITY_NAME = "Confirmation";
 
     public static final int REQUEST_AUTHENTICATE = 0x16;
 
@@ -22,7 +21,6 @@ public class ProcessOrderActivity extends ShopeliaActivity {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, new ConfirmationFragment());
             ft.commit();
-            track(Analytics.Events.Steps.Confirmation.BEGIN);
         }
 
     }

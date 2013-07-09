@@ -13,8 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
-import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.analytics.AnalyticsBuilder;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
@@ -84,8 +82,6 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     closeSoftKeyboard();
-                    track(Analytics.Events.Steps.Finalize.END,
-                            AnalyticsBuilder.prepareMethodPackage(getActivity(), Analytics.Properties.Steps.Finalizing.Method.SIGN_OUT));
                     UserManager.get(getActivity()).logout();
                     getActivity().startActivityForResult(new Intent(getActivity(), PrepareOrderActivity.class), 12);
                 }
