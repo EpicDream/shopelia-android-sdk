@@ -48,6 +48,8 @@
 	<string name="shopelia_authenticate_validate">CONFIRMER</string>
 	<string name="shopelia_authenticate_your_password">Votre mot de passe Shopelia</string>
 	<string name="shopelia_authenticate_wrong_password">Mot de passe incorrect</string>
+	<string name="shopelia_authenticate_waiting_message">Authentification...</string>
+	<string name="shopelia_authenticate_auto_sign_in_message">Connexion en cours...</string>
 	
     <!-- Main form -->
     <string name="shopelia_form_main_waiting">Création de votre compte Shopelia</string>

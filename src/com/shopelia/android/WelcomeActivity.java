@@ -19,22 +19,24 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
     public static final int REQUEST_SHOPELIA = 0x100;
     public static final int REQUEST_MERCHANT = 0x101;
 
+    public static final long SHOW_WAITING_DIALOG_DELAY = 2000L;
+
     public boolean mIsCanceling = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         UserManager um = UserManager.get(this);
-        if (um.getLoginsCount() == 0) {
+        if (!um.isLogged()) {
             setActivityStyle(STYLE_TRANSLUCENT);
         }
         super.onCreate(savedInstanceState);
-        if (um.getLoginsCount() > 0 && um.isLogged() && um.getUser() != null) {
+        if (um.getLoginsCount() > 0 && um.getUser() != null && !um.isAutoSignedIn()) {
             setHostContentView(R.layout.shopelia_welcome_activity);
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.fragment_container, new AuthenticateFragment());
             ft.commit();
-        } else if (um.getCheckoutCount() > 0) {
+        } else if (um.getCheckoutCount() > 0 || um.isAutoSignedIn()) {
             startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
         } else {
             setHostContentView(R.layout.shopelia_welcome_activity);

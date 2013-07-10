@@ -116,7 +116,7 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
                 if (mVerifyAPI.verify(mFormContainer.toJson())) {
                     mErrorMessage.setVisibility(View.GONE);
                     mPasswordField.setEnabled(false);
-                    startWaiting("Authentification...", false, false);
+                    startWaiting(getString(R.string.shopelia_authenticate_waiting_message), false, false);
                 }
             }
         }
@@ -136,6 +136,7 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
         @Override
         public void onVerifySucceed() {
             mPasswordField.setValid(true);
+            UserManager.get(getActivity()).setAutoSignIn(findViewById(R.id.remember_me, CheckBox.class).isChecked());
             getActivity().startActivityForResult(new Intent(getActivity(), PrepareOrderActivity.class), 12);
         };
 

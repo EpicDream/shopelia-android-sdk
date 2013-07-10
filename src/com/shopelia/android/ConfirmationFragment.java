@@ -4,6 +4,7 @@ import java.util.Locale;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -30,9 +31,12 @@ import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
+import com.shopelia.android.utils.DialogHelper;
 import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.ProductSheetWidget;
 import com.shopelia.android.widget.actionbar.ActionBar;
+import com.shopelia.android.widget.actionbar.ActionBar.Item;
+import com.shopelia.android.widget.actionbar.TextButtonItem;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
@@ -77,7 +81,26 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     protected void onCreateShopeliaActionBar(ActionBar actionBar) {
         super.onCreateShopeliaActionBar(actionBar);
         actionBar.clear();
+        actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_sign_out, getActivity(), R.string.shopelia_action_bar_sign_out));
         actionBar.commit();
+    }
+
+    @Override
+    protected void onActionItemSelected(Item item) {
+        super.onActionItemSelected(item);
+        if (item.getId() == R.id.shopelia_action_bar_sign_out) {
+            DialogHelper.buildLogoutDialog(getActivity(), new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    closeSoftKeyboard();
+                    UserManager.get(getActivity()).logout();
+                    getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
+                    getActivity().finish();
+                }
+            }, null).create().show();
+
+        }
     }
 
     @Override

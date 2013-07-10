@@ -79,6 +79,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     private ShopeliaTracker mTrackingObject = ShopeliaTracker.Factory.create(ShopeliaTracker.PROVIDER_DEFAULT);
 
     private Runnable mWaitModeRunnable;
+    private boolean mIsPaused = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +140,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     @Override
     protected void onPause() {
         super.onPause();
+        mIsPaused = true;
         if (mProgressDialog != null && mProgressDialog.isShowing()) {
             mProgressDialog.dismiss();
         }
@@ -147,6 +149,13 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     protected void createSessionId(long value, String str) {
         String input = value + str;
         mSessionId = DigestUtils.SHA1(input, "UTF-8");
+    }
+
+    public void setActivityVisibility(int visibility) {
+        View v = super.findViewById(android.R.id.content);
+        if (v != null) {
+            v.setVisibility(visibility);
+        }
     }
 
     public void fireScreenSeenEvent(String screenName) {
@@ -159,7 +168,12 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        mIsPaused = false;
         ShopeliaHttpSynchronizer.flush(this);
+    }
+
+    public boolean isPaused() {
+        return mIsPaused;
     }
 
     @Override
@@ -193,6 +207,9 @@ public abstract class ShopeliaActivity extends FragmentActivity {
      * @param isCancelable Action is cancelable (true or false)
      */
     public void startWaiting(CharSequence message, boolean blockUi, boolean isCancelable) {
+        if (isPaused()) {
+            return;
+        }
         getShopeliaActionBar().save();
         if (blockUi) {
             setWaitingMode(true);

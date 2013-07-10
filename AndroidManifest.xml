@@ -50,7 +50,7 @@
             android:name="com.shopelia.android.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:theme="@style/Theme.Shopelia.FloatingFrame"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name="com.shopelia.android.PrepareOrderActivity"

@@ -88,22 +88,7 @@ public class UserAPI extends ApiHandler {
         if (id == User.NO_ID) {
             throw new IllegalAccessError("Cannot retrieve invalid user");
         }
-        ShopeliaRestClient.V1(getContext()).authenticate(getContext());
-        ShopeliaRestClient.V1(getContext()).get(Command.V1.Users.User(id), null, new JsonAsyncCallback() {
-
-            @Override
-            public void onComplete(HttpResponse response, JSONObject object) {
-                try {
-                    User user = User.inflate(object.getJSONObject(User.Api.USER));
-                    UserManager.get(getContext()).login(user);
-                    if (hasCallback()) {
-                        getCallback().onUserRetrieved(user);
-                        getCallback().onUserUpdateDone();
-                    }
-                } catch (JSONException e) {
-                    onError(e);
-                }
-            }
+        ShopeliaRestClient.V1(getContext()).get(Command.V1.Users.User(id), null, new AsyncCallback() {
 
             @Override
             public void onError(Exception e) {
@@ -111,6 +96,24 @@ public class UserAPI extends ApiHandler {
                 fireError(STEP_RETRIEVE_USER, null, null, e);
                 if (hasCallback()) {
                     getCallback().onUserUpdateDone();
+                }
+            }
+
+            @Override
+            public void onComplete(HttpResponse httpResponse) {
+                if (httpResponse.getStatus() == 401 && hasCallback()) {
+                    getCallback().onAuthTokenRevoked();
+                } else {
+                    try {
+                        User user = User.inflate(new JSONObject(httpResponse.getBodyAsString()).getJSONObject(User.Api.USER));
+                        UserManager.get(getContext()).login(user);
+                        if (hasCallback()) {
+                            getCallback().onUserRetrieved(user);
+                            getCallback().onUserUpdateDone();
+                        }
+                    } catch (JSONException e) {
+                        onError(e);
+                    }
                 }
             }
 

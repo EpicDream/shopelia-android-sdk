@@ -20,6 +20,7 @@ public class UserManager {
     private static final String PREFS_AUTH_TOKEN = "user:authToken";
     private static final String PREFS_LOGINS_COUNT = "user:loginsCount";
     private static final String PREFS_CHECKOUT_COUNT = "user:checkoutCount";
+    private static final String PREFS_AUTO_SIGNIN = "user:autoSignIn";
 
     private static UserManager sInstance = null;
 
@@ -115,11 +116,26 @@ public class UserManager {
             editor.commit();
             ShopeliaTracker.Factory.getDefault(mContext).unidentify();
             ShopeliaTracker.Factory.getDefault(mContext).flush();
+            setAutoSignIn(false);
         }
     }
 
     public boolean isLogged() {
         return getAuthToken() != null;
+    }
+
+    public boolean isAutoSignedIn() {
+        return mPreferences.getBoolean(PREFS_AUTO_SIGNIN, false);
+    }
+
+    public void revokeAutoSignIn() {
+        setAutoSignIn(false);
+    }
+
+    public void setAutoSignIn(boolean value) {
+        Editor edit = mPreferences.edit();
+        edit.putBoolean(PREFS_AUTO_SIGNIN, value);
+        edit.commit();
     }
 
     public User getUser() {

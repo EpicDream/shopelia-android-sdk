@@ -51,6 +51,8 @@ public class ApiHandler {
 
         public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message);
 
+        public void onAuthTokenRevoked();
+
     }
 
     public static class CallbackAdapter implements Callback {
@@ -137,6 +139,11 @@ public class ApiHandler {
 
         @Override
         public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message) {
+
+        }
+
+        @Override
+        public void onAuthTokenRevoked() {
 
         }
 
