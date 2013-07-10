@@ -136,6 +136,14 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if (mProgressDialog != null && mProgressDialog.isShowing()) {
+            mProgressDialog.dismiss();
+        }
+    }
+
     protected void createSessionId(long value, String str) {
         String input = value + str;
         mSessionId = DigestUtils.SHA1(input, "UTF-8");
