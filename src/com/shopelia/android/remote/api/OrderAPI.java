@@ -44,8 +44,7 @@ public class OrderAPI extends ApiHandler {
             fireError(STEP_ORDER, null, null, e);
             return;
         }
-        ShopeliaRestClient.authenticate(getContext());
-        ShopeliaRestClient.post(Command.V1.Orders.$, params, new AsyncCallback() {
+        ShopeliaRestClient.V1(getContext()).post(Command.V1.Orders.$, params, new AsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse httpResponse) {

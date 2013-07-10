@@ -53,8 +53,7 @@ public class VerifyAPI extends ApiHandler {
         if (isOrderForbidden()) {
             return false;
         }
-        ShopeliaRestClient.authenticate(getContext());
-        ShopeliaRestClient.post(Command.V1.Users.Verify.$, object, new AsyncCallback() {
+        ShopeliaRestClient.V1(getContext()).post(Command.V1.Users.Verify.$, object, new AsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse httpResponse) {

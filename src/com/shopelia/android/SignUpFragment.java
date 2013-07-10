@@ -226,7 +226,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
             final String number = s.toString().replace(" ", "");
             if (PhoneField.PHONE_PATTERN.matcher(number).matches() && !number.equals(mCurrentNumber)) {
                 mCurrentNumber = number;
-                ShopeliaRestClient.get(Command.V1.Phones.Lookup(mCurrentNumber), null, new AsyncCallback() {
+                ShopeliaRestClient.V1(getActivity()).get(Command.V1.Phones.Lookup(mCurrentNumber), null, new AsyncCallback() {
 
                     @Override
                     public void onComplete(HttpResponse httpResponse) {
@@ -288,7 +288,7 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
                 } catch (JSONException e) {
 
                 }
-                ShopeliaRestClient.post(Command.V1.Users.Exists(), params, new AsyncCallback() {
+                ShopeliaRestClient.V1(getActivity()).post(Command.V1.Users.Exists(), params, new AsyncCallback() {
 
                     @Override
                     public void onComplete(HttpResponse httpResponse) {

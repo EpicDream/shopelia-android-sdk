@@ -70,11 +70,11 @@ public final class PlacesAutoCompleteAPI {
             location = new Location(LocationManager.NETWORK_PROVIDER);
         }
 
-        ParameterMap params = ShopeliaRestClient.newParams();
+        ParameterMap params = new ParameterMap();
         params.add(Command.Autocomplete.QUERY, input);
         params.add(Command.Autocomplete.LATITUDE, String.valueOf(location.getLatitude()));
         params.add(Command.Autocomplete.LONGITUDE, String.valueOf(location.getLongitude()));
-        HttpResponse httpResponse = ShopeliaRestClient.get(Command.Autocomplete.$, params);
+        HttpResponse httpResponse = ShopeliaRestClient.V1(context).get(Command.Autocomplete.$, params);
         try {
             Log.d(null, httpResponse.getBodyAsString());
             List<Address> addresses = inflatesAutocompletionAddresses(new JSONArray(httpResponse.getBodyAsString()));
@@ -88,8 +88,8 @@ public final class PlacesAutoCompleteAPI {
         return null;
     }
 
-    public static void getAddressDetails(String reference, final OnAddressDetailsListener listener) {
-        ShopeliaRestClient.get(Command.Details(reference), null, new AsyncCallback() {
+    public static void getAddressDetails(final Context context, String reference, final OnAddressDetailsListener listener) {
+        ShopeliaRestClient.V1(context).get(Command.Details(reference), null, new AsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse httpResponse) {

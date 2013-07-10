@@ -30,8 +30,7 @@ public class PaymentAPI extends ApiHandler {
             fireError(STEP_SEND_PAYMENT_INFORMATION, null, null, e);
             return;
         }
-        ShopeliaRestClient.authenticate(getContext());
-        ShopeliaRestClient.post(Command.V1.PaymentCards.$, params, new JsonAsyncCallback() {
+        ShopeliaRestClient.V1(getContext()).post(Command.V1.PaymentCards.$, params, new JsonAsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse response, JSONObject object) {

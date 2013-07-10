@@ -15,6 +15,7 @@ import com.shopelia.android.model.Merchant;
 import com.shopelia.android.utils.JsonUtils;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
+import com.turbomanage.httpclient.ParameterMap;
 
 /**
  * The Merchant API works in both synchronous and asynchronous way.
@@ -48,7 +49,7 @@ public class MerchantsAPI extends ApiHandler {
     public Merchant getMerchant(final String url) {
         Merchant out = findMerchantByUrl(url);
         if (out == null && canFetchMerchants()) {
-            ShopeliaRestClient.get(Command.V1.Merchants.$, null, new AsyncCallback() {
+            ShopeliaRestClient.V1(getContext()).get(Command.V1.Merchants.$, null, new AsyncCallback() {
 
                 @Override
                 public void onComplete(HttpResponse httpResponse) {
@@ -72,7 +73,7 @@ public class MerchantsAPI extends ApiHandler {
 
     public void update() {
         if (canFetchMerchants()) {
-            ShopeliaRestClient.get(Command.V1.Merchants.$, ShopeliaRestClient.newParams(), new AsyncCallback() {
+            ShopeliaRestClient.V1(getContext()).get(Command.V1.Merchants.$, new ParameterMap(), new AsyncCallback() {
 
                 @Override
                 public void onComplete(HttpResponse httpResponse) {

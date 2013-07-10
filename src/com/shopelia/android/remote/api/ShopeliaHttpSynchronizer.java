@@ -218,21 +218,18 @@ public final class ShopeliaHttpSynchronizer {
         }
 
         protected void put(Context context, AsyncCallback callback) {
-            ShopeliaRestClient.authenticate(context);
             if (object != null) {
-                ShopeliaRestClient.put(command, object, callback);
+                ShopeliaRestClient.V1(context).put(command, object, callback);
             }
         }
 
         protected void delete(Context context, AsyncCallback callback) {
-            ShopeliaRestClient.authenticate(context);
-            ShopeliaRestClient.delete(command, params, callback);
+            ShopeliaRestClient.V1(context).delete(command, params, callback);
         }
 
         protected void post(Context context, AsyncCallback callback) {
-            ShopeliaRestClient.authenticate(context);
             if (object != null) {
-                ShopeliaRestClient.post(command, object, callback);
+                ShopeliaRestClient.V1(context).post(command, object, callback);
             }
         }
 

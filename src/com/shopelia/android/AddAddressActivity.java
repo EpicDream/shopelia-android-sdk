@@ -301,7 +301,7 @@ public class AddAddressActivity extends ShopeliaActivity {
             startWaiting(getString(R.string.shopelia_form_address_loading_autocomplete), true, false);
             AddAddressActivity.this.closeSoftKeyboard();
             mAddressField.clearFocus();
-            PlacesAutoCompleteAPI.getAddressDetails(address.reference, new OnAddressDetailsListener() {
+            PlacesAutoCompleteAPI.getAddressDetails(AddAddressActivity.this, address.reference, new OnAddressDetailsListener() {
 
                 @Override
                 public void onError() {

@@ -28,8 +28,7 @@ public class AddressesAPI extends ApiHandler {
         try {
             JSONObject addressObject = address.toJson();
             params.put(Order.Api.ADDRESS, addressObject);
-            ShopeliaRestClient.authenticate(getContext());
-            ShopeliaRestClient.post(Command.V1.Addresses.$, params, new AddressAsyncCallback(201) {
+            ShopeliaRestClient.V1(getContext()).post(Command.V1.Addresses.$, params, new AddressAsyncCallback(201) {
 
                 @Override
                 public void onSuccess(int status, JSONObject object, Address address) {
@@ -58,8 +57,7 @@ public class AddressesAPI extends ApiHandler {
         try {
             JSONObject addressObject = address.toJson();
             params.put(Order.Api.ADDRESS, addressObject);
-            ShopeliaRestClient.authenticate(getContext());
-            ShopeliaRestClient.put(Command.V1.Addresses.Address(address.id), params, new AddressAsyncCallback(204) {
+            ShopeliaRestClient.V1(getContext()).put(Command.V1.Addresses.Address(address.id), params, new AddressAsyncCallback(204) {
 
                 @Override
                 public void onSuccess(int status, JSONObject object, Address a) {

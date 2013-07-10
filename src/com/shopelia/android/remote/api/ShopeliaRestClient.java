@@ -15,7 +15,6 @@ import com.shopelia.android.http.LogcatRequestLogger;
 import com.shopelia.android.manager.UserManager;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
-import com.turbomanage.httpclient.ParameterMap;
 import com.turbomanage.httpclient.android.AndroidHttpClient;
 
 /**
@@ -24,7 +23,7 @@ import com.turbomanage.httpclient.android.AndroidHttpClient;
  * @author Pierre Pollastri
  */
 @SuppressLint("NewApi")
-public final class ShopeliaRestClient {
+public final class ShopeliaRestClient extends AndroidHttpClient {
 
     public static final String LOG_TAG = "ShopelisRestClient";
 
@@ -32,173 +31,27 @@ public final class ShopeliaRestClient {
     // private static final String ROOT = "http://zola.epicdream.fr:4444";
     public final static String API_KEY = "52953f1868a7545011d979a8c1d0acbc310dcb5a262981bd1a75c1c6f071ffb4";
 
+    public static final String CONTENT_TYPE_JSON = "application/json";
+
     private static final int CONNECTION_TIMEOUT = 3000;
     private static final int READ_TIMEOUT = 100000;
     private static final int MAX_RETRIES = 1;
 
-    private static AndroidHttpClient sHttpClient;
-
-    static {
-        reset();
+    private interface API {
+        String V1 = "application/vnd.shopelia.v1";
+        String V2 = "application/vnd.shopelia.v2";
     }
 
-    private ShopeliaRestClient() {
-
+    public final static ShopeliaRestClient V1(Context context) {
+        return new ShopeliaRestClient(context, API.V1);
     }
 
-    /**
-     * Convenience method creates a new ParameterMap to hold query params
-     * 
-     * @return ParameterMap
-     */
-    public static ParameterMap newParams() {
-        return sHttpClient.newParams();
+    public final static ShopeliaRestClient V2(Context context) {
+        return new ShopeliaRestClient(context, API.V2);
     }
 
-    public static void authenticate(Context context) {
-        prepare();
-        if (UserManager.get(context).isLogged()) {
-            sHttpClient.addHeader("X-Shopelia-AuthToken", UserManager.get(context).getAuthToken());
-        } else {
-
-        }
-    }
-
-    /**
-     * Execute a GET request and return the response. The supplied parameters
-     * are URL encoded and sent as the query string.
-     * 
-     * @param path
-     * @param params
-     * @return
-     */
-    public static HttpResponse get(String path, ParameterMap params) {
-        prepare();
-        HttpResponse response = sHttpClient.get(path, params);
-        release();
-        return response;
-    }
-
-    /**
-     * Execute a GET request and invoke the callback on completion. The supplied
-     * parameters are URL encoded and sent as the query string.
-     * 
-     * @param path
-     * @param params
-     * @param callback
-     */
-    public static void get(String path, ParameterMap params, AsyncCallback callback) {
-        prepare();
-        sHttpClient.get(path, params, callback);
-        release();
-    }
-
-    /**
-     * Execute a POST request with parameter map and return the response.
-     * 
-     * @param path
-     * @param params
-     */
-    public static HttpResponse post(String path, ParameterMap params) {
-        prepare();
-        HttpResponse r = sHttpClient.post(path, params);
-        release();
-        return r;
-    }
-
-    /**
-     * Execute a POST request with parameter map and invoke the callback on
-     * completion.
-     * 
-     * @param path
-     * @param params
-     * @param callback
-     */
-    public static void post(String path, ParameterMap params, AsyncCallback callback) {
-        prepare();
-        sHttpClient.post(path, params, callback);
-        release();
-    }
-
-    /**
-     * Execute a POST request with parameter map and return the response.
-     * 
-     * @param path
-     * @param params
-     */
-    public static HttpResponse post(String path, JSONObject json) {
-        prepare();
-        HttpResponse r = sHttpClient.post(path, "application/json", json.toString().getBytes());
-        release();
-        return r;
-    }
-
-    /**
-     * Execute a POST request with parameter map and invoke the callback on
-     * completion.
-     * 
-     * @param path
-     * @param params
-     * @param callback
-     */
-    public static void post(String path, JSONObject object, AsyncCallback callback) {
-        prepare();
-        sHttpClient.post(path, "application/json", object.toString().getBytes(), callback);
-        release();
-    }
-
-    /**
-     * Execute a POST request with parameter map and return the response.
-     * 
-     * @param path
-     * @param params
-     */
-    public static HttpResponse post(String path, byte[] object) {
-        prepare();
-        HttpResponse r = sHttpClient.post(path, "application/json", object);
-        release();
-        return r;
-    }
-
-    /**
-     * Execute a POST request with parameter map and invoke the callback on
-     * completion.
-     * 
-     * @param path
-     * @param params
-     * @param callback
-     */
-    public static void post(String path, byte[] object, AsyncCallback callback) {
-        prepare();
-        sHttpClient.post(path, "application/json", object, callback);
-        release();
-    }
-
-    public static void put(String path, JSONObject object, AsyncCallback callback) {
-        prepare();
-        sHttpClient.put(path, "application/json", object.toString().getBytes(), callback);
-        release();
-    }
-
-    /**
-     * Execute a DELETE request and invoke the callback on completion. The
-     * supplied parameters are URL encoded and sent as the query string.
-     * 
-     * @param path
-     * @param params
-     * @param callback
-     */
-    public static void delete(String path, ParameterMap params, AsyncCallback callback) {
-        prepare();
-        sHttpClient.delete(path, params, callback);
-        release();
-    }
-
-    public static final void reset() {
-
-        sHttpClient = new AndroidHttpClient(ROOT);
-        sHttpClient.clearHeaders();
-
+    private ShopeliaRestClient(Context context, String version) {
+        super(ROOT);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD && AndroidHttpClient.getCookieManager() != null) {
             AndroidHttpClient.getCookieManager().setCookiePolicy(CookiePolicy.ACCEPT_NONE);
         }
@@ -207,18 +60,18 @@ public final class ShopeliaRestClient {
          * Build shopelia HTTP header
          */
 
-        sHttpClient.addHeader("Content-Type", "application/json");
-        sHttpClient.addHeader("Accept", "application/json");
-        sHttpClient.addHeader("Accept", "application/vnd.shopelia.v1");
-        sHttpClient.addHeader("X-Shopelia-ApiKey", API_KEY);
+        addHeader("Content-Type", CONTENT_TYPE_JSON);
+        addHeader("Accept", CONTENT_TYPE_JSON);
+        addHeader("Accept", version);
+        addHeader("X-Shopelia-ApiKey", API_KEY);
 
         /*
          * Timeouts and retries
          */
 
-        sHttpClient.setConnectionTimeout(CONNECTION_TIMEOUT);
-        sHttpClient.setReadTimeout(READ_TIMEOUT);
-        sHttpClient.setMaxRetries(MAX_RETRIES);
+        setConnectionTimeout(CONNECTION_TIMEOUT);
+        setReadTimeout(READ_TIMEOUT);
+        setMaxRetries(MAX_RETRIES);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.GINGERBREAD) {
             CookieManager cm = new CookieManager();
@@ -230,19 +83,30 @@ public final class ShopeliaRestClient {
          * Logger
          */
 
-        sHttpClient.setRequestLogger(new LogcatRequestLogger(LOG_TAG, Config.INFO_LOGS_ENABLED));
+        setRequestLogger(new LogcatRequestLogger(LOG_TAG, Config.INFO_LOGS_ENABLED));
+        authenticate(context);
     }
 
-    private static final void prepare() {
-        if (sHttpClient == null) {
-            reset();
+    public void authenticate(Context context) {
+        if (UserManager.get(context).isLogged()) {
+            addHeader("X-Shopelia-AuthToken", UserManager.get(context).getAuthToken());
         }
     }
 
-    private static final void release() {
-        if (sHttpClient != null) {
-            sHttpClient = null;
-        }
+    public void post(String path, JSONObject object, AsyncCallback callback) {
+        post(path, CONTENT_TYPE_JSON, object.toString().getBytes(), callback);
+    }
+
+    public HttpResponse post(String path, JSONObject object) {
+        return post(path, CONTENT_TYPE_JSON, object.toString().getBytes());
+    }
+
+    public void put(String path, JSONObject object, AsyncCallback callback) {
+        put(path, CONTENT_TYPE_JSON, object.toString().getBytes(), callback);
+    }
+
+    public HttpResponse put(String path, JSONObject object) {
+        return put(path, CONTENT_TYPE_JSON, object.toString().getBytes());
     }
 
 }

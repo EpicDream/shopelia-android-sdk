@@ -32,9 +32,8 @@ public class UserAPI extends ApiHandler {
             fireError(STEP_ACCOUNT_CREATION, null, null, e);
             return;
         }
-        ShopeliaRestClient.reset();
         UserManager.get(getContext()).logout();
-        ShopeliaRestClient.post(Command.V1.Users.$, params, new JsonAsyncCallback() {
+        ShopeliaRestClient.V1(getContext()).post(Command.V1.Users.$, params, new JsonAsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse response, JSONObject object) {
@@ -67,8 +66,8 @@ public class UserAPI extends ApiHandler {
         if (id == User.NO_ID) {
             throw new IllegalAccessError("Cannot retrieve invalid user");
         }
-        ShopeliaRestClient.authenticate(getContext());
-        ShopeliaRestClient.delete(Command.V1.Users.User(id), null, new AsyncCallback() {
+        ShopeliaRestClient.V1(getContext()).authenticate(getContext());
+        ShopeliaRestClient.V1(getContext()).delete(Command.V1.Users.User(id), null, new AsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse response) {
@@ -89,8 +88,8 @@ public class UserAPI extends ApiHandler {
         if (id == User.NO_ID) {
             throw new IllegalAccessError("Cannot retrieve invalid user");
         }
-        ShopeliaRestClient.authenticate(getContext());
-        ShopeliaRestClient.get(Command.V1.Users.User(id), null, new JsonAsyncCallback() {
+        ShopeliaRestClient.V1(getContext()).authenticate(getContext());
+        ShopeliaRestClient.V1(getContext()).get(Command.V1.Users.User(id), null, new JsonAsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse response, JSONObject object) {
@@ -129,7 +128,7 @@ public class UserAPI extends ApiHandler {
             return;
         }
 
-        ShopeliaRestClient.post(Command.V1.Users.SignIn.$, params, new AsyncCallback() {
+        ShopeliaRestClient.V1(getContext()).post(Command.V1.Users.SignIn.$, params, new AsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse httpResponse) {
@@ -161,10 +160,10 @@ public class UserAPI extends ApiHandler {
     }
 
     public void signOut(final String email) {
-        ParameterMap params = ShopeliaRestClient.newParams();
+        ParameterMap params = ShopeliaRestClient.V1(getContext()).newParams();
         params.add(User.Api.EMAIL, email);
-        ShopeliaRestClient.authenticate(getContext());
-        ShopeliaRestClient.delete(Command.V1.Users.SignOut(), params, new AsyncCallback() {
+        ShopeliaRestClient.V1(getContext()).authenticate(getContext());
+        ShopeliaRestClient.V1(getContext()).delete(Command.V1.Users.SignOut(), params, new AsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse httpResponse) {

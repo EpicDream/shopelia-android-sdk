@@ -108,7 +108,7 @@ public class RecoverPasswordActivity extends ShopeliaActivity {
                 closeSoftKeyboard();
                 JSONObject params = mFormLayout.toJson();
                 v.setEnabled(false);
-                ShopeliaRestClient.post(Command.V1.Users.Reset(), params, new AsyncCallback() {
+                ShopeliaRestClient.V1(RecoverPasswordActivity.this).post(Command.V1.Users.Reset(), params, new AsyncCallback() {
 
                     @Override
                     public void onComplete(HttpResponse httpResponse) {
