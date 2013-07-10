@@ -2,6 +2,7 @@ package com.shopelia.android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
@@ -14,6 +15,9 @@ public class CloseCheckoutActivity extends ShopeliaActivity {
     protected void onCreate(Bundle saveState) {
         super.onCreate(saveState);
         setHostContentView(R.layout.shopelia_close_checkout_activity);
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.fragment_container, new CloseCheckoutFragment());
+        ft.commit();
         if (saveState == null) {
             getTracker().track(Analytics.Events.Steps.ORDER_COMPLETED);
         }

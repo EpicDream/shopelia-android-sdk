@@ -6,6 +6,7 @@
     <item name="shopelia_resource_list_activity" type="layout">@layout/__shopelia_fragment_container</item>
     <item name="shopelia_welcome_activity" type="layout">@layout/__shopelia_fragment_container</item>
     <item name="shopelia_add_payment_card_activity" type="layout">@layout/__shopelia_fragment_container</item>
+    <item name="shopelia_close_checkout_activity" type="layout">@layout/__shopelia_fragment_container</item>
     
     <item name="shopelia_resource_list_fragment" type="layout">@layout/__shopelia_list_container</item>
 
