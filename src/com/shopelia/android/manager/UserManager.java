@@ -62,6 +62,13 @@ public class UserManager {
         saveUser();
     }
 
+    public void update(User user) {
+        if (user != null) {
+            mUser = user;
+            saveUser();
+        }
+    }
+
     public void notifyCheckoutSucceed() {
         Editor editor = mPreferences.edit();
         editor.putInt(PREFS_CHECKOUT_COUNT, getCheckoutCount() + 1);

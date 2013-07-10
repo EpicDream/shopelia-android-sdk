@@ -9,6 +9,8 @@ import android.content.res.Resources;
 
 import com.shopelia.android.R;
 import com.shopelia.android.concurent.ScheduledTask;
+import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -49,16 +51,42 @@ public class VerifyAPI extends ApiHandler {
         editor.commit();
     }
 
-    public boolean verify(JSONObject object) {
+    public boolean verify(final JSONObject object) {
         if (isOrderForbidden()) {
             return false;
         }
-        ShopeliaRestClient.V1(getContext()).post(Command.V1.Users.Verify.$, object, new AsyncCallback() {
+        ShopeliaRestClient.V2(getContext()).post(Command.V1.Users.Verify.$, object, new AsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse httpResponse) {
-                if (httpResponse.getStatus() == 204 && hasCallback()) {
+                if (httpResponse.getStatus() == 200 && hasCallback()) {
+                    try {
+                        User user = User.inflate(new JSONObject(httpResponse.getBodyAsString()).getJSONObject(User.Api.USER));
+                        UserManager.get(getContext()).update(user);
+                    } catch (JSONException e) {
+                        // Do nothing
+                    }
                     getCallback().onVerifySucceed();
+                } else if (hasCallback() && httpResponse.getStatus() == 401 && object.has(User.Api.PASSWORD)
+                        && UserManager.get(getContext()).getUser() != null) {
+                    User user = UserManager.get(getContext()).getUser();
+                    user.password = object.optString(User.Api.PASSWORD);
+                    new UserAPI(getContext(), new CallbackAdapter() {
+                        @Override
+                        public void onSignIn(User user) {
+                            super.onSignIn(user);
+                            getCallback().onVerifySucceed();
+                        }
+
+                        @Override
+                        public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+                            super.onError(step, httpResponse, response, e);
+                            if (hasCallback()) {
+                                getCallback().onError(STEP_VERIFY, httpResponse, response, e);
+                            }
+                        }
+
+                    }).signIn(user);
                 } else if (hasCallback()) {
                     if (httpResponse.getStatus() == 503) {
                         try {
