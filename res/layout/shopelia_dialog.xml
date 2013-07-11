@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.shopelia.android.widget.ExtendedFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:shopelia_enable_dispatch_drawable_state="false" >
+
+    <LinearLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/shopelia_floating_frame_dark_top_corner_background"
+        android:clickable="false"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        android:orientation="vertical" >
+
+        <com.shopelia.android.widget.actionbar.ActionBarWidget
+            android:id="@+id/action_bar"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/shopelia_title_bar_height"
+            android:background="@drawable/shopelia_floating_frame_header" >
+        </com.shopelia.android.widget.actionbar.ActionBarWidget>
+
+        <FrameLayout
+            android:id="@+id/host_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent"
+            android:paddingBottom="@dimen/shopelia_activity_vertical_margin"
+            android:paddingLeft="@dimen/shopelia_activity_horizontal_margin"
+            android:paddingRight="@dimen/shopelia_activity_horizontal_margin" >
+        </FrameLayout>
+    </LinearLayout>
+
+</com.shopelia.android.widget.ExtendedFrameLayout>

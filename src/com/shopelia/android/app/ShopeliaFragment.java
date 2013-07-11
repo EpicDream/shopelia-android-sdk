@@ -1,11 +1,14 @@
 package com.shopelia.android.app;
 
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 
+import com.shopelia.android.app.ShopeliaDialog.DialogCallback;
 import com.shopelia.android.app.tracking.DummyTracker;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
@@ -37,7 +40,14 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
     }
 
     public void onAttach() {
-        onCreateShopeliaActionBar(getBaseActivity().getShopeliaActionBar());
+        if (getShopeliaDialog() == null) {
+            onCreateShopeliaActionBar(getBaseActivity().getShopeliaActionBar());
+        }
+    }
+
+    @Override
+    public void show(FragmentManager manager, String tag) {
+        super.show(manager, tag);
     }
 
     protected void onCreateShopeliaActionBar(ActionBar actionBar) {
@@ -46,6 +56,31 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
 
     protected void onActionItemSelected(Item item) {
 
+    }
+
+    protected ShopeliaDialog getShopeliaDialog() {
+        if (getShowsDialog() && getDialog() instanceof ShopeliaDialog) {
+            return (ShopeliaDialog) getDialog();
+        }
+        return null;
+    }
+
+    @Override
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
+        ShopeliaDialog dialog = new ShopeliaDialog(getActivity());
+        dialog.setDialogCallback(new DialogCallback() {
+
+            @Override
+            public void onCreateShopeliaActionBar(ShopeliaDialog dialog, ActionBar actionBar) {
+                ShopeliaFragment.this.onCreateShopeliaActionBar(actionBar);
+            }
+
+            @Override
+            public void onActionItemSelected(ShopeliaDialog dialog, Item item) {
+                ShopeliaFragment.this.onActionItemSelected(item);
+            }
+        });
+        return dialog;
     }
 
     public ShopeliaTracker getTracker() {
@@ -77,9 +112,13 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
     }
 
     public void startWaiting(CharSequence message, boolean blockUi, boolean isCancelable) {
-        ShopeliaActivity activity = (ShopeliaActivity) mContract;
-        if (activity != null) {
-            activity.startWaiting(message, blockUi, isCancelable);
+        if (!getShowsDialog()) {
+            ShopeliaActivity activity = (ShopeliaActivity) mContract;
+            if (activity != null) {
+                activity.startWaiting(message, blockUi, isCancelable);
+            }
+        } else {
+            getShopeliaDialog().startWaiting(message, blockUi, isCancelable);
         }
     }
 
@@ -100,9 +139,13 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
     }
 
     public void stopWaiting() {
-        ShopeliaActivity activity = (ShopeliaActivity) mContract;
-        if (activity != null) {
-            activity.stopWaiting();
+        if (!getShowsDialog()) {
+            ShopeliaActivity activity = (ShopeliaActivity) mContract;
+            if (activity != null) {
+                activity.stopWaiting();
+            }
+        } else {
+            getShopeliaDialog().stopWaiting();
         }
     }
 
