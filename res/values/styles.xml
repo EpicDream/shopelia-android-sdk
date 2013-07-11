@@ -11,7 +11,7 @@
             backward-compatibility can go here.
         -->
     </style>
-
+    
     <!-- Application theme. -->
 
     <style name="Animation.Shopelia.FloatingFrame" parent="android:Animation">
@@ -34,6 +34,16 @@
         <item name="android:windowAnimationStyle">@style/Animation.Shopelia.FloatingFrame</item>
     </style>
 
+    <style name="Theme.Shopelia.Dialog" parent="android:Theme.Dialog">
+         <item name="android:windowNoTitle">true</item>
+         <item name="android:background">@android:color/transparent</item>
+         <item name="android:windowBackground">@android:color/transparent</item>
+    </style>
+    
+    <style name="Theme.Shopelia.AlertDialog" parent="android:Theme.Dialog">
+        
+    </style>
+    
     <style name="Theme.Shopelia.Widget"></style>
 
     <style name="Theme.Shopelia.Widget.EditText" parent="@android:style/Widget.EditText">

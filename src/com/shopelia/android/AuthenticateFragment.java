@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
@@ -83,7 +84,12 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
                 public void onClick(DialogInterface dialog, int which) {
                     closeSoftKeyboard();
                     UserManager.get(getActivity()).logout();
-                    getActivity().startActivityForResult(new Intent(getActivity(), PrepareOrderActivity.class), 12);
+                    if (!getShowsDialog()) {
+                        getActivity().startActivityForResult(new Intent(getActivity(), PrepareOrderActivity.class), 12);
+                    } else {
+                        getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
+                        getActivity().finish();
+                    }
                 }
             }, null).create().show();
 
@@ -147,12 +153,11 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
             mErrorMessage.setText(R.string.shopelia_authenticate_wrong_password);
             mPasswordField.setError(true);
             mPasswordField.setContentText("");
+            mPasswordField.getEditText().setSelection(0);
             mFormContainer.findFieldById(R.id.password).startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup));
             mPasswordField.setOnValidateListener(new OnValidateListener() {
 
                 public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    mPasswordField.setOnValidateListener(null);
-                    mPasswordField.setError(false);
                     mErrorMessage.setVisibility(View.GONE);
                 };
 
