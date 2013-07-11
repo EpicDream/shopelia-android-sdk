@@ -45,6 +45,16 @@ public class Order implements BaseModel<Order> {
         address = ParcelUtils.readParcelable(source, Address.class.getClassLoader());
     }
 
+    public void updateUser(User update) {
+        if (!update.addresses.contains(address)) {
+            address = update.getDefaultAddress();
+        }
+        if (!update.paymentCards.contains(card)) {
+            card = update.getDefaultPaymentCard();
+        }
+        user = update;
+    }
+
     @Override
     public int describeContents() {
         return 0;

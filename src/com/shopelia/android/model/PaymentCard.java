@@ -128,6 +128,17 @@ public class PaymentCard implements BaseModel<PaymentCard> {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (o instanceof PaymentCard) {
+            PaymentCard card = (PaymentCard) o;
+            if (card.id == id && id != NO_ID) {
+                return true;
+            }
+        }
+        return super.equals(o);
+    }
+
+    @Override
     public long getId() {
         return id;
     }

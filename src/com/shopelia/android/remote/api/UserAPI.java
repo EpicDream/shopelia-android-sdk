@@ -84,40 +84,38 @@ public class UserAPI extends ApiHandler {
         });
     }
 
-    public void updateUser(long id) {
-        if (id == User.NO_ID) {
-            throw new IllegalAccessError("Cannot retrieve invalid user");
-        }
-        ShopeliaRestClient.V1(getContext()).get(Command.V1.Users.User(id), null, new AsyncCallback() {
+    public void updateUser() {
+        ShopeliaRestClient.V1(getContext()).get(Command.V1.Users.User(UserManager.get(getContext()).getUser().id), null,
+                new AsyncCallback() {
 
-            @Override
-            public void onError(Exception e) {
-                super.onError(e);
-                fireError(STEP_RETRIEVE_USER, null, null, e);
-                if (hasCallback()) {
-                    getCallback().onUserUpdateDone();
-                }
-            }
-
-            @Override
-            public void onComplete(HttpResponse httpResponse) {
-                if (httpResponse.getStatus() == 401 && hasCallback()) {
-                    getCallback().onAuthTokenRevoked();
-                } else {
-                    try {
-                        User user = User.inflate(new JSONObject(httpResponse.getBodyAsString()).getJSONObject(User.Api.USER));
-                        UserManager.get(getContext()).login(user);
+                    @Override
+                    public void onError(Exception e) {
+                        super.onError(e);
+                        fireError(STEP_RETRIEVE_USER, null, null, e);
                         if (hasCallback()) {
-                            getCallback().onUserRetrieved(user);
                             getCallback().onUserUpdateDone();
                         }
-                    } catch (JSONException e) {
-                        onError(e);
                     }
-                }
-            }
 
-        });
+                    @Override
+                    public void onComplete(HttpResponse httpResponse) {
+                        if (httpResponse.getStatus() == 401 && hasCallback()) {
+                            getCallback().onAuthTokenRevoked();
+                        } else {
+                            try {
+                                User user = User.inflate(new JSONObject(httpResponse.getBodyAsString()).getJSONObject(User.Api.USER));
+                                UserManager.get(getContext()).update(user);
+                                if (hasCallback()) {
+                                    getCallback().onUserRetrieved(user);
+                                    getCallback().onUserUpdateDone();
+                                }
+                            } catch (JSONException e) {
+                                onError(e);
+                            }
+                        }
+                    }
+
+                });
     }
 
     public void signIn(User user) {

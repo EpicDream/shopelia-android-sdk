@@ -2,6 +2,8 @@ package com.shopelia.android;
 
 import java.util.Locale;
 
+import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -31,12 +33,14 @@ import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
+import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.utils.DialogHelper;
 import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.ProductSheetWidget;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
+import com.turbomanage.httpclient.HttpResponse;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
@@ -57,7 +61,6 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         return inflater.inflate(R.layout.shopelia_order_confirmation_fragment, container, false);
     }
 
-    @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -65,23 +68,50 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         view.findViewById(R.id.confirm).setOnClickListener(mOnConfirmClickListener);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             view.findViewById(R.id.ticket).setBackground(new TicketDrawable(getActivity()));
-            // TODO Fix the drawable for pre version
-            // } else if (Build.VERSION.SDK_INT >=
-            // Build.VERSION_CODES.GINGERBREAD) {
-            // view.findViewById(R.id.ticket).setBackgroundDrawable(new
-            // TicketDrawable(getActivity()));
         } else {
             view.findViewById(R.id.ticket).setBackgroundResource(R.drawable.shopelia_field_normal);
         }
         mOrder = getBaseActivity().getOrder();
         setupUi();
+        if (UserManager.get(getActivity()).isAutoSignedIn()) {
+            updateUser();
+        }
+    }
+
+    protected void updateUser() {
+        new UserAPI(getActivity(), new CallbackAdapter() {
+
+            @Override
+            public void onUserUpdateDone() {
+                super.onUserUpdateDone();
+                mOrder = getBaseActivity().getOrder();
+                User user = UserManager.get(getActivity()).getUser();
+                getBaseActivity().getOrder().updateUser(user);
+                setupUi();
+            }
+
+            @Override
+            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+                super.onError(step, httpResponse, response, e);
+                stopWaiting();
+            }
+
+            @Override
+            public void onAuthTokenRevoked() {
+                super.onAuthTokenRevoked();
+
+            }
+
+        }).updateUser();
     }
 
     @Override
     protected void onCreateShopeliaActionBar(ActionBar actionBar) {
         super.onCreateShopeliaActionBar(actionBar);
         actionBar.clear();
-        actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_sign_out, getActivity(), R.string.shopelia_action_bar_sign_out));
+        if (UserManager.get(getActivity()).isAutoSignedIn()) {
+            actionBar.addItem(new TextButtonItem(R.id.shopelia_action_bar_sign_out, getActivity(), R.string.shopelia_action_bar_sign_out));
+        }
         actionBar.commit();
     }
 
@@ -209,6 +239,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     // ////////////////////////////////////////////////////////////////
 
     private void setupUi() {
+        mOrder = getBaseActivity().getOrder();
         setupPaymentCardUi();
         setupProductUi();
         setupAddressUi();
