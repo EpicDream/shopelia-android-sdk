@@ -175,11 +175,6 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         @Override
         public void onClick(View v) {
 
-            if (true) {
-                new AuthenticateFragment().show(getFragmentManager(), "dialog");
-                return;
-            }
-
             if (((CheckBox) getView().findViewById(R.id.auto_cancel)).isChecked()) {
                 mOrder.product.productPrice = 0;
                 mOrder.product.deliveryPrice = 0;

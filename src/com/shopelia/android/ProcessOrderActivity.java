@@ -10,8 +10,6 @@ public class ProcessOrderActivity extends ShopeliaActivity {
 
     public static final String ACTIVITY_NAME = "Confirmation";
 
-    public static final int REQUEST_AUTHENTICATE = 0x16;
-
     @Override
     protected void onCreate(Bundle saveState) {
         super.onCreate(saveState);
