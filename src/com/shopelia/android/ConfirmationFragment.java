@@ -3,6 +3,7 @@ package com.shopelia.android;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
@@ -33,6 +34,9 @@ import com.turbomanage.httpclient.HttpResponse;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
+    private static final int REQUEST_ADDRESS = 0x200;
+    private static final int REQUEST_PAYMENT_CARD = 0x201;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +62,25 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         setupUi();
         if (UserManager.get(getActivity()).isAutoSignedIn()) {
             updateUser();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
+                case REQUEST_ADDRESS:
+                    getOrder().address = data.getParcelableExtra(AddAddressActivity.EXTRA_ADDRESS_OBJECT);
+                    SingleAddressFragment.newInstance(getOrder().address).replace(getFragmentManager(), R.id.address);
+                    break;
+
+                case REQUEST_PAYMENT_CARD:
+                    getOrder().card = data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD);
+                    SinglePaymentCardFragment.newInstance(getOrder().card).replace(getFragmentManager(), R.id.payment_card);
+                    break;
+            }
+            order();
         }
     }
 
@@ -127,10 +150,17 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     public void order() {
         if (getOrder().address == null) {
+            Intent intent = new Intent(getActivity(), AddAddressActivity.class);
+            intent.putExtra(AddAddressActivity.EXTRA_REQUIRED, true);
+            intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_ADD);
+            startActivityForResult(intent, REQUEST_ADDRESS);
             return;
         }
 
         if (getOrder().card == null) {
+            Intent intent = new Intent(getActivity(), AddPaymentCardActivity.class);
+            intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
+            startActivityForResult(intent, REQUEST_PAYMENT_CARD);
             return;
         }
 

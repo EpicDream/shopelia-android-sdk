@@ -366,6 +366,7 @@ public class AddAddressActivity extends ShopeliaActivity {
                     User user = UserManager.get(AddAddressActivity.this).getUser();
                     user.addAddress(address);
                     UserManager.get(AddAddressActivity.this).saveUser();
+                    mResult = address;
                     createAddress();
                 };
 

@@ -118,7 +118,7 @@ public class SingleAddressFragment extends ShopeliaFragment<OnAddressChangeListe
         switch (requestCode) {
             case REQUEST_ADD_ADDRESS:
                 if (resultCode == Activity.RESULT_OK) {
-                    mAddress = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
+                    mAddress = data.getParcelableExtra(AddAddressActivity.EXTRA_ADDRESS_OBJECT);
                     getContract().onAddressChange(mAddress);
                 }
                 break;
