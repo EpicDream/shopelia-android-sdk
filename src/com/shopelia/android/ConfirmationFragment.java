@@ -61,7 +61,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         SinglePaymentCardFragment.newInstance(getOrder().card).replace(getFragmentManager(), R.id.payment_card);
         setupUi();
         if (UserManager.get(getActivity()).isAutoSignedIn()) {
-            updateUser();
+            updateUser(false);
         }
     }
 
@@ -84,8 +84,8 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         }
     }
 
-    protected void updateUser() {
-        startWaiting(getString(R.string.shopelia_confirmation_update_user), false, false);
+    protected void updateUser(final boolean block) {
+        startWaiting(getString(R.string.shopelia_confirmation_update_user), block, false);
         new UserAPI(getActivity(), new CallbackAdapter() {
 
             @Override
@@ -94,6 +94,9 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                 User user = UserManager.get(getActivity()).getUser();
                 getBaseActivity().getOrder().updateUser(user);
                 setupUi();
+                if (block) {
+                    order();
+                }
             }
 
             @Override
@@ -172,13 +175,21 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         startWaiting(getString(R.string.shopelia_confirmation_waiting, getOrder().product.merchant.name), true, false);
         new OrderAPI(getActivity(), new CallbackAdapter() {
 
+            @Override
             public void onOrderConfirmation(boolean succeed) {
                 stopWaiting();
                 UserManager.get(getActivity()).notifyCheckoutSucceed();
                 Intent intent = new Intent(getActivity(), CloseCheckoutActivity.class);
                 intent.putExtra(ShopeliaActivity.EXTRA_ORDER, getOrder());
                 getActivity().startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
-            };
+            }
+
+            @Override
+            public void onInvalidOrderRequest() {
+                super.onInvalidOrderRequest();
+                stopWaiting();
+                updateUser(true);
+            }
 
             @Override
             public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response, Exception e) {

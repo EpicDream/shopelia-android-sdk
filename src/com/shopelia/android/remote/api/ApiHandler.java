@@ -25,6 +25,8 @@ public class ApiHandler {
 
         public void onOrderConfirmation(boolean succeed);
 
+        public void onInvalidOrderRequest();
+
         public void onUserRetrieved(User user);
 
         public void onUserUpdateDone();
@@ -144,6 +146,11 @@ public class ApiHandler {
 
         @Override
         public void onAuthTokenRevoked() {
+
+        }
+
+        @Override
+        public void onInvalidOrderRequest() {
 
         }
 

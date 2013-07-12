@@ -53,6 +53,10 @@ public class OrderAPI extends ApiHandler {
                     if (hasCallback()) {
                         getCallback().onOrderConfirmation(true);
                     }
+                } else if (httpResponse.getStatus() == 422) {
+                    if (hasCallback()) {
+                        getCallback().onInvalidOrderRequest();
+                    }
                 } else {
                     fireError(STEP_ORDER, httpResponse, null, new IllegalStateException(httpResponse.getBodyAsString()));
                 }
@@ -67,5 +71,4 @@ public class OrderAPI extends ApiHandler {
 
         });
     }
-
 }
