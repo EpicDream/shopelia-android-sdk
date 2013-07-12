@@ -6,10 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.shopelia.android.app.ShopeliaDialog.DialogCallback;
 import com.shopelia.android.app.tracking.DummyTracker;
+import com.shopelia.android.model.Order;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 
@@ -138,6 +140,13 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
         super.startActivityForResult(intent, requestCode);
     }
 
+    public Order getOrder() {
+        if (getBaseActivity() != null) {
+            return getBaseActivity().getOrder();
+        }
+        return null;
+    }
+
     public void stopWaiting() {
         if (!getShowsDialog()) {
             ShopeliaActivity activity = (ShopeliaActivity) mContract;
@@ -184,6 +193,12 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
 
     public String getName() {
         return null;
+    }
+
+    public void replace(FragmentManager fragmentManager, int resId) {
+        FragmentTransaction ft = fragmentManager.beginTransaction();
+        ft.replace(resId, this);
+        ft.commit();
     }
 
 }

@@ -3,14 +3,18 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:animateLayoutChanges="true"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:fillViewport="true" >
 
     <LinearLayout
         android:id="@+id/outside_area"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/shopelia_activity_vertical_margin"
+        android:paddingLeft="@dimen/shopelia_activity_horizontal_margin"
+        android:paddingRight="@dimen/shopelia_activity_horizontal_margin"
+        android:paddingTop="@dimen/shopelia_activity_vertical_margin"
         android:clickable="false"
         android:clipToPadding="false"
         android:focusable="false"
@@ -22,7 +26,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             layout="@layout/shopelia_dialog" />
-
     </LinearLayout>
 
 </ScrollView>

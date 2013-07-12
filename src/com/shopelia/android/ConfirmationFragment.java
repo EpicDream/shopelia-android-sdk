@@ -1,16 +1,12 @@
 package com.shopelia.android;
 
-import java.util.Locale;
-
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,17 +15,10 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.manager.UserManager;
-import com.shopelia.android.model.Address;
-import com.shopelia.android.model.Order;
-import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
@@ -43,13 +32,6 @@ import com.shopelia.android.widget.actionbar.TextButtonItem;
 import com.turbomanage.httpclient.HttpResponse;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
-
-    public static final int REQUEST_SELECT_ADDRESS = 0x100;
-    public static final int REQUEST_SELECT_PAYMENT_CARD = 0x101;
-    public static final int REQUEST_ADD_PAYMENT_CARD = 0x102;
-    public static final int REQUEST_ADD_ADDRESS = 0x103;
-
-    private Order mOrder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -71,7 +53,8 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         } else {
             view.findViewById(R.id.ticket).setBackgroundResource(R.drawable.shopelia_field_normal);
         }
-        mOrder = getBaseActivity().getOrder();
+        SingleAddressFragment.newInstance(getOrder().address).replace(getFragmentManager(), R.id.address);
+        SinglePaymentCardFragment.newInstance(getOrder().card).replace(getFragmentManager(), R.id.payment_card);
         setupUi();
         if (UserManager.get(getActivity()).isAutoSignedIn()) {
             updateUser();
@@ -85,7 +68,6 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             @Override
             public void onUserUpdateDone() {
                 super.onUserUpdateDone();
-                mOrder = getBaseActivity().getOrder();
                 User user = UserManager.get(getActivity()).getUser();
                 getBaseActivity().getOrder().updateUser(user);
                 setupUi();
@@ -135,91 +117,24 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         }
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case REQUEST_ADD_ADDRESS:
-                if (resultCode == Activity.RESULT_OK) {
-                    getBaseActivity().getOrder().address = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
-                    setupUi();
-                } else {
-                    getActivity().setResult(Activity.RESULT_CANCELED);
-                    getActivity().finish();
-                }
-                break;
-            case REQUEST_SELECT_ADDRESS:
-                if (resultCode == Activity.RESULT_OK) {
-                    getBaseActivity().getOrder().address = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
-                } else {
-                    User user = UserManager.get(getActivity()).getUser();
-                    Address address = null;
-                    for (Address item : user.addresses) {
-                        if (mOrder.address.id == item.id) {
-                            address = item;
-                            break;
-                        }
-                    }
-                    if (address == null) {
-                        address = user.getDefaultAddress();
-                    }
-                    getBaseActivity().getOrder().address = address;
-                }
-                mOrder = getBaseActivity().getOrder();
-                setupUi();
-                break;
-            case REQUEST_ADD_PAYMENT_CARD:
-                if (resultCode == Activity.RESULT_OK) {
-                    getBaseActivity().getOrder().card = data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD);
-                    setupUi();
-                } else {
-                    getActivity().setResult(Activity.RESULT_CANCELED);
-                    getActivity().finish();
-                }
-                break;
-            case REQUEST_SELECT_PAYMENT_CARD: {
-                if (resultCode == Activity.RESULT_OK) {
-                    getBaseActivity().getOrder().card = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
-                } else {
-                    User user = UserManager.get(getActivity()).getUser();
-                    PaymentCard card = null;
-                    for (PaymentCard item : user.paymentCards) {
-                        if (mOrder.card.id == item.id) {
-                            card = item;
-                            break;
-                        }
-                    }
-                    if (card == null) {
-                        card = user.getDefaultPaymentCard();
-                    }
-                    getBaseActivity().getOrder().card = card;
-                }
-                mOrder = getBaseActivity().getOrder();
-                setupUi();
-                break;
-            }
-        }
-
-    }
-
     private OnClickListener mOnConfirmClickListener = new OnClickListener() {
 
         @Override
         public void onClick(View v) {
 
             if (((CheckBox) getView().findViewById(R.id.auto_cancel)).isChecked()) {
-                mOrder.product.productPrice = 0;
-                mOrder.product.deliveryPrice = 0;
+                getOrder().product.productPrice = 0;
+                getOrder().product.deliveryPrice = 0;
             }
 
-            startWaiting(getString(R.string.shopelia_confirmation_waiting, mOrder.product.merchant.name), true, false);
+            startWaiting(getString(R.string.shopelia_confirmation_waiting, getOrder().product.merchant.name), true, false);
             new OrderAPI(getActivity(), new CallbackAdapter() {
 
                 public void onOrderConfirmation(boolean succeed) {
                     stopWaiting();
                     UserManager.get(getActivity()).notifyCheckoutSucceed();
                     Intent intent = new Intent(getActivity(), CloseCheckoutActivity.class);
-                    intent.putExtra(ShopeliaActivity.EXTRA_ORDER, mOrder);
+                    intent.putExtra(ShopeliaActivity.EXTRA_ORDER, getOrder());
                     getActivity().startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
                 };
 
@@ -230,7 +145,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                     Toast.makeText(getActivity(), R.string.shopelia_confirmation_error, Toast.LENGTH_LONG).show();
                 };
 
-            }).order(mOrder);
+            }).order(getOrder());
         }
     };
 
@@ -241,16 +156,12 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     // ////////////////////////////////////////////////////////////////
 
     public void setupUi(User user) {
-        mOrder = getBaseActivity().getOrder();
         getBaseActivity().getOrder().updateUser(user);
         setupUi();
     }
 
     private void setupUi() {
-        mOrder = getBaseActivity().getOrder();
-        setupPaymentCardUi();
         setupProductUi();
-        setupAddressUi();
         setupPriceUi();
         setupUserUi();
     }
@@ -258,103 +169,33 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     private void setupProductUi() {
         //@formatter:off
         findViewById(R.id.product_sheet, ProductSheetWidget.class)
-            .setProductInfo(mOrder.product)
+            .setProductInfo(getOrder().product)
             .refreshView();
         //@formatter:on
     }
 
-    private void setupAddressUi() {
-        if (mOrder.address != null) {
-            findViewById(R.id.address_user_name, TextView.class).setText(mOrder.address.firstname + " " + mOrder.address.lastname);
-            findViewById(R.id.address_address, TextView.class).setText(mOrder.address.address);
-            findViewById(R.id.address_extras, TextView.class).setText(mOrder.address.extras);
-            if (TextUtils.isEmpty(mOrder.address.extras)) {
-                findViewById(R.id.address_extras).setVisibility(View.GONE);
-            }
-            findViewById(R.id.address_city_and_country, TextView.class).setText(
-                    mOrder.address.zipcode + ", " + mOrder.address.city + ", " + mOrder.address.getDisplayCountry());
-            String number = mOrder.address.phone;
-            try {
-                PhoneNumberUtil util = PhoneNumberUtil.getInstance();
-                PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
-                number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
-            } catch (NumberParseException e) {
-                e.printStackTrace();
-            }
-
-            findViewById(R.id.user_phone_number, TextView.class).setText(number);
-            findViewById(R.id.address_edit).setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View arg0) {
-                    Intent intent = new Intent(getActivity(), ResourceListActivity.class);
-                    intent.putExtra(ResourceListActivity.EXTRA_RESOURCE, Address.IDENTIFIER);
-                    intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_ALL);
-                    startActivityForResult(intent, REQUEST_SELECT_ADDRESS);
-                }
-            });
-        } else {
-            Intent intent = new Intent(getActivity(), AddAddressActivity.class);
-            intent.putExtra(AddAddressActivity.EXTRA_REQUIRED, true);
-            intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_ADD);
-            startActivityForResult(intent, REQUEST_ADD_ADDRESS);
-        }
-    }
-
-    private void setupPaymentCardUi() {
-        if (mOrder.card != null) {
-            StringBuilder number = new StringBuilder(mOrder.card.number);
-            int relativeIndex = 0;
-            for (int index = 0; index < number.length(); index++) {
-                if (index < number.length() - 4) {
-                    number.replace(index, index + 1, "*");
-                }
-                if (index > 0 && relativeIndex % 4 == 0) {
-                    number.insert(index, " ");
-                    index++;
-                    relativeIndex = 0;
-                }
-                relativeIndex++;
-            }
-            findViewById(R.id.payment_card_number, TextView.class).setText(number);
-            findViewById(R.id.payment_card_edit).setOnClickListener(new OnClickListener() {
-
-                @Override
-                public void onClick(View arg0) {
-                    Intent intent = new Intent(getActivity(), ResourceListActivity.class);
-                    intent.putExtra(ResourceListActivity.EXTRA_RESOURCE, PaymentCard.IDENTIFIER);
-                    intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_ALL);
-                    intent.putExtra(ResourceListActivity.EXTRA_DEFAULT_ITEM, mOrder.card.id);
-                    startActivityForResult(intent, REQUEST_SELECT_PAYMENT_CARD);
-                }
-            });
-        } else {
-            Intent intent = new Intent(getActivity(), AddPaymentCardActivity.class);
-            intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
-            startActivityForResult(intent, REQUEST_ADD_PAYMENT_CARD);
-        }
-    }
-
     private void setupUserUi() {
-        findViewById(R.id.user_email, TextView.class).setText(mOrder.user.email);
+        findViewById(R.id.user_email, TextView.class).setText(getOrder().user.email);
     }
 
     private void setupPriceUi() {
-        findViewById(R.id.price_product_name, TextView.class).setText(mOrder.product.name);
-        findViewById(R.id.price_value_no_shipping, TextView.class).setText(mOrder.product.currency.format(mOrder.product.productPrice));
-        if ((int) (mOrder.product.deliveryPrice * 100) == 0) {
+        findViewById(R.id.price_product_name, TextView.class).setText(getOrder().product.name);
+        findViewById(R.id.price_value_no_shipping, TextView.class).setText(
+                getOrder().product.currency.format(getOrder().product.productPrice));
+        if ((int) (getOrder().product.deliveryPrice * 100) == 0) {
             FontableTextView fees = findViewById(R.id.price_value_shipping);
             fees.setText(R.string.shopelia_confirmation_free);
         } else {
-            findViewById(R.id.price_value_shipping, TextView.class).setText(mOrder.product.currency.format(mOrder.product.deliveryPrice));
+            findViewById(R.id.price_value_shipping, TextView.class).setText(
+                    getOrder().product.currency.format(getOrder().product.deliveryPrice));
         }
         findViewById(R.id.price_value_total, TextView.class).setText(
-                mOrder.product.currency.format(mOrder.product.productPrice + mOrder.product.deliveryPrice));
-        findViewById(R.id.price_shipping_info, TextView.class).setText(mOrder.product.shippingExtra);
+                getOrder().product.currency.format(getOrder().product.productPrice + getOrder().product.deliveryPrice));
+        findViewById(R.id.price_shipping_info, TextView.class).setText(getOrder().product.shippingExtra);
 
         // Testing purposes
-        if (mOrder.user.email.equals("elarch@gmail.com") || mOrder.user.email.contains("shopelia")
-                || mOrder.user.email.contains("prixing.fr")) {
+        if (getOrder().user.email.equals("elarch@gmail.com") || getOrder().user.email.contains("shopelia")
+                || getOrder().user.email.contains("prixing.fr")) {
             getView().findViewById(R.id.auto_cancel).setVisibility(View.VISIBLE);
         }
     }

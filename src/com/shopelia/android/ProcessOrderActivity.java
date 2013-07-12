@@ -5,10 +5,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
+import com.shopelia.android.SingleAddressFragment.OnAddressChangeListener;
+import com.shopelia.android.SinglePaymentCardFragment.OnPaymentCardChangeListener;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.model.Address;
+import com.shopelia.android.model.PaymentCard;
 
-public class ProcessOrderActivity extends ShopeliaActivity implements OnUserAuthenticateListener {
+public class ProcessOrderActivity extends ShopeliaActivity implements OnUserAuthenticateListener, OnAddressChangeListener,
+        OnPaymentCardChangeListener {
 
     public static final String ACTIVITY_NAME = "Confirmation";
 
@@ -49,6 +54,16 @@ public class ProcessOrderActivity extends ShopeliaActivity implements OnUserAuth
     @Override
     public void onUserAuthenticate(boolean authoSignIn) {
         mConfirmationFragment.setupUi(UserManager.get(this).getUser());
+    }
+
+    @Override
+    public void onAddressChange(Address address) {
+        getOrder().address = address;
+    }
+
+    @Override
+    public void onPaymentCardChange(PaymentCard card) {
+        getOrder().card = card;
     }
 
 }
