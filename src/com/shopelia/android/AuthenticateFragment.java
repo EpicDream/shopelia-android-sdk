@@ -13,6 +13,7 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
+import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
@@ -32,7 +33,13 @@ import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.PasswordField;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class AuthenticateFragment extends ShopeliaFragment<Void> {
+public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateListener> {
+
+    public interface OnUserAuthenticateListener {
+        public void onUserAuthenticate(boolean authoSignIn);
+    }
+
+    public static final String DIALOG_NAME = "Authentification";
 
     private FormLinearLayout mFormContainer;
     private VerifyAPI mVerifyAPI;
@@ -64,6 +71,12 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
         mErrorMessage = findViewById(R.id.error);
 
         mVerifyAPI = new VerifyAPI(getActivity(), mApiCallback);
+
+        if (getShowsDialog()) {
+            findViewById(R.id.remember_me).setVisibility(View.GONE);
+            setCancelable(false);
+        }
+
     }
 
     @Override
@@ -142,8 +155,10 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
         @Override
         public void onVerifySucceed() {
             mPasswordField.setValid(true);
-            UserManager.get(getActivity()).setAutoSignIn(findViewById(R.id.remember_me, CheckBox.class).isChecked());
-            getActivity().startActivityForResult(new Intent(getActivity(), PrepareOrderActivity.class), 12);
+            if (getShowsDialog()) {
+                dismiss();
+            }
+            getContract().onUserAuthenticate(findViewById(R.id.remember_me, CheckBox.class).isChecked());
         };
 
         @Override

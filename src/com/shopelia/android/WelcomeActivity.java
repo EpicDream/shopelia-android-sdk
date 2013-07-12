@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
+import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
 import com.shopelia.android.WelcomeFragment.WelcomeParent;
 import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Merchant;
 
-public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
+public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, OnUserAuthenticateListener {
 
     public static final String ACTIVITY_NAME = "Welcome Activity";
 
@@ -76,7 +77,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
 
     @Override
     public void continueWithShopelia() {
-        startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
+        startActivityForResult(new Intent(this, PrepareOrderActivity.class), REQUEST_CHECKOUT);
     }
 
     @Override
@@ -93,6 +94,12 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
     @Override
     public void cancel() {
         onBackPressed();
+    }
+
+    @Override
+    public void onUserAuthenticate(boolean autoSignIn) {
+        UserManager.get(this).setAutoSignIn(autoSignIn);
+        startActivityForResult(new Intent(this, PrepareOrderActivity.class), REQUEST_CHECKOUT);
     }
 
 }

@@ -79,6 +79,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     }
 
     protected void updateUser() {
+        startWaiting(getString(R.string.shopelia_confirmation_update_user), false, false);
         new UserAPI(getActivity(), new CallbackAdapter() {
 
             @Override
@@ -99,7 +100,8 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             @Override
             public void onAuthTokenRevoked() {
                 super.onAuthTokenRevoked();
-
+                stopWaiting();
+                new AuthenticateFragment().show(getFragmentManager(), AuthenticateFragment.DIALOG_NAME);
             }
 
         }).updateUser();
@@ -237,6 +239,12 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     // UI SETUP
     //
     // ////////////////////////////////////////////////////////////////
+
+    public void setupUi(User user) {
+        mOrder = getBaseActivity().getOrder();
+        getBaseActivity().getOrder().updateUser(user);
+        setupUi();
+    }
 
     private void setupUi() {
         mOrder = getBaseActivity().getOrder();

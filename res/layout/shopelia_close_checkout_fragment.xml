@@ -10,6 +10,7 @@
         android:id="@+id/imageView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
         android:src="@drawable/shopelia_present" />
 
     <com.shopelia.android.widget.FontableTextView
@@ -42,12 +43,12 @@
         android:id="@+id/validate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/shopelia_margin_extra_large"
+        android:layout_marginBottom="@dimen/shopelia_margin_large"
         android:layout_marginLeft="@dimen/shopelia_margin_large"
         android:layout_marginRight="@dimen/shopelia_margin_large"
-        android:layout_marginTop="@dimen/shopelia_margin_extra_large"
-        app:shopelia_text="@string/shopelia_close_checkout_validation"
-        app:shopelia_icon="@drawable/shopelia_check_white" >
+        android:layout_marginTop="@dimen/shopelia_margin_large"
+        app:shopelia_icon="@drawable/shopelia_check_white"
+        app:shopelia_text="@string/shopelia_close_checkout_validation" >
 
     </com.shopelia.android.widget.ValidationButton>
 

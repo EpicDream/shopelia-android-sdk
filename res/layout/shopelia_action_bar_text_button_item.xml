@@ -24,6 +24,8 @@
         android:paddingLeft="@dimen/shopelia_margin_large"
         android:paddingRight="@dimen/shopelia_margin_large"
         android:text="Déjà inscrit ?"
+       	android:maxLines="1"
+       	android:ellipsize="end"
         android:textColor="@color/shopelia_light"
         android:textSize="@dimen/shopelia_font_size_small"
         app:shopelia_fontFamily="normal"

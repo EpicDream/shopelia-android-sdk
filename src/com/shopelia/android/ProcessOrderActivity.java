@@ -4,11 +4,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
+import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
 import com.shopelia.android.app.ShopeliaActivity;
+import com.shopelia.android.manager.UserManager;
 
-public class ProcessOrderActivity extends ShopeliaActivity {
+public class ProcessOrderActivity extends ShopeliaActivity implements OnUserAuthenticateListener {
 
     public static final String ACTIVITY_NAME = "Confirmation";
+
+    private ConfirmationFragment mConfirmationFragment = new ConfirmationFragment();
 
     @Override
     protected void onCreate(Bundle saveState) {
@@ -17,7 +21,7 @@ public class ProcessOrderActivity extends ShopeliaActivity {
 
         if (saveState == null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.fragment_container, new ConfirmationFragment());
+            ft.replace(R.id.fragment_container, mConfirmationFragment);
             ft.commit();
         }
 
@@ -40,6 +44,11 @@ public class ProcessOrderActivity extends ShopeliaActivity {
     @Override
     public String getActivityName() {
         return ACTIVITY_NAME;
+    }
+
+    @Override
+    public void onUserAuthenticate(boolean authoSignIn) {
+        mConfirmationFragment.setupUi(UserManager.get(this).getUser());
     }
 
 }
