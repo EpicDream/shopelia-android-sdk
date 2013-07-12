@@ -1,86 +1,142 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/shopelia_margin_extra_small"
-        android:src="@drawable/shopelia_pin" />
-
-    <ImageButton
-        android:id="@+id/address_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/shopelia_grey_button_background"
-        android:padding="@dimen/shopelia_margin_small"
-        android:scaleType="centerInside"
-        android:src="@drawable/shopelia_pen"
-        android:visibility="visible" />
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/add_address_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/shopelia_margin_normal"
-        android:layout_marginRight="@dimen/shopelia_margin_normal"
-        android:layout_toLeftOf="@+id/address_edit"
-        android:layout_toRightOf="@+id/imageView1"
-        android:orientation="vertical" >
+        android:background="@drawable/shopelia_list_selector"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/shopelia_margin_mid_large"
+        android:paddingLeft="@dimen/shopelia_margin_large"
+        android:paddingRight="@dimen/shopelia_margin_large"
+        android:paddingTop="@dimen/shopelia_margin_mid_large" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/shopelia_pin" />
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/fontableTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/shopelia_margin_normal"
+                android:layout_toRightOf="@+id/icon"
+                android:drawablePadding="@dimen/shopelia_margin_normal"
+                android:text="@string/shopelia_confirmation_you_have_no_address"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_small" />
+        </RelativeLayout>
 
         <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/address_user_name"
-            android:layout_width="wrap_content"
+            android:id="@+id/add_a_card"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Prénom Nom"
-            android:textColor="@color/shopelia_dark"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            app:shopelia_fontStyle="normal" />
-
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/address_address"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="12 rue du test"
-            android:textColor="@color/shopelia_dark"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            app:shopelia_fontStyle="normal" />
-
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/address_extras"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="esc de droite"
-            android:textColor="@color/shopelia_dark"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            app:shopelia_fontStyle="normal" />
-
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/address_city_and_country"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="75001, Paris, France"
-            android:textColor="@color/shopelia_dark"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            app:shopelia_fontStyle="normal" />
-
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/user_phone_number"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="01 08 93 89 12"
-            android:textColor="@color/shopelia_dark"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            app:shopelia_fontStyle="normal" />
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
+            android:text="@string/shopelia_confirmation_add_a_address"
+            android:textColor="@color/shopelia_link_text_color"
+            android:textSize="@dimen/shopelia_font_size_small" />
     </LinearLayout>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/display_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/shopelia_margin_mid_large"
+        android:paddingLeft="@dimen/shopelia_margin_large"
+        android:paddingRight="@dimen/shopelia_margin_large"
+        android:paddingTop="@dimen/shopelia_margin_mid_large" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/shopelia_margin_extra_small"
+            android:src="@drawable/shopelia_pin" />
+
+        <ImageButton
+            android:id="@+id/address_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/shopelia_grey_button_background"
+            android:padding="@dimen/shopelia_margin_small"
+            android:scaleType="centerInside"
+            android:src="@drawable/shopelia_pen"
+            android:visibility="visible" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:layout_toLeftOf="@+id/address_edit"
+            android:layout_toRightOf="@+id/imageView1"
+            android:orientation="vertical" >
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/address_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Prénom Nom"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_normal"
+                app:shopelia_fontStyle="normal" />
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/address_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="12 rue du test"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_normal"
+                app:shopelia_fontStyle="normal" />
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/address_extras"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="esc de droite"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_normal"
+                app:shopelia_fontStyle="normal" />
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/address_city_and_country"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="75001, Paris, France"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_normal"
+                app:shopelia_fontStyle="normal" />
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/user_phone_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="01 08 93 89 12"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_normal"
+                app:shopelia_fontStyle="normal" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

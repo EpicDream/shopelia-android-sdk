@@ -60,36 +60,28 @@
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/shopelia_divider_normal"
-                android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
                 android:layout_marginTop="@dimen/shopelia_margin_mid_large"
                 android:background="@color/shopelia_dividerColor" />
 
             <FrameLayout
                 android:id="@+id/address"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/shopelia_margin_large"
-                android:layout_marginRight="@dimen/shopelia_margin_large" />
+                android:layout_height="wrap_content" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/shopelia_divider_normal"
-                android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
-                android:layout_marginTop="@dimen/shopelia_margin_mid_large"
                 android:background="@color/shopelia_dividerColor" />
 
             <FrameLayout
                 android:id="@+id/payment_card"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/shopelia_margin_large"
-                android:layout_marginRight="@dimen/shopelia_margin_large" />
+                android:layout_height="wrap_content" />
 
             <View
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/shopelia_divider_normal"
                 android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
-                android:layout_marginTop="@dimen/shopelia_margin_mid_large"
                 android:background="@color/shopelia_dividerColor" />
 
             <include

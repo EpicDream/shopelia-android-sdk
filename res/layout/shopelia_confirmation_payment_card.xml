@@ -1,50 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal" >
-
-    <ImageView
-        android:id="@+id/imageView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="@dimen/shopelia_margin_extra_small"
-        android:src="@drawable/shopelia_card" />
-
-    <ImageButton
-        android:id="@+id/payment_card_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentTop="true"
-        android:background="@drawable/shopelia_grey_button_background"
-        android:padding="@dimen/shopelia_margin_small"
-        android:scaleType="centerInside"
-        android:src="@drawable/shopelia_pen" />
+    android:orientation="vertical" >
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/add_card_button"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="@dimen/shopelia_margin_normal"
-        android:layout_marginRight="@dimen/shopelia_margin_normal"
-        android:layout_toLeftOf="@+id/payment_card_edit"
-        android:layout_toRightOf="@+id/imageView1"
-        android:orientation="vertical" >
+        android:background="@drawable/shopelia_list_selector"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/shopelia_margin_mid_large"
+        android:paddingLeft="@dimen/shopelia_margin_large"
+        android:paddingRight="@dimen/shopelia_margin_large"
+        android:paddingTop="@dimen/shopelia_margin_mid_large" >
 
-        <TextView
-            android:id="@+id/payment_card_number"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <ImageView
+                android:id="@+id/icon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:src="@drawable/shopelia_card" />
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/fontableTextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="@dimen/shopelia_margin_normal"
+                android:layout_toRightOf="@+id/icon"
+                android:drawablePadding="@dimen/shopelia_margin_normal"
+                android:text="@string/shopelia_confirmation_you_have_no_card"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_small" />
+
+        </RelativeLayout>
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/add_a_card"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="**** **** **** 1234"
-            android:textColor="@color/shopelia_dark"
-            android:textSize="@dimen/shopelia_font_size_normal"
-             />
-
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
+            android:text="@string/shopelia_confirmation_add_a_card"
+            android:textColor="@color/shopelia_link_text_color"
+            android:textSize="@dimen/shopelia_font_size_small" />
     </LinearLayout>
 
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/display_card"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="@dimen/shopelia_margin_mid_large"
+        android:paddingLeft="@dimen/shopelia_margin_large"
+        android:paddingRight="@dimen/shopelia_margin_large"
+        android:paddingTop="@dimen/shopelia_margin_mid_large" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="@dimen/shopelia_margin_extra_small"
+            android:src="@drawable/shopelia_card" />
+
+        <ImageButton
+            android:id="@+id/payment_card_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/shopelia_grey_button_background"
+            android:padding="@dimen/shopelia_margin_small"
+            android:scaleType="centerInside"
+            android:src="@drawable/shopelia_pen" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:layout_toLeftOf="@+id/payment_card_edit"
+            android:layout_toRightOf="@+id/imageView1"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/payment_card_number"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="**** **** **** 1234"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_normal" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

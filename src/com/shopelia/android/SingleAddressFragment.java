@@ -66,6 +66,8 @@ public class SingleAddressFragment extends ShopeliaFragment<OnAddressChangeListe
 
     public void refresh() {
         if (mAddress != null) {
+            findViewById(R.id.display_address).setVisibility(View.VISIBLE);
+            findViewById(R.id.add_address_button).setVisibility(View.GONE);
             findViewById(R.id.address_user_name, TextView.class).setText(mAddress.firstname + " " + mAddress.lastname);
             findViewById(R.id.address_address, TextView.class).setText(mAddress.address);
             findViewById(R.id.address_extras, TextView.class).setText(mAddress.extras);
@@ -95,10 +97,18 @@ public class SingleAddressFragment extends ShopeliaFragment<OnAddressChangeListe
                 }
             });
         } else {
-            Intent intent = new Intent(getActivity(), AddAddressActivity.class);
-            intent.putExtra(AddAddressActivity.EXTRA_REQUIRED, true);
-            intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_ADD);
-            startActivityForResult(intent, REQUEST_ADD_ADDRESS);
+            findViewById(R.id.display_address).setVisibility(View.GONE);
+            findViewById(R.id.add_address_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.add_address_button).setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), AddAddressActivity.class);
+                    intent.putExtra(AddAddressActivity.EXTRA_REQUIRED, true);
+                    intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_ADD);
+                    startActivityForResult(intent, REQUEST_ADD_ADDRESS);
+                }
+            });
         }
     }
 
@@ -110,9 +120,6 @@ public class SingleAddressFragment extends ShopeliaFragment<OnAddressChangeListe
                 if (resultCode == Activity.RESULT_OK) {
                     mAddress = data.getParcelableExtra(ResourceListActivity.EXTRA_SELECTED_ITEM);
                     getContract().onAddressChange(mAddress);
-                } else {
-                    getActivity().setResult(Activity.RESULT_CANCELED);
-                    getActivity().finish();
                 }
                 break;
             case REQUEST_SELECT_ADDRESS:

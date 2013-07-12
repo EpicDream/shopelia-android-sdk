@@ -57,6 +57,8 @@ public class SinglePaymentCardFragment extends ShopeliaFragment<OnPaymentCardCha
 
     protected void refresh() {
         if (mCard != null) {
+            findViewById(R.id.display_card).setVisibility(View.VISIBLE);
+            findViewById(R.id.add_card_button).setVisibility(View.GONE);
             StringBuilder number = new StringBuilder(mCard.number);
             int relativeIndex = 0;
             for (int index = 0; index < number.length(); index++) {
@@ -83,9 +85,17 @@ public class SinglePaymentCardFragment extends ShopeliaFragment<OnPaymentCardCha
                 }
             });
         } else {
-            Intent intent = new Intent(getActivity(), AddPaymentCardActivity.class);
-            intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
-            startActivityForResult(intent, REQUEST_ADD_PAYMENT_CARD);
+            findViewById(R.id.display_card).setVisibility(View.GONE);
+            findViewById(R.id.add_card_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.add_card_button).setOnClickListener(new OnClickListener() {
+
+                @Override
+                public void onClick(View v) {
+                    Intent intent = new Intent(getActivity(), AddPaymentCardActivity.class);
+                    intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
+                    startActivityForResult(intent, REQUEST_ADD_PAYMENT_CARD);
+                }
+            });
         }
     }
 
@@ -97,9 +107,6 @@ public class SinglePaymentCardFragment extends ShopeliaFragment<OnPaymentCardCha
                 if (resultCode == Activity.RESULT_OK) {
                     mCard = data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD);
                     getContract().onPaymentCardChange(mCard);
-                } else {
-                    getActivity().setResult(Activity.RESULT_CANCELED);
-                    getActivity().finish();
                 }
                 break;
             case REQUEST_SELECT_PAYMENT_CARD: {

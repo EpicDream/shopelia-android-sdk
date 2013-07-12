@@ -121,33 +121,43 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
         @Override
         public void onClick(View v) {
-
-            if (((CheckBox) getView().findViewById(R.id.auto_cancel)).isChecked()) {
-                getOrder().product.productPrice = 0;
-                getOrder().product.deliveryPrice = 0;
-            }
-
-            startWaiting(getString(R.string.shopelia_confirmation_waiting, getOrder().product.merchant.name), true, false);
-            new OrderAPI(getActivity(), new CallbackAdapter() {
-
-                public void onOrderConfirmation(boolean succeed) {
-                    stopWaiting();
-                    UserManager.get(getActivity()).notifyCheckoutSucceed();
-                    Intent intent = new Intent(getActivity(), CloseCheckoutActivity.class);
-                    intent.putExtra(ShopeliaActivity.EXTRA_ORDER, getOrder());
-                    getActivity().startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
-                };
-
-                @Override
-                public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response,
-                        Exception e) {
-                    stopWaiting();
-                    Toast.makeText(getActivity(), R.string.shopelia_confirmation_error, Toast.LENGTH_LONG).show();
-                };
-
-            }).order(getOrder());
+            order();
         }
     };
+
+    public void order() {
+        if (getOrder().address == null) {
+            return;
+        }
+
+        if (getOrder().card == null) {
+            return;
+        }
+
+        if (((CheckBox) getView().findViewById(R.id.auto_cancel)).isChecked()) {
+            getOrder().product.productPrice = 0;
+            getOrder().product.deliveryPrice = 0;
+        }
+
+        startWaiting(getString(R.string.shopelia_confirmation_waiting, getOrder().product.merchant.name), true, false);
+        new OrderAPI(getActivity(), new CallbackAdapter() {
+
+            public void onOrderConfirmation(boolean succeed) {
+                stopWaiting();
+                UserManager.get(getActivity()).notifyCheckoutSucceed();
+                Intent intent = new Intent(getActivity(), CloseCheckoutActivity.class);
+                intent.putExtra(ShopeliaActivity.EXTRA_ORDER, getOrder());
+                getActivity().startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
+            };
+
+            @Override
+            public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response, Exception e) {
+                stopWaiting();
+                Toast.makeText(getActivity(), R.string.shopelia_confirmation_error, Toast.LENGTH_LONG).show();
+            };
+
+        }).order(getOrder());
+    }
 
     // ////////////////////////////////////////////////////////////////
     //

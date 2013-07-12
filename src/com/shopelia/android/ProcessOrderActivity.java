@@ -11,6 +11,8 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.PaymentCard;
+import com.shopelia.android.remote.api.AddressesAPI;
+import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 
 public class ProcessOrderActivity extends ShopeliaActivity implements OnUserAuthenticateListener, OnAddressChangeListener,
         OnPaymentCardChangeListener {
@@ -59,6 +61,7 @@ public class ProcessOrderActivity extends ShopeliaActivity implements OnUserAuth
     @Override
     public void onAddressChange(Address address) {
         getOrder().address = address;
+        new AddressesAPI(this, new CallbackAdapter()).setDefaultAddress(address);
     }
 
     @Override

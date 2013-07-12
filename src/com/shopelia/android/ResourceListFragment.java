@@ -81,7 +81,12 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         BaseModel<?> item = (BaseModel<?>) mListView.getItemAtPosition(position);
         ModelAdapterFactory factory = getFactory();
         factory.delete(getActivity(), item);
-        refresh();
+        if (mList.size() > 0) {
+            refresh();
+        } else {
+
+            getActivity().finish();
+        }
     }
 
     @Override
@@ -168,9 +173,6 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     private OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(final AdapterView<?> adapterView, final View v, final int position, long itemId) {
-            if (mList.size() == 1) {
-                return false;
-            }
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder.setTitle(R.string.shopelia_dialog_title).setItems(R.array.shopelia_form_address_item_actions,
                     new DialogInterface.OnClickListener() {
