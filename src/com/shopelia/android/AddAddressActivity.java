@@ -76,7 +76,7 @@ public class AddAddressActivity extends ShopeliaActivity {
 
     static {
         TRACKER_NAME = new SparseArray<String>();
-        TRACKER_NAME.put(R.id.name, Analytics.Events.UserInteractions.Fields.NAME);
+        TRACKER_NAME.put(R.id.lastname, Analytics.Events.UserInteractions.Fields.NAME);
         TRACKER_NAME.put(R.id.address, Analytics.Events.UserInteractions.Fields.ADDRESS_1);
         TRACKER_NAME.put(R.id.extras, Analytics.Events.UserInteractions.Fields.ADDRESS_2);
         TRACKER_NAME.put(R.id.country, Analytics.Events.UserInteractions.Fields.COUNTRY);
@@ -104,13 +104,17 @@ public class AddAddressActivity extends ShopeliaActivity {
         mFormLayout = (FormLinearLayout) findViewById(R.id.form);
 
         Bundle extras = getIntent().getExtras() != null ? getIntent().getExtras() : new Bundle();
-        String name = (extras.getString(EXTRA_FIRSTNAME) + " " + extras.getString(EXTRA_LASTNAME)).trim();
-        name = extras.getString(EXTRA_FIRSTNAME) == null || extras.getString(EXTRA_LASTNAME) == null ? "" : name;
         //@formatter:off
-        mFormLayout.findFieldById(R.id.name, NameField.class)
+        mFormLayout.findFieldById(R.id.lastname, NameField.class)
+            .setJsonPath(Address.Api.FIRSTNAME)
+            .mandatory()
+            .setContentText(extras.getString(EXTRA_FIRSTNAME))
+            .setListener(mTrackingListener)
+            .setOnClickListener(mOnClickListener);
+        mFormLayout.findFieldById(R.id.lastname, NameField.class)
             .setJsonPath(Address.Api.LASTNAME)
             .mandatory()
-            .setContentText(name)
+            .setContentText(extras.getString(EXTRA_LASTNAME))
             .setListener(mTrackingListener)
             .setOnClickListener(mOnClickListener);
         mFormLayout.findFieldById(R.id.city, NameField.class)
@@ -418,19 +422,6 @@ public class AddAddressActivity extends ShopeliaActivity {
             try {
                 mResult = Address.inflate(mFormLayout.toJson());
                 mResult.country = LocaleUtils.getCountryISO2Code(mResult.country);
-
-                int first_space = mResult.lastname.indexOf(' ');
-                if (first_space != -1) {
-                    mResult.firstname = mResult.lastname.substring(0, first_space).trim();
-                    mResult.lastname = mResult.lastname.substring(first_space + 1).trim();
-                }
-                mResult.is_default = true;
-                if (TextUtils.isEmpty(mResult.lastname) || TextUtils.isEmpty(mResult.firstname)) {
-                    out = false;
-                    mFormLayout.findFieldById(R.id.name, EditTextField.class)
-                            .setError(getString(R.string.shopelia_form_address_error_name));
-                }
-
             } catch (JSONException e) {
                 if (Config.INFO_LOGS_ENABLED) {
                     e.printStackTrace();

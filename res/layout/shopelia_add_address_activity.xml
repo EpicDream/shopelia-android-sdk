@@ -27,15 +27,28 @@
             android:layout_height="wrap_content"
             app:shopelia_hint="@string/shopelia_form_main_phone" />
 
-        <com.shopelia.android.widget.form.NameField
-            android:id="@+id/name"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/shopelia_margin_small"
-            android:ems="10"
-            android:inputType="textCapSentences|textNoSuggestions|textPersonName"
-            android:nextFocusDown="@+id/name"
-            app:shopelia_hint="@string/shopelia_form_address_first_name_and_last_name" />
+            android:layout_height="wrap_content" >
+
+            <com.shopelia.android.widget.form.NameField
+                android:id="@+id/firstname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="@dimen/shopelia_margin_small"
+                android:layout_weight="1"
+                app:shopelia_hint="@string/shopelia_form_address_first_name" >
+            </com.shopelia.android.widget.form.NameField>
+
+            <com.shopelia.android.widget.form.NameField
+                android:id="@+id/lastname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/shopelia_margin_small"
+                app:shopelia_hint="@string/shopelia_form_address_last_name"
+                android:layout_weight="1" >
+            </com.shopelia.android.widget.form.NameField>
+        </LinearLayout>
 
         <com.shopelia.android.widget.form.EditTextField
             android:id="@+id/address"

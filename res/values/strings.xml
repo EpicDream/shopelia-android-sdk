@@ -87,6 +87,8 @@
 
     <!-- Address creation form -->
     <string name="shopelia_form_address_first_name_and_last_name">Prénom Nom</string>
+    <string name="shopelia_form_address_first_name">Prénom</string>
+    <string name="shopelia_form_address_last_name">Nom</string>
     <string name="shopelia_form_address_address">Adresse</string>
     <string name="shopelia_form_address_extra_informations">Complément d\'informations</string>
     <string name="shopelia_form_address_city">Ville</string>
