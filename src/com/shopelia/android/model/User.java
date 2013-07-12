@@ -120,12 +120,11 @@ public class User implements BaseModel<User> {
                 return address;
             }
         }
-        return addresses.get(0);
+        return addresses.size() > 0 ? addresses.get(0) : null;
     }
 
     public PaymentCard getDefaultPaymentCard() {
-        // TODO Better payment card selection
-        return paymentCards.get(0);
+        return paymentCards.size() > 0 ? paymentCards.get(0) : null;
     }
 
     public static User inflate(JSONObject json) {
