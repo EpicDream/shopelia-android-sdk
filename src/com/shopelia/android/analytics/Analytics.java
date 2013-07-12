@@ -17,7 +17,7 @@ public interface Analytics {
             public interface Fields {
                 String EMAIL = "Email";
                 String PHONE = "Phone";
-                String NAME = "Full name";
+                String NAME = "Full Name";
                 String ADDRESS_1 = "Address 1";
                 String ADDRESS_2 = "Address 2";
                 String ZIP = "Zip";
