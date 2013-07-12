@@ -74,6 +74,25 @@ public class AddressesAPI extends ApiHandler {
         }
     }
 
+    public void setDefaultAddress(final Address address) {
+        if (address == null) {
+            return;
+        }
+        JSONObject params = new JSONObject();
+        try {
+            params.put(Address.Api.IS_DEFAULT, 1);
+            ShopeliaRestClient.V1(getContext()).put(Command.V1.Addresses.Address(address.id), params, new AsyncCallback() {
+
+                @Override
+                public void onComplete(HttpResponse httpResponse) {
+
+                }
+            });
+        } catch (JSONException e) {
+            // Do nothing
+        }
+    }
+
     private abstract class AddressAsyncCallback extends AsyncCallback {
 
         private List<Integer> mSuccessCode = new ArrayList<Integer>();
