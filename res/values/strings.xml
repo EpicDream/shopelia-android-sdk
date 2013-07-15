@@ -75,6 +75,8 @@
     </string>
     <string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
 	<string name="shopelia_form_main_use_secured_server">Continuer sur serveur sécurisé</string>
+    <string name="shopelia_form_main_create_account">Créer un compte</string>
+	<string name="shopelia_form_main_sign_in_account">Se connecter</string>
     
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Nom</string>
