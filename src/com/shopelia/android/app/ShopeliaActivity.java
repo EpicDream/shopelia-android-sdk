@@ -141,9 +141,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         mIsPaused = true;
-        if (mProgressDialog != null && mProgressDialog.isShowing()) {
-            mProgressDialog.dismiss();
-        }
     }
 
     protected void createSessionId(long value, String str) {
@@ -213,7 +210,9 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         getShopeliaActionBar().save();
         if (blockUi) {
             setWaitingMode(true);
-            mProgressDialog = ProgressDialog.show(this, getString(R.string.shopelia_dialog_title), message);
+            if (!isFinishing()) {
+                mProgressDialog = ProgressDialog.show(this, getString(R.string.shopelia_dialog_title), message);
+            }
         } else {
             setQuietWaitingMode(true);
             getShopeliaActionBar().clear();
