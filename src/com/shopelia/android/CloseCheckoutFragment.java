@@ -55,7 +55,7 @@ public class CloseCheckoutFragment extends ShopeliaFragment<Void> {
                     getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
                     getActivity().finish();
                 }
-            }, null).create().show();
+            }, null).show();
 
         }
     }

@@ -14,6 +14,8 @@ import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.PaymentAPI;
+import com.shopelia.android.widget.actionbar.ActionBar;
+import com.shopelia.android.widget.actionbar.TextButtonItem;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.HeaderField;
 import com.shopelia.android.widget.form.SingleLinePaymentCardField;
@@ -25,6 +27,15 @@ public class AddPaymentCardFragment extends ShopeliaFragment<OnPaymentCardAddedL
     }
 
     private FormLinearLayout mFormContainer;
+
+    @Override
+    protected void onCreateShopeliaActionBar(ActionBar actionBar) {
+        super.onCreateShopeliaActionBar(actionBar);
+        actionBar.clear();
+        actionBar.addItem(TextButtonItem.createTextViewItem(R.id.shopelia_action_bar_secured,
+                getString(R.string.shopelia_form_payment_card_secured_server), false));
+        actionBar.commit();
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

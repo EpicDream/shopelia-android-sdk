@@ -106,6 +106,9 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
                 mFormContainer.nextField(mFormContainer.findFieldById(R.id.email));
             }
         }
+        if (getContract().getValidationButton() != null) {
+            getContract().getValidationButton().setText(R.string.shopelia_form_main_validate);
+        }
     }
 
     @Override

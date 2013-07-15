@@ -42,7 +42,7 @@
     </string>
 
     <!-- Authenticate -->
-    <string name="shopelia_authenticate_remove_check">Si vous désactivez la fonctionalité de protection par mot de passe, il est possible que des achats non autorisés soient effectués. Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
+    <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
 	<string name="shopelia_authenticate_title">Authentification</string>
 	<string name="shopelia_authenticate_remember_me">NE PLUS ME LE DEMANDER</string>
 	<string name="shopelia_authenticate_validate">CONFIRMER</string>
@@ -74,7 +74,8 @@
 	    ]]>
     </string>
     <string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
-
+	<string name="shopelia_form_main_use_secured_server">Continuer sur serveur sécurisé</string>
+    
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Nom</string>
     <string name="shopelia_form_account_first_name">Prénom</string>
@@ -119,7 +120,8 @@
     <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
     <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saisissez manuellement les informations</string>
     <string name="shopelia_form_payment_card_not_compatible">Shopelia n\'est disponible que pour les cartes Visa et American Express.</string>
-
+	<string name="shopelia_form_payment_card_secured_server">(Serveur sécurisé)</string>
+    
     <!-- Shopelia footer -->
     <string name="shopelia_footer">PAIEMENT SECURISE PAR</string>
 

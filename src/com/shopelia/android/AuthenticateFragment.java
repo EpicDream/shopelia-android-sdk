@@ -104,7 +104,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
                         getActivity().finish();
                     }
                 }
-            }, null).create().show();
+            }, null).show();
 
         }
     }
@@ -131,6 +131,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
 
         @Override
         public void onSubmit(FormContainer container) {
+            findViewById(R.id.validate).setEnabled(false);
             if (mFormContainer.validate()) {
                 if (mVerifyAPI.verify(mFormContainer.toJson())) {
                     mErrorMessage.setVisibility(View.GONE);
@@ -163,6 +164,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
 
         @Override
         public void onVerifyFailed() {
+            findViewById(R.id.validate).setEnabled(true);
             mPasswordField.setEnabled(true);
             mErrorMessage.setVisibility(View.VISIBLE);
             mErrorMessage.setText(R.string.shopelia_authenticate_wrong_password);
@@ -205,6 +207,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
         @Override
         public void onError(int step, HttpResponse httpResponse, org.json.JSONObject response, Exception e) {
             mErrorMessage.setVisibility(View.VISIBLE);
+            findViewById(R.id.validate).setEnabled(false);
             mErrorMessage.setText(R.string.shopelia_error_network_error);
             stopWaiting();
         };

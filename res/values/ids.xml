@@ -6,7 +6,8 @@
     <item name="shopelia_action_bar_create_account" type="id"/>
     <item name="shopelia_action_bar_sign_out" type="id"/>
     <item name="shopelia_action_bar_add" type="id"/>
-
+	<item name="shopelia_action_bar_secured" type="id"></item>
+    
     <!-- SingleLinePaymentCardField -->
     <item name="shopelia_card_number" type="id"/>
     <item name="shopelia_card_expiry_date" type="id"/>

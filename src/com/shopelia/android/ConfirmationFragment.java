@@ -37,6 +37,8 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     private static final int REQUEST_ADDRESS = 0x200;
     private static final int REQUEST_PAYMENT_CARD = 0x201;
 
+    private boolean mIsOrdering = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -138,7 +140,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                     getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
                     getActivity().finish();
                 }
-            }, null).create().show();
+            }, null).show();
 
         }
     }
@@ -152,11 +154,16 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     };
 
     public void order() {
+        if (mIsOrdering) {
+            return;
+        }
+        mIsOrdering = true;
         if (getOrder().address == null) {
             Intent intent = new Intent(getActivity(), AddAddressActivity.class);
             intent.putExtra(AddAddressActivity.EXTRA_REQUIRED, true);
             intent.putExtra(AddAddressActivity.EXTRA_MODE, AddAddressActivity.MODE_ADD);
             startActivityForResult(intent, REQUEST_ADDRESS);
+            mIsOrdering = false;
             return;
         }
 
@@ -164,6 +171,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             Intent intent = new Intent(getActivity(), AddPaymentCardActivity.class);
             intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
             startActivityForResult(intent, REQUEST_PAYMENT_CARD);
+            mIsOrdering = false;
             return;
         }
 
@@ -172,12 +180,14 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             getOrder().product.deliveryPrice = 0;
         }
 
-        startWaiting(getString(R.string.shopelia_confirmation_waiting, getOrder().product.merchant.name), true, false);
+        getBaseActivity().startDelayedWaiting(getString(R.string.shopelia_confirmation_waiting, getOrder().product.merchant.name), true,
+                false, 500);
         new OrderAPI(getActivity(), new CallbackAdapter() {
 
             @Override
             public void onOrderConfirmation(boolean succeed) {
                 stopWaiting();
+                mIsOrdering = false;
                 UserManager.get(getActivity()).notifyCheckoutSucceed();
                 Intent intent = new Intent(getActivity(), CloseCheckoutActivity.class);
                 intent.putExtra(ShopeliaActivity.EXTRA_ORDER, getOrder());
@@ -188,12 +198,14 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             public void onInvalidOrderRequest() {
                 super.onInvalidOrderRequest();
                 stopWaiting();
+                mIsOrdering = false;
                 updateUser(true);
             }
 
             @Override
             public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response, Exception e) {
                 stopWaiting();
+                mIsOrdering = false;
                 Toast.makeText(getActivity(), R.string.shopelia_confirmation_error, Toast.LENGTH_LONG).show();
             };
 

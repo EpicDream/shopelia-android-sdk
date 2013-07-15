@@ -12,6 +12,7 @@ import com.shopelia.android.widget.actionbar.ActionBar.Item;
 public class TextButtonItem extends Item {
 
     private String mText;
+    private int mDividerVisibility = View.VISIBLE;
 
     public TextButtonItem(int id) {
         super(id);
@@ -35,6 +36,17 @@ public class TextButtonItem extends Item {
     public void bindView(View view) {
         TextView textView = (TextView) view.findViewById(R.id.action_bar_item_textview);
         textView.setText(mText);
+        view.findViewById(R.id.divider).setVisibility(mDividerVisibility);
     }
 
+    public void setDividerVisibility(int dividerVisibility) {
+        this.mDividerVisibility = dividerVisibility;
+    }
+
+    public static TextButtonItem createTextViewItem(int id, CharSequence text, boolean hasDivider) {
+        TextButtonItem item = new TextButtonItem(id, text.toString());
+        item.setDividerVisibility(hasDivider ? View.VISIBLE : View.GONE);
+        item.setClickable(false);
+        return item;
+    }
 }

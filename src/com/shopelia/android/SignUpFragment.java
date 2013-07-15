@@ -171,6 +171,14 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        if (getContract().getValidationButton() != null) {
+            getContract().getValidationButton().setText(R.string.shopelia_form_main_use_secured_server);
+        }
+    }
+
+    @Override
     protected void onActionItemSelected(Item item) {
         super.onActionItemSelected(item);
         if (item.getId() == R.id.shopelia_action_bar_login) {

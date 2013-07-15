@@ -210,9 +210,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         getShopeliaActionBar().save();
         if (blockUi) {
             setWaitingMode(true);
-            if (!isFinishing()) {
-                mProgressDialog = ProgressDialog.show(this, getString(R.string.shopelia_dialog_title), message);
-            }
+            mProgressDialog = ProgressDialog.show(this, getString(R.string.shopelia_dialog_title), message);
         } else {
             setQuietWaitingMode(true);
             getShopeliaActionBar().clear();

@@ -28,6 +28,7 @@ public class ActionBar {
 
         private final int mId;
         private View mView;
+        private boolean mClickable = true;
 
         public Item(int id) {
             mId = id;
@@ -57,6 +58,14 @@ public class ActionBar {
             if (mView != null) {
                 bindView(mView);
             }
+        }
+
+        public void setClickable(boolean clickable) {
+            mClickable = clickable;
+        }
+
+        public boolean isClickable() {
+            return mClickable;
         }
 
     }
@@ -120,7 +129,9 @@ public class ActionBar {
             if (view.getParent() != null && view.getParent() instanceof ViewGroup) {
                 ((ViewGroup) view.getParent()).removeView(view);
             }
-            view.setOnClickListener(mOnClickListener);
+            if (item.isClickable()) {
+                view.setOnClickListener(mOnClickListener);
+            }
             container.addView(view);
         }
     }
