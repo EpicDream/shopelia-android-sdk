@@ -65,7 +65,7 @@
     <string name="shopelia_form_main_address">Adresse</string>
     <string name="shopelia_form_main_header_text" formatted="false">
 <![CDATA[
-	    Votre commande va être préparée\nautomatiquement avec <b>Shopelia</b>\n sur le site <b>%s</b>.
+	    Votre commande va être préparée<br>automatiquement avec <b>Shopelia</b><br>sur le site <b>%s</b>.
 	    ]]>
     </string>
     <string name="shopelia_form_main_footer_text">
