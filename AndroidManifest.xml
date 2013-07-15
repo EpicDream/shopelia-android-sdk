@@ -49,8 +49,8 @@
         <activity
             android:name="com.shopelia.android.WelcomeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:theme="@style/Theme.Shopelia.FloatingFrame"
             android:launchMode="singleTask"
+            android:theme="@style/Theme.Shopelia.FloatingFrame"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
             android:name="com.shopelia.android.PrepareOrderActivity"
@@ -105,11 +105,15 @@
             android:theme="@style/Theme.Shopelia" />
 
         <service
-            android:name="com.shopelia.android.service.ShopeliaService"
+            android:name="com.shopelia.android.accounts.ShopeliaAccountAuthentificationService"
             android:exported="true" >
             <intent-filter>
-                <action android:name="com.shopelia.android.action.SHOPELIA" />
+                <action android:name="android.accounts.AccountAuthenticator" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.accounts.AccountAuthenticator"
+                android:resource="@xml/shopelia_authenticator" />
         </service>
 
         <!-- Activities responsible for gathering payment info -->
