@@ -1,10 +1,22 @@
 package com.shopelia.android;
 
+import java.io.IOException;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.accounts.AccountManagerFuture;
+import android.accounts.AuthenticatorException;
+import android.accounts.OperationCanceledException;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.text.TextUtils;
+import android.util.Log;
 
 import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
 import com.shopelia.android.WelcomeFragment.WelcomeParent;
@@ -12,6 +24,7 @@ import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Merchant;
+import com.shopelia.android.model.User;
 
 public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, OnUserAuthenticateListener {
 
@@ -26,11 +39,51 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        UserManager um = UserManager.get(this);
-        if (!um.isLogged()) {
+        final UserManager um = UserManager.get(this);
+        if (!um.isLogged() && um.getAccount() == null) {
             setActivityStyle(STYLE_TRANSLUCENT);
         }
         super.onCreate(savedInstanceState);
+        if (um.hasAccountPermission() && um.getAccount() != null) {
+            um.restoreFromAccount(new AccountManagerCallback<Bundle>() {
+
+                @Override
+                public void run(AccountManagerFuture<Bundle> result) {
+                    try {
+                        if (result.isDone()) {
+                            Bundle data = result.getResult();
+                            Log.d(null, "DONE " + data.getString(AccountManager.KEY_AUTHTOKEN));
+                            um.setAuthToken(data.getString(AccountManager.KEY_AUTHTOKEN));
+                            String userString = data.getString(AccountManager.KEY_USERDATA);
+                            User user = null;
+                            if (!TextUtils.isEmpty(userString)) {
+                                user = User.inflate(new JSONObject(userString));
+                            }
+                            if (user != null) {
+                                um.update(user);
+                            }
+                        }
+                    } catch (OperationCanceledException e) {
+                        e.printStackTrace();
+                    } catch (AuthenticatorException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    if (result.isDone()) {
+                        init();
+                    }
+                }
+            });
+        } else {
+            init();
+        }
+    }
+
+    private void init() {
+        UserManager um = UserManager.get(this);
         if (um.getLoginsCount() > 0 && um.getUser() != null && !um.isAutoSignedIn()) {
             setHostContentView(R.layout.shopelia_welcome_activity);
             FragmentManager fm = getSupportFragmentManager();

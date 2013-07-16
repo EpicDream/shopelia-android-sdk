@@ -3,9 +3,14 @@ package com.shopelia.android.manager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
+import android.accounts.AccountManagerCallback;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.shopelia.android.app.ShopeliaTracker;
@@ -61,6 +66,12 @@ public class UserManager {
         editor.commit();
         mUser = user;
         saveUser();
+        AccountManager manager = getAccountManager();
+        if (manager != null) {
+            clearAccounts();
+            final Account account = new Account(user.email, Config.ACCOUNT_TYPE);
+            manager.addAccountExplicitly(account, null, user.toUserdata(getAuthToken()));
+        }
     }
 
     public void update(User user) {
@@ -106,8 +117,24 @@ public class UserManager {
         return mPreferences.getString(PREFS_AUTH_TOKEN, null);
     }
 
+    @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
+    public void restoreFromAccount(AccountManagerCallback<Bundle> callback) {
+        if (hasAccountPermission() && getAccount() != null) {
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                getAccountManager().getAuthToken(getAccount(), Config.AUTH_TOKEN_TYPE, null, false, callback, null);
+            } else {
+                getAccountManager().getAuthToken(getAccount(), Config.AUTH_TOKEN_TYPE, false, callback, null);
+            }
+        }
+    }
+
     public void logout() {
         if (mUser != null) {
+            AccountManager manager = getAccountManager();
+            if (manager != null) {
+                manager.removeAccount(getAccount(), null, null);
+            }
             new UserAPI(mContext, null).signOut(mUser.email);
             mUser = null;
             Editor editor = mPreferences.edit();
@@ -120,8 +147,56 @@ public class UserManager {
         }
     }
 
+    public Account getAccount() {
+        Account[] accounts = getAccounts();
+        if (accounts == null) {
+            return null;
+        }
+        Account account = accounts.length > 0 ? accounts[0] : null;
+        assureSingleAccount();
+        return account;
+    }
+
+    private void assureSingleAccount() {
+        Account[] accounts = getAccounts();
+        if (accounts == null || accounts.length <= 1) {
+            return;
+        }
+        AccountManager manager = getAccountManager();
+        for (int index = 1; index < accounts.length; index++) {
+            manager.removeAccount(accounts[index], null, null);
+        }
+    }
+
+    private void clearAccounts() {
+        Account[] accounts = getAccounts();
+        if (accounts == null || accounts.length == 0) {
+            return;
+        }
+        AccountManager manager = getAccountManager();
+        for (int index = 0; index < accounts.length; index++) {
+            manager.removeAccount(accounts[index], null, null);
+        }
+    }
+
+    public Account[] getAccounts() {
+        AccountManager manager = getAccountManager();
+        if (manager == null) {
+            return null;
+        }
+        return manager.getAccountsByType(Config.ACCOUNT_TYPE);
+    }
+
+    public AccountManager getAccountManager() {
+        return hasAccountPermission() ? AccountManager.get(mContext) : null;
+    }
+
+    public boolean hasAccountPermission() {
+        return true;
+    }
+
     public boolean isLogged() {
-        return getAuthToken() != null;
+        return getAuthToken() != null && getAccount() != null;
     }
 
     public boolean isAutoSignedIn() {
@@ -139,7 +214,6 @@ public class UserManager {
     }
 
     public User getUser() {
-        return mUser;
+        return isLogged() ? mUser : null;
     }
-
 }

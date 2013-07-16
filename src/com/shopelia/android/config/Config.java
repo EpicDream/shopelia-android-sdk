@@ -84,4 +84,6 @@ public final class Config {
     // /////////////////////////////////////////////////////////////
     public static final int REQUEST_ORDER = 0x916;
 
+    public static final String ACCOUNT_TYPE = "com.shopelia.android";
+    public static final String AUTH_TOKEN_TYPE = "com.shopelia.android.standard";
 }

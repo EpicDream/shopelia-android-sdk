@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
  <account-authenticator xmlns:android="http://schemas.android.com/apk/res/android"
-    android:accountType="typeOfAuthenticator"
+    android:accountType="com.shopelia.android"
     android:icon="@drawable/shopelia_ic_account"
     android:label="@string/shopelia_account_name"
  />
