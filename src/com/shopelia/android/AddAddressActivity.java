@@ -105,7 +105,7 @@ public class AddAddressActivity extends ShopeliaActivity {
 
         Bundle extras = getIntent().getExtras() != null ? getIntent().getExtras() : new Bundle();
         //@formatter:off
-        mFormLayout.findFieldById(R.id.lastname, NameField.class)
+        mFormLayout.findFieldById(R.id.firstname, NameField.class)
             .setJsonPath(Address.Api.FIRSTNAME)
             .mandatory()
             .setContentText(extras.getString(EXTRA_FIRSTNAME))
