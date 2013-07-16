@@ -41,7 +41,7 @@ public class UserManager {
         final String json = mPreferences.getString(PREFS_USER_JSON, null);
         if (json != null) {
             try {
-                login(User.inflate(new JSONObject(json)));
+                mUser = User.inflate(new JSONObject(json));
             } catch (JSONException e) {
                 Log.e("Shopelia", "Impossible to restore user from\n" + json, e);
             }
@@ -55,10 +55,11 @@ public class UserManager {
         return sInstance;
     }
 
-    public void login(User user) {
+    public void login(User user, String authToken) {
         if (user == null) {
             return;
         }
+        setAuthToken(authToken);
         ShopeliaTracker.Factory.getDefault(mContext).identify(user);
         ShopeliaTracker.Factory.getDefault(mContext).flush();
         Editor editor = mPreferences.edit();

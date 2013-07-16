@@ -39,8 +39,7 @@ public class UserAPI extends ApiHandler {
             public void onComplete(HttpResponse response, JSONObject object) {
                 if (hasCallback() && object.has(User.Api.USER) && object.has(User.Api.AUTH_TOKEN)) {
                     User user = User.inflate(object.optJSONObject(User.Api.USER));
-                    UserManager.get(getContext()).login(user);
-                    UserManager.get(getContext()).setAuthToken(object.optString(User.Api.AUTH_TOKEN));
+                    UserManager.get(getContext()).login(user, object.optString(User.Api.AUTH_TOKEN));
                     UserManager.get(getContext()).saveUser();
                     if (user.addresses.size() > 0) {
                         getCallback().onAccountCreationSucceed(user, user.addresses.get(0));
@@ -142,8 +141,7 @@ public class UserAPI extends ApiHandler {
                 }
                 if (httpResponse.getStatus() == 200) {
                     User user = User.inflate(object.optJSONObject(User.Api.USER));
-                    UserManager.get(getContext()).login(user);
-                    UserManager.get(getContext()).setAuthToken(object.optString(User.Api.AUTH_TOKEN));
+                    UserManager.get(getContext()).login(user, object.optString(User.Api.AUTH_TOKEN));
                     UserManager.get(getContext()).saveUser();
                     getCallback().onSignIn(user);
                 } else {
