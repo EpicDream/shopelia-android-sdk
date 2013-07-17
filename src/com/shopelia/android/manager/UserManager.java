@@ -133,7 +133,7 @@ public class UserManager {
     public void logout() {
         if (mUser != null) {
             AccountManager manager = getAccountManager();
-            if (manager != null) {
+            if (getAccount() != null) {
                 manager.removeAccount(getAccount(), null, null);
             }
             new UserAPI(mContext, null).signOut(mUser.email);
@@ -197,7 +197,7 @@ public class UserManager {
     }
 
     public boolean isLogged() {
-        return getAuthToken() != null && getAccount() != null;
+        return getAuthToken() != null;
     }
 
     public boolean isAutoSignedIn() {

@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
@@ -44,7 +43,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
             setActivityStyle(STYLE_TRANSLUCENT);
         }
         super.onCreate(savedInstanceState);
-        if (um.hasAccountPermission() && um.getAccount() != null) {
+        if (!um.isLogged() && um.hasAccountPermission() && um.getAccount() != null) {
             um.restoreFromAccount(new AccountManagerCallback<Bundle>() {
 
                 @Override
@@ -53,15 +52,11 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
                         if (result.isDone()) {
                             Bundle data = result.getResult();
                             Log.d(null, "DONE " + data.getString(AccountManager.KEY_AUTHTOKEN));
-                            um.setAuthToken(data.getString(AccountManager.KEY_AUTHTOKEN));
+                            String authToken = data.getString(AccountManager.KEY_AUTHTOKEN);
                             String userString = data.getString(AccountManager.KEY_USERDATA);
-                            User user = null;
-                            if (!TextUtils.isEmpty(userString)) {
-                                user = User.inflate(new JSONObject(userString));
-                            }
-                            if (user != null) {
-                                um.update(user);
-                            }
+                            User user = User.inflate(new JSONObject(userString));
+                            um.login(user, authToken);
+                            um.setAutoSignIn(false);
                         }
                     } catch (OperationCanceledException e) {
                         e.printStackTrace();
@@ -84,7 +79,11 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
 
     private void init() {
         UserManager um = UserManager.get(this);
-        if (um.getLoginsCount() > 0 && um.getUser() != null && !um.isAutoSignedIn()) {
+        if (um.isLogged() && um.getAccount() == null) {
+            um.logout();
+            startActivityForResult(new Intent(this, PrepareOrderActivity.class), REQUEST_CHECKOUT);
+            return;
+        } else if (um.getUser() != null && !um.isAutoSignedIn()) {
             setHostContentView(R.layout.shopelia_welcome_activity);
             FragmentManager fm = getSupportFragmentManager();
             FragmentTransaction ft = fm.beginTransaction();
