@@ -56,7 +56,7 @@
 	<string name="shopelia_authenticate_auto_sign_in_message">Connexion en cours...</string>
 	
     <!-- Main form -->
-    <string name="shopelia_form_main_waiting">Création de votre compte Shopelia</string>
+    <string name="shopelia_form_main_waiting">Sauvegarde de vos informations</string>
     <string name="shopelia_form_main_phone">Numéro de téléphone</string>
     <string name="shopelia_form_main_email">Email</string>
     <string name="shopelia_form_main_password">Mot de passe</string>
