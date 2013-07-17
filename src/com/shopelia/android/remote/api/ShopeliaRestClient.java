@@ -27,8 +27,7 @@ public final class ShopeliaRestClient extends AndroidHttpClient {
 
     public static final String LOG_TAG = "ShopelisRestClient";
 
-    private static final String ROOT = "https://www.shopelia.fr:443";
-    // private static final String ROOT = "http://zola.epicdream.fr:4444";
+    private static final String ROOT = "https://www.shopelia.com:443";
     public final static String API_KEY = "52953f1868a7545011d979a8c1d0acbc310dcb5a262981bd1a75c1c6f071ffb4";
 
     public static final String CONTENT_TYPE_JSON = "application/json";
