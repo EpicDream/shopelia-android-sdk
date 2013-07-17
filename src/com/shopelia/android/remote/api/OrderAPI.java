@@ -55,7 +55,7 @@ public class OrderAPI extends ApiHandler {
                     }
                 } else if (httpResponse.getStatus() == 422) {
                     if (hasCallback()) {
-                        getCallback().onInvalidOrderRequest();
+                        getCallback().onInvalidOrderRequest(ErrorInflater.grabErrorMessage(httpResponse.getBodyAsString()));
                     }
                 } else {
                     fireError(STEP_ORDER, httpResponse, null, new IllegalStateException(httpResponse.getBodyAsString()));

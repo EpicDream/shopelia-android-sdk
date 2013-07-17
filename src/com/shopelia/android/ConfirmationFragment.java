@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -82,7 +83,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                     SinglePaymentCardFragment.newInstance(getOrder().card).replace(getFragmentManager(), R.id.payment_card);
                     break;
             }
-            order();
+            order(false);
         }
     }
 
@@ -97,7 +98,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                 getBaseActivity().getOrder().updateUser(user);
                 setupUi();
                 if (block) {
-                    order();
+                    order(true);
                 }
             }
 
@@ -149,11 +150,11 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
         @Override
         public void onClick(View v) {
-            order();
+            order(false);
         }
     };
 
-    public void order() {
+    public void order(final boolean reentrant) {
         if (mIsOrdering) {
             return;
         }
@@ -195,11 +196,16 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             }
 
             @Override
-            public void onInvalidOrderRequest() {
-                super.onInvalidOrderRequest();
+            public void onInvalidOrderRequest(String message) {
+                super.onInvalidOrderRequest(message);
                 stopWaiting();
                 mIsOrdering = false;
-                updateUser(true);
+                if (!reentrant) {
+                    updateUser(true);
+                } else {
+                    Toast.makeText(getActivity(), TextUtils.isEmpty(message) ? getString(R.string.shopelia_confirmation_error) : message,
+                            Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override

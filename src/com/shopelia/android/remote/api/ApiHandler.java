@@ -25,7 +25,7 @@ public class ApiHandler {
 
         public void onOrderConfirmation(boolean succeed);
 
-        public void onInvalidOrderRequest();
+        public void onInvalidOrderRequest(String errorMessage);
 
         public void onUserRetrieved(User user);
 
@@ -150,16 +150,16 @@ public class ApiHandler {
         }
 
         @Override
-        public void onInvalidOrderRequest() {
+        public void onInvalidOrderRequest(String errorMessage) {
 
         }
-
     }
 
     public static class ErrorInflater {
 
         public interface Api {
             String ERROR = "error";
+            String BASE = "base";
         }
 
         public static JSONObject inflate(String source) {
@@ -176,6 +176,21 @@ public class ApiHandler {
             }
         }
 
+        public static String grabErrorMessage(String source) {
+            String message = null;
+            try {
+                JSONObject error = inflate(source);
+                if (error.has(Api.BASE)) {
+                    message = error.getJSONArray(Api.BASE).getString(0);
+                }
+                if (error.has(Api.ERROR)) {
+                    message = error.getString(Api.ERROR);
+                }
+            } catch (Exception e) {
+
+            }
+            return message;
+        }
     }
 
     public static final int STEP_DEAD = 0;
