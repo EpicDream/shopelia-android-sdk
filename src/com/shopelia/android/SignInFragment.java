@@ -15,7 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
-import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.app.AccountAuthenticatorShopeliaFragment;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.User;
 import com.shopelia.android.widget.ValidationButton;
@@ -27,7 +27,7 @@ import com.shopelia.android.widget.form.EmailField;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.PasswordField;
 
-public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
+public class SignInFragment extends AccountAuthenticatorShopeliaFragment<OnSignInListener> {
 
     public interface OnSignInListener {
         public void onSignIn(JSONObject result);
@@ -107,7 +107,8 @@ public class SignInFragment extends ShopeliaFragment<OnSignInListener> {
             }
         }
         if (getContract().getValidationButton() != null) {
-            getContract().getValidationButton().setText(R.string.shopelia_form_main_validate);
+            getContract().getValidationButton().setText(
+                    isCalledByAcountManager() ? R.string.shopelia_form_main_sign_in_account : R.string.shopelia_form_main_validate);
         }
     }
 

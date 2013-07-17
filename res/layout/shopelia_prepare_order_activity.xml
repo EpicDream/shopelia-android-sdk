@@ -8,8 +8,9 @@
     tools:context=".PrepareOrderActivity" >
 
     <LinearLayout
+        android:id="@+id/main_form"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="vertical"
         android:paddingLeft="@dimen/shopelia_activity_horizontal_margin"

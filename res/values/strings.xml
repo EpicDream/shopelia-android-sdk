@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Account manager -->
+    <string name="shopelia_account_name">Shopelia</string>
+    <string name="shopelia_account_only_one">Vous ne pouvez pas vous connecter avec plusieurs compte à la fois. Veuillez supprimer le compte existant pour en ajouter un autre.</string>
+    
     <!-- Dialogs -->
     <string name="shopelia_dialog_title">Shopelia</string>
 

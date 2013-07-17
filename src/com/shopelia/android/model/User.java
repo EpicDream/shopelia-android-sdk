@@ -6,6 +6,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
@@ -183,6 +184,20 @@ public class User implements BaseModel<User> {
             out.put(User.Api.PAYMENT_CARDS_ATTRIBUTES, cards);
         }
         return out;
+    }
+
+    public Bundle toUserdata(String authToken) {
+        Bundle userdata = new Bundle();
+        userdata.putString(Api.USER, email);
+        userdata.putString(Api.FIRST_NAME, firstname);
+        userdata.putString(Api.LAST_NAME, lastname);
+        userdata.putString(Api.AUTH_TOKEN, authToken);
+        try {
+            userdata.putString(Api.USER, toJson().toString());
+        } catch (JSONException e) {
+
+        }
+        return userdata;
     }
 
     @Override

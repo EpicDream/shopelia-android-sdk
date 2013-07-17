@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import android.accounts.AccountManager;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -15,12 +16,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.LinearLayout;
 import android.widget.LinearLayout.LayoutParams;
 import android.widget.ScrollView;
 import android.widget.Toast;
@@ -28,6 +31,7 @@ import android.widget.Toast;
 import com.shopelia.android.SignInFragment.OnSignInListener;
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.analytics.Analytics;
+import com.shopelia.android.app.AccountAuthenticatorShopeliaActivity;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.config.Config;
@@ -41,7 +45,6 @@ import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.ApiHandler.ErrorInflater;
 import com.shopelia.android.remote.api.UserAPI;
-import com.shopelia.android.service.ShopeliaService;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 import com.shopelia.android.view.animation.ResizeAnimation;
@@ -54,7 +57,7 @@ import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.form.SingleLinePaymentCardField;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpListener, OnSignInListener {
+public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity implements OnSignUpListener, OnSignInListener {
 
     /**
      * Url of the product to purchase
@@ -142,14 +145,20 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
         setHostContentView(R.layout.shopelia_prepare_order_activity);
         mScrollView = (ScrollView) findViewById(R.id.scrollview);
 
-        if (getIntent().getExtras() == null || !getIntent().getExtras().containsKey(EXTRA_PRODUCT_URL)) {
+        if (isCalledByAcountManager() && UserManager.get(this).getAccount() != null) {
+            Toast.makeText(this, R.string.shopelia_account_only_one, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
+        if (!isCalledByAcountManager() && (getIntent().getExtras() == null || !getIntent().getExtras().containsKey(EXTRA_PRODUCT_URL))) {
             finish();
             return;
         }
 
         if (savedInstanceState == null) {
             createSessionId(System.currentTimeMillis(), getIntent().getStringExtra(EXTRA_PRODUCT_URL));
-            if (!UserManager.get(this).isLogged()) {
+            if (!UserManager.get(this).isLogged() || isCalledByAcountManager()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 if (UserManager.get(this).getLoginsCount() > 0) {
                     ft.add(R.id.fragment_container, mSignInFragment, mSignInFragment.getName());
@@ -161,10 +170,14 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 checkoutOrder(getOrder());
             }
         }
-        startService(new Intent(ShopeliaService.ACTION));
         new FormListHeader(this).setView(findViewById(R.id.header));
         new FormListFooter(this).setView(findViewById(R.id.footer));
-        ((ProductSheetWidget) findViewById(R.id.product_sheet)).setArguments(getIntent().getExtras());
+        if (isCalledByAcountManager()) {
+            findViewById(R.id.header).setVisibility(View.GONE);
+            ((LinearLayout) findViewById(R.id.main_form)).setGravity(Gravity.TOP);
+        } else {
+            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setArguments(getIntent().getExtras());
+        }
     }
 
     @Override
@@ -234,12 +247,16 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
                 }
                 stopWaiting();
                 order.user = user;
-                if (user.paymentCards.size() == 0) {
-                    Intent intent = new Intent(PrepareOrderActivity.this, AddPaymentCardActivity.class);
-                    intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
-                    startActivityForResult(intent, REQUEST_ADD_PAYMENT_CARD);
+                if (isCalledByAcountManager()) {
+                    finishAccountRegistration(user);
                 } else {
-                    checkoutOrder(order);
+                    if (user.paymentCards.size() == 0) {
+                        Intent intent = new Intent(PrepareOrderActivity.this, AddPaymentCardActivity.class);
+                        intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
+                        startActivityForResult(intent, REQUEST_ADD_PAYMENT_CARD);
+                    } else {
+                        checkoutOrder(order);
+                    }
                 }
             }
 
@@ -255,6 +272,15 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             }
 
         }).createAccount(order.user, order.address, order.card);
+    }
+
+    private void finishAccountRegistration(User user) {
+        final Intent intent = new Intent();
+        intent.putExtra(AccountManager.KEY_ACCOUNT_NAME, user.email);
+        intent.putExtra(AccountManager.KEY_ACCOUNT_TYPE, Config.ACCOUNT_TYPE);
+        setAccountAuthenticatorResult(intent.getExtras());
+        setResult(RESULT_OK, intent);
+        finish();
     }
 
     private void prepareOrder(Order order) {
@@ -315,9 +341,13 @@ public class PrepareOrderActivity extends ShopeliaActivity implements OnSignUpLi
             public void onSignIn(User user) {
                 stopWaiting();
                 super.onSignIn(user);
-                Order order = getOrder();
-                order.user = user;
-                checkoutOrder(order);
+                if (isCalledByAcountManager()) {
+                    finishAccountRegistration(user);
+                } else {
+                    Order order = getOrder();
+                    order.user = user;
+                    checkoutOrder(order);
+                }
             }
 
             @Override

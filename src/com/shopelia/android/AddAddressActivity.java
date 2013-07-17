@@ -9,6 +9,7 @@ import org.json.JSONException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -420,7 +421,9 @@ public class AddAddressActivity extends ShopeliaActivity {
         boolean out = mFormLayout.validate();
         if (out) {
             try {
+                Log.d(null, "SHOULD HAVE " + mFormLayout.toJson());
                 mResult = Address.inflate(mFormLayout.toJson());
+                Log.d(null, "GOT ADDRESS " + mResult.toJson());
                 mResult.country = LocaleUtils.getCountryISO2Code(mResult.country);
             } catch (JSONException e) {
                 if (Config.INFO_LOGS_ENABLED) {

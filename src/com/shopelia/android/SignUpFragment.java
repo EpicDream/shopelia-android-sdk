@@ -21,7 +21,7 @@ import android.widget.Toast;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.app.AccountAuthenticatorShopeliaFragment;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
@@ -45,7 +45,7 @@ import com.shopelia.android.widget.form.SingleLinePaymentCardField;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
+public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignUpListener> {
 
     public interface OnSignUpListener {
         public void onSignUp(JSONObject result);
@@ -174,7 +174,10 @@ public class SignUpFragment extends ShopeliaFragment<OnSignUpListener> {
     public void onResume() {
         super.onResume();
         if (getContract().getValidationButton() != null) {
-            getContract().getValidationButton().setText(R.string.shopelia_form_main_use_secured_server);
+            getContract().getValidationButton()
+                    .setText(
+                            isCalledByAcountManager() ? R.string.shopelia_form_main_create_account
+                                    : R.string.shopelia_form_main_use_secured_server);
         }
     }
 

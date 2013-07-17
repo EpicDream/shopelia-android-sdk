@@ -55,6 +55,9 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         User user = UserManager.get(getActivity()).getUser();
+        if (user == null) {
+            return;
+        }
         ((TextView) view.findViewById(R.id.email)).setText(user.email);
         view.findViewById(R.id.validate).setOnClickListener(mOnValidateClickListener);
         view.findViewById(R.id.forgotPassword).setOnClickListener(mOnRecoverPasswordClickListener);
