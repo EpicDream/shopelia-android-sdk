@@ -3,6 +3,7 @@ package com.shopelia.android.manager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.Manifest.permission;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -17,6 +18,7 @@ import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.UserAPI;
+import com.shopelia.android.utils.ContextUtils;
 
 public class UserManager {
 
@@ -193,7 +195,8 @@ public class UserManager {
     }
 
     public boolean hasAccountPermission() {
-        return true;
+        return ContextUtils.hasPermissions(mContext, permission.MANAGE_ACCOUNTS, permission.USE_CREDENTIALS, permission.GET_ACCOUNTS,
+                permission.AUTHENTICATE_ACCOUNTS);
     }
 
     public boolean isLogged() {

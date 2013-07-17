@@ -44,6 +44,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
         }
         super.onCreate(savedInstanceState);
         if (!um.isLogged() && um.hasAccountPermission() && um.getAccount() != null) {
+            setHostContentView(R.layout.shopelia_loading_layout);
             um.restoreFromAccount(new AccountManagerCallback<Bundle>() {
 
                 @Override
@@ -79,7 +80,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
 
     private void init() {
         UserManager um = UserManager.get(this);
-        if (um.isLogged() && um.getAccount() == null) {
+        if (um.isLogged() && um.hasAccountPermission() && um.getAccount() == null) {
             um.logout();
             startActivityForResult(new Intent(this, PrepareOrderActivity.class), REQUEST_CHECKOUT);
             return;
