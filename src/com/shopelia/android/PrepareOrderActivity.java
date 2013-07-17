@@ -145,6 +145,12 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
         setHostContentView(R.layout.shopelia_prepare_order_activity);
         mScrollView = (ScrollView) findViewById(R.id.scrollview);
 
+        if (isCalledByAcountManager() && UserManager.get(this).getAccount() != null) {
+            Toast.makeText(this, R.string.shopelia_account_only_one, Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+
         if (!isCalledByAcountManager() && (getIntent().getExtras() == null || !getIntent().getExtras().containsKey(EXTRA_PRODUCT_URL))) {
             finish();
             return;
