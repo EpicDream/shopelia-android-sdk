@@ -134,8 +134,8 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
 
         @Override
         public void onSubmit(FormContainer container) {
-            findViewById(R.id.validate).setEnabled(false);
             if (mFormContainer.validate()) {
+                findViewById(R.id.validate).setEnabled(false);
                 if (mVerifyAPI.verify(mFormContainer.toJson())) {
                     mErrorMessage.setVisibility(View.GONE);
                     mPasswordField.setEnabled(false);
