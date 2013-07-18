@@ -9,10 +9,12 @@ import org.json.JSONObject;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Build;
+import android.text.TextUtils;
 
 import com.shopelia.android.config.Config;
 import com.shopelia.android.http.LogcatRequestLogger;
 import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.utils.ContextUtils;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.android.AndroidHttpClient;
@@ -28,7 +30,7 @@ public final class ShopeliaRestClient extends AndroidHttpClient {
     public static final String LOG_TAG = "ShopelisRestClient";
 
     private static final String ROOT = "https://www.shopelia.com:443";
-    public final static String API_KEY = "52953f1868a7545011d979a8c1d0acbc310dcb5a262981bd1a75c1c6f071ffb4";
+    public final static String API_KEY = "shopelia-sdk-api-key";
 
     public static final String CONTENT_TYPE_JSON = "application/json";
 
@@ -59,10 +61,16 @@ public final class ShopeliaRestClient extends AndroidHttpClient {
          * Build shopelia HTTP header
          */
 
+        String apiKey = ContextUtils.getMetadataString(context, API_KEY, null);
+
+        if (TextUtils.isEmpty(apiKey)) {
+            throw new IllegalStateException("You must configure a Shopelia API key before using Shopelia SDK");
+        }
+
         addHeader("Content-Type", CONTENT_TYPE_JSON);
         addHeader("Accept", CONTENT_TYPE_JSON);
         addHeader("Accept", version);
-        addHeader("X-Shopelia-ApiKey", API_KEY);
+        addHeader("X-Shopelia-ApiKey", apiKey);
 
         /*
          * Timeouts and retries
