@@ -35,6 +35,7 @@ public class UserManager {
     private final SharedPreferences mPreferences;
 
     private User mUser;
+    private Account mAccount;
 
     private UserManager(Context context) {
         mContext = context.getApplicationContext();
@@ -151,12 +152,16 @@ public class UserManager {
     }
 
     public Account getAccount() {
+        if (mAccount != null) {
+            return mAccount;
+        }
         Account[] accounts = getAccounts();
         if (accounts == null) {
             return null;
         }
         Account account = accounts.length > 0 ? accounts[0] : null;
         assureSingleAccount();
+        mAccount = account;
         return account;
     }
 
