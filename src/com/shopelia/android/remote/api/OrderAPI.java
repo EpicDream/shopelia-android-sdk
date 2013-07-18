@@ -26,7 +26,7 @@ public class OrderAPI extends ApiHandler {
         return rounded.doubleValue();
     }
 
-    public void order(final Order order) {
+    public void order(final Order order, boolean test) {
 
         JSONObject params = new JSONObject();
         setCurrentStep(STEP_ORDER);
@@ -39,6 +39,9 @@ public class OrderAPI extends ApiHandler {
                     round(order.product.deliveryPrice + order.product.productPrice, 2, BigDecimal.ROUND_HALF_UP));
             orderObject.put(PaymentCard.Api.PAYMENT_CARD_ID, order.card.id);
             orderObject.put(Address.Api.ADDRESS_ID, order.address.id);
+            if (test) {
+                orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL, 1);
+            }
             params.put(Order.Api.ORDER, orderObject);
         } catch (JSONException e) {
             fireError(STEP_ORDER, null, null, e);
@@ -71,4 +74,9 @@ public class OrderAPI extends ApiHandler {
 
         });
     }
+
+    public void order(final Order order) {
+        order(order, false);
+    }
+
 }
