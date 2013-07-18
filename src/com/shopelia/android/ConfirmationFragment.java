@@ -176,11 +176,6 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             return;
         }
 
-        if (((CheckBox) getView().findViewById(R.id.auto_cancel)).isChecked()) {
-            getOrder().product.productPrice = 0;
-            getOrder().product.deliveryPrice = 0;
-        }
-
         getBaseActivity().startDelayedWaiting(getString(R.string.shopelia_confirmation_waiting, getOrder().product.merchant.name), true,
                 false, 500);
         new OrderAPI(getActivity(), new CallbackAdapter() {
@@ -215,7 +210,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                 Toast.makeText(getActivity(), R.string.shopelia_confirmation_error, Toast.LENGTH_LONG).show();
             };
 
-        }).order(getOrder());
+        }).order(getOrder(), findViewById(R.id.auto_cancel, CheckBox.class).isChecked());
     }
 
     // ////////////////////////////////////////////////////////////////

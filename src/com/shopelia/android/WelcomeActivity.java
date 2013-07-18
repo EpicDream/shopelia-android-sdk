@@ -19,6 +19,7 @@ import android.util.Log;
 
 import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
 import com.shopelia.android.WelcomeFragment.WelcomeParent;
+import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.manager.UserManager;
@@ -43,6 +44,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
             setActivityStyle(STYLE_TRANSLUCENT);
         }
         super.onCreate(savedInstanceState);
+        getTracker().track(Analytics.Events.UInterface.SHOPELIA_BUTTON_CLICKED);
         if (!um.isLogged() && um.hasAccountPermission() && um.getAccount() != null) {
             setHostContentView(R.layout.shopelia_loading_layout);
             um.restoreFromAccount(new AccountManagerCallback<Bundle>() {

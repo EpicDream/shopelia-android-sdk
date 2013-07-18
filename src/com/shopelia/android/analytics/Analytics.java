@@ -41,7 +41,8 @@ public interface Analytics {
         }
 
         public interface UInterface {
-            String SHOPELIA_BUTTON_SHOWN = "Shopelia button shown";
+            String SHOPELIA_BUTTON_SHOWN = "Shopelia Button Shown";
+            String SHOPELIA_BUTTON_CLICKED = "Shopelia Button Clicked";
 
         }
 
