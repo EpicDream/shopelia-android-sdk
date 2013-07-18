@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Common -->
+    <string name="shopelia_default_app_name">l\'application</string>
+    
     <!-- Account manager -->
     <string name="shopelia_account_name">Shopelia</string>
     <string name="shopelia_account_only_one">Vous ne pouvez pas vous connecter avec plusieurs compte à la fois. Veuillez supprimer le compte existant pour en ajouter un autre.</string>
@@ -209,7 +212,7 @@
     <!-- Close checkout -->
     <string name="shopelia_close_checkout_main_text">Votre commande a bien\nété prise en compte !</string>
     <string name="shopelia_close_checkout_sub_text">Vous allez recevoir une confirmation de la part du marchand dans les minutes qui viennent.\n \n Merci d\'avoir utilisé le service Shopelia !</string>
-    <string name="shopelia_close_checkout_validation" formatted="false">REVENIR SUR PRIXING</string>
+    <string name="shopelia_close_checkout_validation" formatted="false">REVENIR SUR %s</string>
 
     <!-- Log Out -->
     <string name="shopelia_logout_are_you_sure">Voulez-vous vraiment vous déconnecter ?</string>

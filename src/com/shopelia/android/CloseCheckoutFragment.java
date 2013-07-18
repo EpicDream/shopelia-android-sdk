@@ -10,7 +10,9 @@ import android.view.ViewGroup;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.utils.ContextUtils;
 import com.shopelia.android.utils.DialogHelper;
+import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
@@ -25,6 +27,9 @@ public class CloseCheckoutFragment extends ShopeliaFragment<Void> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ValidationButton validate = findViewById(R.id.validate);
+        validate.setText(getString(R.string.shopelia_close_checkout_validation,
+                ContextUtils.getApplicationName(getActivity(), getActivity().getString(R.string.shopelia_default_app_name))));
         view.findViewById(R.id.validate).setOnClickListener(new OnClickListener() {
 
             @Override
