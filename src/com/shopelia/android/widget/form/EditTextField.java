@@ -59,7 +59,6 @@ public class EditTextField extends FormField {
     private HashSet<TextWatcher> mTextWatchers = new HashSet<TextWatcher>();
 
     private int mMaxLength = INVALID_LENGTH;
-
     private FormAutocompleteEditText mBoundedEditText;
 
     public EditTextField(Context context) {
@@ -300,7 +299,8 @@ public class EditTextField extends FormField {
             if (mOnValidateListener != null) {
                 mOnValidateListener.afterTextChanged(s);
             }
-            setValid(onValidation(false));
+            setValid(onValidation(false)
+                    && (mOnValidateListener != null ? mOnValidateListener.onValidate(EditTextField.this, false) : true));
             if (getBoundedView() != null) {
                 ViewHolder holder = (ViewHolder) getBoundedView().getTag();
                 holder.editText.setChecked(isValid() && !TextUtils.isEmpty(mContentText));

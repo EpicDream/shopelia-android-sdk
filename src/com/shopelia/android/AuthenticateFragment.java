@@ -210,8 +210,14 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
         @Override
         public void onError(int step, HttpResponse httpResponse, org.json.JSONObject response, Exception e) {
             mErrorMessage.setVisibility(View.VISIBLE);
-            findViewById(R.id.validate).setEnabled(false);
-            mErrorMessage.setText(R.string.shopelia_error_network_error);
+            mPasswordField.setEnabled(true);
+            findViewById(R.id.validate).setEnabled(true);
+            if (e != null) {
+                mErrorMessage.setText(R.string.shopelia_error_network_error);
+            } else if (httpResponse != null) {
+                String error = ApiHandler.ErrorInflater.grabErrorMessage(httpResponse.getBodyAsString());
+                mErrorMessage.setText(error);
+            }
             stopWaiting();
         };
 

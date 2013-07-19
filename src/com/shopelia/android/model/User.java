@@ -27,11 +27,14 @@ public class User implements BaseModel<User> {
         String ID = "id";
         String EMAIL = "email";
         String PASSWORD = "password";
+        String PASSWORD_CONFIRMATION = "password_confirmation";
         String FIRST_NAME = "first_name";
         String LAST_NAME = "last_name";
         String ADDRESSES_ATTRIBUTES = "addresses_attributes";
         String ADDRESSES = "addresses";
         String PAYMENT_CARDS_ATTRIBUTES = "payment_cards_attributes";
+
+        String HAS_PASSWORD = "has_password";
 
         String PAYMENT_CARDS = "payment_cards";
 
@@ -50,6 +53,7 @@ public class User implements BaseModel<User> {
     public String lastname;
     public String password;
     public String pincode;
+    public int has_password;
 
     public ArrayList<Address> addresses = new ArrayList<Address>();
     public ArrayList<PaymentCard> paymentCards = new ArrayList<PaymentCard>();
@@ -74,6 +78,7 @@ public class User implements BaseModel<User> {
         lastname = source.readString();
         pincode = source.readString();
         password = source.readString();
+        has_password = source.readInt();
         ParcelUtils.readParcelableList(source, addresses, Address.class.getClassLoader());
         ParcelUtils.readParcelableList(source, paymentCards, PaymentCard.class.getClassLoader());
     }
@@ -86,6 +91,7 @@ public class User implements BaseModel<User> {
         dest.writeString(lastname);
         dest.writeString(pincode);
         dest.writeString(password);
+        dest.writeInt(has_password);
         ParcelUtils.writeParcelableList(dest, addresses, flags);
         ParcelUtils.writeParcelableList(dest, paymentCards, flags);
     }
@@ -99,6 +105,7 @@ public class User implements BaseModel<User> {
         json.put(Api.LAST_NAME, lastname);
         json.put(Api.ADDRESSES, JsonUtils.toJson(addresses));
         json.put(Api.PAYMENT_CARDS, JsonUtils.toJson(paymentCards));
+        json.put(Api.HAS_PASSWORD, has_password);
         return json;
     }
 
@@ -159,6 +166,7 @@ public class User implements BaseModel<User> {
         if (user.paymentCards == null) {
             user.paymentCards = new ArrayList<PaymentCard>();
         }
+        user.has_password = json.optInt(Api.HAS_PASSWORD);
         return user;
     }
 

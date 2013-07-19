@@ -3,11 +3,11 @@
 
     <!-- Common -->
     <string name="shopelia_default_app_name">l\'application</string>
-    
+
     <!-- Account manager -->
     <string name="shopelia_account_name">Shopelia</string>
     <string name="shopelia_account_only_one">Vous ne pouvez pas vous connecter avec plusieurs compte à la fois. Veuillez supprimer le compte existant pour en ajouter un autre.</string>
-    
+
     <!-- Dialogs -->
     <string name="shopelia_dialog_title">Shopelia</string>
 
@@ -50,14 +50,14 @@
 
     <!-- Authenticate -->
     <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
-	<string name="shopelia_authenticate_title">Authentification</string>
-	<string name="shopelia_authenticate_remember_me">NE PLUS ME LE DEMANDER</string>
-	<string name="shopelia_authenticate_validate">CONFIRMER</string>
-	<string name="shopelia_authenticate_your_password">Votre mot de passe Shopelia</string>
-	<string name="shopelia_authenticate_wrong_password">Mot de passe incorrect</string>
-	<string name="shopelia_authenticate_waiting_message">Authentification...</string>
-	<string name="shopelia_authenticate_auto_sign_in_message">Connexion en cours...</string>
-	
+    <string name="shopelia_authenticate_title">Authentification</string>
+    <string name="shopelia_authenticate_remember_me">NE PLUS ME LE DEMANDER</string>
+    <string name="shopelia_authenticate_validate">CONFIRMER</string>
+    <string name="shopelia_authenticate_your_password">Votre mot de passe Shopelia</string>
+    <string name="shopelia_authenticate_wrong_password">Mot de passe incorrect</string>
+    <string name="shopelia_authenticate_waiting_message">Authentification...</string>
+    <string name="shopelia_authenticate_auto_sign_in_message">Connexion en cours...</string>
+
     <!-- Main form -->
     <string name="shopelia_form_main_waiting">Sauvegarde de vos informations</string>
     <string name="shopelia_form_main_phone">Numéro de téléphone</string>
@@ -81,10 +81,10 @@
 	    ]]>
     </string>
     <string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
-	<string name="shopelia_form_main_use_secured_server">Continuer sur serveur sécurisé</string>
+    <string name="shopelia_form_main_use_secured_server">Continuer sur serveur sécurisé</string>
     <string name="shopelia_form_main_create_account">Créer un compte</string>
-	<string name="shopelia_form_main_sign_in_account">Se connecter</string>
-    
+    <string name="shopelia_form_main_sign_in_account">Se connecter</string>
+
     <!-- Account creation form -->
     <string name="shopelia_form_account_name">Nom</string>
     <string name="shopelia_form_account_first_name">Prénom</string>
@@ -129,8 +129,8 @@
     <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
     <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saisissez manuellement les informations</string>
     <string name="shopelia_form_payment_card_not_compatible">Shopelia n\'est disponible que pour les cartes Visa et American Express.</string>
-	<string name="shopelia_form_payment_card_secured_server">(Serveur sécurisé)</string>
-    
+    <string name="shopelia_form_payment_card_secured_server">(Serveur sécurisé)</string>
+
     <!-- Shopelia footer -->
     <string name="shopelia_footer">PAIEMENT SECURISE PAR</string>
 
@@ -154,12 +154,12 @@
     <string name="shopelia_confirmation_total_price">TOTAL</string>
     <string name="shopelia_confirmation_error">Une erreur est survenue. Impossible de valider votre commande.</string>
     <string name="shopelia_confirmation_free">Gratuit</string>
-	<string name="shopelia_confirmation_update_user">Mise à jour...</string>
+    <string name="shopelia_confirmation_update_user">Mise à jour...</string>
     <string name="shopelia_confirmation_you_have_no_card">Vous n\'avez renseigné aucune carte de paiement. Vous devez enregistrer au moins une carte de paiement pour commander.</string>
-	<string name="shopelia_confirmation_add_a_card">Cliquez ici pour ajouter une carte de paiement</string>
-	<string name="shopelia_confirmation_you_have_no_address">Vous n\'avez renseigné aucune adresse. Vous devez enregistrer au moins une adresse pour commander.</string>
-	<string name="shopelia_confirmation_add_a_address">Cliquez ici pour ajouter une adresse</string>
-    
+    <string name="shopelia_confirmation_add_a_card">Cliquez ici pour ajouter une carte de paiement</string>
+    <string name="shopelia_confirmation_you_have_no_address">Vous n\'avez renseigné aucune adresse. Vous devez enregistrer au moins une adresse pour commander.</string>
+    <string name="shopelia_confirmation_add_a_address">Cliquez ici pour ajouter une adresse</string>
+
     <!-- Pin code -->
     <string name="shopelia_pincode_create">CRÉEZ VOTRE CODE D\'ACCÈS</string>
     <string name="shopelia_pincode_re_enter">VÉRIFIEZ VOTRE CODE D\'ACCÈS</string>
@@ -213,7 +213,18 @@
     <string name="shopelia_close_checkout_main_text">Votre commande a bien\nété prise en compte !</string>
     <string name="shopelia_close_checkout_sub_text">Vous allez recevoir une confirmation de la part du marchand dans les minutes qui viennent.\n \n Merci d\'avoir utilisé le service Shopelia !</string>
     <string name="shopelia_close_checkout_validation" formatted="false">REVENIR SUR %s</string>
+    <string name="shopelia_close_checkout_validation_or_exit" formatted="false">ou revenir sur %s</string>
+    <string name="shopelia_close_checkout_create_a_password" formatted="false">Créer un mot de passe</string>
 
+    <!-- Password -->
+    <string name="shopelia_form_password_header">Créer votre mot de passe</string>
+    <string name="shopelia_form_password_validate">Créer le mot de passe</string>
+    <string name="shopelia_form_password_password">Nouveau mot de passe</string>
+    <string name="shopelia_form_password_confirm">Confirmer le mot de passe</string>
+    <string name="shopelia_form_password_no_match">Les mots de passe doivent être identiques</string>
+    <string name="shopelia_form_password_min_length">Le mot de passe doit contenir au minimum 6 caractères</string>
+    <string name="shopelia_form_password_waiting">Création de votre mot de passe en cours...</string>
+    
     <!-- Log Out -->
     <string name="shopelia_logout_are_you_sure">Voulez-vous vraiment vous déconnecter ?</string>
     <string name="shopelia_logout_positive">Se déconnecter</string>
