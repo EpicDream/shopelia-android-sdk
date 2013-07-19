@@ -87,6 +87,8 @@ public class AsyncImageView extends ImageView {
         void onLoadingFailed(AsyncImageView imageView, Exception exception);
     }
 
+    public static final int DEFAULT_MAX_RETRY = 10;
+
     private Drawable mDefaultDrawable;
 
     private String mUrl;
@@ -104,6 +106,9 @@ public class AsyncImageView extends ImageView {
     private boolean mIsFixedSize;
 
     private boolean mBlockLayout;
+
+    private int mMaxRetry = DEFAULT_MAX_RETRY;
+    private int mAttempts = 0;
 
     public AsyncImageView(Context context) {
         this(context, null);
@@ -326,7 +331,7 @@ public class AsyncImageView extends ImageView {
      *            AsyncImageView to display the default image
      */
     public boolean setUrl(String url) {
-
+        mAttempts = 0;
         // Check the url has changed
         if (mBitmap != null && url != null && url.equals(mUrl)) {
             return true;
@@ -438,6 +443,17 @@ public class AsyncImageView extends ImageView {
 
         public void onImageRequestFailed(ImageRequest request, Exception exception) {
             mRequest = null;
+            if (++mAttempts < mMaxRetry) {
+                postDelayed(new Runnable() {
+
+                    @Override
+                    public void run() {
+                        stopLoading();
+                        forceDownload();
+                        reload();
+                    }
+                }, 500);
+            }
             if (mOnAsyncImageViewLoadListener != null) {
                 mOnAsyncImageViewLoadListener.onLoadingFailed(AsyncImageView.this, exception);
             }
