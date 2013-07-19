@@ -37,7 +37,6 @@ public class CloseCheckoutFragment extends ShopeliaFragment<OnCreatePasswordList
         ValidationButton validate = findViewById(R.id.validate);
         FontableTextView exit = findViewById(R.id.exit);
         User user = UserManager.get(getActivity()).getUser();
-        user.has_password = 0;
         if (user.has_password == 0) {
             exit.setText(getString(R.string.shopelia_close_checkout_validation_or_exit,
                     ContextUtils.getApplicationName(getActivity(), getActivity().getString(R.string.shopelia_default_app_name))));

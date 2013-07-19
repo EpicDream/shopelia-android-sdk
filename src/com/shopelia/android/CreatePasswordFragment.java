@@ -1,6 +1,5 @@
 package com.shopelia.android;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Bundle;
@@ -88,11 +87,6 @@ public class CreatePasswordFragment extends ShopeliaFragment<Void> {
                     User user = UserManager.get(getActivity()).getUser();
                     startWaiting(getString(R.string.shopelia_form_password_waiting), true, false);
                     JSONObject object = mFormContainer.toJson();
-                    try {
-                        object.getJSONObject("user").put("current_password", "merguez");
-                    } catch (JSONException e1) {
-                        e1.printStackTrace();
-                    }
                     ShopeliaRestClient.V1(getActivity()).put(Command.V1.Users.User(user.id), object, new AsyncCallback() {
 
                         @Override
