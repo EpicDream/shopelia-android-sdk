@@ -1,10 +1,10 @@
 package com.shopelia.android.utils;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface.OnClickListener;
 
 import com.shopelia.android.R;
+import com.shopelia.android.app.ShopeliaAlertDialog;
 
 public final class DialogHelper {
 
@@ -12,9 +12,9 @@ public final class DialogHelper {
 
     }
 
-    public static AlertDialog.Builder buildLogoutDialog(Context context, OnClickListener onPositiveClickListener,
+    public static ShopeliaAlertDialog.Builder buildLogoutDialog(Context context, OnClickListener onPositiveClickListener,
             OnClickListener onNegativeClickListener) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        ShopeliaAlertDialog.Builder builder = new ShopeliaAlertDialog.Builder(context);
         //@formatter:off
         builder
             .setTitle(R.string.shopelia_dialog_title)

@@ -46,9 +46,10 @@ public class ShopeliaDialog extends Dialog {
         super.onCreate(savedInstanceState);
         super.setContentView(R.layout.shopelia_dialog);
         mContainer = (ViewGroup) super.findViewById(R.id.host_container);
-        setContentView(mView);
-
-        mActionBar = new ActionBar(getOwnerActivity());
+        if (mView != null) {
+            setContentView(mView);
+        }
+        mActionBar = new ActionBar(this.getContext());
         mActionBar.bindWidget((ActionBarWidget) super.findViewById(R.id.action_bar));
         mActionBar.setOnItemClickListener(mOnActionBarItemClickListener);
         onCreateShopeliaActionBar(mActionBar);
@@ -56,7 +57,7 @@ public class ShopeliaDialog extends Dialog {
 
     @Override
     public void setContentView(int layoutResID) {
-
+        setContentView(getLayoutInflater().inflate(layoutResID, mContainer, false));
     }
 
     @Override
@@ -92,8 +93,8 @@ public class ShopeliaDialog extends Dialog {
 
     @Override
     public View findViewById(int id) {
-        if (mContainer != null) {
-            return mContainer.findViewById(id);
+        if (mView != null) {
+            return mView.findViewById(id);
         }
         return null;
     }
