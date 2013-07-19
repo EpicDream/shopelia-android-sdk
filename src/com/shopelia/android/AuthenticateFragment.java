@@ -99,6 +99,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     closeSoftKeyboard();
+                    dialog.dismiss();
                     UserManager.get(getActivity()).logout();
                     if (!getShowsDialog()) {
                         getActivity().startActivityForResult(new Intent(getActivity(), PrepareOrderActivity.class), 12);
