@@ -2,7 +2,6 @@ package com.shopelia.android.widget;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,7 +16,6 @@ import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.Product;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
-import com.shopelia.android.widget.AsyncImageView.OnAsyncImageViewLoadListener;
 
 public class ProductSheetWidget extends FrameLayout {
 
@@ -127,34 +125,11 @@ public class ProductSheetWidget extends FrameLayout {
         mProductShippingInfo.setVisibility(mArguments.containsKey(PrepareOrderActivity.EXTRA_SHIPPING_INFO) ? View.VISIBLE : View.GONE);
         mTax.setText(tax.getResId());
         Object image = mArguments.get(PrepareOrderActivity.EXTRA_PRODUCT_IMAGE);
-        if (image != null && image instanceof Uri) {
+        if (image != null && image instanceof Uri && !mProductImage.isLoading()) {
             mProductImage.setImageURI((Uri) image);
         }
         if (vendor != null) {
             mVendorLogo.setUrl(vendor.logo);
-            mVendorLogo.setOnAsyncImageViewLoadListener(new OnAsyncImageViewLoadListener() {
-
-                @Override
-                public void onLoadingStarted(AsyncImageView imageView) {
-                }
-
-                @Override
-                public void onLoadingFailed(AsyncImageView imageView, Exception exception) {
-                    postDelayed(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            mVendorLogo.stopLoading();
-                            mVendorLogo.forceDownload();
-                            mVendorLogo.reload();
-                        }
-                    }, 500);
-                }
-
-                @Override
-                public void onLoadingEnded(AsyncImageView imageView, Bitmap image) {
-                }
-            });
         }
     }
 
