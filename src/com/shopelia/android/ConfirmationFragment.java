@@ -220,8 +220,10 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     // ////////////////////////////////////////////////////////////////
 
     public void setupUi(User user) {
-        getBaseActivity().getOrder().updateUser(user);
-        setupUi();
+        if (getBaseActivity() != null) {
+            getBaseActivity().getOrder().updateUser(user);
+            setupUi();
+        }
     }
 
     private void setupUi() {
