@@ -28,6 +28,7 @@ public class UserManager {
     private static final String PREFS_LOGINS_COUNT = "user:loginsCount";
     private static final String PREFS_CHECKOUT_COUNT = "user:checkoutCount";
     private static final String PREFS_AUTO_SIGNIN = "user:autoSignIn";
+    private static final String LOG_TAG = "USER_MANAGER";
 
     private static UserManager sInstance = null;
 
@@ -69,13 +70,8 @@ public class UserManager {
         editor.putInt(PREFS_LOGINS_COUNT, mPreferences.getInt(PREFS_LOGINS_COUNT, 0) + 1);
         editor.commit();
         mUser = user;
+        addAccount(user, authToken);
         saveUser();
-        AccountManager manager = getAccountManager();
-        if (manager != null) {
-            clearAccounts();
-            final Account account = new Account(user.email, Config.ACCOUNT_TYPE);
-            manager.addAccountExplicitly(account, null, user.toUserdata(getAuthToken()));
-        }
     }
 
     public void update(User user) {
@@ -96,6 +92,10 @@ public class UserManager {
             Editor editor = mPreferences.edit();
             editor.putString(PREFS_USER_JSON, mUser.toJson().toString());
             editor.commit();
+            AccountManager manager = getAccountManager();
+            if (manager != null) {
+
+            }
         } catch (JSONException e) {
             if (Config.ERROR_LOGS_ENABLED) {
                 Log.e("Shopelia", "Impossible to save user", e);
@@ -135,10 +135,7 @@ public class UserManager {
 
     public void logout() {
         if (mUser != null) {
-            AccountManager manager = getAccountManager();
-            if (getAccount() != null) {
-                manager.removeAccount(getAccount(), null, null);
-            }
+            removeAccount();
             new UserAPI(mContext, null).signOut(mUser.email);
             mUser = null;
             Editor editor = mPreferences.edit();
@@ -159,32 +156,44 @@ public class UserManager {
         if (accounts == null) {
             return null;
         }
-        Account account = accounts.length > 0 ? accounts[0] : null;
-        assureSingleAccount();
-        mAccount = account;
-        return account;
-    }
-
-    private void assureSingleAccount() {
-        Account[] accounts = getAccounts();
-        if (accounts == null || accounts.length <= 1) {
-            return;
-        }
-        AccountManager manager = getAccountManager();
-        for (int index = 1; index < accounts.length; index++) {
-            manager.removeAccount(accounts[index], null, null);
-        }
-    }
-
-    private void clearAccounts() {
-        Account[] accounts = getAccounts();
-        if (accounts == null || accounts.length == 0) {
-            return;
-        }
-        AccountManager manager = getAccountManager();
         for (int index = 0; index < accounts.length; index++) {
-            manager.removeAccount(accounts[index], null, null);
+            if (accounts[index] != null) {
+                mAccount = accounts[index];
+                return accounts[index];
+            }
         }
+        return null;
+    }
+
+    private void addAccount(User user, String authToken) {
+        Account[] accounts = getAccounts();
+        AccountManager manager = getAccountManager();
+
+        if (manager == null) {
+            return;
+        }
+
+        if (accounts == null || accounts.length > 0) {
+            return;
+        }
+        final Account account = new Account(mUser.email, Config.ACCOUNT_TYPE);
+        manager.addAccountExplicitly(account, null, mUser.toUserdata(authToken));
+
+        if (Config.INFO_LOGS_ENABLED) {
+            Log.i(LOG_TAG, "Adding a Shopelia Account");
+        }
+
+    }
+
+    private void removeAccount() {
+        AccountManager manager = getAccountManager();
+        if (getAccount() != null) {
+            if (Config.INFO_LOGS_ENABLED) {
+                Log.i(LOG_TAG, "Removing a Shopelia Account");
+            }
+            manager.removeAccount(getAccount(), null, null);
+        }
+        mAccount = null;
     }
 
     public Account[] getAccounts() {
