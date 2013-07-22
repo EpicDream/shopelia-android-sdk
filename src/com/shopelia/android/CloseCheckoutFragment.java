@@ -64,6 +64,7 @@ public class CloseCheckoutFragment extends ShopeliaFragment<OnCreatePasswordList
                     getActivity().finish();
                 }
             });
+            exit.setVisibility(View.GONE);
         }
 
     }
