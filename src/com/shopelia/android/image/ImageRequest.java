@@ -251,4 +251,14 @@ public class ImageRequest {
         next = null;
     }
 
+    @Override
+    public String toString() {
+        return "ImageRequest {url: " + url + "}";
+    }
+
+    @Override
+    public int hashCode() {
+        return url.hashCode();
+    }
+
 }
