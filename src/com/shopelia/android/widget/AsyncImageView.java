@@ -288,7 +288,6 @@ public class AsyncImageView extends ImageView {
         if (mRequest == null && mUrl != null) {
             mBitmap = null;
             mRequest = ImageRequest.obtain(mUrl, mImageRequestCallback);
-
             mIsLoading = true;
             final boolean isSynchronous = mRequest.load(getContext());
             mIsLoading = false;
@@ -333,7 +332,7 @@ public class AsyncImageView extends ImageView {
     public boolean setUrl(String url) {
         mAttempts = 0;
         // Check the url has changed
-        if (mBitmap != null && url != null && url.equals(mUrl)) {
+        if (url != null && url.equals(mUrl)) {
             return true;
         }
 
@@ -428,7 +427,6 @@ public class AsyncImageView extends ImageView {
     public void onRestoreInstanceState(Parcelable state) {
         SavedState ss = (SavedState) state;
         super.onRestoreInstanceState(ss.getSuperState());
-
         setUrl(ss.url);
     }
 

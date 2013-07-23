@@ -200,7 +200,6 @@ public class ImageLoader {
             // Look into the synchronous cache
             bitmap = mHardMemoryCache.get(url);
         }
-
         if (url.startsWith(ASSETS_PREFIX)) {
             if (bitmap == null) {
 
@@ -449,7 +448,6 @@ public class ImageLoader {
         public void handleMessage(Message msg) {
 
             final ImageRequest request = (ImageRequest) msg.obj;
-
             switch (msg.what) {
                 case MESSAGE_LOAD:
                     // Do the work of loading the image
@@ -493,7 +491,6 @@ public class ImageLoader {
 
                     // 2: Hit the network in order to retrieve the Bitmap
                     if (diskBitmap == null && (request.cachePolicy & ImageRequest.CACHE_POLICY_NETWORK) != 0) {
-
                         boolean tempSuccess = false;
 
                         request.retryCount = 0;
