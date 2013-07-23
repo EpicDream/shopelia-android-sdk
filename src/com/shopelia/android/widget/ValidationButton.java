@@ -67,6 +67,7 @@ public class ValidationButton extends FrameLayout {
         if (mLabel != null) {
             mLabel.setText(text);
         }
+        refreshIcon();
     }
 
     public void setTextSize(float textSize) {
@@ -77,10 +78,21 @@ public class ValidationButton extends FrameLayout {
         setText(getContext().getString(resId));
     }
 
+    public CharSequence getText() {
+        return mLabel.getText();
+    }
+
     public void setIcon(Drawable drawable) {
         if (mIcon != null) {
             mIcon.setImageDrawable(drawable);
+        }
+        refreshIcon();
+    }
 
+    private void refreshIcon() {
+        if (mIcon != null) {
+            mIcon.setVisibility(mIcon.getDrawable() != null ? View.VISIBLE : View.GONE);
+            mSeparator.setVisibility(mIcon.getDrawable() != null ? View.VISIBLE : View.GONE);
         }
     }
 

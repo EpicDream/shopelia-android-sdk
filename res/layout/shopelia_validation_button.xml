@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/RelativeLayout1"
+    android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="50dp"
     android:background="@drawable/shopelia_validation_button_background"
@@ -9,31 +9,29 @@
     android:orientation="horizontal" >
 
     <ImageView
-        android:id="@+id/separator"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_alignParentTop="true"
-        android:layout_toRightOf="@+id/icon"
-        android:scaleType="fitXY"
-        android:src="@drawable/shopelia_button_separator" />
-
-    <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/shopelia_margin_large"
         android:layout_marginRight="@dimen/shopelia_margin_large"
         android:src="@drawable/shopelia_cart_white" />
+
+    <ImageView
+        android:id="@+id/separator"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:src="@drawable/shopelia_button_separator" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/separator"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginLeft="@dimen/shopelia_margin_normal"
+        android:layout_marginRight="@dimen/shopelia_margin_normal"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:layout_weight="1"
         android:gravity="center"
         android:text="VALIDER"
         android:textColor="@color/shopelia_validation_button_text_color"
@@ -41,4 +39,4 @@
         android:textStyle="bold"
         app:shopelia_fontStyle="bold" />
 
-</RelativeLayout>
+</LinearLayout>

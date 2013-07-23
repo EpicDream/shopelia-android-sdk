@@ -67,6 +67,11 @@
         <item name="android:focusable">false</item>
     </style>
 
+    <style name="Theme.Shopelia.Widget.Button.Green" parent="android:style/Widget.Button">
+        <item name="android:background">@drawable/shopelia_validation_button_background</item>
+        <item name="android:textColor">@color/shopelia_white</item>
+    </style>
+    
     <style name="Theme.Shopelia.TextAppearance" parent="@android:style/TextAppearance"></style>
 
     <style name="Theme.Shopelia.TextAppearance.Header" parent="@android:style/TextAppearance.Large">
