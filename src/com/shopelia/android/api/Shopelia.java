@@ -210,41 +210,89 @@ public final class Shopelia implements Parcelable {
         return obtain(context, productUrl, null);
     }
 
+    /**
+     * Sets the image uri of the product
+     * 
+     * @param imageUri
+     * @return
+     */
     public Shopelia setProductImageUri(Uri imageUri) {
         mData.putExtra(EXTRA_PRODUCT_IMAGE, imageUri);
         return this;
     }
 
+    /**
+     * Sets the product name
+     * 
+     * @param productName
+     * @return
+     */
     public Shopelia setProductName(String productName) {
         mData.putExtra(EXTRA_PRODUCT_TITLE, productName);
         return this;
     }
 
+    /**
+     * Sets the product price (without shipping price
+     * 
+     * @param price
+     * @return
+     */
     public Shopelia setProductPrice(float price) {
         mData.putExtra(EXTRA_PRICE, price);
         return this;
     }
 
+    /**
+     * Sets the product delivery price
+     * 
+     * @param price
+     * @return
+     */
     public Shopelia setProductShippingPrice(float price) {
         mData.putExtra(EXTRA_SHIPPING_PRICE, price);
         return this;
     }
 
+    /**
+     * Sets the extras informations associated with the product (stock, delivery
+     * delay...)
+     * 
+     * @param info
+     * @return
+     */
     public Shopelia setProductShippingInfo(String info) {
         mData.putExtra(EXTRA_SHIPPING_INFO, info);
         return this;
     }
 
+    /**
+     * Sets a possible email for the user. It can ease the registration of the
+     * user on Shopelia if you already know it.
+     * 
+     * @param email
+     * @return
+     */
     public Shopelia setUserEmail(String email) {
         mData.putExtra(EXTRA_USER_EMAIL, email);
         return this;
     }
 
+    /**
+     * Sets a possible phone for the user. It can ease the registration of the
+     * user on Shopelia if you already know it.
+     * 
+     * @param phone
+     * @return
+     */
     public Shopelia setUserPhone(String phone) {
         mData.putExtra(EXTRA_USER_PHONE, phone);
         return this;
     }
 
+    /**
+     * Notify to shopelia that you are currently displaying a Shopelia Button
+     */
     public void display() {
         ShopeliaTracker tracking = ShopeliaTracker.Factory.getDefault(mContext);
         tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
