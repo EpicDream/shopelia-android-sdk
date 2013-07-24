@@ -26,7 +26,9 @@ public final class IOUtils {
 
     public static void closeQuietly(InputStream is) {
         try {
-            is.close();
+            if (is != null) {
+                is.close();
+            }
         } catch (Exception e) {
             // Quiet
         }
