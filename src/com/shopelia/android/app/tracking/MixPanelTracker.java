@@ -14,7 +14,7 @@ import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.config.Build;
 import com.shopelia.android.model.User;
 
-public class MixPanelTracker implements ShopeliaTracker {
+public class MixPanelTracker extends ShopeliaTracker {
 
     private static final String MIXPANEL_API_TOKEN = "95c15bf80bf7bf93cb1c673865c75a22";
 

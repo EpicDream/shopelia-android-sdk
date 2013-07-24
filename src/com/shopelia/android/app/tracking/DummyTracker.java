@@ -7,7 +7,7 @@ import android.content.Context;
 import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.model.User;
 
-public class DummyTracker implements ShopeliaTracker {
+public class DummyTracker extends ShopeliaTracker {
 
     @Override
     public void init(Context context) {
