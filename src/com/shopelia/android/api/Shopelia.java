@@ -13,7 +13,6 @@ import android.os.Parcelable;
 
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.WelcomeActivity;
-import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.manager.UserManager;
@@ -295,7 +294,6 @@ public final class Shopelia implements Parcelable {
      */
     public void display() {
         ShopeliaTracker tracking = ShopeliaTracker.Factory.getDefault(mContext);
-        tracking.track(Analytics.Events.UInterface.SHOPELIA_BUTTON_SHOWN);
         tracking.flush();
     }
 

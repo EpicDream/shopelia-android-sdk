@@ -4,15 +4,10 @@ public interface Analytics {
 
     public interface Events {
 
-        public interface Steps {
-
-            public String ORDER_COMPLETED = "Order Completed";
-
-        }
-
         public interface UserInteractions {
             String FOCUS_IN = "In";
             String OK = "OK";
+            String CLICK_ON = "Click On";
 
             public interface Fields {
                 String EMAIL = "Email";
@@ -40,26 +35,12 @@ public interface Analytics {
             String DISPLAY = "Display";
         }
 
-        public interface UInterface {
-            String SHOPELIA_BUTTON_SHOWN = "Shopelia Button Shown";
-            String SHOPELIA_BUTTON_CLICKED = "Shopelia Button Clicked";
-
-        }
-
-        public String ADD_ADDRESS_METHOD = "AddAddressMethod";
-
     }
 
     public interface Properties {
         String SESSION = "Session ID";
         String SDK = "SDK";
-        String SDK_VERSION = "SDK_VERSION";
-
-        public interface AddAddressMethod {
-            String PLACES_AUTOCOMPLETE = "Places Autocompletion";
-            String REVERSE_DIRECTORY = "Reverse Directory";
-            String MANUAL = "Manual";
-        }
+        String SDK_VERSION = "SDK Version";
 
     }
 

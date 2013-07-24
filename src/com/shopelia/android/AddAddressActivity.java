@@ -356,8 +356,6 @@ public class AddAddressActivity extends ShopeliaActivity {
             extras.putParcelable(EXTRA_ADDRESS_OBJECT, mResult);
             data.putExtras(extras);
             setResult(RESULT_OK, data);
-            String method = TextUtils.isEmpty(mResult.reference) ? Analytics.Properties.AddAddressMethod.MANUAL
-                    : Analytics.Properties.AddAddressMethod.PLACES_AUTOCOMPLETE;
             // @formatter:on
             finish();
         }

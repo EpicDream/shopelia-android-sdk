@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.CloseCheckoutFragment.OnCreatePasswordListener;
-import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
 
 public class CloseCheckoutActivity extends ShopeliaActivity implements OnCreatePasswordListener {
@@ -20,7 +19,6 @@ public class CloseCheckoutActivity extends ShopeliaActivity implements OnCreateP
         ft.replace(R.id.fragment_container, new CloseCheckoutFragment());
         ft.commit();
         if (saveState == null) {
-            getTracker().track(Analytics.Events.Steps.ORDER_COMPLETED);
         }
     }
 
