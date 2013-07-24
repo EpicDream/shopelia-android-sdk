@@ -1,6 +1,7 @@
 package com.shopelia.android.utils;
 
 import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 
 public final class DigestUtils {
 
@@ -31,6 +32,20 @@ public final class DigestUtils {
             // Do nothing
             return null;
         }
+    }
+
+    public static final String md5(final String s) {
+        try {
+            // Create MD5 Hash
+            MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+            digest.update(s.getBytes());
+            byte md5[] = digest.digest();
+            return convertToHex(md5);
+
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return "";
     }
 
 }
