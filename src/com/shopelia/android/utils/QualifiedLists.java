@@ -20,7 +20,7 @@ public class QualifiedLists<E> implements JsonData {
     }
 
     public ArrayList<E> getList(String name) {
-        if (mContent.containsKey(name)) {
+        if (!mContent.containsKey(name)) {
             mContent.put(name, new ArrayList<E>());
         }
         return mContent.get(name);
@@ -36,9 +36,9 @@ public class QualifiedLists<E> implements JsonData {
         int size = list.size();
         for (int index = 0; index < size; index++) {
             if (revokator.revoke(list.get(index))) {
+                list.remove(index);
                 index--;
                 size--;
-                list.remove(index);
             }
         }
     }
@@ -79,7 +79,7 @@ public class QualifiedLists<E> implements JsonData {
             final int s = array.length();
             ArrayList<E> list = new ArrayList<E>(s);
             for (int i = 0; i < s; i++) {
-                list.add(inflater.inflate(array.getJSONObject(index)));
+                list.add(inflater.inflate(array.getJSONObject(i)));
             }
             out.mContent.put(name, list);
         }
@@ -96,10 +96,10 @@ public class QualifiedLists<E> implements JsonData {
             for (E item : array) {
                 if (item instanceof JsonData) {
                     JsonData jdata = (JsonData) item;
-                    a.put(jdata);
+                    a.put(jdata.toJson());
                 }
             }
-            object.put(entry.getKey(), array);
+            object.put(entry.getKey(), a);
         }
         return object;
     }

@@ -18,6 +18,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.model.JsonData;
@@ -42,7 +43,7 @@ public class VikingTracker extends ShopeliaTracker {
     private static final String DIRECTORY = "Shopelia/";
     private static final String SAVE_FILE = "internal.json";
     private static final String CHARSET = "UTF-8";
-    private static final long REVOCATION_DELAY = 5 * TimeUnits.SECONDS;
+    private static final long REVOCATION_DELAY = 30 * TimeUnits.SECONDS;
     private static final String DEFAULT_TRACKER_NAME = "Android";
 
     private QualifiedLists<Entry> mData = new QualifiedLists<VikingTracker.Entry>();
@@ -73,14 +74,11 @@ public class VikingTracker extends ShopeliaTracker {
 
     @Override
     public void init(Context context) {
-        if (Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED) {
-            File dir = new File(Environment.getExternalStorageDirectory(), DIRECTORY);
-            if (!dir.exists()) {
-                dir.mkdirs();
-            }
-            mSaveFile = new File(dir, SAVE_FILE);
-            load();
-        }
+        File dir = new File(Environment.getExternalStorageDirectory(), DIRECTORY);
+        dir.mkdirs();
+        mSaveFile = new File(dir, SAVE_FILE);
+        load();
+        Log.d(null, "FILE " + mSaveFile);
         mContext = context.getApplicationContext();
     }
 
@@ -101,11 +99,18 @@ public class VikingTracker extends ShopeliaTracker {
 
     private void sendEventToTracker(ArrayList<Entry> entries, String tracker, String action) {
         JSONArray urls = prepareArray(entries, action, tracker);
+        if (urls.length() == 0) {
+            return;
+        }
         JSONObject params = new JSONObject();
         try {
             params.put(Api.TRACKER, tracker);
             params.put(Api.TYPE, action);
             params.put(Api.URLS, urls);
+            Log.d(null, "SEND " + params.toString(2));
+            if (true) {
+                return;
+            }
             ShopeliaRestClient.V1(mContext).post(Command.V1.Events.$, params, new AsyncCallback() {
 
                 @Override
@@ -129,6 +134,7 @@ public class VikingTracker extends ShopeliaTracker {
     }
 
     protected void save() {
+        Log.d(null, "SAVE");
         if (mSaveFile == null) {
             return;
         }
@@ -136,6 +142,7 @@ public class VikingTracker extends ShopeliaTracker {
             JSONObject object = mData.toJson();
             StringReader reader = new StringReader(object.toString());
             IOUtils.copy(reader, new FileOutputStream(mSaveFile), Charset.forName(CHARSET));
+            Log.d(null, "SAVED");
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -146,35 +153,36 @@ public class VikingTracker extends ShopeliaTracker {
     }
 
     protected void load() {
-        if (mSaveFile == null || !mSaveFile.exists()) {
-            return;
-        }
-        FileInputStream fis = null;
-        try {
-            fis = new FileInputStream(mSaveFile);
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(fis, writer, Charset.forName(CHARSET));
-            JSONObject object = new JSONObject(writer.toString());
-            mData = QualifiedLists.inflate(object, Entry.INFLATOR);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (JSONException e) {
-            e.printStackTrace();
-        } finally {
-            IOUtils.closeQuietly(fis);
-        }
-
-        mData.getList(Lists.EVENTS).clear();
-        mData.revoke(Lists.EVENTS_SENT, new Revokator<VikingTracker.Entry>() {
-
-            @Override
-            public boolean revoke(Entry item) {
-                return System.currentTimeMillis() - item.created_at > REVOCATION_DELAY;
+        if (mSaveFile != null && mSaveFile.exists()) {
+            FileInputStream fis = null;
+            try {
+                fis = new FileInputStream(mSaveFile);
+                StringWriter writer = new StringWriter();
+                IOUtils.copy(fis, writer, Charset.forName(CHARSET));
+                JSONObject object = new JSONObject(writer.toString());
+                mData = QualifiedLists.inflate(object, Entry.INFLATOR);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            } finally {
+                IOUtils.closeQuietly(fis);
             }
 
-        });
+            mData.getList(Lists.EVENTS).clear();
+            mData.revoke(Lists.EVENTS_SENT, new Revokator<VikingTracker.Entry>() {
+
+                @Override
+                public boolean revoke(Entry item) {
+                    return System.currentTimeMillis() - item.created_at > REVOCATION_DELAY;
+                }
+
+            });
+        } else {
+            mData = new QualifiedLists<VikingTracker.Entry>();
+        }
         ArrayList<Entry> uuids = mData.getList(Lists.UUIDS);
         if (uuids.size() == 0) {
             mUuid = UUID.randomUUID().toString();
@@ -192,7 +200,7 @@ public class VikingTracker extends ShopeliaTracker {
 
         interface Api {
             String DIGEST = "digest";
-            String CREATED_AT = "created_url";
+            String CREATED_AT = "created_at";
         }
 
         long created_at;
@@ -260,6 +268,7 @@ public class VikingTracker extends ShopeliaTracker {
         String URLS = "urls";
         String TRACKER = "tracker";
         String TYPE = "type";
+        String VISITOR = "visitor";
 
     }
 
