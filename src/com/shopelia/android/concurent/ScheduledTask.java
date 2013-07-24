@@ -58,6 +58,10 @@ public class ScheduledTask {
         }
     }
 
+    public void cancel() {
+        stop();
+    }
+
     private void start() {
         if (mHandler == null) {
             mHandler = new Handler();
