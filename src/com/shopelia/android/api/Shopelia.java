@@ -14,7 +14,6 @@ import android.os.Parcelable;
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.WelcomeActivity;
 import com.shopelia.android.app.ShopeliaActivity;
-import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Merchant;
 import com.shopelia.android.remote.api.ApiHandler;
@@ -287,14 +286,6 @@ public final class Shopelia implements Parcelable {
     public Shopelia setUserPhone(String phone) {
         mData.putExtra(EXTRA_USER_PHONE, phone);
         return this;
-    }
-
-    /**
-     * Notify to shopelia that you are currently displaying a Shopelia Button
-     */
-    public void display() {
-        ShopeliaTracker tracking = ShopeliaTracker.Factory.getDefault(mContext);
-        tracking.flush();
     }
 
     @Override
