@@ -1,13 +1,18 @@
 package com.shopelia.android.app.tracking;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.StringReader;
+import java.io.StringWriter;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.UUID;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -16,10 +21,15 @@ import android.os.Environment;
 
 import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.model.JsonData;
+import com.shopelia.android.remote.api.Command;
+import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.shopelia.android.utils.DigestUtils;
 import com.shopelia.android.utils.IOUtils;
 import com.shopelia.android.utils.QualifiedLists;
 import com.shopelia.android.utils.QualifiedLists.Revokator;
+import com.shopelia.android.utils.TimeUnits;
+import com.turbomanage.httpclient.AsyncCallback;
+import com.turbomanage.httpclient.HttpResponse;
 
 public class VikingTracker extends ShopeliaTracker {
 
@@ -32,25 +42,33 @@ public class VikingTracker extends ShopeliaTracker {
     private static final String DIRECTORY = "Shopelia/";
     private static final String SAVE_FILE = "internal.json";
     private static final String CHARSET = "UTF-8";
+    private static final long REVOCATION_DELAY = 5 * TimeUnits.SECONDS;
+    private static final String DEFAULT_TRACKER_NAME = "Android";
 
-    private QualifiedLists<Entry> mData;
+    private QualifiedLists<Entry> mData = new QualifiedLists<VikingTracker.Entry>();
     private File mSaveFile;
-    private String uuid;
+    private String mUuid;
+    private HashSet<String> mTrakers = new HashSet<String>();
+    private Context mContext;
 
     private VikingTracker() {
-
+        mTrakers.add(DEFAULT_TRACKER_NAME);
     }
 
     @Override
-    public void onClickShopeliaButton(String url) {
-        super.onClickShopeliaButton(url);
-        mData.getList(Lists.EVENTS).add(new Entry(Actions.CLICK, url));
+    public void onClickShopeliaButton(String url, String tracker) {
+        if (tracker == null) {
+            tracker = DEFAULT_TRACKER_NAME;
+        }
+        mData.getList(Lists.EVENTS).add(new Entry(Actions.CLICK, url, tracker));
     }
 
     @Override
-    public void onDisplayShopeliaButton(String url) {
-        super.onDisplayShopeliaButton(url);
-        mData.getList(Lists.EVENTS).add(new Entry(Actions.DISPLAY, url));
+    public void onDisplayShopeliaButton(String url, String tracker) {
+        if (tracker == null) {
+            tracker = DEFAULT_TRACKER_NAME;
+        }
+        mData.getList(Lists.EVENTS).add(new Entry(Actions.DISPLAY, url, tracker));
     }
 
     @Override
@@ -63,13 +81,51 @@ public class VikingTracker extends ShopeliaTracker {
             mSaveFile = new File(dir, SAVE_FILE);
             load();
         }
+        mContext = context.getApplicationContext();
     }
 
     @Override
-    public void flush() {
-        ArrayList<Entry> entry = mData.diff(Lists.EVENTS, Lists.EVENTS_SENT);
+    public synchronized void flush() {
+        ArrayList<Entry> entries = mData.diff(Lists.EVENTS, Lists.EVENTS_SENT);
+        for (String tracker : mTrakers) {
+            sendEventsToTracker(entries, tracker);
+        }
         mData.merge(Lists.EVENTS, Lists.EVENTS_SENT);
         save();
+    }
+
+    private void sendEventsToTracker(ArrayList<Entry> entries, String tracker) {
+        sendEventToTracker(entries, tracker, Actions.CLICK);
+        sendEventToTracker(entries, tracker, Actions.DISPLAY);
+    }
+
+    private void sendEventToTracker(ArrayList<Entry> entries, String tracker, String action) {
+        JSONArray urls = prepareArray(entries, action, tracker);
+        JSONObject params = new JSONObject();
+        try {
+            params.put(Api.TRACKER, tracker);
+            params.put(Api.TYPE, action);
+            params.put(Api.URLS, urls);
+            ShopeliaRestClient.V1(mContext).post(Command.V1.Events.$, params, new AsyncCallback() {
+
+                @Override
+                public void onComplete(HttpResponse httpResponse) {
+                    // Do nothing
+                }
+            });
+        } catch (JSONException e) {
+
+        }
+    }
+
+    private JSONArray prepareArray(ArrayList<Entry> entries, String action, String tracker) {
+        JSONArray array = new JSONArray();
+        for (Entry entry : entries) {
+            if (action.equals(entry.action)) {
+                array.put(entry.url);
+            }
+        }
+        return array;
     }
 
     protected void save() {
@@ -93,19 +149,43 @@ public class VikingTracker extends ShopeliaTracker {
         if (mSaveFile == null || !mSaveFile.exists()) {
             return;
         }
+        FileInputStream fis = null;
+        try {
+            fis = new FileInputStream(mSaveFile);
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(fis, writer, Charset.forName(CHARSET));
+            JSONObject object = new JSONObject(writer.toString());
+            mData = QualifiedLists.inflate(object, Entry.INFLATOR);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (JSONException e) {
+            e.printStackTrace();
+        } finally {
+            IOUtils.closeQuietly(fis);
+        }
+
         mData.getList(Lists.EVENTS).clear();
         mData.revoke(Lists.EVENTS_SENT, new Revokator<VikingTracker.Entry>() {
 
             @Override
             public boolean revoke(Entry item) {
-                return false;
+                return System.currentTimeMillis() - item.created_at > REVOCATION_DELAY;
             }
 
         });
+        ArrayList<Entry> uuids = mData.getList(Lists.UUIDS);
+        if (uuids.size() == 0) {
+            mUuid = UUID.randomUUID().toString();
+            uuids.add(new Entry(mUuid));
+        } else {
+            mUuid = uuids.get(0).digest;
+        }
     }
 
     public String getUuid() {
-        return uuid;
+        return mUuid;
     }
 
     private static class Entry implements JsonData {
@@ -119,12 +199,19 @@ public class VikingTracker extends ShopeliaTracker {
         String digest;
         String action;
         String url;
+        String tracker;
 
-        public Entry(String action, String url) {
+        public Entry(String digest) {
+            this.digest = digest;
+            created_at = System.currentTimeMillis();
+        }
+
+        public Entry(String action, String url, String tracker) {
             this.url = url;
             this.action = action;
             this.digest = DigestUtils.md5(action + "://" + url);
             created_at = System.currentTimeMillis();
+            this.tracker = tracker;
         }
 
         protected Entry(JSONObject source) throws JSONException {
@@ -159,7 +246,7 @@ public class VikingTracker extends ShopeliaTracker {
     }
 
     private interface Lists {
-        String UUID = "uuid";
+        String UUIDS = "uuids";
         String EVENTS_SENT = "events_sent";
         String EVENTS = "events";
     }
