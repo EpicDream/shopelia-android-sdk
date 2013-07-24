@@ -69,6 +69,23 @@ public class QualifiedLists<E> implements JsonData {
         }
     }
 
+    public static <E> QualifiedLists<E> inflate(JSONObject object, JsonInflater<E> inflater) throws JSONException {
+        QualifiedLists<E> out = new QualifiedLists<E>();
+        JSONArray names = object.names();
+        final int size = names.length();
+        for (int index = 0; index < size; index++) {
+            final String name = names.getString(index);
+            JSONArray array = object.getJSONArray(name);
+            final int s = array.length();
+            ArrayList<E> list = new ArrayList<E>(s);
+            for (int i = 0; i < s; i++) {
+                list.add(inflater.inflate(array.getJSONObject(index)));
+            }
+            out.mContent.put(name, list);
+        }
+        return out;
+    }
+
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject object = new JSONObject();
