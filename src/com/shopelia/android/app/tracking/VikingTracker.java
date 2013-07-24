@@ -43,9 +43,9 @@ public class VikingTracker extends ShopeliaTracker {
     private static final String DIRECTORY = "Shopelia/";
     private static final String SAVE_FILE = "internal.json";
     private static final String CHARSET = "UTF-8";
-    private static final long REVOCATION_DELAY = 1 * TimeUnits.MINUTES;
+    private static final long REVOCATION_DELAY = 1 * TimeUnits.HOURS;
     private static final String DEFAULT_TRACKER_NAME = "Android";
-    private static final long FLUSH_TASK_DELAY = 20 * TimeUnits.SECONDS;
+    private static final long FLUSH_TASK_DELAY = 1 * TimeUnits.SECONDS;
 
     private QualifiedLists<Entry> mData = new QualifiedLists<VikingTracker.Entry>();
     private File mSaveFile;
