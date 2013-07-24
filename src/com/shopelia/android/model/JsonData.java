@@ -7,4 +7,8 @@ public interface JsonData {
 
     public JSONObject toJson() throws JSONException;
 
+    public interface JsonInflater<E> {
+        public E inflate(JSONObject source) throws JSONException;
+    }
+
 }
