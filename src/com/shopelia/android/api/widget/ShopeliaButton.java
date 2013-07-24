@@ -36,11 +36,6 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
     }
 
     @Override
-    public void setOnClickListener(OnClickListener l) {
-
-    }
-
-    @Override
     public void setProductUrl(CharSequence url) {
         mHelper.setProductUrl(url);
     }
@@ -96,6 +91,12 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
     }
 
     @Override
+    protected void onDetachedFromWindow() {
+        super.onDetachedFromWindow();
+        mHelper.onDetachFromWindow();
+    }
+
+    @Override
     public void onViewShouldBeVisible() {
         setVisibility(View.VISIBLE);
     }
@@ -107,26 +108,22 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
 
     @Override
     public void setProductPrice(float price) {
-        // TODO Auto-generated method stub
-
+        mHelper.setProductPrice(price);
     }
 
     @Override
     public void setProductDeliveryPrice(float shippingPrice) {
-        // TODO Auto-generated method stub
-
+        mHelper.setProductDeliveryPrice(shippingPrice);
     }
 
     @Override
     public void setProductImage(Uri imageUri) {
-        // TODO Auto-generated method stub
-
+        mHelper.setProductImage(imageUri);
     }
 
     @Override
     public void setProductShippingExtras(String shippingExtras) {
-        // TODO Auto-generated method stub
-
+        mHelper.setProductShippingExtras(shippingExtras);
     }
 
 }

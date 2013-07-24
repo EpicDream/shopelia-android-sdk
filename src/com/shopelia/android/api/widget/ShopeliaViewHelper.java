@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.shopelia.android.api.Shopelia;
+import com.shopelia.android.app.ShopeliaTracker;
 
 /**
  * A helper class useful if you want to create a custom Shopelia layout. It
@@ -34,9 +35,12 @@ public class ShopeliaViewHelper implements ShopeliaView {
     private String mProductUrl;
     private Shopelia mShopelia;
     private Callback mCallback;
+    private ShopeliaTracker mTracker;
+    private String mTrackerName;
 
     public ShopeliaViewHelper(Context context, AttributeSet attrs) {
         mContext = context;
+        mTracker = ShopeliaTracker.Factory.getTracker(ShopeliaTracker.PROVIDER_VIKING, context);
     }
 
     public void setCallback(Callback callback) {
@@ -49,6 +53,7 @@ public class ShopeliaViewHelper implements ShopeliaView {
     @Override
     public void callCheckout() {
         if (mShopelia != null) {
+            mTracker.onClickShopeliaButton(mProductUrl, mTrackerName);
             mShopelia.checkout(mContext);
         }
     }
@@ -64,6 +69,7 @@ public class ShopeliaViewHelper implements ShopeliaView {
                     super.onUpdateDone();
                     mShopelia = Shopelia.obtain(mContext, mProductUrl);
                     if (mShopelia != null && mCallback != null) {
+                        mTracker.onDisplayShopeliaButton(mProductUrl, mTrackerName);
                         mCallback.onViewShouldSmoothlyAppear();
                     }
                 }
@@ -99,6 +105,10 @@ public class ShopeliaViewHelper implements ShopeliaView {
     @Override
     public void setProductShippingExtras(String shippingExtras) {
 
+    }
+
+    public void onDetachFromWindow() {
+        mTracker.flush();
     }
 
 }

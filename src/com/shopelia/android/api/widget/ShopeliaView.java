@@ -24,4 +24,5 @@ public interface ShopeliaView {
     public void setProductImage(Uri imageUri);
 
     public void setProductShippingExtras(String shippingExtras);
+
 }
