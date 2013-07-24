@@ -25,6 +25,9 @@ public final class Config {
      */
     public static final int COMPILATION_TARGET = BuildConfig.DEBUG ? COMPILATION_TARGET_DEBUG : COMPILATION_TARGET_RELEASE;
 
+    public static final boolean DEBUG = BuildConfig.DEBUG;
+    public static final boolean RELEASE = !DEBUG;
+
     // /////////////////////////////////////////////////////////////
     //
     // Logs
