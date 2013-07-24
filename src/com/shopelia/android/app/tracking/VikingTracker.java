@@ -121,7 +121,7 @@ public class VikingTracker extends ShopeliaTracker {
     private JSONArray prepareArray(ArrayList<Entry> entries, String action, String tracker) {
         JSONArray array = new JSONArray();
         for (Entry entry : entries) {
-            if (action.equals(entry.action)) {
+            if (action.equals(entry.action) && tracker.equals(entry.tracker)) {
                 array.put(entry.url);
             }
         }
