@@ -9,30 +9,55 @@ import android.content.Context;
 
 import com.shopelia.android.app.tracking.DummyTracker;
 import com.shopelia.android.app.tracking.MixPanelTracker;
+import com.shopelia.android.app.tracking.VikingTracker;
 import com.shopelia.android.model.User;
 
-public interface ShopeliaTracker {
+public abstract class ShopeliaTracker {
 
-    public int PROVIDER_MIXPANEL = 0x1;
-    public int PROVIDER_DEFAULT = PROVIDER_MIXPANEL;
+    public static final int PROVIDER_MIXPANEL = 0x1;
+    public static final int PROVIDER_DUMMY = 0x2;
+    public static final int PROVIDER_VIKING = 0x3;
+    public static final int PROVIDER_DEFAULT = PROVIDER_MIXPANEL;
 
-    public void init(Context context);
+    public abstract void init(Context context);
 
-    public void identify(User user);
+    public void identify(User user) {
 
-    public void unidentify();
+    }
 
-    public void track(String eventName);
+    public void unidentify() {
 
-    public void track(String eventName, JSONObject object);
+    }
 
-    public void onDisplay(String activityName);
+    public void track(String eventName) {
 
-    public void onFocusIn(String fieldName);
+    }
 
-    public void onValidate(String fieldName);
+    public void track(String eventName, JSONObject object) {
 
-    public void flush();
+    }
+
+    public void onDisplayShopeliaButton(String url) {
+
+    }
+
+    public void onClickShopeliaButton(String url) {
+
+    }
+
+    public void onDisplay(String activityName) {
+
+    }
+
+    public void onFocusIn(String fieldName) {
+
+    }
+
+    public void onValidate(String fieldName) {
+
+    }
+
+    public abstract void flush();
 
     public static class Factory {
 
@@ -42,9 +67,17 @@ public interface ShopeliaTracker {
             switch (provider) {
                 case PROVIDER_MIXPANEL:
                     return new MixPanelTracker();
+                case PROVIDER_VIKING:
+                    return VikingTracker.getInstance();
                 default:
                     return new DummyTracker();
             }
+        }
+
+        public static ShopeliaTracker getTracker(int provider, Context context) {
+            ShopeliaTracker tracker = create(provider);
+            tracker.init(context);
+            return tracker;
         }
 
         public static ShopeliaTracker getDefault(Context context) {
