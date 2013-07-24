@@ -18,7 +18,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Environment;
-import android.util.Log;
 
 import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.concurent.ScheduledTask;
@@ -44,7 +43,7 @@ public class VikingTracker extends ShopeliaTracker {
     private static final String DIRECTORY = "Shopelia/";
     private static final String SAVE_FILE = "internal.json";
     private static final String CHARSET = "UTF-8";
-    private static final long REVOCATION_DELAY = 30 * TimeUnits.SECONDS;
+    private static final long REVOCATION_DELAY = 1 * TimeUnits.MINUTES;
     private static final String DEFAULT_TRACKER_NAME = "Android";
     private static final long FLUSH_TASK_DELAY = 20 * TimeUnits.SECONDS;
 
@@ -64,7 +63,7 @@ public class VikingTracker extends ShopeliaTracker {
         if (tracker == null) {
             tracker = DEFAULT_TRACKER_NAME;
         }
-        mData.getList(Lists.EVENTS).add(new Entry(Actions.CLICK, url, tracker));
+        addEventTolist(Lists.EVENTS, new Entry(Actions.CLICK, url, tracker));
         mFlushTask.cancel();
         mFlushTask.schedule(mFlushRunnable, FLUSH_TASK_DELAY);
     }
@@ -74,9 +73,23 @@ public class VikingTracker extends ShopeliaTracker {
         if (tracker == null) {
             tracker = DEFAULT_TRACKER_NAME;
         }
-        mData.getList(Lists.EVENTS).add(new Entry(Actions.DISPLAY, url, tracker));
+        addEventTolist(Lists.EVENTS, new Entry(Actions.DISPLAY, url, tracker));
         mFlushTask.cancel();
         mFlushTask.schedule(mFlushRunnable, FLUSH_TASK_DELAY);
+    }
+
+    private void addEventTolist(String name, Entry entry) {
+        ArrayList<Entry> list = mData.getList(name);
+        boolean found = false;
+        for (Entry i : list) {
+            if (i.digest.equals(entry.digest)) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            list.add(entry);
+        }
     }
 
     @Override
@@ -85,12 +98,19 @@ public class VikingTracker extends ShopeliaTracker {
         dir.mkdirs();
         mSaveFile = new File(dir, SAVE_FILE);
         load();
-        Log.d(null, "FILE " + mSaveFile);
         mContext = context.getApplicationContext();
     }
 
     @Override
     public synchronized void flush() {
+        mData.revoke(Lists.EVENTS_SENT, new Revokator<VikingTracker.Entry>() {
+
+            @Override
+            public boolean revoke(Entry item) {
+                return System.currentTimeMillis() - item.created_at > REVOCATION_DELAY;
+            }
+
+        });
         ArrayList<Entry> entries = mData.diff(Lists.EVENTS, Lists.EVENTS_SENT);
         for (String tracker : mTrakers) {
             sendEventsToTracker(entries, tracker);
@@ -174,14 +194,6 @@ public class VikingTracker extends ShopeliaTracker {
             }
 
             mData.getList(Lists.EVENTS).clear();
-            mData.revoke(Lists.EVENTS_SENT, new Revokator<VikingTracker.Entry>() {
-
-                @Override
-                public boolean revoke(Entry item) {
-                    return System.currentTimeMillis() - item.created_at > REVOCATION_DELAY;
-                }
-
-            });
         } else {
             mData = new QualifiedLists<VikingTracker.Entry>();
         }
