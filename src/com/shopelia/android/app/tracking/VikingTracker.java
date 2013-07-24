@@ -21,6 +21,7 @@ import android.os.Environment;
 import android.util.Log;
 
 import com.shopelia.android.app.ShopeliaTracker;
+import com.shopelia.android.concurent.ScheduledTask;
 import com.shopelia.android.model.JsonData;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
@@ -45,12 +46,14 @@ public class VikingTracker extends ShopeliaTracker {
     private static final String CHARSET = "UTF-8";
     private static final long REVOCATION_DELAY = 30 * TimeUnits.SECONDS;
     private static final String DEFAULT_TRACKER_NAME = "Android";
+    private static final long FLUSH_TASK_DELAY = 20 * TimeUnits.SECONDS;
 
     private QualifiedLists<Entry> mData = new QualifiedLists<VikingTracker.Entry>();
     private File mSaveFile;
     private String mUuid;
     private HashSet<String> mTrakers = new HashSet<String>();
     private Context mContext;
+    private ScheduledTask mFlushTask = new ScheduledTask();
 
     private VikingTracker() {
         mTrakers.add(DEFAULT_TRACKER_NAME);
@@ -62,6 +65,8 @@ public class VikingTracker extends ShopeliaTracker {
             tracker = DEFAULT_TRACKER_NAME;
         }
         mData.getList(Lists.EVENTS).add(new Entry(Actions.CLICK, url, tracker));
+        mFlushTask.cancel();
+        mFlushTask.schedule(mFlushRunnable, FLUSH_TASK_DELAY);
     }
 
     @Override
@@ -70,6 +75,8 @@ public class VikingTracker extends ShopeliaTracker {
             tracker = DEFAULT_TRACKER_NAME;
         }
         mData.getList(Lists.EVENTS).add(new Entry(Actions.DISPLAY, url, tracker));
+        mFlushTask.cancel();
+        mFlushTask.schedule(mFlushRunnable, FLUSH_TASK_DELAY);
     }
 
     @Override
@@ -107,10 +114,7 @@ public class VikingTracker extends ShopeliaTracker {
             params.put(Api.TRACKER, tracker);
             params.put(Api.TYPE, action);
             params.put(Api.URLS, urls);
-            Log.d(null, "SEND " + params.toString(2));
-            if (true) {
-                return;
-            }
+            params.put(Api.VISITOR, getUuid());
             ShopeliaRestClient.V1(mContext).post(Command.V1.Events.$, params, new AsyncCallback() {
 
                 @Override
@@ -134,7 +138,6 @@ public class VikingTracker extends ShopeliaTracker {
     }
 
     protected void save() {
-        Log.d(null, "SAVE");
         if (mSaveFile == null) {
             return;
         }
@@ -142,7 +145,6 @@ public class VikingTracker extends ShopeliaTracker {
             JSONObject object = mData.toJson();
             StringReader reader = new StringReader(object.toString());
             IOUtils.copy(reader, new FileOutputStream(mSaveFile), Charset.forName(CHARSET));
-            Log.d(null, "SAVED");
         } catch (JSONException e) {
             e.printStackTrace();
         } catch (FileNotFoundException e) {
@@ -185,7 +187,7 @@ public class VikingTracker extends ShopeliaTracker {
         }
         ArrayList<Entry> uuids = mData.getList(Lists.UUIDS);
         if (uuids.size() == 0) {
-            mUuid = UUID.randomUUID().toString();
+            mUuid = UUID.randomUUID().toString().replace("-", "").substring(0, 32).toLowerCase();
             uuids.add(new Entry(mUuid));
         } else {
             mUuid = uuids.get(0).digest;
@@ -280,6 +282,14 @@ public class VikingTracker extends ShopeliaTracker {
             flush();
         }
 
+    };
+
+    private Runnable mFlushRunnable = new Runnable() {
+
+        @Override
+        public void run() {
+            flush();
+        }
     };
 
 }
