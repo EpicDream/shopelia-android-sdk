@@ -58,7 +58,7 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
 
     }
 
-    public static final String FRAGMENT_NAME = "SignUp";
+    public static final String FRAGMENT_NAME = "Sign Up";
 
     private static final SparseArray<String> TRACKER_NAME;
 

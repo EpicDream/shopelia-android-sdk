@@ -17,7 +17,7 @@ import com.shopelia.android.model.BaseModel;
  */
 public class ResourceListActivity extends ShopeliaActivity {
 
-    public static final String ACTIVITY_NAME = "ResourceListActivity";
+    public static final String ACTIVITY_NAME = "Resource List";
 
     /**
      * The identifier of the resource
