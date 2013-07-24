@@ -27,6 +27,7 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
         mHelper = new ShopeliaViewHelper(context, attrs);
         mHelper.setCallback(this);
         setText("Acheter");
+
     }
 
     @Override

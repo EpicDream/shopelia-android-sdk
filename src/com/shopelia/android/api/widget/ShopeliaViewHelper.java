@@ -41,6 +41,9 @@ public class ShopeliaViewHelper implements ShopeliaView {
 
     public void setCallback(Callback callback) {
         mCallback = callback;
+        if (mProductUrl == null) {
+            mCallback.onViewShouldBeInvisible();
+        }
     }
 
     @Override
