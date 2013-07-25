@@ -332,7 +332,7 @@ public class AsyncImageView extends ImageView {
     public boolean setUrl(String url) {
         mAttempts = 0;
         // Check the url has changed
-        if (url != null && url.equals(mUrl)) {
+        if (url != null && url.equals(mUrl) && (mBitmap != null || (mRequest != null && !mRequest.isCancelled()))) {
             return true;
         }
 
