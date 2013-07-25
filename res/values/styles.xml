@@ -27,7 +27,7 @@
 
     <style name="Theme.Shopelia.FloatingFrame" parent="Theme.Shopelia">
         <item name="android:windowIsTranslucent">true</item>
-        <item name="android:windowBackground">@color/shopelia_dark_translucent_60</item>
+        <item name="android:windowBackground">@drawable/shopelia_dark_radial_gradient</item>
         <item name="android:windowContentOverlay">@null</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:backgroundDimEnabled">true</item>
