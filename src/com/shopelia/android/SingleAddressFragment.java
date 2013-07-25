@@ -1,7 +1,5 @@
 package com.shopelia.android;
 
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -12,10 +10,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.google.i18n.phonenumbers.NumberParseException;
-import com.google.i18n.phonenumbers.PhoneNumberUtil;
-import com.google.i18n.phonenumbers.PhoneNumberUtil.PhoneNumberFormat;
-import com.google.i18n.phonenumbers.Phonenumber.PhoneNumber;
 import com.shopelia.android.SingleAddressFragment.OnAddressChangeListener;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
@@ -77,14 +71,6 @@ public class SingleAddressFragment extends ShopeliaFragment<OnAddressChangeListe
             findViewById(R.id.address_city_and_country, TextView.class).setText(
                     mAddress.zipcode + ", " + mAddress.city + ", " + mAddress.getDisplayCountry());
             String number = mAddress.phone;
-            try {
-                PhoneNumberUtil util = PhoneNumberUtil.getInstance();
-                PhoneNumber phoneNumber = util.parse(number, Locale.getDefault().getCountry());
-                number = util.format(phoneNumber, PhoneNumberFormat.NATIONAL);
-            } catch (NumberParseException e) {
-                e.printStackTrace();
-            }
-
             findViewById(R.id.user_phone_number, TextView.class).setText(number);
             findViewById(R.id.address_edit).setOnClickListener(new OnClickListener() {
 
