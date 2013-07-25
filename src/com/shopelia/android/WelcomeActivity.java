@@ -15,7 +15,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
 import com.shopelia.android.WelcomeFragment.WelcomeParent;
@@ -52,7 +51,6 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
                     try {
                         if (result.isDone()) {
                             Bundle data = result.getResult();
-                            Log.d(null, "DONE " + data.getString(AccountManager.KEY_AUTHTOKEN));
                             String authToken = data.getString(AccountManager.KEY_AUTHTOKEN);
                             String userString = data.getString(AccountManager.KEY_USERDATA);
                             User user = User.inflate(new JSONObject(userString));
