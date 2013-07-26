@@ -40,6 +40,7 @@ public class HttpGetPoller extends AbstractPoller<HttpGetRequest, HttpGetRespons
 
     public HttpGetPoller(ShopeliaRestClient client) {
         super(NAME);
+        mClient = client;
     }
 
     @Override

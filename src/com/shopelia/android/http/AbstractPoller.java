@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 
 /**
  * This class allows creation of polling classes. You must implement
@@ -73,10 +74,13 @@ public abstract class AbstractPoller<ParamType, ResultType> {
      * this call.
      */
     public synchronized void poll() {
+        Log.d(null, "ON POLL");
         if (isPaused()) {
+            setState(STATE_POLLING);
             sendMessageToPollerThread();
         } else if (isStopped()) {
             mIteration = 0;
+            setState(STATE_POLLING);
             if (mExpiryTime == NO_EXPIRATION) {
                 mMaxIteration = INFINITE;
             } else {
@@ -148,6 +152,7 @@ public abstract class AbstractPoller<ParamType, ResultType> {
 
     private void sendMessageToPollerThread() {
         if (mPollerHandler != null && isPolling()) {
+            Log.d(null, "POLL SEND OK");
             Message msg = mPollerHandler.obtainMessage(MESSAGE_POLL, mParam.get());
             mPollerHandler.sendMessageDelayed(msg, mFrequency);
         }
@@ -173,6 +178,7 @@ public abstract class AbstractPoller<ParamType, ResultType> {
             super.start();
             mPollerHandler = new PollerHandler(getLooper());
             sendMessageToPollerThread();
+            Log.d(null, "POLL SEND TO POLLER THREAD");
         }
 
     }
@@ -191,11 +197,13 @@ public abstract class AbstractPoller<ParamType, ResultType> {
                     getLooper().quit();
                     break;
                 case MESSAGE_POLL:
+                    Log.d(null, "POLLING");
                     ResultType result = execute((ParamType) msg.obj);
                     Message message = mHandler.obtainMessage();
                     message.what = MESSAGE_POLL;
                     message.obj = result;
                     message.sendToTarget();
+                    Log.d(null, "POLLING SEND TO MAIN THREAD");
                     break;
             }
         }
@@ -209,17 +217,21 @@ public abstract class AbstractPoller<ParamType, ResultType> {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MESSAGE_POLL:
+                    Log.d(null, "POLL RECEIVED ON MAIN THREAD");
                     if (msg.obj != null) {
                         ResultType old = mResult;
                         mResult = (ResultType) msg.obj;
-                        if (mOnPollerEventListener != null) {
+                        if (mOnPollerEventListener != null && mResult != null) {
+                            Log.d(null, "POLL NOTIFY RESULT");
                             mOnPollerEventListener.onResult(old, mResult);
                         }
                     }
                     mIteration++;
                     if ((mMaxIteration == INFINITE || mIteration < mMaxIteration) && isPolling()) {
+                        Log.d(null, "POLL RELAUNCH");
                         sendMessageToPollerThread();
                     } else if (mMaxIteration != INFINITE && mIteration >= mMaxIteration && mOnPollerEventListener != null) {
+                        Log.d(null, "POLL EXPIRED");
                         mOnPollerEventListener.onTimeExpired();
                     }
                     break;

@@ -1,10 +1,12 @@
 package com.shopelia.android.widget;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -83,7 +85,18 @@ public class ProductSheetWidget extends FrameLayout {
     }
 
     public void refreshView() {
+        if (mProduct == null) {
 
+        } else {
+            mProductImage.setImageURI(mProduct.image);
+            mProductName.setText(mProduct.name);
+            mProductPrice.setText(mProduct.currency.format(mProduct.productPrice));
+            mProductShippingInfo.setText(mProduct.shippingExtra);
+            mShippingFees.setText(mProduct.currency.format(mProduct.deliveryPrice));
+            mTax.setText(getString(mProduct.tax.getResId()));
+            mVendorLogo.setUrl(mProduct.merchant.logo);
+            mProductDescription.setVisibility(View.GONE);
+        }
     }
 
     public String getString(int id) {
@@ -156,7 +169,16 @@ public class ProductSheetWidget extends FrameLayout {
 
         @Override
         public void onResult(HttpGetResponse previousResult, HttpGetResponse newResult) {
-            Log.d(null, "RESULT " + newResult.response.getBodyAsString());
+            if (newResult.exception != null) {
+                newResult.exception.printStackTrace();
+            } else {
+                try {
+                    mProduct = Product.inflate(new JSONObject(newResult.response.getBodyAsString()));
+                    refreshView();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
 
     };

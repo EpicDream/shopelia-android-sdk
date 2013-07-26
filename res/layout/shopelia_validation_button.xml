@@ -4,7 +4,7 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="50dp"
-    android:background="@drawable/shopelia_validation_button_background"
+    android:background="@drawable/shopelia_white_button_background"
     android:gravity="center_vertical|left"
     android:orientation="horizontal" >
 

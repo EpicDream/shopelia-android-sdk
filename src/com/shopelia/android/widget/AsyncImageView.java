@@ -145,7 +145,9 @@ public class AsyncImageView extends ImageView {
 
     @Override
     public void setImageURI(Uri uri) {
-        setUrl(uri.toString());
+        if (uri != null) {
+            setUrl(uri.toString());
+        }
     }
 
     private void initAsyncImageView() {

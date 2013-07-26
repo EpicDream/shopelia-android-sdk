@@ -19,6 +19,10 @@ public class Product implements BaseModel<Product> {
         String NAME = "name";
         String URL = "url";
         String IMAGE_URL = "image_url";
+        String EXPECTED_PRODUCT_PRICE = "expected_price_product";
+        String EXPECTED_SHIPPING_PRICE = "expected_price_shipping";
+        String SHIPPING_EXTRAS = "shipping_info";
+        String MERCHANT = "merchant";
     }
 
     public static final String IDENTIFIER = Product.class.getName();
@@ -98,11 +102,18 @@ public class Product implements BaseModel<Product> {
         }
     };
 
-    public static Product inflate(JSONObject object) {
+    public static Product inflate(JSONObject object) throws JSONException {
         Product product = new Product();
         product.name = object.optString(Api.NAME);
         product.url = object.optString(Api.URL);
         product.image = Uri.parse(object.optString(Api.IMAGE_URL));
+        if (object.has(Api.MERCHANT)) {
+            product.merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
+        }
+        product.deliveryPrice = (float) object.optDouble(Api.EXPECTED_SHIPPING_PRICE);
+        product.productPrice = (float) object.optDouble(Api.EXPECTED_PRODUCT_PRICE);
+        product.shippingExtra = object.optString(Api.SHIPPING_EXTRAS);
+        product.ensureDefaultValues();
         return product;
     }
 
@@ -118,16 +129,19 @@ public class Product implements BaseModel<Product> {
         product.tax = bundle.getParcelable(Shopelia.EXTRA_TAX);
         product.shippingExtra = bundle.getString(Shopelia.EXTRA_SHIPPING_INFO);
         product.productPrice = bundle.getFloat(Shopelia.EXTRA_PRICE, NO_PRICE);
-
-        if (product.currency == null) {
-            product.currency = Currency.EUR;
-        }
-
-        if (product.tax == null) {
-            product.tax = Tax.ATI;
-        }
-
+        product.ensureDefaultValues();
         return product;
+    }
+
+    protected void ensureDefaultValues() {
+        if (currency == null) {
+            currency = Currency.EUR;
+        }
+
+        if (tax == null) {
+            tax = Tax.ATI;
+        }
+
     }
 
     @Override
