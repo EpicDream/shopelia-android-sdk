@@ -1,5 +1,6 @@
 package com.shopelia.android.api.widget;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.net.Uri;
 import android.util.AttributeSet;
@@ -7,7 +8,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.view.animation.BounceInterpolator;
 
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.shopelia.android.widget.ValidationButton;
 
 public class ShopeliaButton extends ValidationButton implements ShopeliaView, ShopeliaViewHelper.Callback {
@@ -22,12 +25,12 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
         this(context, attrs, 0);
     }
 
+    @SuppressLint("NewApi")
     public ShopeliaButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, 0);
         mHelper = new ShopeliaViewHelper(context, attrs);
         mHelper.setCallback(this);
         setText("Acheter");
-
     }
 
     @Override
@@ -65,6 +68,17 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
     public void onViewShouldSmoothlyAppear() {
         onViewShouldBeVisible();
         startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
+        ObjectAnimator a = ObjectAnimator.ofFloat(this, "scaleX", 0.f, 1.f);
+        a.setInterpolator(new BounceInterpolator());
+        a.setDuration(1000).start();
+
+        a = ObjectAnimator.ofFloat(this, "scaleY", 0.f, 1.f);
+        a.setInterpolator(new BounceInterpolator());
+        a.setDuration(1000).start();
+
+        a = ObjectAnimator.ofInt(this, "width", 0, 400);
+        a.setInterpolator(new BounceInterpolator());
+        a.setDuration(1000).start();
     }
 
     @Override

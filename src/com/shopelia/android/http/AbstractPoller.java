@@ -87,6 +87,11 @@ public abstract class AbstractPoller<ParamType, ResultType> {
         }
     }
 
+    public AbstractPoller<ParamType, ResultType> setOnPollerEventListener(OnPollerEventListener<ResultType> l) {
+        mOnPollerEventListener = l;
+        return this;
+    }
+
     /**
      * Stop the poller.
      */

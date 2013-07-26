@@ -78,8 +78,9 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
         if (getShowsDialog()) {
             findViewById(R.id.remember_me).setVisibility(View.GONE);
             setCancelable(false);
-        }
+        } else {
 
+        }
     }
 
     @Override

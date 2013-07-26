@@ -93,6 +93,10 @@ public final class Command {
             public static final String $ = V1.$ + "/events";
         }
 
+        public static final class Products {
+            public static final String $ = V1.$ + "/products";
+        }
+
     }
 
 }

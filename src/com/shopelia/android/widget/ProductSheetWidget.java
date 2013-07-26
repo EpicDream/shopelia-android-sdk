@@ -4,14 +4,26 @@ import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
+import com.shopelia.android.http.AbstractPoller.OnPollerEventListener;
+import com.shopelia.android.http.HttpGetPoller;
+import com.shopelia.android.http.HttpGetPoller.HttpGetRequest;
+import com.shopelia.android.http.HttpGetPoller.HttpGetResponse;
 import com.shopelia.android.model.Product;
+import com.shopelia.android.remote.api.Command;
+import com.shopelia.android.remote.api.ShopeliaRestClient;
+import com.shopelia.android.utils.TimeUnits;
+import com.turbomanage.httpclient.ParameterMap;
 
 public class ProductSheetWidget extends FrameLayout {
+
+    private static final long POLLING_FREQUENCY = TimeUnits.SECONDS / 2;
+    private static final long POLLING_EXPIRATION = 10 * TimeUnits.SECONDS;
 
     private View mRootView;
 
@@ -28,6 +40,7 @@ public class ProductSheetWidget extends FrameLayout {
     private FontableTextView mTax;
 
     private Product mProduct;
+    private HttpGetPoller mPoller;
 
     public ProductSheetWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -54,6 +67,18 @@ public class ProductSheetWidget extends FrameLayout {
     }
 
     public ProductSheetWidget setProductInfo(Product product) {
+        mProduct = product;
+        if (product.productPrice == Product.NO_PRICE) {
+            if (mPoller != null) {
+                mPoller.stop();
+            }
+            ShopeliaRestClient client = ShopeliaRestClient.V1(getContext());
+            ParameterMap map = client.newParams();
+            map.add(Product.Api.URL, mProduct.url);
+            mPoller = new HttpGetPoller(client);
+            mPoller.setExpiryDuration(POLLING_EXPIRATION).setRequestFrequency(POLLING_FREQUENCY)
+                    .setParam(new HttpGetRequest(Command.V1.Products.$, map)).setOnPollerEventListener(mOnPollerEventListener).poll();
+        }
         return this;
     }
 
@@ -121,5 +146,19 @@ public class ProductSheetWidget extends FrameLayout {
         };
 
     }
+
+    private OnPollerEventListener<HttpGetResponse> mOnPollerEventListener = new OnPollerEventListener<HttpGetPoller.HttpGetResponse>() {
+
+        @Override
+        public void onTimeExpired() {
+
+        }
+
+        @Override
+        public void onResult(HttpGetResponse previousResult, HttpGetResponse newResult) {
+            Log.d(null, "RESULT " + newResult.response.getBodyAsString());
+        }
+
+    };
 
 }

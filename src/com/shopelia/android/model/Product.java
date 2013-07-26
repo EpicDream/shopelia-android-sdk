@@ -4,9 +4,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.ParcelUtils;
 import com.shopelia.android.utils.Tax;
@@ -20,6 +22,7 @@ public class Product implements BaseModel<Product> {
     }
 
     public static final String IDENTIFIER = Product.class.getName();
+    public static final float NO_PRICE = -1.f;
 
     public String url;
     public String name;
@@ -100,6 +103,30 @@ public class Product implements BaseModel<Product> {
         product.name = object.optString(Api.NAME);
         product.url = object.optString(Api.URL);
         product.image = Uri.parse(object.optString(Api.IMAGE_URL));
+        return product;
+    }
+
+    public static Product inflate(Bundle bundle) {
+        Product product = new Product();
+        product.name = bundle.getString(Shopelia.EXTRA_PRODUCT_TITLE);
+        product.image = bundle.getParcelable(Shopelia.EXTRA_PRODUCT_IMAGE);
+        product.url = bundle.getString(Shopelia.EXTRA_PRODUCT_URL);
+        product.description = bundle.getString(Shopelia.EXTRA_PRODUCT_DESCRIPTION);
+        product.currency = bundle.getParcelable(Shopelia.EXTRA_CURRENCY);
+        product.deliveryPrice = bundle.getFloat(Shopelia.EXTRA_SHIPPING_PRICE, NO_PRICE);
+        product.merchant = bundle.getParcelable(Shopelia.EXTRA_MERCHANT);
+        product.tax = bundle.getParcelable(Shopelia.EXTRA_TAX);
+        product.shippingExtra = bundle.getString(Shopelia.EXTRA_SHIPPING_INFO);
+        product.productPrice = bundle.getFloat(Shopelia.EXTRA_PRICE, NO_PRICE);
+
+        if (product.currency == null) {
+            product.currency = Currency.EUR;
+        }
+
+        if (product.tax == null) {
+            product.tax = Tax.ATI;
+        }
+
         return product;
     }
 

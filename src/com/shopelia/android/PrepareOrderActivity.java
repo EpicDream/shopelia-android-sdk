@@ -40,6 +40,7 @@ import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
+import com.shopelia.android.model.Product;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
@@ -176,7 +177,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
             findViewById(R.id.header).setVisibility(View.GONE);
             ((LinearLayout) findViewById(R.id.main_form)).setGravity(Gravity.TOP);
         } else {
-            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setArguments(getIntent().getExtras());
+            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(Product.inflate(getIntent().getExtras()));
         }
     }
 
@@ -284,16 +285,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     }
 
     private void prepareOrder(Order order) {
-        order.product.productPrice = getIntent().getFloatExtra(EXTRA_PRICE, 0);
-        order.product.deliveryPrice = getIntent().getFloatExtra(EXTRA_SHIPPING_PRICE, 0);
-        order.product.shippingExtra = getIntent().getStringExtra(EXTRA_SHIPPING_INFO);
-        order.product.url = getIntent().getStringExtra(EXTRA_PRODUCT_URL);
-        order.product.name = getIntent().getStringExtra(EXTRA_PRODUCT_TITLE);
-        order.product.image = getIntent().getParcelableExtra(EXTRA_PRODUCT_IMAGE);
-        order.product.merchant = getIntent().getParcelableExtra(EXTRA_MERCHANT);
-        order.product.currency = Currency.EUR;
-        order.product.tax = Tax.ATI;
-        order.product.description = getIntent().getStringExtra(EXTRA_PRODUCT_DESCRIPTION);
+        order.product = Product.inflate(getIntent().getExtras());
 
         Bundle extras = getIntent().getExtras();
         if (extras.containsKey(PrepareOrderActivity.EXTRA_CURRENCY)) {
