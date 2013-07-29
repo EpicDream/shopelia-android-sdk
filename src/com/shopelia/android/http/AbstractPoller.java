@@ -21,10 +21,28 @@ import android.os.Message;
  */
 public abstract class AbstractPoller<ParamType, ResultType> {
 
+    /**
+     * Listener of poller event.
+     * 
+     * @author Pierre Pollastri
+     * @param <ResultType>
+     */
     public interface OnPollerEventListener<ResultType> {
 
+        /**
+         * Called when the polling duration is expired
+         */
         public void onTimeExpired();
 
+        /**
+         * Called each time the poller received a result. You must return true
+         * if you accept the result and you want the polligin to stop or false
+         * otherwise.
+         * 
+         * @param previousResult The last non null result
+         * @param newResult The new non null result
+         * @return true, to stop the polling or false to continue
+         */
         public boolean onResult(ResultType previousResult, ResultType newResult);
 
     }
