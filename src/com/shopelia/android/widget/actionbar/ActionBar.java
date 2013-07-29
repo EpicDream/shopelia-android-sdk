@@ -48,7 +48,7 @@ public class ActionBar {
 
         protected View getView(ActionBar actionBar) {
             if (mView == null) {
-                mView = getView(actionBar.getLayoutInflater(), actionBar.getView().getOptionsContainer());
+                mView = getView(actionBar.getLayoutInflater(), actionBar.getView().getBufferContainer());
             }
             bindView(mView);
             return mView;
@@ -68,6 +68,15 @@ public class ActionBar {
             return mClickable;
         }
 
+        @Override
+        public boolean equals(Object o) {
+            if (o instanceof Item) {
+                Item i = (Item) o;
+                return i.mId == mId;
+            }
+            return super.equals(o);
+        }
+
     }
 
     private Context mContext;
@@ -84,7 +93,7 @@ public class ActionBar {
     public void bindWidget(ActionBarWidget boundWidget) {
         mInflater = LayoutInflater.from(mContext);
         mActionBarWidget = boundWidget;
-        invalidate();
+        invalidate(boundWidget.getOptionsContainer());
     }
 
     public ActionBar addItem(Item item) {
@@ -97,12 +106,7 @@ public class ActionBar {
             mItems.commit();
             return;
         }
-        if (mItems.size() > 0) {
-            mActionBarWidget.swapBuffer();
-            doCommit();
-        } else {
-            doCommit();
-        }
+        doCommit();
     }
 
     public void clear() {
@@ -121,8 +125,7 @@ public class ActionBar {
         return mInflater;
     }
 
-    public void invalidate() {
-        ViewGroup container = mActionBarWidget.getOptionsContainer();
+    public void invalidate(ViewGroup container) {
         container.removeAllViews();
         for (Item item : mItems) {
             View view = item.getView(this);
@@ -153,8 +156,10 @@ public class ActionBar {
     }
 
     private void doCommit() {
-        mItems.commit();
-        invalidate();
+        if (mItems.commit()) {
+            invalidate(mActionBarWidget.getBufferContainer());
+            mActionBarWidget.swap();
+        }
     }
 
     public void hide() {

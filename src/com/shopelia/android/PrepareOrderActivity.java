@@ -45,6 +45,7 @@ import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.ApiHandler.ErrorInflater;
+import com.shopelia.android.remote.api.ProductAPI;
 import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
@@ -128,6 +129,8 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     private SignUpFragment mSignUpFragment = new SignUpFragment();
     private ScrollView mScrollView;
 
+    private Product mProduct;
+
     private int mSignInViewCount = 0;
 
     private boolean mCardScanned = false;
@@ -177,7 +180,22 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
             findViewById(R.id.header).setVisibility(View.GONE);
             ((LinearLayout) findViewById(R.id.main_form)).setGravity(Gravity.TOP);
         } else {
-            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(Product.inflate(getIntent().getExtras()));
+            Product product = Product.inflate(getIntent().getExtras());
+            if (product.isValid()) {
+                mProduct = product;
+                ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(product);
+            } else {
+                new ProductAPI(this, new CallbackAdapter() {
+                    @Override
+                    public void onProductUpdate(Product product) {
+                        super.onProductUpdate(product);
+                        if (product.isValid()) {
+                            mProduct = product;
+                            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(product);
+                        }
+                    }
+                }).getProduct(product);
+            }
         }
     }
 
@@ -285,7 +303,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     }
 
     private void prepareOrder(Order order) {
-        order.product = Product.inflate(getIntent().getExtras());
+        order.product = mProduct != null ? mProduct : Product.inflate(getIntent().getExtras());
 
         Bundle extras = getIntent().getExtras();
         if (extras.containsKey(PrepareOrderActivity.EXTRA_CURRENCY)) {

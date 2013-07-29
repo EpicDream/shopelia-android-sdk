@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <integer name="shopelia_animation_time">1000</integer>
-    
+    <integer name="shopelia_animation_time">600</integer>
+    <integer name="shopelia_animation_time_short">200</integer>
+
 </resources>

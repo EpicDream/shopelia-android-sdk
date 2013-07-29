@@ -30,11 +30,34 @@ public class StateList<E> implements List<E> {
         }
     }
 
-    public void commit() {
+    public boolean hasChange() {
+        if (mStaged.size() != mCommitted.size()) {
+            return true;
+        }
+        for (E i1 : mStaged) {
+            boolean found = false;
+            for (E i2 : mCommitted) {
+                if (i1.equals(i2)) {
+                    found = true;
+                    break;
+                }
+                if (!found) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public boolean commit() {
+        if (!hasChange()) {
+            return false;
+        }
         mCommitted.clear();
         for (E item : mStaged) {
             mCommitted.add(item);
         }
+        return true;
     }
 
     @Override

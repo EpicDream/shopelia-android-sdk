@@ -1,15 +1,22 @@
 package com.shopelia.android.widget;
 
 import android.content.Context;
+import android.graphics.Rect;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
 import com.shopelia.android.model.Product;
+import com.shopelia.android.view.animation.ResizeAnimation;
+import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedListener;
+import com.shopelia.android.view.animation.RotationTransition;
 
 public class ProductSheetWidget extends FrameLayout {
 
@@ -26,8 +33,10 @@ public class ProductSheetWidget extends FrameLayout {
     private AsyncImageView mVendorLogo;
     private FontableTextView mProductPrice;
     private FontableTextView mTax;
-
     private Product mProduct;
+    private View mLoading;
+    private View mContent;
+    private View mSwitcher;
 
     public ProductSheetWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -51,21 +60,38 @@ public class ProductSheetWidget extends FrameLayout {
         mVendorLogo = (AsyncImageView) findViewById(R.id.product_vendor_icon);
         mVendorText = (FontableTextView) findViewById(R.id.product_vendor_text);
         mTax = (FontableTextView) findViewById(R.id.product_tax);
+        mLoading = findViewById(R.id.loading);
+        mContent = findViewById(R.id.content);
+        mSwitcher = findViewById(R.id.switcher);
     }
 
     public ProductSheetWidget setProductInfo(Product product) {
+        if (mProduct == null && product != null && false) {
+
+        } else if (mProduct != null && product == null) {
+            mLoading.setVisibility(View.VISIBLE);
+            mContent.setVisibility(View.INVISIBLE);
+        }
         mProduct = product;
+        refreshView();
         return this;
     }
 
     public void refreshView() {
+        refreshView(false);
+    }
+
+    public void refreshView(boolean animate) {
         if (mProduct == null || !mProduct.isValid()) {
 
         } else {
+
             mProductImage.setImageURI(mProduct.image);
             mProductName.setText(mProduct.name);
             mProductPrice.setText(mProduct.currency.format(mProduct.productPrice));
             mProductShippingInfo.setText(mProduct.shippingExtra);
+            int visibility = TextUtils.isEmpty(mProduct.shippingExtra) ? View.GONE : View.VISIBLE;
+            mProductShippingInfo.setVisibility(visibility);
             mShippingFees.setText(mProduct.currency.format(mProduct.deliveryPrice));
             mTax.setText(getString(mProduct.tax.getResId()));
             mVendorLogo.setUrl(mProduct.merchant.logo);
@@ -73,6 +99,34 @@ public class ProductSheetWidget extends FrameLayout {
             if (mProduct.deliveryPrice == 0.0f) {
                 mShippingFees.setText(R.string.shopelia_product_free_shipping);
             }
+            final ResizeAnimation anim = new ResizeAnimation(mSwitcher, mSwitcher.getLayoutParams().width,
+                    mSwitcher.getLayoutParams().height);
+            anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time_short));
+            anim.setAnimationListener(new AnimationListener() {
+
+                @Override
+                public void onAnimationStart(Animation arg0) {
+
+                }
+
+                @Override
+                public void onAnimationRepeat(Animation arg0) {
+
+                }
+
+                @Override
+                public void onAnimationEnd(Animation arg0) {
+                    new RotationTransition(mContent, mLoading, "rotationY").setDuration(
+                            getResources().getInteger(R.integer.shopelia_animation_time)).start();
+                }
+            });
+            anim.computeSize(new OnViewRectComputedListener() {
+
+                @Override
+                public void onViewRectComputed(View victim, Rect from, Rect to) {
+                    mSwitcher.startAnimation(anim);
+                }
+            });
         }
     }
 

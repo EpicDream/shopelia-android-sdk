@@ -1,15 +1,14 @@
 package com.shopelia.android.widget.actionbar;
 
 import android.content.Context;
-import android.os.Handler;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Interpolator;
-import android.view.animation.LinearInterpolator;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
+import com.shopelia.android.view.animation.RotationTransition;
 
 public class ActionBarWidget extends FrameLayout {
 
@@ -41,89 +40,18 @@ public class ActionBarWidget extends FrameLayout {
         mOptionsContainer.setVisibility(VISIBLE);
     }
 
-    public void swap(Transition transition) {
-        if (transition == null) {
-            throw new NullPointerException("Transition cannot be null at this point");
+    boolean d = false;
+
+    public void swap() {
+        ViewGroup tmp = mOptionsContainer;
+        mOptionsContainer = mBufferContainer;
+        mBufferContainer = tmp;
+        if (mBufferContainer.getChildCount() == 0) {
+            mOptionsContainer.setVisibility(View.VISIBLE);
+            mBufferContainer.setVisibility(View.INVISIBLE);
+        } else {
+            new RotationTransition(mOptionsContainer, mBufferContainer, "rotationX").setDuration(
+                    getResources().getInteger(R.integer.shopelia_animation_time_short)).start();
         }
-        transition.start(this);
     }
-
-    public static abstract class Transition {
-
-        private static final long INVALID_DURATION = 0;
-
-        private ActionBarWidget mView;
-        private long mDuration = INVALID_DURATION;
-        private long mStartTime = INVALID_DURATION;
-        private long framerate = 1000 / 40;
-        private Interpolator mInterpolator = new LinearInterpolator();
-        private Handler mHandler;
-
-        public void start(ActionBarWidget actionBarWidget) {
-            mView = actionBarWidget;
-            if (mDuration == INVALID_DURATION) {
-                mDuration = getContext().getResources().getInteger(android.R.integer.config_mediumAnimTime);
-            }
-            mStartTime = INVALID_DURATION;
-            onTransitionStart();
-            mAnimationRunnable.run();
-        }
-
-        public void setDuration(long duration) {
-            mDuration = duration;
-        }
-
-        public long getDuration() {
-            return mDuration;
-        }
-
-        public void setInterpolator(Interpolator interpolator) {
-            mInterpolator = interpolator;
-            if (mInterpolator == null) {
-                mInterpolator = new LinearInterpolator();
-            }
-        }
-
-        public Interpolator getInterpolator() {
-            return mInterpolator;
-        }
-
-        public void onTransitionStart() {
-
-        }
-
-        public void onTransitionEnd() {
-
-        }
-
-        public abstract void apply(long currentTime);
-
-        public ActionBarWidget getView() {
-            return mView;
-        }
-
-        public Context getContext() {
-            return mView.getContext();
-        }
-
-        private Runnable mAnimationRunnable = new Runnable() {
-
-            @Override
-            public void run() {
-                if (mStartTime == INVALID_DURATION) {
-                    mStartTime = System.currentTimeMillis();
-                }
-                long currentTime = System.currentTimeMillis() - mStartTime;
-                apply(currentTime);
-                if (currentTime >= getDuration()) {
-                    apply(getDuration());
-                    onTransitionEnd();
-                } else {
-                    mHandler.postDelayed(this, framerate);
-                }
-            }
-        };
-
-    }
-
 }
