@@ -143,4 +143,10 @@ public class PaymentCard implements BaseModel<PaymentCard> {
         return id;
     }
 
+    @Override
+    public boolean isValid() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

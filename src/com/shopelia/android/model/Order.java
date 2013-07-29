@@ -136,4 +136,10 @@ public class Order implements BaseModel<Order> {
         return uuid != NO_UUID ? uuid.hashCode() : NO_ID;
     }
 
+    @Override
+    public boolean isValid() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

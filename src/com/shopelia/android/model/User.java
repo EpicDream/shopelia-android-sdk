@@ -236,4 +236,10 @@ public class User implements BaseModel<User> {
         return id;
     }
 
+    @Override
+    public boolean isValid() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }

@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.utils.Currency;
@@ -193,6 +194,11 @@ public class Product implements BaseModel<Product> {
     @Override
     public long getId() {
         return url.hashCode();
+    }
+
+    @Override
+    public boolean isValid() {
+        return !TextUtils.isEmpty(name) && deliveryPrice != NO_PRICE && productPrice != NO_PRICE && merchant != null;
     }
 
 }

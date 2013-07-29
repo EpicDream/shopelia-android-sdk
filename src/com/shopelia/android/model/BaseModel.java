@@ -16,4 +16,6 @@ public interface BaseModel<T> extends Parcelable, JsonData {
 
     public long getId();
 
+    public boolean isValid();
+
 }

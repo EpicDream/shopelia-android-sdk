@@ -168,17 +168,19 @@ public class ProductSheetWidget extends FrameLayout {
         }
 
         @Override
-        public void onResult(HttpGetResponse previousResult, HttpGetResponse newResult) {
+        public boolean onResult(HttpGetResponse previousResult, HttpGetResponse newResult) {
             if (newResult.exception != null) {
                 newResult.exception.printStackTrace();
             } else {
                 try {
                     mProduct = Product.inflate(new JSONObject(newResult.response.getBodyAsString()));
                     refreshView();
+                    return true;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
+            return false;
         }
 
     };

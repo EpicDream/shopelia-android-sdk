@@ -124,4 +124,10 @@ public class Merchant implements BaseModel<Merchant> {
         return id;
     }
 
+    @Override
+    public boolean isValid() {
+        // TODO Auto-generated method stub
+        return false;
+    }
+
 }
