@@ -1,8 +1,5 @@
 package com.shopelia.android.widget;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -12,20 +9,9 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
-import com.shopelia.android.http.AbstractPoller.OnPollerEventListener;
-import com.shopelia.android.http.HttpGetPoller;
-import com.shopelia.android.http.HttpGetPoller.HttpGetRequest;
-import com.shopelia.android.http.HttpGetPoller.HttpGetResponse;
 import com.shopelia.android.model.Product;
-import com.shopelia.android.remote.api.Command;
-import com.shopelia.android.remote.api.ShopeliaRestClient;
-import com.shopelia.android.utils.TimeUnits;
-import com.turbomanage.httpclient.ParameterMap;
 
 public class ProductSheetWidget extends FrameLayout {
-
-    private static final long POLLING_FREQUENCY = TimeUnits.SECONDS / 2;
-    private static final long POLLING_EXPIRATION = 10 * TimeUnits.SECONDS;
 
     private View mRootView;
 
@@ -42,7 +28,6 @@ public class ProductSheetWidget extends FrameLayout {
     private FontableTextView mTax;
 
     private Product mProduct;
-    private HttpGetPoller mPoller;
 
     public ProductSheetWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -70,22 +55,11 @@ public class ProductSheetWidget extends FrameLayout {
 
     public ProductSheetWidget setProductInfo(Product product) {
         mProduct = product;
-        if (product.productPrice == Product.NO_PRICE) {
-            if (mPoller != null) {
-                mPoller.stop();
-            }
-            ShopeliaRestClient client = ShopeliaRestClient.V1(getContext());
-            ParameterMap map = client.newParams();
-            map.add(Product.Api.URL, mProduct.url);
-            mPoller = new HttpGetPoller(client);
-            mPoller.setExpiryDuration(POLLING_EXPIRATION).setRequestFrequency(POLLING_FREQUENCY)
-                    .setParam(new HttpGetRequest(Command.V1.Products.$, map)).setOnPollerEventListener(mOnPollerEventListener).poll();
-        }
         return this;
     }
 
     public void refreshView() {
-        if (mProduct == null) {
+        if (mProduct == null || !mProduct.isValid()) {
 
         } else {
             mProductImage.setImageURI(mProduct.image);
@@ -96,6 +70,9 @@ public class ProductSheetWidget extends FrameLayout {
             mTax.setText(getString(mProduct.tax.getResId()));
             mVendorLogo.setUrl(mProduct.merchant.logo);
             mProductDescription.setVisibility(View.GONE);
+            if (mProduct.deliveryPrice == 0.0f) {
+                mShippingFees.setText(R.string.shopelia_product_free_shipping);
+            }
         }
     }
 
@@ -159,30 +136,4 @@ public class ProductSheetWidget extends FrameLayout {
         };
 
     }
-
-    private OnPollerEventListener<HttpGetResponse> mOnPollerEventListener = new OnPollerEventListener<HttpGetPoller.HttpGetResponse>() {
-
-        @Override
-        public void onTimeExpired() {
-
-        }
-
-        @Override
-        public boolean onResult(HttpGetResponse previousResult, HttpGetResponse newResult) {
-            if (newResult.exception != null) {
-                newResult.exception.printStackTrace();
-            } else {
-                try {
-                    mProduct = Product.inflate(new JSONObject(newResult.response.getBodyAsString()));
-                    refreshView();
-                    return true;
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-            return false;
-        }
-
-    };
-
 }

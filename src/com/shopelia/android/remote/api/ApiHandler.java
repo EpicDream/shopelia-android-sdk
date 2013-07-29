@@ -11,6 +11,7 @@ import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.PaymentCard;
+import com.shopelia.android.model.Product;
 import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -54,6 +55,10 @@ public class ApiHandler {
         public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message);
 
         public void onAuthTokenRevoked();
+
+        public void onProductUpdate(Product product);
+
+        public void onProductNotAvailable(Product product);
 
     }
 
@@ -153,6 +158,16 @@ public class ApiHandler {
         public void onInvalidOrderRequest(String errorMessage) {
 
         }
+
+        @Override
+        public void onProductUpdate(Product product) {
+
+        }
+
+        @Override
+        public void onProductNotAvailable(Product product) {
+
+        }
     }
 
     public static class ErrorInflater {
@@ -204,6 +219,7 @@ public class ApiHandler {
     public static final int STEP_SIGN_IN = 8;
     public static final int STEP_ADDRESS = 9;
     public static final int STEP_VERIFY = 10;
+    public static final int STEP_PRODUCT = 11;
 
     public static final int STATE_RUNNING = 0;
     public static final int STATE_PAUSED = 1;

@@ -11,6 +11,7 @@
         android:background="@drawable/shopelia_title_bar_background"
         android:layout_height="@dimen/shopelia_title_bar_height" />
 
+
     <FrameLayout
         android:id="@+id/host_container"
         android:layout_width="match_parent"

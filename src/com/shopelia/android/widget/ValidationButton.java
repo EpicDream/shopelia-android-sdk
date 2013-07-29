@@ -3,8 +3,8 @@ package com.shopelia.android.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -14,7 +14,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.shopelia.android.R;
-import com.shopelia.android.graphics.ColorDrawableAnimation;
 
 @SuppressLint("DefaultLocale")
 public class ValidationButton extends FrameLayout {
@@ -61,12 +60,18 @@ public class ValidationButton extends FrameLayout {
                 ta.recycle();
             }
         }
-        Drawable d = getChildAt(0).getBackground();
-        Color.rgb(213, 213, 213);
-        ColorDrawableAnimation anim = new ColorDrawableAnimation(d, Color.WHITE);
-        anim.setDuration(10000);
-        anim.start(Color.rgb(45, 159, 53), Color.rgb(159, 45, 53));
-        getChildAt(0).setBackground(d);
+    }
+
+    @SuppressWarnings("deprecation")
+    @SuppressLint("NewApi")
+    public void setCompatBackground(Drawable background) {
+        if (getChildCount() > 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                getChildAt(0).setBackground(background);
+            } else {
+                getChildAt(0).setBackgroundDrawable(background);
+            }
+        }
     }
 
     public void setText(CharSequence text) {

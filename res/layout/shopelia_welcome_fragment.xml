@@ -76,7 +76,7 @@
 
                 <com.shopelia.android.widget.ValidationButton
                     android:id="@+id/continue_with_shopelia"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/shopelia_margin_normal"
                     android:clickable="true"
