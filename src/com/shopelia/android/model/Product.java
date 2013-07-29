@@ -1,5 +1,8 @@
 package com.shopelia.android.model;
 
+import java.util.ArrayList;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -19,10 +22,11 @@ public class Product implements BaseModel<Product> {
         String NAME = "name";
         String URL = "url";
         String IMAGE_URL = "image_url";
-        String EXPECTED_PRODUCT_PRICE = "expected_price_product";
-        String EXPECTED_SHIPPING_PRICE = "expected_price_shipping";
+        String EXPECTED_PRODUCT_PRICE = "price";
+        String EXPECTED_SHIPPING_PRICE = "price_shipping";
         String SHIPPING_EXTRAS = "shipping_info";
         String MERCHANT = "merchant";
+        String VERSIONS = "versions";
     }
 
     public static final String IDENTIFIER = Product.class.getName();
@@ -44,8 +48,15 @@ public class Product implements BaseModel<Product> {
 
     public String shippingExtra;
 
+    public ArrayList<Product> versions = new ArrayList<Product>();
+
     public Product() {
 
+    }
+
+    public Product(Product cpy) {
+        merge(cpy);
+        ensureDefaultValues();
     }
 
     private Product(Parcel source) {
@@ -59,6 +70,7 @@ public class Product implements BaseModel<Product> {
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
+
     }
 
     @Override
@@ -102,19 +114,28 @@ public class Product implements BaseModel<Product> {
         }
     };
 
-    public static Product inflate(JSONObject object) throws JSONException {
-        Product product = new Product();
-        product.name = object.optString(Api.NAME);
-        product.url = object.optString(Api.URL);
-        product.image = Uri.parse(object.optString(Api.IMAGE_URL));
+    public Product inflateSelf(JSONObject object) throws JSONException {
+        name = object.optString(Api.NAME);
+        url = object.optString(Api.URL);
+        image = Uri.parse(object.optString(Api.IMAGE_URL));
         if (object.has(Api.MERCHANT)) {
-            product.merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
+            merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
         }
-        product.deliveryPrice = (float) object.optDouble(Api.EXPECTED_SHIPPING_PRICE);
-        product.productPrice = (float) object.optDouble(Api.EXPECTED_PRODUCT_PRICE);
-        product.shippingExtra = object.optString(Api.SHIPPING_EXTRAS);
-        product.ensureDefaultValues();
-        return product;
+        deliveryPrice = (float) object.optDouble(Api.EXPECTED_SHIPPING_PRICE);
+        productPrice = (float) object.optDouble(Api.EXPECTED_PRODUCT_PRICE);
+        shippingExtra = object.optString(Api.SHIPPING_EXTRAS);
+        if (object.has(Api.VERSIONS)) {
+            versions = inflate(this, object.getJSONArray(Api.VERSIONS));
+            if (versions.size() > 0) {
+                merge(versions.get(0));
+            }
+        }
+        ensureDefaultValues();
+        return this;
+    }
+
+    public static Product inflate(JSONObject object) throws JSONException {
+        return new Product().inflateSelf(object);
     }
 
     public static Product inflate(Bundle bundle) {
@@ -133,6 +154,15 @@ public class Product implements BaseModel<Product> {
         return product;
     }
 
+    public static ArrayList<Product> inflate(Product base, JSONArray array) throws JSONException {
+        final int size = array.length();
+        ArrayList<Product> products = new ArrayList<Product>(size);
+        for (int index = 0; index < size; index++) {
+            products.add(new Product(base).inflateSelf(array.getJSONObject(index)));
+        }
+        return products;
+    }
+
     protected void ensureDefaultValues() {
         if (currency == null) {
             currency = Currency.EUR;
@@ -145,8 +175,19 @@ public class Product implements BaseModel<Product> {
     }
 
     @Override
-    public void merge(Product item) {
-        // TODO Auto-generated method stub
+    public void merge(Product cpy) {
+        if (cpy != null) {
+            url = cpy.url;
+            name = cpy.name;
+            description = cpy.description;
+            image = cpy.image;
+            merchant = cpy.merchant;
+            tax = cpy.tax;
+            currency = cpy.currency;
+            productPrice = cpy.productPrice;
+            deliveryPrice = cpy.deliveryPrice;
+            shippingExtra = cpy.shippingExtra;
+        }
     }
 
     @Override
