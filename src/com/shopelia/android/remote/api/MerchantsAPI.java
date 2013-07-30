@@ -71,7 +71,7 @@ public class MerchantsAPI extends ApiHandler {
         return out;
     }
 
-    public void update() {
+    public boolean update() {
         if (canFetchMerchants()) {
             ShopeliaRestClient.V1(getContext()).get(Command.V1.Merchants.$, new ParameterMap(), new AsyncCallback() {
 
@@ -102,9 +102,11 @@ public class MerchantsAPI extends ApiHandler {
                 }
 
             });
+            return false;
         } else if (hasCallback()) {
             getCallback().onRetrieveMerchants(mMerchants);
         }
+        return true;
     }
 
     private void loadMerchantsFromCache() {

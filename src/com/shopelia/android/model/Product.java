@@ -28,6 +28,8 @@ public class Product implements BaseModel<Product> {
         String SHIPPING_EXTRAS = "shipping_info";
         String MERCHANT = "merchant";
         String VERSIONS = "versions";
+        String DOWNLOAD_TIME = "download_at";
+        String JSON = "json";
     }
 
     public static final String IDENTIFIER = Product.class.getName();
@@ -51,6 +53,9 @@ public class Product implements BaseModel<Product> {
 
     public ArrayList<Product> versions = new ArrayList<Product>();
 
+    public long download_at = 0;
+    public JSONObject json;
+
     public Product() {
 
     }
@@ -71,7 +76,15 @@ public class Product implements BaseModel<Product> {
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
+        download_at = source.readLong();
+        String j = source.readString();
+        if (j != null) {
+            try {
+                json = new JSONObject(j);
+            } catch (JSONException e) {
 
+            }
+        }
     }
 
     @Override
@@ -80,6 +93,10 @@ public class Product implements BaseModel<Product> {
         json.put(Api.NAME, name);
         json.put(Api.URL, url);
         json.put(Api.IMAGE_URL, image.toString());
+        json.put(Api.DOWNLOAD_TIME, download_at);
+        if (json != null) {
+            json.put(Api.JSON, json);
+        }
         return json;
     }
 
@@ -100,6 +117,9 @@ public class Product implements BaseModel<Product> {
         ParcelUtils.writeParcelable(dest, merchant, flags);
         ParcelUtils.writeParcelable(dest, tax, flags);
         ParcelUtils.writeParcelable(dest, currency, flags);
+        dest.writeLong(download_at);
+        String j = json != null ? json.toString() : null;
+        dest.writeString(j);
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Creator<Product>() {
@@ -131,6 +151,13 @@ public class Product implements BaseModel<Product> {
                 merge(versions.get(0));
             }
         }
+        if (object.has(Api.JSON)) {
+            try {
+                json = object.getJSONObject(Api.JSON);
+            } catch (JSONException e) {
+
+            }
+        }
         ensureDefaultValues();
         return this;
     }
@@ -153,6 +180,15 @@ public class Product implements BaseModel<Product> {
         product.productPrice = bundle.getFloat(Shopelia.EXTRA_PRICE, NO_PRICE);
         product.ensureDefaultValues();
         return product;
+    }
+
+    public static ArrayList<Product> inflate(JSONArray a) throws JSONException {
+        final int size = a.length();
+        ArrayList<Product> products = new ArrayList<Product>(size);
+        for (int index = 0; index < size; index++) {
+            products.add(Product.inflate(a.getJSONObject(index)));
+        }
+        return products;
     }
 
     public static ArrayList<Product> inflate(Product base, JSONArray array) throws JSONException {
@@ -188,6 +224,7 @@ public class Product implements BaseModel<Product> {
             productPrice = cpy.productPrice;
             deliveryPrice = cpy.deliveryPrice;
             shippingExtra = cpy.shippingExtra;
+            json = cpy.json;
         }
     }
 
