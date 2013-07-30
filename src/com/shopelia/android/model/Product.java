@@ -122,8 +122,8 @@ public class Product implements BaseModel<Product> {
         if (object.has(Api.MERCHANT)) {
             merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
         }
-        deliveryPrice = (float) object.optDouble(Api.EXPECTED_SHIPPING_PRICE, 12);
-        productPrice = (float) object.optDouble(Api.EXPECTED_PRODUCT_PRICE, 12);
+        deliveryPrice = (float) object.optDouble(Api.EXPECTED_SHIPPING_PRICE, NO_PRICE);
+        productPrice = (float) object.optDouble(Api.EXPECTED_PRODUCT_PRICE, NO_PRICE);
         shippingExtra = object.optString(Api.SHIPPING_EXTRAS);
         if (object.has(Api.VERSIONS)) {
             versions = inflate(this, object.getJSONArray(Api.VERSIONS));
