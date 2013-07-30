@@ -56,7 +56,7 @@ public class ApiHandler {
 
         public void onAuthTokenRevoked();
 
-        public void onProductUpdate(Product product);
+        public void onProductUpdate(Product product, boolean fromNetwork);
 
         public void onProductNotAvailable(Product product);
 
@@ -160,12 +160,12 @@ public class ApiHandler {
         }
 
         @Override
-        public void onProductUpdate(Product product) {
+        public void onProductNotAvailable(Product product) {
 
         }
 
         @Override
-        public void onProductNotAvailable(Product product) {
+        public void onProductUpdate(Product product, boolean fromNetwork) {
 
         }
     }

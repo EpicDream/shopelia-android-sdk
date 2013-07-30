@@ -187,11 +187,10 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
             } else {
                 new ProductAPI(this, new CallbackAdapter() {
                     @Override
-                    public void onProductUpdate(Product product) {
-                        super.onProductUpdate(product);
+                    public void onProductUpdate(Product product, boolean fromNetwork) {
                         if (product.isValid()) {
                             mProduct = product;
-                            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(product);
+                            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(product, fromNetwork);
                         }
                     }
                 }).getProduct(product);

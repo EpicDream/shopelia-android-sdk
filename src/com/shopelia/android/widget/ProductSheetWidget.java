@@ -67,14 +67,12 @@ public class ProductSheetWidget extends FrameLayout {
     }
 
     public ProductSheetWidget setProductInfo(Product product) {
-        if (mProduct == null && product != null && false) {
+        return setProductInfo(product, true);
+    }
 
-        } else if (mProduct != null && product == null) {
-            mLoading.setVisibility(View.VISIBLE);
-            mContent.setVisibility(View.INVISIBLE);
-        }
+    public ProductSheetWidget setProductInfo(Product product, boolean animate) {
         mProduct = product;
-        refreshView();
+        refreshView(animate);
         return this;
     }
 
@@ -84,7 +82,8 @@ public class ProductSheetWidget extends FrameLayout {
 
     public void refreshView(boolean animate) {
         if (mProduct == null || !mProduct.isValid()) {
-
+            mLoading.setVisibility(View.VISIBLE);
+            mContent.setVisibility(View.INVISIBLE);
         } else {
 
             mProductImage.setImageURI(mProduct.image);
@@ -101,35 +100,43 @@ public class ProductSheetWidget extends FrameLayout {
             } else {
                 mShippingFees.setText(getString(R.string.shopelia_product_shipping_fees, mProduct.currency.format(mProduct.deliveryPrice)));
             }
-            final ResizeAnimation anim = new ResizeAnimation(mSwitcher, mSwitcher.getLayoutParams().width,
-                    mSwitcher.getLayoutParams().height);
-            anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time_short));
-            anim.setAnimationListener(new AnimationListener() {
-
-                @Override
-                public void onAnimationStart(Animation arg0) {
-
-                }
-
-                @Override
-                public void onAnimationRepeat(Animation arg0) {
-
-                }
-
-                @Override
-                public void onAnimationEnd(Animation arg0) {
-                    new CrossFadingTransition(mContent, mLoading, true).setDuration(
-                            getResources().getInteger(R.integer.shopelia_animation_time)).start();
-                }
-            });
-            anim.computeSize(new OnViewRectComputedListener() {
-
-                @Override
-                public void onViewRectComputed(View victim, Rect from, Rect to) {
-                    mSwitcher.startAnimation(anim);
-                }
-            });
+            if (animate) {
+                switchViews();
+            } else {
+                mContent.setVisibility(View.VISIBLE);
+                mLoading.setVisibility(View.INVISIBLE);
+            }
         }
+    }
+
+    private void switchViews() {
+        final ResizeAnimation anim = new ResizeAnimation(mSwitcher, mSwitcher.getLayoutParams().width, mSwitcher.getLayoutParams().height);
+        anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time_short));
+        anim.setAnimationListener(new AnimationListener() {
+
+            @Override
+            public void onAnimationStart(Animation arg0) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation arg0) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation arg0) {
+                new CrossFadingTransition(mContent, mLoading, true).setDuration(
+                        getResources().getInteger(R.integer.shopelia_animation_time)).start();
+            }
+        });
+        anim.computeSize(new OnViewRectComputedListener() {
+
+            @Override
+            public void onViewRectComputed(View victim, Rect from, Rect to) {
+                mSwitcher.startAnimation(anim);
+            }
+        });
     }
 
     public String getString(int id) {

@@ -157,7 +157,10 @@ public class Product implements BaseModel<Product> {
             } catch (JSONException e) {
 
             }
+        } else {
+            json = object;
         }
+        download_at = object.optLong(Api.DOWNLOAD_TIME, 0L);
         ensureDefaultValues();
         return this;
     }

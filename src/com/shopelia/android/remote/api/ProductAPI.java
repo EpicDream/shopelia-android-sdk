@@ -31,7 +31,7 @@ public class ProductAPI extends ApiHandler {
     private static final String PRIVATE_PREFERENCE = "Shopelia$ProductAPI.PrivatePreference";
     private static final String PREFS_PRODUCT = "product:products";
 
-    private static final long KEEP_ALIVE = 1 * TimeUnits.HOURS;
+    private static final long KEEP_ALIVE = 20 * TimeUnits.SECONDS;
 
     private static final long POLLING_FREQUENCY = TimeUnits.SECONDS / 2;
     private static final long POLLING_EXPIRATION = 10 * TimeUnits.SECONDS;
@@ -53,7 +53,7 @@ public class ProductAPI extends ApiHandler {
         if (fromCache != null) {
             mProduct = fromCache;
         }
-        if (!product.isValid()) {
+        if (!mProduct.isValid()) {
             if (mPoller != null) {
                 mPoller.stop();
             }
@@ -66,7 +66,7 @@ public class ProductAPI extends ApiHandler {
             return false;
         } else {
             if (hasCallback()) {
-                getCallback().onProductUpdate(mProduct);
+                getCallback().onProductUpdate(mProduct, false);
             }
         }
         return true;
@@ -93,12 +93,14 @@ public class ProductAPI extends ApiHandler {
                 }
             } else {
                 try {
+                    Product product = mProduct;
                     mProduct = Product.inflate(new JSONObject(newResult.response.getBodyAsString()));
+                    mProduct.url = product.url;
                     mProduct.download_at = System.currentTimeMillis();
                     mProducts.add(mProduct);
-                    saveMerchants(mProducts);
+                    saveProducts(mProducts);
                     if (hasCallback()) {
-                        getCallback().onProductUpdate(mProduct);
+                        getCallback().onProductUpdate(mProduct, true);
                     }
                     return mProduct.isValid();
                 } catch (JSONException e) {
@@ -113,12 +115,20 @@ public class ProductAPI extends ApiHandler {
     private Product findProductByUrl(String url) {
         for (Product product : mProducts) {
             if (product.url.equals(url)) {
-                if (product.download_at + KEEP_ALIVE > System.currentTimeMillis()) {
+                Product out = null;
+                try {
+                    if (product.json != null) {
+                        out = Product.inflate(product.json);
+                    }
+                } catch (JSONException e) {
+
+                }
+                if (product.download_at + KEEP_ALIVE < System.currentTimeMillis() || out == null || !out.isValid()) {
                     mProducts.remove(product);
-                    saveMerchants(mProducts);
+                    saveProducts(mProducts);
                     return null;
                 }
-                return product;
+                return out;
             }
         }
         return null;
@@ -137,7 +147,7 @@ public class ProductAPI extends ApiHandler {
         }
     }
 
-    private void saveMerchants(List<Product> products) {
+    private void saveProducts(List<Product> products) {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(PREFS_PRODUCT, JsonUtils.toJson(products).toString());
         editor.commit();
