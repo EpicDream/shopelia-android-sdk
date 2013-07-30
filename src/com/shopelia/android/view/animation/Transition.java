@@ -12,7 +12,7 @@ public abstract class Transition {
         public void onTransitionStart(View in, View out);
     }
 
-    public class OnTransitionListenerAdapter implements OnTransitionListener {
+    public static class OnTransitionListenerAdapter implements OnTransitionListener {
 
         @Override
         public void onTransitionHalfWay(View in, View out) {
