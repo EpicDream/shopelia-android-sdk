@@ -181,20 +181,15 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
             ((LinearLayout) findViewById(R.id.main_form)).setGravity(Gravity.TOP);
         } else {
             Product product = Product.inflate(getIntent().getExtras());
-            if (product.isValid()) {
-                mProduct = product;
-                ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(product);
-            } else {
-                new ProductAPI(this, new CallbackAdapter() {
-                    @Override
-                    public void onProductUpdate(Product product, boolean fromNetwork) {
-                        if (product.isValid()) {
-                            mProduct = product;
-                            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(product, fromNetwork);
-                        }
+            new ProductAPI(this, new CallbackAdapter() {
+                @Override
+                public void onProductUpdate(Product product, boolean fromNetwork) {
+                    if (product.isValid()) {
+                        mProduct = product;
+                        ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(product, fromNetwork);
                     }
-                }).getProduct(product);
-            }
+                }
+            }).getProduct(product);
         }
     }
 
