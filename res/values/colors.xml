@@ -22,4 +22,8 @@
     <color name="shopelia_holo_blue_light_translucent_30">#4d33b5e5</color>
 	<color name="shopelia_grey">#999999</color>
     
+	<color name="shopelia_validation_green">#2d9f35</color>
+	<color name="shopelia_validation_grey">#F5F5F5</color>
+	<color name="shopelia_validation_textColor_enabled">@color/shopelia_white</color>
+	<color name="shopelia_validation_textColor_disabled">@color/shopelia_grey</color>
 </resources>

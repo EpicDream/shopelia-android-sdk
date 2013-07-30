@@ -230,6 +230,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         setupProductUi();
         setupPriceUi();
         setupUserUi();
+        findViewById(R.id.confirm).setEnabled(getOrder().product.isValid());
     }
 
     private void setupProductUi() {
