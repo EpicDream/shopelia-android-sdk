@@ -50,7 +50,7 @@ public class ProductAPI extends ApiHandler {
     public boolean getProduct(Product product) {
         mProduct = product;
         Product fromCache = findProductByUrl(product.url);
-        if (fromCache != null) {
+        if (fromCache != null && !product.isValid()) {
             mProduct = fromCache;
         }
         if (!mProduct.isValid()) {
