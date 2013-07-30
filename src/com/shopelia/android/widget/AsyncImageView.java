@@ -48,12 +48,22 @@ import com.shopelia.android.image.ImageRequest;
  */
 public class AsyncImageView extends ImageView {
 
+    public static final int ALIGN_LEFT = 0x1;
+    public static final int ALIGN_RIGHT = 0x1 << 1;
+    public static final int ALIGN_CENTER_VERTICAL = 0x1 << 2;
+    public static final int ALIGN_TOP = 0x1 << 3;
+    public static final int ALIGN_BOTTOM = 0x1 << 4;
+    public static final int ALIGN_CENTER_HORIZONTAL = 0x1 << 5;
+    public static final int ALIGN_CENTER = ALIGN_CENTER_HORIZONTAL | ALIGN_CENTER_VERTICAL;
+
     private static final int DEFAULT_CROSS_FADING_DURATION = 300;
     private static final Drawable EMPTY_DRAWABLE = new ColorDrawable(Color.TRANSPARENT);
 
     private static final long DELAY_FOR_CROSS = 800L;
 
     private long mStartLoading = 0;
+
+    private int mAlign = ALIGN_CENTER;
 
     /**
      * Clients may listen to {@link AsyncImageView} changes using a
@@ -386,6 +396,10 @@ public class AsyncImageView extends ImageView {
         }
     }
 
+    public void setDrawableAlignement(int alignement) {
+        mAlign = alignement;
+    }
+
     static class SavedState extends BaseSavedState {
         String url;
 
@@ -421,7 +435,6 @@ public class AsyncImageView extends ImageView {
         SavedState ss = new SavedState(superState);
 
         ss.url = mUrl;
-
         return ss;
     }
 
@@ -468,8 +481,8 @@ public class AsyncImageView extends ImageView {
             }
             if (canCrossFade() && !mIsLoading) {
                 final TransitionDrawable d = new TransitionDrawable(new Drawable[] {
-                        mDefaultDrawable == null ? EMPTY_DRAWABLE : new KeepRatioDrawable(mDefaultDrawable),
-                        new KeepRatioDrawable(new BitmapDrawable(getResources(), image))
+                        mDefaultDrawable == null ? EMPTY_DRAWABLE : new KeepRatioDrawable(mDefaultDrawable, mAlign),
+                        new KeepRatioDrawable(new BitmapDrawable(getResources(), image), mAlign)
                 });
                 setImageDrawable(d);
                 d.setCrossFadeEnabled(true);
@@ -516,9 +529,11 @@ public class AsyncImageView extends ImageView {
     private static class KeepRatioDrawable extends Drawable {
 
         private Drawable mDrawable;
+        private int mAlign;
 
-        public KeepRatioDrawable(Drawable drawable) {
+        public KeepRatioDrawable(Drawable drawable, int alignement) {
             mDrawable = drawable;
+            mAlign = alignement;
         }
 
         @Override
@@ -551,15 +566,25 @@ public class AsyncImageView extends ImageView {
                 final int containerHeight = bounds.height();
 
                 final float scale = Math.min((float) containerWidth / (float) width, (float) containerHeight / (float) height);
-                final int dx = (int) ((containerWidth - width * scale) * 0.5f + 0.5f);
-                final int dy = (int) ((containerHeight - height * scale) * 0.5f + 0.5f);
-
-                mDrawable.setBounds(dx, dy, (int) (width * scale + dx), (int) (height * scale + dy));
+                final float scaledWidth = width * scale;
+                final float scaledHeight = height * scale;
+                float dx = 0.f;
+                float dy = 0.f;
+                if ((mAlign & ALIGN_CENTER_HORIZONTAL) == ALIGN_CENTER_HORIZONTAL) {
+                    dx = (containerWidth - scaledWidth) * 0.5f + 0.5f;
+                } else if ((mAlign & ALIGN_RIGHT) == ALIGN_RIGHT) {
+                    dx = containerWidth - scaledWidth;
+                }
+                if ((mAlign & ALIGN_CENTER_VERTICAL) == ALIGN_CENTER_VERTICAL) {
+                    dy = (containerHeight - scaledHeight) * 0.5f + 0.5f;
+                } else if ((mAlign & ALIGN_BOTTOM) == ALIGN_BOTTOM) {
+                    dy = containerHeight - scaledHeight;
+                }
+                mDrawable.setBounds((int) dx, (int) dy, (int) (scaledWidth + dx), (int) (scaledHeight + dy));
             } else {
                 mDrawable.setBounds(bounds);
             }
         }
-
     }
 
 }
