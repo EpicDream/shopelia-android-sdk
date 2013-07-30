@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
@@ -20,12 +21,6 @@ public class OrderAPI extends ApiHandler {
         super(context, callback);
     }
 
-    private double round(double unrounded, int precision, int roundingMode) {
-        BigDecimal bd = new BigDecimal(unrounded);
-        BigDecimal rounded = bd.setScale(precision, roundingMode);
-        return rounded.doubleValue();
-    }
-
     public void order(final Order order, boolean test) {
 
         JSONObject params = new JSONObject();
@@ -33,7 +28,7 @@ public class OrderAPI extends ApiHandler {
         try {
             JSONObject orderObject = new JSONObject();
             JSONArray products = new JSONArray();
-            products.put(order.product.toJson());
+            products.put(order.product.toOrderJson());
             orderObject.put(Order.Api.PRODUCTS, products);
             orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL,
                     round(order.product.deliveryPrice + order.product.productPrice, 2, BigDecimal.ROUND_HALF_UP));
@@ -43,6 +38,7 @@ public class OrderAPI extends ApiHandler {
                 orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL, 1);
             }
             params.put(Order.Api.ORDER, orderObject);
+            Log.d(null, "ORDER " + params.toString(2));
         } catch (JSONException e) {
             fireError(STEP_ORDER, null, null, e);
             return;
@@ -77,6 +73,12 @@ public class OrderAPI extends ApiHandler {
 
     public void order(final Order order) {
         order(order, false);
+    }
+
+    private static double round(double unrounded, int precision, int roundingMode) {
+        BigDecimal bd = new BigDecimal(unrounded);
+        BigDecimal rounded = bd.setScale(precision, roundingMode);
+        return rounded.doubleValue();
     }
 
 }

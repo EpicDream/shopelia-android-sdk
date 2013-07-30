@@ -21,9 +21,11 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.model.Product;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.OrderAPI;
+import com.shopelia.android.remote.api.ProductAPI;
 import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.utils.DialogHelper;
 import com.shopelia.android.widget.FontableTextView;
@@ -66,6 +68,27 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         if (UserManager.get(getActivity()).isAutoSignedIn()) {
             updateUser(false);
         }
+        new ProductAPI(getActivity(), new CallbackAdapter() {
+
+            @Override
+            public void onProductUpdate(Product product, boolean fromNetwork) {
+                super.onProductUpdate(product, fromNetwork);
+                getOrder().product = product;
+                findViewById(R.id.product_sheet, ProductSheetWidget.class).setProductInfo(getOrder().product, fromNetwork);
+                setupUi();
+            }
+
+            @Override
+            public void onProductNotAvailable(Product product) {
+                super.onProductNotAvailable(product);
+            }
+
+            @Override
+            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+                super.onError(step, httpResponse, response, e);
+            }
+
+        }).getProduct(getOrder().product);
     }
 
     @Override
@@ -235,9 +258,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     private void setupProductUi() {
         //@formatter:off
-        findViewById(R.id.product_sheet, ProductSheetWidget.class)
-            .setProductInfo(getOrder().product)
-            .refreshView();
+       
         //@formatter:on
     }
 

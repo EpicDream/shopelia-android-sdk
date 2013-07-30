@@ -100,6 +100,14 @@ public class Product implements BaseModel<Product> {
         return json;
     }
 
+    public JSONObject toOrderJson() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put(Api.NAME, name);
+        json.put(Api.URL, url);
+        json.put(Api.IMAGE_URL, image.toString());
+        return json;
+    }
+
     @Override
     public int describeContents() {
         return 0;

@@ -160,6 +160,9 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
 
         @Override
         public void onVerifySucceed() {
+            if (getActivity() == null || getView() == null) {
+                return;
+            }
             mPasswordField.setValid(true);
             if (getShowsDialog()) {
                 dismiss();
