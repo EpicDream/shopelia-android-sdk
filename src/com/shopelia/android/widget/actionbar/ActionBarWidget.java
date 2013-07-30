@@ -51,7 +51,7 @@ public class ActionBarWidget extends FrameLayout {
             mBufferContainer.setVisibility(View.INVISIBLE);
         } else {
             new RotationTransition(mOptionsContainer, mBufferContainer, "rotationX").setDuration(
-                    getResources().getInteger(R.integer.shopelia_animation_time_short)).start();
+                    getResources().getInteger(R.integer.shopelia_animation_time_very_short)).start();
         }
     }
 }

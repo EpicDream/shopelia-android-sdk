@@ -3,5 +3,5 @@
 
     <integer name="shopelia_animation_time">600</integer>
     <integer name="shopelia_animation_time_short">200</integer>
-
+	<integer name="shopelia_animation_time_very_short">180</integer>
 </resources>

@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.app.ShopeliaTracker;
+import com.shopelia.android.utils.TimeUnits;
 
 /**
  * A helper class useful if you want to create a custom Shopelia layout. It
@@ -30,6 +31,8 @@ public class ShopeliaViewHelper implements ShopeliaView {
 
         public void onCheckout();
     }
+
+    private static final long DELAY_FOR_SMOOTH_CHANGES = 100 * TimeUnits.MILISECONDS;
 
     private Context mContext;
     private String mProductUrl;
@@ -62,7 +65,7 @@ public class ShopeliaViewHelper implements ShopeliaView {
     public void setProductUrl(CharSequence url) {
         if (url != null && !url.toString().equals(mProductUrl)) {
             mProductUrl = url.toString();
-
+            final long begin = System.currentTimeMillis();
             Shopelia.update(mContext, new Shopelia.CallbackAdapter() {
                 @Override
                 public void onUpdateDone() {
@@ -70,7 +73,11 @@ public class ShopeliaViewHelper implements ShopeliaView {
                     mShopelia = Shopelia.obtain(mContext, mProductUrl);
                     if (mShopelia != null && mCallback != null) {
                         mTracker.onDisplayShopeliaButton(mProductUrl, mTrackerName);
-                        mCallback.onViewShouldSmoothlyAppear();
+                        if (begin + DELAY_FOR_SMOOTH_CHANGES < System.currentTimeMillis()) {
+                            mCallback.onViewShouldSmoothlyAppear();
+                        } else {
+                            mCallback.onViewShouldBeVisible();
+                        }
                     }
                 }
             });
