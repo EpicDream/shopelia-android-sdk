@@ -144,7 +144,7 @@
 
                     <com.shopelia.android.widget.AsyncImageView
                         android:id="@+id/product_vendor_icon"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="20dp"
                         android:layout_marginLeft="@dimen/shopelia_margin_normal"
                         android:scaleType="fitCenter"

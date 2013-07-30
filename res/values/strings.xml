@@ -139,7 +139,7 @@
     <string name="shopelia_tax_ati">TTC</string>
 
     <!-- Product sheet -->
-    <string name="shopelia_product_shipping_fees" formatted="false">Frais de livraison : %s</string>
+    <string name="shopelia_product_shipping_fees" formatted="false">+ %s de frais de livraison</string>
     <string name="shopelia_product_free_shipping">Livraison gratuite</string>
 	<string name="shopelia_product_loading">VEUILLEZ PATIENTER...</string>
     
