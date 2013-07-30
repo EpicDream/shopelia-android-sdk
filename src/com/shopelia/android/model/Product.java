@@ -94,8 +94,8 @@ public class Product implements BaseModel<Product> {
         json.put(Api.URL, url);
         json.put(Api.IMAGE_URL, image.toString());
         json.put(Api.DOWNLOAD_TIME, download_at);
-        if (json != null) {
-            json.put(Api.JSON, json);
+        if (this.json != null) {
+            json.put(Api.JSON, this.json);
         }
         return json;
     }
