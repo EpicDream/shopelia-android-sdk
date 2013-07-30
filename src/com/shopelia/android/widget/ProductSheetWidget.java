@@ -14,9 +14,9 @@ import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
 import com.shopelia.android.model.Product;
+import com.shopelia.android.view.animation.CrossFadingTransition;
 import com.shopelia.android.view.animation.ResizeAnimation;
 import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedListener;
-import com.shopelia.android.view.animation.RotationTransition;
 
 public class ProductSheetWidget extends FrameLayout {
 
@@ -58,6 +58,7 @@ public class ProductSheetWidget extends FrameLayout {
         mProductImage = (AsyncImageView) findViewById(R.id.product_image);
         mProductPrice = (FontableTextView) findViewById(R.id.product_price);
         mVendorLogo = (AsyncImageView) findViewById(R.id.product_vendor_icon);
+        mVendorLogo.setDrawableAlignement(AsyncImageView.ALIGN_LEFT | AsyncImageView.ALIGN_CENTER_VERTICAL);
         mVendorText = (FontableTextView) findViewById(R.id.product_vendor_text);
         mTax = (FontableTextView) findViewById(R.id.product_tax);
         mLoading = findViewById(R.id.loading);
@@ -92,12 +93,13 @@ public class ProductSheetWidget extends FrameLayout {
             mProductShippingInfo.setText(mProduct.shippingExtra);
             int visibility = TextUtils.isEmpty(mProduct.shippingExtra) ? View.GONE : View.VISIBLE;
             mProductShippingInfo.setVisibility(visibility);
-            mShippingFees.setText(mProduct.currency.format(mProduct.deliveryPrice));
             mTax.setText(getString(mProduct.tax.getResId()));
             mVendorLogo.setUrl(mProduct.merchant.logo);
             mProductDescription.setVisibility(View.GONE);
             if (mProduct.deliveryPrice == 0.0f) {
                 mShippingFees.setText(R.string.shopelia_product_free_shipping);
+            } else {
+                mShippingFees.setText(getString(R.string.shopelia_product_shipping_fees, mProduct.currency.format(mProduct.deliveryPrice)));
             }
             final ResizeAnimation anim = new ResizeAnimation(mSwitcher, mSwitcher.getLayoutParams().width,
                     mSwitcher.getLayoutParams().height);
@@ -116,7 +118,7 @@ public class ProductSheetWidget extends FrameLayout {
 
                 @Override
                 public void onAnimationEnd(Animation arg0) {
-                    new RotationTransition(mContent, mLoading, "rotationY").setDuration(
+                    new CrossFadingTransition(mContent, mLoading, true).setDuration(
                             getResources().getInteger(R.integer.shopelia_animation_time)).start();
                 }
             });
