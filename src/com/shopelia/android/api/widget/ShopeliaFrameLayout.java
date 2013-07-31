@@ -22,7 +22,9 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
     public ShopeliaFrameLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
         mHelper = new ShopeliaViewHelper(context, attrs);
+        mHelper.setCallback(this);
         setCheckoutDelegate(this);
+        onViewShouldBeInvisible();
     }
 
     @Override
@@ -78,7 +80,7 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
 
     @Override
     public void onViewShouldSmoothlyAppear() {
-        setVisibility(View.INVISIBLE);
+        setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -97,8 +99,11 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
     }
 
     public void setCheckoutDelegate(View v) {
-        mDelegate = v;
         v.setOnClickListener(mOnCheckoutClickListener);
+        if (mDelegate != null) {
+            mDelegate.setOnClickListener(null);
+        }
+        mDelegate = v;
     }
 
     private OnClickListener mOnCheckoutClickListener = new OnClickListener() {
@@ -108,5 +113,10 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
             callCheckout();
         }
     };
+
+    @Override
+    public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l) {
+        mHelper.setOnProductAvailabilityChangeListener(l);
+    }
 
 }

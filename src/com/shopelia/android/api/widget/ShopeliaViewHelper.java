@@ -40,6 +40,7 @@ public class ShopeliaViewHelper implements ShopeliaView {
     private Callback mCallback;
     private ShopeliaTracker mTracker;
     private String mTrackerName;
+    private OnProductAvailabilityChangeListener mOnProductAvailabilityChangeListener;
 
     public ShopeliaViewHelper(Context context, AttributeSet attrs) {
         mContext = context;
@@ -72,12 +73,17 @@ public class ShopeliaViewHelper implements ShopeliaView {
                     super.onUpdateDone();
                     mShopelia = Shopelia.obtain(mContext, mProductUrl);
                     if (mShopelia != null && mCallback != null) {
+                        if (mOnProductAvailabilityChangeListener != null) {
+                            mOnProductAvailabilityChangeListener.onProductAvailabilityChange(mProductUrl, true);
+                        }
                         mTracker.onDisplayShopeliaButton(mProductUrl, mTrackerName);
                         if (begin + DELAY_FOR_SMOOTH_CHANGES < System.currentTimeMillis()) {
                             mCallback.onViewShouldSmoothlyAppear();
                         } else {
                             mCallback.onViewShouldBeVisible();
                         }
+                    } else if (mOnProductAvailabilityChangeListener != null) {
+                        mOnProductAvailabilityChangeListener.onProductAvailabilityChange(mProductUrl, false);
                     }
                 }
             });
@@ -96,26 +102,39 @@ public class ShopeliaViewHelper implements ShopeliaView {
 
     @Override
     public void setProductPrice(float price) {
-
+        if (mShopelia != null) {
+            mShopelia.setProductPrice(price);
+        }
     }
 
     @Override
     public void setProductDeliveryPrice(float shippingPrice) {
-
+        if (mShopelia != null) {
+            mShopelia.setProductShippingPrice(shippingPrice);
+        }
     }
 
     @Override
     public void setProductImage(Uri imageUri) {
-
+        if (mShopelia != null) {
+            mShopelia.setProductImageUri(imageUri);
+        }
     }
 
     @Override
     public void setProductShippingExtras(String shippingExtras) {
-
+        if (mShopelia != null) {
+            mShopelia.setProductShippingInfo(shippingExtras);
+        }
     }
 
     public void onDetachFromWindow() {
         mTracker.flush();
+    }
+
+    @Override
+    public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l) {
+        mOnProductAvailabilityChangeListener = l;
     }
 
 }

@@ -9,6 +9,10 @@ import android.net.Uri;
  */
 public interface ShopeliaView {
 
+    public interface OnProductAvailabilityChangeListener {
+        public void onProductAvailabilityChange(String url, boolean available);
+    }
+
     public void callCheckout();
 
     public void setProductUrl(CharSequence url);
@@ -24,5 +28,7 @@ public interface ShopeliaView {
     public void setProductImage(Uri imageUri);
 
     public void setProductShippingExtras(String shippingExtras);
+
+    public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l);
 
 }
