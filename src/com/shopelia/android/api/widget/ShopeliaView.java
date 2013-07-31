@@ -21,6 +21,8 @@ public interface ShopeliaView {
 
     public boolean canCheckout();
 
+    public void setProductName(String name);
+
     public void setProductPrice(float price);
 
     public void setProductDeliveryPrice(float shippingPrice);

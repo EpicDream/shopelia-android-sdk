@@ -143,4 +143,9 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
         mHelper.setOnProductAvailabilityChangeListener(l);
     }
 
+    @Override
+    public void setProductName(String name) {
+        mHelper.setProductName(name);
+    }
+
 }

@@ -67,6 +67,7 @@ public class ShopeliaViewHelper implements ShopeliaView {
         if (url != null && !url.toString().equals(mProductUrl)) {
             mProductUrl = url.toString();
             final long begin = System.currentTimeMillis();
+            mTracker.onDisplayShopeliaButton(mProductUrl, mTrackerName);
             Shopelia.update(mContext, new Shopelia.CallbackAdapter() {
                 @Override
                 public void onUpdateDone() {
@@ -76,7 +77,6 @@ public class ShopeliaViewHelper implements ShopeliaView {
                         if (mOnProductAvailabilityChangeListener != null) {
                             mOnProductAvailabilityChangeListener.onProductAvailabilityChange(mProductUrl, true);
                         }
-                        mTracker.onDisplayShopeliaButton(mProductUrl, mTrackerName);
                         if (begin + DELAY_FOR_SMOOTH_CHANGES < System.currentTimeMillis()) {
                             mCallback.onViewShouldSmoothlyAppear();
                         } else {
@@ -97,7 +97,7 @@ public class ShopeliaViewHelper implements ShopeliaView {
 
     @Override
     public boolean canCheckout() {
-        return false;
+        return mShopelia != null;
     }
 
     @Override
@@ -135,6 +135,13 @@ public class ShopeliaViewHelper implements ShopeliaView {
     @Override
     public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l) {
         mOnProductAvailabilityChangeListener = l;
+    }
+
+    @Override
+    public void setProductName(String name) {
+        if (mShopelia != null) {
+            mShopelia.setProductName(name);
+        }
     }
 
 }
