@@ -28,7 +28,7 @@ public class OrderAPI extends ApiHandler {
         try {
             JSONObject orderObject = new JSONObject();
             JSONArray products = new JSONArray();
-            products.put(order.product.toOrderJson());
+            products.put(order.product.toJson());
             orderObject.put(Order.Api.PRODUCTS, products);
             orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL,
                     round(order.product.deliveryPrice + order.product.productPrice, 2, BigDecimal.ROUND_HALF_UP));

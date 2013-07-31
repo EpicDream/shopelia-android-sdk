@@ -28,8 +28,6 @@ public class Product implements BaseModel<Product> {
         String SHIPPING_EXTRAS = "shipping_info";
         String MERCHANT = "merchant";
         String VERSIONS = "versions";
-        String DOWNLOAD_TIME = "download_at";
-        String JSON = "json";
     }
 
     public static final String IDENTIFIER = Product.class.getName();
@@ -53,9 +51,6 @@ public class Product implements BaseModel<Product> {
 
     public ArrayList<Product> versions = new ArrayList<Product>();
 
-    public long download_at = 0;
-    public JSONObject json;
-
     public Product() {
 
     }
@@ -65,7 +60,7 @@ public class Product implements BaseModel<Product> {
         ensureDefaultValues();
     }
 
-    private Product(Parcel source) {
+    protected Product(Parcel source) {
         url = source.readString();
         name = source.readString();
         productPrice = source.readFloat();
@@ -76,15 +71,6 @@ public class Product implements BaseModel<Product> {
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
-        download_at = source.readLong();
-        String j = source.readString();
-        if (j != null) {
-            try {
-                json = new JSONObject(j);
-            } catch (JSONException e) {
-
-            }
-        }
     }
 
     @Override
@@ -92,19 +78,9 @@ public class Product implements BaseModel<Product> {
         JSONObject json = new JSONObject();
         json.put(Api.NAME, name);
         json.put(Api.URL, url);
-        json.put(Api.IMAGE_URL, image.toString());
-        json.put(Api.DOWNLOAD_TIME, download_at);
-        if (this.json != null) {
-            json.put(Api.JSON, this.json);
+        if (image != null) {
+            json.put(Api.IMAGE_URL, image.toString());
         }
-        return json;
-    }
-
-    public JSONObject toOrderJson() throws JSONException {
-        JSONObject json = new JSONObject();
-        json.put(Api.NAME, name);
-        json.put(Api.URL, url);
-        json.put(Api.IMAGE_URL, image.toString());
         return json;
     }
 
@@ -125,9 +101,6 @@ public class Product implements BaseModel<Product> {
         ParcelUtils.writeParcelable(dest, merchant, flags);
         ParcelUtils.writeParcelable(dest, tax, flags);
         ParcelUtils.writeParcelable(dest, currency, flags);
-        dest.writeLong(download_at);
-        String j = json != null ? json.toString() : null;
-        dest.writeString(j);
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Creator<Product>() {
@@ -159,16 +132,6 @@ public class Product implements BaseModel<Product> {
                 merge(versions.get(0));
             }
         }
-        if (object.has(Api.JSON)) {
-            try {
-                json = object.getJSONObject(Api.JSON);
-            } catch (JSONException e) {
-
-            }
-        } else {
-            json = object;
-        }
-        download_at = object.optLong(Api.DOWNLOAD_TIME, 0L);
         ensureDefaultValues();
         return this;
     }
@@ -235,7 +198,6 @@ public class Product implements BaseModel<Product> {
             productPrice = cpy.productPrice;
             deliveryPrice = cpy.deliveryPrice;
             shippingExtra = cpy.shippingExtra;
-            json = cpy.json;
         }
     }
 

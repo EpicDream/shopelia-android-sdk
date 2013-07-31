@@ -30,6 +30,7 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
         super(context, attrs, 0);
         mHelper = new ShopeliaViewHelper(context, attrs);
         mHelper.setCallback(this);
+        // TODO Use AttributeSet
         setText("Acheter");
     }
 

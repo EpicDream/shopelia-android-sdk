@@ -15,6 +15,7 @@ import com.shopelia.android.http.AbstractPoller.OnPollerEventListener;
 import com.shopelia.android.http.HttpGetPoller;
 import com.shopelia.android.http.HttpGetPoller.HttpGetRequest;
 import com.shopelia.android.http.HttpGetPoller.HttpGetResponse;
+import com.shopelia.android.model.ExtendedProduct;
 import com.shopelia.android.model.Product;
 import com.shopelia.android.utils.JsonUtils;
 import com.shopelia.android.utils.TimeUnits;
@@ -38,8 +39,8 @@ public class ProductAPI extends ApiHandler {
 
     private HttpGetPoller mPoller;
     private SharedPreferences mPreferences;
-    private ArrayList<Product> mProducts;
-    private Product mProduct;
+    private ArrayList<ExtendedProduct> mProducts;
+    private ExtendedProduct mProduct;
 
     public ProductAPI(Context context, Callback callback) {
         super(context, callback);
@@ -48,12 +49,12 @@ public class ProductAPI extends ApiHandler {
     }
 
     public boolean getProduct(Product product) {
-        mProduct = product;
-        Product fromCache = findProductByUrl(product.url);
+        mProduct = new ExtendedProduct(product);
+        ExtendedProduct fromCache = findProductByUrl(product.url);
         if (fromCache != null && !product.isValid()) {
             mProduct = fromCache;
         }
-        if (!mProduct.isValid()) {
+        if (mProduct.getProduct() == null || !mProduct.getProduct().isValid()) {
             if (mPoller != null) {
                 mPoller.stop();
             }
@@ -66,14 +67,14 @@ public class ProductAPI extends ApiHandler {
             return false;
         } else {
             if (hasCallback()) {
-                getCallback().onProductUpdate(mProduct, false);
+                getCallback().onProductUpdate(mProduct.getProduct(), false);
             }
         }
         return true;
     }
 
     public Product getProduct() {
-        return mProduct;
+        return mProduct.getProduct();
     }
 
     private OnPollerEventListener<HttpGetResponse> mOnPollerEventListener = new OnPollerEventListener<HttpGetPoller.HttpGetResponse>() {
@@ -81,7 +82,7 @@ public class ProductAPI extends ApiHandler {
         @Override
         public void onTimeExpired() {
             if (hasCallback()) {
-                getCallback().onProductNotAvailable(mProduct);
+                getCallback().onProductNotAvailable(mProduct.getProduct());
             }
         }
 
@@ -91,16 +92,14 @@ public class ProductAPI extends ApiHandler {
                 if (hasCallback()) {
                     getCallback().onError(STEP_PRODUCT, newResult.response, null, newResult.exception);
                 }
-            } else {
+            } else if (newResult.response != null) {
                 try {
-                    Product product = mProduct;
-                    mProduct = Product.inflate(new JSONObject(newResult.response.getBodyAsString()));
-                    mProduct.url = product.url;
+                    mProduct.setJson(new JSONObject(newResult.response.getBodyAsString()));
                     mProduct.download_at = System.currentTimeMillis();
                     mProducts.add(mProduct);
                     saveProducts(mProducts);
-                    if (hasCallback()) {
-                        getCallback().onProductUpdate(mProduct, true);
+                    if (hasCallback() && mProduct.isValid()) {
+                        getCallback().onProductUpdate(mProduct.getProduct(), true);
                     }
                     return mProduct.isValid();
                 } catch (JSONException e) {
@@ -112,23 +111,15 @@ public class ProductAPI extends ApiHandler {
 
     };
 
-    private Product findProductByUrl(String url) {
-        for (Product product : mProducts) {
+    private ExtendedProduct findProductByUrl(String url) {
+        for (ExtendedProduct product : mProducts) {
             if (product.url.equals(url)) {
-                Product out = null;
-                try {
-                    if (product.json != null) {
-                        out = Product.inflate(product.json);
-                    }
-                } catch (JSONException e) {
-
-                }
-                if (product.download_at + KEEP_ALIVE < System.currentTimeMillis() || out == null || !out.isValid()) {
+                if (product.download_at + KEEP_ALIVE < System.currentTimeMillis() || !product.isValid()) {
                     mProducts.remove(product);
                     saveProducts(mProducts);
                     return null;
                 }
-                return out;
+                return product;
             }
         }
         return null;
@@ -138,16 +129,16 @@ public class ProductAPI extends ApiHandler {
         String json = mPreferences.getString(PREFS_PRODUCT, null);
         if (!TextUtils.isEmpty(json)) {
             try {
-                mProducts = Product.inflate(new JSONArray(json));
+                mProducts = ExtendedProduct.inflate(new JSONArray(json));
             } catch (Exception e) {
-                mProducts = new ArrayList<Product>();
+                mProducts = new ArrayList<ExtendedProduct>();
             }
         } else {
-            mProducts = new ArrayList<Product>();
+            mProducts = new ArrayList<ExtendedProduct>();
         }
     }
 
-    private void saveProducts(List<Product> products) {
+    private void saveProducts(List<ExtendedProduct> products) {
         SharedPreferences.Editor editor = mPreferences.edit();
         editor.putString(PREFS_PRODUCT, JsonUtils.toJson(products).toString());
         editor.commit();

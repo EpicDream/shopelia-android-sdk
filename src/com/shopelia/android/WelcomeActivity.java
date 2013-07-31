@@ -53,7 +53,11 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
                             Bundle data = result.getResult();
                             String authToken = data.getString(AccountManager.KEY_AUTHTOKEN);
                             String userString = data.getString(AccountManager.KEY_USERDATA);
-                            User user = User.inflate(new JSONObject(userString));
+                            User user = userString != null ? User.inflate(new JSONObject(userString)) : new User();
+                            if (user.email == null) {
+                                user.email = um.getAccount().name;
+                                authToken = um.getAccount().name;
+                            }
                             um.login(user, authToken);
                             um.setAutoSignIn(false);
                         }
@@ -65,6 +69,8 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
                         e.printStackTrace();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    } catch (Exception e) {
+
                     }
                     if (result.isDone()) {
                         init();

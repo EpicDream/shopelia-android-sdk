@@ -134,26 +134,39 @@ public class ValidationButton extends FrameLayout {
             if (!enabled) {
                 {
                     ColorDrawableAnimation anim = new ColorDrawableAnimation(getBackground(), Color.WHITE);
-                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time_short));
+                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
                     anim.start(getResources().getColor(R.color.shopelia_validation_green),
                             getResources().getColor(R.color.shopelia_validation_grey));
                 }
                 {
                     ColorDrawableAnimation anim = new ColorDrawableAnimation(mIcon.getDrawable(), Color.WHITE);
-                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time_short));
+                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
                     anim.start(getResources().getColor(R.color.shopelia_validation_textColor_disabled));
                 }
                 {
                     ObjectAnimator
                             .ofInt(mLabel, "textColor", getResources().getColor(R.color.shopelia_white),
                                     getResources().getColor(R.color.shopelia_validation_textColor_disabled))
-                            .setDuration(getResources().getInteger(R.integer.shopelia_animation_time_short)).start();
+                            .setDuration(getResources().getInteger(R.integer.shopelia_animation_time)).start();
                 }
             } else {
-                ColorDrawableAnimation anim = new ColorDrawableAnimation(getBackground(), Color.WHITE);
-                anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time_short));
-                anim.start(getResources().getColor(R.color.shopelia_validation_grey),
-                        getResources().getColor(R.color.shopelia_validation_green));
+                {
+                    ColorDrawableAnimation anim = new ColorDrawableAnimation(getBackground(), Color.WHITE);
+                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
+                    anim.start(getResources().getColor(R.color.shopelia_validation_grey),
+                            getResources().getColor(R.color.shopelia_validation_green));
+                }
+                {
+                    ColorDrawableAnimation anim = new ColorDrawableAnimation(mIcon.getDrawable(), Color.WHITE);
+                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
+                    anim.start(getResources().getColor(R.color.shopelia_validation_textColor_disabled), Color.WHITE);
+                }
+                {
+                    ObjectAnimator
+                            .ofInt(mLabel, "textColor", getResources().getColor(R.color.shopelia_validation_textColor_disabled),
+                                    getResources().getColor(R.color.shopelia_white))
+                            .setDuration(getResources().getInteger(R.integer.shopelia_animation_time)).start();
+                }
             }
 
         }
