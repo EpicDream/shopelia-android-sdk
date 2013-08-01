@@ -55,6 +55,7 @@ public class ShopeliaAlertDialog extends ShopeliaDialog {
         refreshButtonLayout();
         LinearLayout.LayoutParams p = (LayoutParams) view.getLayoutParams();
         p.weight = 1;
+        findViewById(R.id.positive_divider).setVisibility(view.getVisibility());
         view.requestLayout();
     }
 
@@ -106,6 +107,7 @@ public class ShopeliaAlertDialog extends ShopeliaDialog {
         refreshButtonLayout();
         LinearLayout.LayoutParams p = (LayoutParams) view.getLayoutParams();
         p.weight = 1;
+        findViewById(R.id.neutral_divider).setVisibility(view.getVisibility());
         view.requestLayout();
     }
 

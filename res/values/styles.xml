@@ -71,12 +71,26 @@
         <item name="android:background">@drawable/shopelia_validation_button_background</item>
         <item name="android:textColor">@color/shopelia_white</item>
     </style>
-    
+
     <style name="Theme.Shopelia.TextAppearance" parent="@android:style/TextAppearance"></style>
 
     <style name="Theme.Shopelia.TextAppearance.Header" parent="@android:style/TextAppearance.Large">
         <item name="android:textSize">15sp</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Theme.Shopelia.Divider">
+        <item name="android:background">@color/shopelia_divider_color</item>
+    </style>
+
+    <style name="Theme.Shopelia.Divider.Horizontal" parent="Theme.Shopelia.Divider">
+        <item name="android:height">@dimen/shopelia_divider_normal</item>
+    </style>
+
+    <style name="Theme.Shopelia.Divider.Vertical" parent="Theme.Shopelia.Divider">
+        <item name="android:width">@dimen/shopelia_divider_normal</item>
+        <item name="android:paddingTop">@dimen/shopelia_margin_normal</item>
+        <item name="android:paddingBottom">@dimen/shopelia_margin_normal</item>
     </style>
 
 </resources>

@@ -10,6 +10,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_activity_vertical_margin"
+        android:layout_marginLeft="@dimen/shopelia_margin_normal"
+        android:layout_marginRight="@dimen/shopelia_margin_normal"
         android:layout_marginTop="@dimen/shopelia_activity_vertical_margin"
         android:text="Voulez vous effectuer une action maintenant ?"
         android:textColor="@color/shopelia_dark"
@@ -22,6 +24,11 @@
         android:layout_height="wrap_content" >
     </FrameLayout>
 
+    <View
+        style="@style/Theme.Shopelia.Divider.Vertical"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/shopelia_divider_normal" />
+
     <LinearLayout
         android:id="@+id/buttons_container"
         android:layout_width="match_parent"
@@ -31,44 +38,60 @@
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/negative"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/shopelia_validation_button_background"
+            android:background="@drawable/shopelia_list_selector"
             android:gravity="center"
+            android:paddingBottom="@dimen/shopelia_margin_large"
             android:paddingLeft="@dimen/shopelia_margin_normal"
             android:paddingRight="@dimen/shopelia_margin_normal"
+            android:paddingTop="@dimen/shopelia_margin_large"
             android:text="Annuler"
-            android:textColor="@color/shopelia_validation_button_text_color"
-            android:textSize="@dimen/shopelia_font_size_small"
-            app:shopelia_fontStyle="bold" />
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_small" />
 
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/positive"
-            android:layout_width="0dp"
-            android:layout_height="35dp"
-            android:layout_weight="1"
-            android:background="@drawable/shopelia_validation_button_background"
-            android:gravity="center"
-            android:paddingLeft="@dimen/shopelia_margin_normal"
-            android:paddingRight="@dimen/shopelia_margin_normal"
-            android:text="Peut être"
-            android:textColor="@color/shopelia_validation_button_text_color"
-            android:textSize="@dimen/shopelia_font_size_small"
-            app:shopelia_fontStyle="bold" />
+        <View
+            android:id="@+id/neutral_divider"
+            style="@style/Theme.Shopelia.Divider.Vertical"
+            android:layout_width="@dimen/shopelia_divider_normal"
+            android:layout_height="match_parent" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/neutral"
             android:layout_width="0dp"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/shopelia_validation_button_background"
+            android:background="@drawable/shopelia_list_selector"
             android:gravity="center"
+            android:paddingBottom="@dimen/shopelia_margin_large"
             android:paddingLeft="@dimen/shopelia_margin_normal"
             android:paddingRight="@dimen/shopelia_margin_normal"
+            android:paddingTop="@dimen/shopelia_margin_large"
+            android:text="Peut être"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_small" />
+
+        <View
+            android:id="@+id/positive_divider"
+            style="@style/Theme.Shopelia.Divider.Vertical"
+            android:layout_width="@dimen/shopelia_divider_normal"
+            android:layout_height="match_parent" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/positive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="@drawable/shopelia_list_selector"
+            android:gravity="center"
+            android:paddingBottom="@dimen/shopelia_margin_large"
+            android:paddingLeft="@dimen/shopelia_margin_normal"
+            android:paddingRight="@dimen/shopelia_margin_normal"
+            android:paddingTop="@dimen/shopelia_margin_large"
             android:text="Valider"
-            android:textColor="@color/shopelia_validation_button_text_color"
-            android:textSize="@dimen/shopelia_font_size_small"
-            app:shopelia_fontStyle="bold" />
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_small" />
+
     </LinearLayout>
 
 </LinearLayout>
