@@ -6,6 +6,9 @@ import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.shopelia.android.R;
+
 public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, ShopeliaViewHelper.Callback {
 
     private ShopeliaViewHelper mHelper;
@@ -81,6 +84,7 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
     @Override
     public void onViewShouldSmoothlyAppear() {
         setVisibility(View.VISIBLE);
+        ObjectAnimator.ofFloat(this, "alpha", 0.f, 1.f).setDuration(getResources().getInteger(R.integer.shopelia_animation_time)).start();
     }
 
     @Override

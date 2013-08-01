@@ -21,6 +21,7 @@ public class ResizeAnimation extends Animation {
     private View mTargetView;
     private Rect mFrom = new Rect();
     private Rect mTo = new Rect();
+    private int mToWidth, toHeight;
 
     public ResizeAnimation(View target, int toWidth, int toHeight) {
         mTargetView = target;
@@ -48,4 +49,10 @@ public class ResizeAnimation extends Animation {
         mTargetView.getLayoutParams().height = (int) (interpolatedTime * (mTo.height() - mFrom.height()) + mFrom.height());
         mTargetView.requestLayout();
     }
+
+    @Override
+    public boolean willChangeBounds() {
+        return true;
+    }
+
 }

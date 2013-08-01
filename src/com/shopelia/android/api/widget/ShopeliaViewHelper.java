@@ -32,7 +32,7 @@ public class ShopeliaViewHelper implements ShopeliaView {
         public void onCheckout();
     }
 
-    private static final long DELAY_FOR_SMOOTH_CHANGES = 100 * TimeUnits.MILISECONDS;
+    private static final long DELAY_FOR_SMOOTH_CHANGES = 10 * TimeUnits.MILISECONDS;
 
     private Context mContext;
     private String mProductUrl;
