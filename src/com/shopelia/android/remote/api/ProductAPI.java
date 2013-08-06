@@ -98,7 +98,7 @@ public class ProductAPI extends ApiHandler {
                     mProduct.download_at = System.currentTimeMillis();
                     mProducts.add(mProduct);
                     saveProducts(mProducts);
-                    if (hasCallback() && mProduct.isValid()) {
+                    if (hasCallback() && mProduct.isValid() && mProduct.ready) {
                         getCallback().onProductUpdate(mProduct.getProduct(), true);
                     }
                     return mProduct.isValid();
