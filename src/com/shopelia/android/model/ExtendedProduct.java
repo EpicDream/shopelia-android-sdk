@@ -35,6 +35,7 @@ public class ExtendedProduct implements JsonData {
 
     public void setJson(JSONObject object) {
         mJson = object;
+        ready = object.optInt(Api.READY, 0) == 1;
         mProduct = null;
     }
 
@@ -67,8 +68,7 @@ public class ExtendedProduct implements JsonData {
         ExtendedProduct product = new ExtendedProduct();
         product.url = object.getString(Api.URL);
         product.download_at = object.getLong(Api.DOWNLOAD_TIME);
-        product.mJson = object.getJSONObject(Api.JSON);
-        product.ready = object.getInt(Api.READY) == 1;
+        product.setJson(object.getJSONObject(Api.JSON));
         return product;
     }
 
