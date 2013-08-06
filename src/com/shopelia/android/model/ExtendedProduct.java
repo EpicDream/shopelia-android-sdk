@@ -13,9 +13,12 @@ public class ExtendedProduct implements JsonData {
     public interface Api extends Product.Api {
         String DOWNLOAD_TIME = "download_at";
         String JSON = "json";
+        String READY = "ready";
     }
 
     public String url;
+    public boolean ready;
+
     private JSONObject mJson;
     public long download_at;
 
@@ -65,6 +68,7 @@ public class ExtendedProduct implements JsonData {
         product.url = object.getString(Api.URL);
         product.download_at = object.getLong(Api.DOWNLOAD_TIME);
         product.mJson = object.getJSONObject(Api.JSON);
+        product.ready = object.getInt(Api.READY) == 1;
         return product;
     }
 
