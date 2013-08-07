@@ -41,6 +41,10 @@ public class ShopeliaDialog extends Dialog {
         mCallback = callback;
     }
 
+    public View getDecorView() {
+        return mContainer;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
