@@ -80,7 +80,8 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
             @Override
             public void onProductNotAvailable(Product product) {
-                super.onProductNotAvailable(product);
+                ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(product);
+                fragment.show(getChildFragmentManager(), null);
             }
 
             @Override
