@@ -6,6 +6,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -17,6 +18,7 @@ import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.nineoldandroids.animation.ObjectAnimator;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
@@ -28,6 +30,8 @@ import com.shopelia.android.remote.api.OrderAPI;
 import com.shopelia.android.remote.api.ProductAPI;
 import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.utils.DialogHelper;
+import com.shopelia.android.view.animation.ResizeAnimation;
+import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedListener;
 import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.ProductSheetWidget;
 import com.shopelia.android.widget.actionbar.ActionBar;
@@ -272,24 +276,44 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     }
 
     private void setupPriceUi() {
-        findViewById(R.id.price_product_name, TextView.class).setText(getOrder().product.name);
-        findViewById(R.id.price_value_no_shipping, TextView.class).setText(
-                getOrder().product.currency.format(getOrder().product.productPrice));
-        if ((int) (getOrder().product.deliveryPrice * 100) == 0) {
-            FontableTextView fees = findViewById(R.id.price_value_shipping);
-            fees.setText(R.string.shopelia_confirmation_free);
-        } else {
-            findViewById(R.id.price_value_shipping, TextView.class).setText(
-                    getOrder().product.currency.format(getOrder().product.deliveryPrice));
-        }
-        findViewById(R.id.price_value_total, TextView.class).setText(
-                getOrder().product.currency.format(getOrder().product.productPrice + getOrder().product.deliveryPrice));
-        findViewById(R.id.price_shipping_info, TextView.class).setText(getOrder().product.shippingExtra);
+        if (getOrder().product != null && getOrder().product.isValid()) {
+            findViewById(R.id.price_product_name, TextView.class).setText(getOrder().product.name);
+            findViewById(R.id.price_value_no_shipping, TextView.class).setText(
+                    getOrder().product.currency.format(getOrder().product.productPrice));
+            if ((int) (getOrder().product.deliveryPrice * 100) == 0) {
+                FontableTextView fees = findViewById(R.id.price_value_shipping);
+                fees.setText(R.string.shopelia_confirmation_free);
+            } else {
+                findViewById(R.id.price_value_shipping, TextView.class).setText(
+                        getOrder().product.currency.format(getOrder().product.deliveryPrice));
+            }
+            findViewById(R.id.price_value_total, TextView.class).setText(
+                    getOrder().product.currency.format(getOrder().product.productPrice + getOrder().product.deliveryPrice));
+            findViewById(R.id.price_shipping_info, TextView.class).setText(getOrder().product.shippingExtra);
 
-        // Testing purposes
-        if (getOrder().user.email.equals("elarch@gmail.com") || getOrder().user.email.contains("shopelia")
-                || getOrder().user.email.contains("prixing.fr")) {
-            getView().findViewById(R.id.auto_cancel).setVisibility(View.VISIBLE);
+            // Testing purposes
+            if (getOrder().user.email.equals("elarch@gmail.com") || getOrder().user.email.contains("shopelia")
+                    || getOrder().user.email.contains("prixing.fr")) {
+                getView().findViewById(R.id.auto_cancel).setVisibility(View.VISIBLE);
+            }
+            View layout = findViewById(R.id.price_layout);
+            if (layout.getVisibility() == View.GONE) {
+                final ResizeAnimation anim = new ResizeAnimation(layout, layout.getLayoutParams().width, layout.getLayoutParams().height);
+                anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time_short));
+                layout.setVisibility(View.VISIBLE);
+                anim.computeSize(new OnViewRectComputedListener() {
+
+                    @Override
+                    public void onViewRectComputed(View victim, Rect from, Rect to) {
+                        victim.startAnimation(anim);
+                        ObjectAnimator.ofFloat(victim, "alpha", 0.f, 1.f)
+                                .setDuration(getResources().getInteger(R.integer.shopelia_animation_time)).start();
+                    }
+                });
+
+            }
+        } else {
+            findViewById(R.id.price_layout).setVisibility(View.GONE);
         }
     }
 }
