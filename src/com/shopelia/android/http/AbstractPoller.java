@@ -47,7 +47,7 @@ public abstract class AbstractPoller<ParamType, ResultType> {
 
     }
 
-    public static final long DEFAULT_FREQUENCY = 500;
+    public static final long DEFAULT_FREQUENCY = 800;
     public static final long NO_EXPIRATION = -1;
 
     private static final int INFINITE = -1;
@@ -211,6 +211,12 @@ public abstract class AbstractPoller<ParamType, ResultType> {
                     Message message = mHandler.obtainMessage();
                     message.what = MESSAGE_POLL;
                     message.obj = result;
+                    ResultType old = mResult;
+                    if (mOnPollerEventListener != null && mResult != null) {
+                        if (mOnPollerEventListener.onResult(old, mResult)) {
+                            stop();
+                        }
+                    }
                     message.sendToTarget();
                     break;
             }
@@ -225,19 +231,10 @@ public abstract class AbstractPoller<ParamType, ResultType> {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MESSAGE_POLL:
-                    if (msg.obj != null) {
-                        ResultType old = mResult;
-                        mResult = (ResultType) msg.obj;
-                        if (mOnPollerEventListener != null && mResult != null) {
-                            if (mOnPollerEventListener.onResult(old, mResult)) {
-                                stop();
-                            }
-                        }
-                    }
                     mIteration++;
                     if ((mExpiryTime == NO_EXPIRATION || mStartTime + mExpiryTime > System.currentTimeMillis()) && isPolling()) {
                         sendMessageToPollerThread();
-                    } else if (mOnPollerEventListener != null) {
+                    } else if (mOnPollerEventListener != null && isPolling()) {
                         mOnPollerEventListener.onTimeExpired();
                     }
                     break;
