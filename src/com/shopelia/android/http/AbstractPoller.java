@@ -210,8 +210,8 @@ public abstract class AbstractPoller<ParamType, ResultType> {
                     ResultType result = execute((ParamType) msg.obj);
                     Message message = mHandler.obtainMessage();
                     message.what = MESSAGE_POLL;
-                    message.obj = result;
                     ResultType old = mResult;
+                    mResult = result;
                     if (mOnPollerEventListener != null && mResult != null) {
                         if (mOnPollerEventListener.onResult(old, mResult)) {
                             stop();
