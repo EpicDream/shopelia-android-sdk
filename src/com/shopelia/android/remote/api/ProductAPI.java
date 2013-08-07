@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.text.TextUtils;
 
 import com.shopelia.android.http.AbstractPoller.OnPollerEventListener;
@@ -41,6 +42,7 @@ public class ProductAPI extends ApiHandler {
     private SharedPreferences mPreferences;
     private ArrayList<ExtendedProduct> mProducts;
     private ExtendedProduct mProduct;
+    private Handler mHandler = new Handler();
 
     public ProductAPI(Context context, Callback callback) {
         super(context, callback);
@@ -87,10 +89,16 @@ public class ProductAPI extends ApiHandler {
         }
 
         @Override
-        public boolean onResult(HttpGetResponse previousResult, HttpGetResponse newResult) {
+        public boolean onResult(HttpGetResponse previousResult, final HttpGetResponse newResult) {
             if (newResult.exception != null) {
                 if (hasCallback()) {
-                    getCallback().onError(STEP_PRODUCT, newResult.response, null, newResult.exception);
+                    mHandler.post(new Runnable() {
+
+                        @Override
+                        public void run() {
+                            getCallback().onError(STEP_PRODUCT, newResult.response, null, newResult.exception);
+                        }
+                    });
                 }
             } else if (newResult.response != null) {
                 try {
@@ -99,7 +107,13 @@ public class ProductAPI extends ApiHandler {
                     mProducts.add(mProduct);
                     saveProducts(mProducts);
                     if (hasCallback() && mProduct.isValid() && mProduct.ready) {
-                        getCallback().onProductUpdate(mProduct.getProduct(), true);
+                        mHandler.post(new Runnable() {
+
+                            @Override
+                            public void run() {
+                                getCallback().onProductUpdate(mProduct.getProduct(), true);
+                            }
+                        });
                     }
                     return mProduct.isValid();
                 } catch (JSONException e) {
