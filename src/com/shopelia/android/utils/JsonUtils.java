@@ -6,10 +6,20 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
+import android.os.AsyncTask;
+import android.os.Build;
+
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.JsonData;
 
 public final class JsonUtils {
+
+    public interface OnObjectParsedListener<T> {
+        public void onObjectParsed(T object);
+
+        public void onException(JSONException e);
+    }
 
     private JsonUtils() {
 
@@ -47,9 +57,11 @@ public final class JsonUtils {
             }
         }
     }
-    
+
     /**
-     * Inserts a new key/value in the dest {@link JSONObject}. If dest is null, the method will create a new {@link JSONObject} and return it.
+     * Inserts a new key/value in the dest {@link JSONObject}. If dest is null,
+     * the method will create a new {@link JSONObject} and return it.
+     * 
      * @param dest
      * @param key
      * @param value
@@ -57,11 +69,38 @@ public final class JsonUtils {
      * @throws JSONException
      */
     public static JSONObject insert(JSONObject dest, String key, Object value) throws JSONException {
-    	if (dest == null) {
-    		dest = new JSONObject();
-    	}
-    	dest.put(key, value);
-    	return dest;
+        if (dest == null) {
+            dest = new JSONObject();
+        }
+        dest.put(key, value);
+        return dest;
     }
-    
+
+    @SuppressLint("NewApi")
+    public static void parseObjectAsync(final CharSequence charSequence, final OnObjectParsedListener<JSONObject> l) {
+        AsyncTask<Void, Void, JSONObject> task = (new AsyncTask<Void, Void, JSONObject>() {
+
+            @Override
+            protected JSONObject doInBackground(Void... params) {
+                try {
+                    return new JSONObject(charSequence.toString());
+                } catch (JSONException e) {
+
+                }
+                return null;
+            }
+
+            @Override
+            protected void onPostExecute(JSONObject result) {
+                super.onPostExecute(result);
+                l.onObjectParsed(result);
+            }
+
+        });
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            task.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        } else {
+            task.execute();
+        }
+    }
 }
