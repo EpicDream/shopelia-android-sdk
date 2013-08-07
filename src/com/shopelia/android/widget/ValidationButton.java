@@ -14,7 +14,9 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.nineoldandroids.animation.ArgbEvaluator;
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
 import com.shopelia.android.R;
 import com.shopelia.android.graphics.ColorDrawableAnimation;
 
@@ -144,10 +146,11 @@ public class ValidationButton extends FrameLayout {
                     anim.start(getResources().getColor(R.color.shopelia_validation_textColor_disabled));
                 }
                 {
-                    ObjectAnimator
-                            .ofInt(mLabel, "textColor", getResources().getColor(R.color.shopelia_white),
-                                    getResources().getColor(R.color.shopelia_validation_textColor_disabled))
-                            .setDuration(getResources().getInteger(R.integer.shopelia_animation_time)).start();
+                    ValueAnimator colorAnim = ObjectAnimator.ofInt(mLabel, "textColor", getResources().getColor(R.color.shopelia_white),
+                            getResources().getColor(R.color.shopelia_validation_textColor_disabled));
+                    colorAnim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
+                    colorAnim.setEvaluator(new ArgbEvaluator());
+                    colorAnim.start();
                 }
             } else {
                 {
@@ -162,10 +165,12 @@ public class ValidationButton extends FrameLayout {
                     anim.start(getResources().getColor(R.color.shopelia_validation_textColor_disabled), Color.WHITE);
                 }
                 {
-                    ObjectAnimator
-                            .ofInt(mLabel, "textColor", getResources().getColor(R.color.shopelia_validation_textColor_disabled),
-                                    getResources().getColor(R.color.shopelia_white))
-                            .setDuration(getResources().getInteger(R.integer.shopelia_animation_time)).start();
+                    ValueAnimator colorAnim = ObjectAnimator.ofInt(mLabel, "textColor",
+                            getResources().getColor(R.color.shopelia_validation_textColor_disabled),
+                            getResources().getColor(R.color.shopelia_white));
+                    colorAnim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
+                    colorAnim.setEvaluator(new ArgbEvaluator());
+                    colorAnim.start();
                 }
             }
 
