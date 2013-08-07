@@ -24,19 +24,27 @@ public class AddPaymentCardActivity extends ShopeliaActivity implements OnPaymen
      */
     public static final String EXTRA_PAYMENT_CARD = Config.EXTRA_PREFIX + "PAYMENT_CARD";
 
+    private AddPaymentCardFragment mFragment;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHostContentView(R.layout.shopelia_add_payment_card_activity);
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.fragment_container, new AddPaymentCardFragment());
+        ft.replace(R.id.fragment_container, mFragment = new AddPaymentCardFragment());
         ft.commit();
     }
 
     @Override
     public String getActivityName() {
         return ACTIVITY_NAME;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mFragment.onActivityResult(requestCode, resultCode, data);
     }
 
     @Override

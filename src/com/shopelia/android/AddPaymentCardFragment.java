@@ -2,6 +2,7 @@ package com.shopelia.android;
 
 import org.json.JSONException;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -51,6 +52,12 @@ public class AddPaymentCardFragment extends ShopeliaFragment<OnPaymentCardAddedL
         mFormContainer.onCreate(savedInstanceState);
 
         findViewById(R.id.validate).setOnClickListener(mOnValidateClickListener);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mFormContainer.onActivityResult(requestCode, resultCode, data);
     }
 
     private OnClickListener mOnValidateClickListener = new OnClickListener() {
