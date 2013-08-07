@@ -73,15 +73,19 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             @Override
             public void onProductUpdate(Product product, boolean fromNetwork) {
                 super.onProductUpdate(product, fromNetwork);
-                getOrder().product = product;
-                findViewById(R.id.product_sheet, ProductSheetWidget.class).setProductInfo(getOrder().product, fromNetwork);
-                setupUi();
+                if (getActivity() != null) {
+                    getOrder().product = product;
+                    findViewById(R.id.product_sheet, ProductSheetWidget.class).setProductInfo(getOrder().product, fromNetwork);
+                    setupUi();
+                }
             }
 
             @Override
             public void onProductNotAvailable(Product product) {
-                ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(product);
-                fragment.show(getChildFragmentManager(), null);
+                if (getActivity() != null) {
+                    ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(product);
+                    fragment.show(getChildFragmentManager(), null);
+                }
             }
 
             @Override
