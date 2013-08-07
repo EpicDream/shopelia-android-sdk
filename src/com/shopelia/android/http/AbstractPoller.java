@@ -64,12 +64,12 @@ public abstract class AbstractPoller<ParamType, ResultType> {
     private OnPollerEventListener<ResultType> mOnPollerEventListener;
     private long mFrequency = DEFAULT_FREQUENCY;
     private long mExpiryTime = NO_EXPIRATION;
+    private long mStartTime;
     private AtomicInteger mInnerState = new AtomicInteger(STATE_STOPPED);
     private PollerThread mPollerThread;
     private PollerHandler mPollerHandler;
     private AtomicReference<ParamType> mParam = new AtomicReference<ParamType>();
     private int mIteration = 0;
-    private int mMaxIteration;
 
     public AbstractPoller(String name) {
         mPollerName = name;
@@ -97,11 +97,7 @@ public abstract class AbstractPoller<ParamType, ResultType> {
         } else if (isStopped()) {
             mIteration = 0;
             setState(STATE_POLLING);
-            if (mExpiryTime == NO_EXPIRATION) {
-                mMaxIteration = INFINITE;
-            } else {
-                mMaxIteration = (int) (mExpiryTime / mFrequency);
-            }
+            mStartTime = System.currentTimeMillis();
             mPollerThread = new PollerThread();
             mPollerThread.start();
         }
@@ -239,9 +235,9 @@ public abstract class AbstractPoller<ParamType, ResultType> {
                         }
                     }
                     mIteration++;
-                    if ((mMaxIteration == INFINITE || mIteration < mMaxIteration) && isPolling()) {
+                    if ((mExpiryTime == NO_EXPIRATION || mStartTime + mExpiryTime > System.currentTimeMillis()) && isPolling()) {
                         sendMessageToPollerThread();
-                    } else if (mMaxIteration != INFINITE && mIteration >= mMaxIteration && mOnPollerEventListener != null) {
+                    } else if (mOnPollerEventListener != null) {
                         mOnPollerEventListener.onTimeExpired();
                     }
                     break;
