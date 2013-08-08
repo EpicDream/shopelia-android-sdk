@@ -126,8 +126,7 @@ public class Merchant implements BaseModel<Merchant> {
 
     @Override
     public boolean isValid() {
-        // TODO Auto-generated method stub
-        return false;
+        return uri != null && uri.getHost() != null && name != null;
     }
 
 }

@@ -136,7 +136,7 @@ public class MerchantsAPI extends ApiHandler {
             return null;
         }
         for (Merchant merchant : mMerchants) {
-            if (url.contains(merchant.uri.getHost().replace("www.", ""))) {
+            if (merchant.isValid() && url.contains(merchant.uri.getHost().replace("www.", ""))) {
                 return merchant;
             }
         }
