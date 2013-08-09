@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.test.ActivityInstrumentationTestCase2;
 
 import com.jayway.android.robotium.solo.Solo;
+import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.WelcomeActivity;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.test.fixtures.FixtureBundleFactory;
@@ -36,6 +37,11 @@ public class WelcomeActivityTest extends ActivityInstrumentationTestCase2<Welcom
         solo.clickOnView(solo.getView(R.id.continue_with_merchant_site));
         solo.goBack();
         solo.assertCurrentActivity("Should be on WelcomeActivity", WelcomeActivity.class);
+    }
+
+    public void testClickOnContinueToShopelia() {
+        solo.clickOnView(solo.getView(R.id.continue_with_shopelia));
+        solo.assertCurrentActivity("Should be on PrepareOrderActivity", PrepareOrderActivity.class);
     }
 
     @Override
