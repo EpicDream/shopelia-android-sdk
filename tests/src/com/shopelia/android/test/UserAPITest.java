@@ -20,4 +20,14 @@ public class UserAPITest extends InstrumentationTestCase {
         TestUtils.signOut(getInstrumentation().getTargetContext());
         assertFalse("Should not be logged ", UserManager.get(getInstrumentation().getTargetContext()).isLogged());
     }
+
+    public void testCreateUser() {
+        User user = MockUser.get("test");
+        User result = TestUtils.signUp(getInstrumentation().getTargetContext(), user);
+        assertEquals("Should have email = " + user.email, UserManager.get(getInstrumentation().getTargetContext()).getUser().email,
+                user.email);
+        assertTrue("Should be signed in", UserManager.get(getInstrumentation().getTargetContext()).isLogged());
+        assertEquals("Should have the same address", user.getDefaultAddress().address, result.getDefaultAddress().address);
+    }
+
 }

@@ -13,4 +13,14 @@ public class MockUser extends User {
         password = "teston";
     }
 
+    public void test() {
+        email = "test@shopelia.fr";
+        password = "shopelia";
+        addresses.add(MockAddress.get("test"));
+        paymentCards.add(MockPaymentCard.get("test"));
+        firstname = "Test";
+        lastname = "Shopelia";
+        has_password = 0;
+    }
+
 }

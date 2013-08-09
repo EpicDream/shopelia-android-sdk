@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.text.TextUtils;
 
-public final class Address implements BaseModel<Address> {
+public class Address implements BaseModel<Address> {
 
     public interface Api {
         String ADDRESS = "address";

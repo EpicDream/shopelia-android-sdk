@@ -8,10 +8,10 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.model.Address;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.UserAPI;
-import com.shopelia.android.test.model.MockUser;
 import com.turbomanage.httpclient.HttpResponse;
 
 /**
@@ -44,7 +44,7 @@ public class TestUtils {
                 barrier.countDown();
             }
 
-        }).signIn(MockUser.get("me"));
+        }).signIn(user);
         try {
             barrier.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -52,6 +52,40 @@ public class TestUtils {
         }
         if (result.value == null) {
             throw new Error("Unable to login the user " + user.email + " " + user.password);
+        }
+        return result.value;
+    }
+
+    public static User signUp(Context context, User user) {
+        final CountDownLatch barrier = new CountDownLatch(1);
+        final Mutable<User> result = new Mutable<User>();
+        new UserAPI(context, new CallbackAdapter() {
+
+            @Override
+            public void onSignIn(User user) {
+                result.value = user;
+                barrier.countDown();
+            }
+
+            @Override
+            public void onAccountCreationSucceed(User user, Address address) {
+                result.value = user;
+                barrier.countDown();
+            }
+
+            @Override
+            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+                barrier.countDown();
+            }
+
+        }).createAccount(user, user.getDefaultAddress(), user.getDefaultPaymentCard());
+        try {
+            barrier.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+
+        }
+        if (result.value == null) {
+            throw new Error("Unable to create user " + user.email);
         }
         return result.value;
     }
