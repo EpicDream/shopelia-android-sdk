@@ -189,7 +189,7 @@ public class FontableTextView extends TextView {
             return Typeface.createFromAsset(assetManager, path);
         } catch (Exception e) {
             e.printStackTrace();
-            return null;
+            return Typeface.DEFAULT;
         }
     }
 }
