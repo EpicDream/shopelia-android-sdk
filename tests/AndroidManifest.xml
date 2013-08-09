@@ -133,6 +133,9 @@
         <activity
             android:name="io.card.payment.DataEntryActivity"
             android:screenOrientation="portrait" />
+        
+         <meta-data android:name="shopelia-sdk-api-key" android:value="52953f1868a7545011d979a8c1d0acbc310dcb5a262981bd1a75c1c6f071ffb4" />
+        <meta-data android:name="shopelia-sdk-application-name" android:value="Shopelia Test Application" />
     </application>
 
 </manifest>
