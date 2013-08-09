@@ -13,7 +13,7 @@ public class MockMerchant extends Merchant {
     public void first() {
         logo = "";
         name = "TestMerchantFirst";
-        uri = Uri.parse("www.testmerchant.com");
+        uri = Uri.parse("http://testmerchant.com");
     }
 
 }

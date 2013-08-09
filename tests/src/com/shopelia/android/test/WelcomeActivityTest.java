@@ -12,7 +12,7 @@ import com.shopelia.android.test.fixtures.FixtureBundleFactory;
 @SuppressLint("NewApi")
 public class WelcomeActivityTest extends ActivityInstrumentationTestCase2<WelcomeActivity> {
 
-    public Solo solo;
+    private Solo solo;
 
     public WelcomeActivityTest() {
         super(WelcomeActivity.class);
@@ -32,10 +32,15 @@ public class WelcomeActivityTest extends ActivityInstrumentationTestCase2<Welcom
         assertEquals(ShopeliaActivity.STYLE_TRANSLUCENT, getActivity().getActivityStyle());
     }
 
+    public void testClickOnGoToMerchantSite() {
+        solo.clickOnView(solo.getView(R.id.continue_with_merchant_site));
+        solo.goBack();
+        solo.assertCurrentActivity("Should be on WelcomeActivity", WelcomeActivity.class);
+    }
+
     @Override
     protected void tearDown() throws Exception {
-        super.tearDown();
-        // solo.finishOpenedActivities();
+        solo.finishOpenedActivities();
     }
 
 }

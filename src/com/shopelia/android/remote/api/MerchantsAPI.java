@@ -132,7 +132,7 @@ public class MerchantsAPI extends ApiHandler {
     }
 
     private Merchant findMerchantByUrl(String url) {
-        if (url == null) {
+        if (url == null || mMerchants == null) {
             return null;
         }
         for (Merchant merchant : mMerchants) {
