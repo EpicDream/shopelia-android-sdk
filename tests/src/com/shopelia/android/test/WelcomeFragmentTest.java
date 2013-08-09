@@ -11,11 +11,11 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.test.fixtures.FixtureBundleFactory;
 
 @SuppressLint("NewApi")
-public class WelcomeActivityTest extends ActivityInstrumentationTestCase2<WelcomeActivity> {
+public class WelcomeFragmentTest extends ActivityInstrumentationTestCase2<WelcomeActivity> {
 
     private Solo solo;
 
-    public WelcomeActivityTest() {
+    public WelcomeFragmentTest() {
         super(WelcomeActivity.class);
     }
 
