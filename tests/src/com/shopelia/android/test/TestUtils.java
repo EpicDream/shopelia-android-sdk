@@ -7,6 +7,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.UserAPI;
@@ -20,14 +21,14 @@ import com.turbomanage.httpclient.HttpResponse;
  */
 public class TestUtils {
 
-    public User signIn(Context context, CharSequence email, CharSequence password) {
+    public static User signIn(Context context, CharSequence email, CharSequence password) {
         User user = new User();
         user.email = email.toString();
         user.password = password.toString();
         return signIn(context, user);
     }
 
-    public User signIn(Context context, User user) {
+    public static User signIn(Context context, User user) {
         final CountDownLatch barrier = new CountDownLatch(1);
         final Mutable<User> result = new Mutable<User>();
         new UserAPI(context, new CallbackAdapter() {
@@ -53,6 +54,10 @@ public class TestUtils {
             throw new Error("Unable to login the user " + user.email + " " + user.password);
         }
         return result.value;
+    }
+
+    public static void signOut(Context context) {
+        UserManager.get(context).logout();
     }
 
     public static class Mutable<T> {
