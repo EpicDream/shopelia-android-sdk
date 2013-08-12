@@ -7,6 +7,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import org.json.JSONObject;
 
 import android.test.InstrumentationTestCase;
+import android.util.Log;
 
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.User;
@@ -18,11 +19,19 @@ import com.turbomanage.httpclient.HttpResponse;
 
 public class TestAddressesAPI extends InstrumentationTestCase {
 
+    User user;
+    Address address;
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        user = TestUtils.signUp(getInstrumentation().getTargetContext(), MockUser.get("test"));
+        address = MockAddress.get("second");
+    }
+
     public void testAddAddress() {
         final CountDownLatch barrier = new CountDownLatch(1);
         final AtomicBoolean result = new AtomicBoolean(false);
-        TestUtils.signUp(getInstrumentation().getTargetContext(), MockUser.get("test"));
-        Address address = MockAddress.get("second");
         new AddressesAPI(getInstrumentation().getTargetContext(), new CallbackAdapter() {
 
             @Override
@@ -46,6 +55,7 @@ public class TestAddressesAPI extends InstrumentationTestCase {
         }
         assertTrue("Should returns true", result.get());
         User after = TestUtils.updateUser(getInstrumentation().getTargetContext());
+        user = after;
         for (Address a : after.addresses) {
             if (address.address.equals(a.address)) {
                 assertTrue(true);
@@ -58,8 +68,6 @@ public class TestAddressesAPI extends InstrumentationTestCase {
     public void testEditAddress() {
         final CountDownLatch barrier = new CountDownLatch(1);
         final AtomicBoolean result = new AtomicBoolean(false);
-        User user = TestUtils.signUp(getInstrumentation().getTargetContext(), MockUser.get("test"));
-        final Address address = MockAddress.get("second");
         address.id = user.getDefaultAddress().id;
         new AddressesAPI(getInstrumentation().getTargetContext(), new CallbackAdapter() {
 
@@ -83,6 +91,48 @@ public class TestAddressesAPI extends InstrumentationTestCase {
 
         }
         assertTrue("Should returns true", result.get());
+    }
+
+    public void testSetDefaultAddress() {
+        testAddAddress();
+        Address toDefault = null;
+        for (Address address : user.addresses) {
+            Log.d(null, "ADDRESS " + address.address + " " + address.is_default);
+            if (!address.is_default) {
+                toDefault = address;
+            }
+        }
+        if (toDefault == null) {
+            fail("No non-default address (must be a bug)");
+        }
+        final CountDownLatch barrier = new CountDownLatch(1);
+        new AddressesAPI(getInstrumentation().getTargetContext(), new CallbackAdapter() {
+
+            @Override
+            public void onRequestDone() {
+                super.onRequestDone();
+                barrier.countDown();
+            }
+
+            @Override
+            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+                super.onError(step, httpResponse, response, e);
+                barrier.countDown();
+            }
+
+        }).setDefaultAddress(toDefault);
+        try {
+            barrier.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+
+        }
+        User u = TestUtils.updateUser(getInstrumentation().getTargetContext());
+        assertEquals("Addresses should be the same", toDefault.address, u.getDefaultAddress().address);
+    }
+
+    @Override
+    protected void tearDown() throws Exception {
+        super.tearDown();
     }
 
 }
