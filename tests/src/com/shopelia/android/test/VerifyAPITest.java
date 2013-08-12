@@ -16,7 +16,7 @@ import com.shopelia.android.remote.api.VerifyAPI;
 import com.shopelia.android.test.model.MockUser;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class TestVerifyAPI extends InstrumentationTestCase {
+public class VerifyAPITest extends InstrumentationTestCase {
 
     User user;
 

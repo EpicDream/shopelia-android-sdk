@@ -17,7 +17,7 @@ import com.shopelia.android.test.model.MockAddress;
 import com.shopelia.android.test.model.MockUser;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class TestAddressesAPI extends InstrumentationTestCase {
+public class AddressesAPITest extends InstrumentationTestCase {
 
     User user;
     Address address;
