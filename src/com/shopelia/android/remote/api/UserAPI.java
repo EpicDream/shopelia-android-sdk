@@ -32,7 +32,6 @@ public class UserAPI extends ApiHandler {
             fireError(STEP_ACCOUNT_CREATION, null, null, e);
             return;
         }
-        UserManager.get(getContext()).logout();
         ShopeliaRestClient.V1(getContext()).post(Command.V1.Users.$, params, new JsonAsyncCallback() {
 
             @Override
