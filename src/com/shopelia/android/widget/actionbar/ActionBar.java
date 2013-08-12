@@ -104,9 +104,9 @@ public class ActionBar {
     public void commit() {
         if (mActionBarWidget == null) {
             mItems.commit();
-            return;
+        } else {
+            doCommit();
         }
-        doCommit();
     }
 
     public void clear() {
@@ -150,6 +150,7 @@ public class ActionBar {
     public void restore() {
         try {
             mItems = mSavedStates.getLast();
+            mItems.forceNextCommit();
         } catch (NoSuchElementException e) {
             throw new IllegalStateException("Too much call to restore", e);
         }
