@@ -62,12 +62,6 @@ public class TestUtils {
         new UserAPI(context, new CallbackAdapter() {
 
             @Override
-            public void onSignIn(User user) {
-                result.value = user;
-                barrier.countDown();
-            }
-
-            @Override
             public void onAccountCreationSucceed(User user, Address address) {
                 result.value = user;
                 barrier.countDown();
