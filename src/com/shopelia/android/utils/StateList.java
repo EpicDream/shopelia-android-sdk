@@ -17,6 +17,8 @@ public class StateList<E> implements List<E> {
     private List<E> mStaged = new ArrayList<E>();
     private List<E> mCommitted = new ArrayList<E>();
 
+    private boolean mHasChanges = false;
+
     public StateList() {
 
     }
@@ -30,8 +32,13 @@ public class StateList<E> implements List<E> {
         }
     }
 
+    public void forceNextCommit() {
+        mHasChanges = true;
+    }
+
     public boolean hasChange() {
-        if (mStaged.size() != mCommitted.size()) {
+        if (mStaged.size() != mCommitted.size() || mHasChanges) {
+            mHasChanges = false;
             return true;
         }
         for (E i1 : mStaged) {
@@ -41,9 +48,9 @@ public class StateList<E> implements List<E> {
                     found = true;
                     break;
                 }
-                if (!found) {
-                    return true;
-                }
+            }
+            if (!found) {
+                return true;
             }
         }
         return false;
