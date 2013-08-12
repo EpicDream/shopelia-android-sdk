@@ -90,6 +90,39 @@ public class TestUtils {
         return result.value;
     }
 
+    /**
+     * Must be sign in else will fail
+     * 
+     * @param context
+     * @return
+     */
+    public static User updateUser(Context context) {
+        final CountDownLatch barrier = new CountDownLatch(1);
+        final Mutable<User> result = new Mutable<User>();
+        new UserAPI(context, new CallbackAdapter() {
+
+            @Override
+            public void onUserRetrieved(User user) {
+                result.value = user;
+            }
+
+            @Override
+            public void onUserUpdateDone() {
+                barrier.countDown();
+            }
+
+        }).updateUser();
+        try {
+            barrier.await(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+
+        }
+        if (result.value == null) {
+            throw new Error("Unable to update the user (perhaps you are not logged in)");
+        }
+        return result.value;
+    }
+
     public static void signOut(Context context) {
         UserManager.get(context).logout();
     }
