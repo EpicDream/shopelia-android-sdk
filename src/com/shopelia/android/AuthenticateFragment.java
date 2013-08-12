@@ -172,6 +172,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
 
         @Override
         public void onVerifyFailed() {
+            stopWaiting();
             findViewById(R.id.validate).setEnabled(true);
             mPasswordField.setEnabled(true);
             mErrorMessage.setVisibility(View.VISIBLE);
@@ -191,7 +192,6 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
                     return true;
                 }
             });
-            stopWaiting();
         };
 
         @Override
@@ -214,6 +214,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
 
         @Override
         public void onError(int step, HttpResponse httpResponse, org.json.JSONObject response, Exception e) {
+            stopWaiting();
             mErrorMessage.setVisibility(View.VISIBLE);
             mPasswordField.setEnabled(true);
             findViewById(R.id.validate).setEnabled(true);
@@ -223,7 +224,6 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
                 String error = ApiHandler.ErrorInflater.grabErrorMessage(httpResponse.getBodyAsString());
                 mErrorMessage.setText(error);
             }
-            stopWaiting();
         };
 
     };
