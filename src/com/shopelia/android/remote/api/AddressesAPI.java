@@ -85,8 +85,19 @@ public class AddressesAPI extends ApiHandler {
 
                 @Override
                 public void onComplete(HttpResponse httpResponse) {
-
+                    if (hasCallback()) {
+                        getCallback().onRequestDone();
+                    }
                 }
+
+                @Override
+                public void onError(Exception e) {
+                    super.onError(e);
+                    if (hasCallback()) {
+                        getCallback().onError(STEP_ADDRESS, null, null, e);
+                    }
+                }
+
             });
         } catch (JSONException e) {
             // Do nothing

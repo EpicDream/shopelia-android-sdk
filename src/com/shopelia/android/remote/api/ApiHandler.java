@@ -60,6 +60,8 @@ public class ApiHandler {
 
         public void onProductNotAvailable(Product product);
 
+        public void onRequestDone();
+
     }
 
     public static class CallbackAdapter implements Callback {
@@ -168,6 +170,12 @@ public class ApiHandler {
         public void onProductUpdate(Product product, boolean fromNetwork) {
 
         }
+
+        @Override
+        public void onRequestDone() {
+
+        }
+
     }
 
     public static class ErrorInflater {
