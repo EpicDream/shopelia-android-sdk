@@ -42,7 +42,7 @@ public class UserAPI extends ApiHandler {
                     UserManager.get(getContext()).login(user, object.optString(User.Api.AUTH_TOKEN));
                     UserManager.get(getContext()).saveUser();
                     if (user.addresses.size() > 0) {
-                        getCallback().onAccountCreationSucceed(user, user.addresses.get(0));
+                        getCallback().onAccountCreationSucceed(user, user.getDefaultAddress());
                     } else {
                         fireError(STEP_ACCOUNT_CREATION, response, null, new IllegalStateException("No address registered"));
                     }
