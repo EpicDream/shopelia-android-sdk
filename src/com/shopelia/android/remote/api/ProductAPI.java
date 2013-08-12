@@ -123,6 +123,11 @@ public class ProductAPI extends ApiHandler {
             return false;
         }
 
+        @Override
+        public void onPollingSucceed() {
+
+        }
+
     };
 
     private ExtendedProduct findProductByUrl(String url) {

@@ -45,6 +45,8 @@ public abstract class AbstractPoller<ParamType, ResultType> {
          */
         public boolean onResult(ResultType previousResult, ResultType newResult);
 
+        public void onPollingSucceed();
+
     }
 
     public static final long DEFAULT_FREQUENCY = 800;
@@ -100,7 +102,12 @@ public abstract class AbstractPoller<ParamType, ResultType> {
             mStartTime = System.currentTimeMillis();
             mPollerThread = new PollerThread();
             mPollerThread.start();
+            onStart();
         }
+    }
+
+    protected void onStart() {
+
     }
 
     public AbstractPoller<ParamType, ResultType> setOnPollerEventListener(OnPollerEventListener<ResultType> l) {
@@ -236,6 +243,8 @@ public abstract class AbstractPoller<ParamType, ResultType> {
                         sendMessageToPollerThread();
                     } else if (mOnPollerEventListener != null && isPolling()) {
                         mOnPollerEventListener.onTimeExpired();
+                    } else if (mOnPollerEventListener != null) {
+                        mOnPollerEventListener.onPollingSucceed();
                     }
                     break;
 
