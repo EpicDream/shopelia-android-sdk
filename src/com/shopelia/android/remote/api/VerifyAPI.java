@@ -70,7 +70,6 @@ public class VerifyAPI extends ApiHandler {
                 } else if (hasCallback() && httpResponse.getStatus() == 401 && object.has(User.Api.PASSWORD)
                         && UserManager.get(getContext()).getUser() != null) {
                     User user = UserManager.get(getContext()).getUser();
-                    UserManager.get(getContext()).logout();
                     user.password = object.optString(User.Api.PASSWORD);
                     new UserAPI(getContext(), new CallbackAdapter() {
                         @Override
