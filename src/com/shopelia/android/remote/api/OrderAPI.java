@@ -9,6 +9,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.util.Log;
 
+import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
@@ -38,7 +39,9 @@ public class OrderAPI extends ApiHandler {
                 orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL, 1);
             }
             params.put(Order.Api.ORDER, orderObject);
-            Log.d(null, "ORDER " + params.toString(2));
+            if (Config.INFO_LOGS_ENABLED) {
+                Log.d(null, "ORDER " + params.toString(2));
+            }
         } catch (JSONException e) {
             fireError(STEP_ORDER, null, null, e);
             return;
