@@ -17,4 +17,11 @@ public class PaymentCardFactory extends PaymentCard {
         cvv = "123";
     }
 
+    public void second() {
+        number = "4589658745896544";
+        expMonth = "12";
+        expYear = ("" + (Calendar.getInstance().get(Calendar.YEAR) + 2)).substring(2);
+        cvv = "123";
+    }
+
 }
