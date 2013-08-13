@@ -2,10 +2,10 @@ package com.shopelia.android.test.model;
 
 import com.shopelia.android.model.User;
 
-public class MockUser extends User {
+public class UserFactory extends User {
 
-    public static MockUser get(String name) {
-        return MockModelHelper.get(new MockUser(), name);
+    public static UserFactory get(String name) {
+        return ModelFactoryHelper.get(new UserFactory(), name);
     }
 
     public void me() {
@@ -16,8 +16,8 @@ public class MockUser extends User {
     public void test() {
         email = "test@shopelia.fr";
         password = "shopelia";
-        addresses.add(MockAddress.get("test"));
-        paymentCards.add(MockPaymentCard.get("test"));
+        addresses.add(AddressFactory.get("test"));
+        paymentCards.add(PaymentCardFactory.get("test"));
         firstname = "Test";
         lastname = "Shopelia";
         has_password = 0;

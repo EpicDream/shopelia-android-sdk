@@ -4,12 +4,12 @@ import android.test.InstrumentationTestCase;
 
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
-import com.shopelia.android.test.model.MockUser;
+import com.shopelia.android.test.model.UserFactory;
 
 public class UserAPITest extends InstrumentationTestCase {
 
     public void testSignIn() {
-        User me = MockUser.get("me");
+        User me = UserFactory.get("me");
         TestUtils.signIn(getInstrumentation().getTargetContext(), me);
         assertEquals("Should have email = " + me.email, UserManager.get(getInstrumentation().getTargetContext()).getUser().email, me.email);
         assertTrue("Should be signed in", UserManager.get(getInstrumentation().getTargetContext()).isLogged());
@@ -22,7 +22,7 @@ public class UserAPITest extends InstrumentationTestCase {
     }
 
     public void testCreateUser() {
-        User user = MockUser.get("test");
+        User user = UserFactory.get("test");
         User result = TestUtils.signUp(getInstrumentation().getTargetContext(), user);
         assertEquals("Should have email = " + user.email, UserManager.get(getInstrumentation().getTargetContext()).getUser().email,
                 user.email);

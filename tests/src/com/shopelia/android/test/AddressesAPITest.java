@@ -13,8 +13,8 @@ import com.shopelia.android.model.Address;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.AddressesAPI;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
-import com.shopelia.android.test.model.MockAddress;
-import com.shopelia.android.test.model.MockUser;
+import com.shopelia.android.test.model.AddressFactory;
+import com.shopelia.android.test.model.UserFactory;
 import com.turbomanage.httpclient.HttpResponse;
 
 public class AddressesAPITest extends InstrumentationTestCase {
@@ -25,8 +25,8 @@ public class AddressesAPITest extends InstrumentationTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        user = TestUtils.signUp(getInstrumentation().getTargetContext(), MockUser.get("test"));
-        address = MockAddress.get("second");
+        user = TestUtils.signUp(getInstrumentation().getTargetContext(), UserFactory.get("test"));
+        address = AddressFactory.get("second");
     }
 
     public void testAddAddress() {

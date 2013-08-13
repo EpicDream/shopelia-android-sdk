@@ -3,7 +3,7 @@ package com.shopelia.android.test.model;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-public class MockModelHelper {
+public class ModelFactoryHelper {
 
     public static <T> T get(T instance, String name) {
         try {

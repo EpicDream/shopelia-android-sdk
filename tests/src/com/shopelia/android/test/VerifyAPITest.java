@@ -13,7 +13,7 @@ import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.VerifyAPI;
-import com.shopelia.android.test.model.MockUser;
+import com.shopelia.android.test.model.UserFactory;
 import com.turbomanage.httpclient.HttpResponse;
 
 public class VerifyAPITest extends InstrumentationTestCase {
@@ -23,7 +23,7 @@ public class VerifyAPITest extends InstrumentationTestCase {
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        user = MockUser.get("me");
+        user = UserFactory.get("me");
         TestUtils.signIn(getInstrumentation().getTargetContext(), user);
     }
 

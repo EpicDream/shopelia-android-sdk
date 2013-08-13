@@ -4,10 +4,10 @@ import android.net.Uri;
 
 import com.shopelia.android.model.Merchant;
 
-public class MockMerchant extends Merchant {
+public class MerchantFactory extends Merchant {
 
-    public static MockMerchant get(String name) {
-        return MockModelHelper.get(new MockMerchant(), name);
+    public static MerchantFactory get(String name) {
+        return ModelFactoryHelper.get(new MerchantFactory(), name);
     }
 
     public void first() {

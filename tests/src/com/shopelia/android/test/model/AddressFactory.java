@@ -2,10 +2,10 @@ package com.shopelia.android.test.model;
 
 import com.shopelia.android.model.Address;
 
-public class MockAddress extends Address {
+public class AddressFactory extends Address {
 
-    public static MockAddress get(String name) {
-        return MockModelHelper.get(new MockAddress(), name);
+    public static AddressFactory get(String name) {
+        return ModelFactoryHelper.get(new AddressFactory(), name);
     }
 
     public void test() {

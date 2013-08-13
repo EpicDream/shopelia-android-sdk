@@ -4,13 +4,13 @@ import android.os.Bundle;
 
 import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.model.Product;
-import com.shopelia.android.test.model.MockProduct;
+import com.shopelia.android.test.model.ProductFactory;
 
 public class FixtureBundleFactory {
 
     public static Bundle getShopeliaIntentBundle(String name) {
         Bundle out = new Bundle();
-        Product product = MockProduct.get(name);
+        Product product = ProductFactory.get(name);
         out.putParcelable(Shopelia.EXTRA_MERCHANT, product.merchant);
         out.putString(Shopelia.EXTRA_PRODUCT_URL, product.url);
         out.putFloat(Shopelia.EXTRA_PRICE, product.productPrice);

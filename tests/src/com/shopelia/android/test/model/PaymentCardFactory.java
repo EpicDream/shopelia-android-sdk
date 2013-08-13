@@ -4,10 +4,10 @@ import java.util.Calendar;
 
 import com.shopelia.android.model.PaymentCard;
 
-public class MockPaymentCard extends PaymentCard {
+public class PaymentCardFactory extends PaymentCard {
 
-    public static MockPaymentCard get(String name) {
-        return MockModelHelper.get(new MockPaymentCard(), name);
+    public static PaymentCardFactory get(String name) {
+        return ModelFactoryHelper.get(new PaymentCardFactory(), name);
     }
 
     public void test() {
