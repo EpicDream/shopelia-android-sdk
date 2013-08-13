@@ -14,7 +14,7 @@ import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
-import com.shopelia.android.remote.api.PaymentAPI;
+import com.shopelia.android.remote.api.PaymentCardAPI;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
 import com.shopelia.android.widget.form.FormLinearLayout;
@@ -67,7 +67,7 @@ public class AddPaymentCardFragment extends ShopeliaFragment<OnPaymentCardAddedL
             if (mFormContainer.validate()) {
                 try {
                     PaymentCard card = PaymentCard.inflate(mFormContainer.toJson().getJSONObject(Order.Api.PAYMENT_CARD));
-                    new PaymentAPI(getActivity(), new CallbackAdapter() {
+                    new PaymentCardAPI(getActivity(), new CallbackAdapter() {
 
                         @Override
                         public void onPaymentCardAdded(PaymentCard paymentCard) {
