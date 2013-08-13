@@ -1,4 +1,4 @@
-package com.shopelia.android.test;
+package com.shopelia.android.test.remote.api;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
@@ -13,6 +13,7 @@ import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
 import com.shopelia.android.remote.api.VerifyAPI;
+import com.shopelia.android.test.TestUtils;
 import com.shopelia.android.test.model.UserFactory;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -35,7 +36,7 @@ public class VerifyAPITest extends InstrumentationTestCase {
     public void testBlockOrder() throws JSONException, InterruptedException {
         VerifyAPI api = new VerifyAPI(getInstrumentation().getTargetContext(), new CallbackAdapter());
         assertFalse("Should not be blocked", api.isOrderForbidden());
-        for (int iteration = 0; iteration < 5; iteration++) {
+        for (int iteration = 0; iteration < 10; iteration++) {
             verifiy(api, "wrong" + user.password);
         }
         assertTrue("Should be blocked", api.isOrderForbidden());

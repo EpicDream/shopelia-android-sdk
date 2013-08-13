@@ -1,9 +1,10 @@
-package com.shopelia.android.test;
+package com.shopelia.android.test.remote.api;
 
 import android.test.InstrumentationTestCase;
 
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
+import com.shopelia.android.test.TestUtils;
 import com.shopelia.android.test.model.UserFactory;
 
 public class UserAPITest extends InstrumentationTestCase {
