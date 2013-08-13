@@ -23,7 +23,7 @@ public class PollerTest extends InstrumentationTestCase {
             @Override
             public void run() {
                 poller = new TestPoller();
-                poller.setExpiryDuration(100);
+                poller.setExpiryDuration(1000);
                 poller.setRequestFrequency(10);
                 barrier.countDown();
             }
