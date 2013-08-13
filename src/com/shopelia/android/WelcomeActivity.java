@@ -40,6 +40,8 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
         final UserManager um = UserManager.get(this);
         if (!um.isLogged() && um.getAccount() == null) {
             setActivityStyle(STYLE_TRANSLUCENT);
+        } else {
+            setActivityStyle(STYLE_DIALOG);
         }
         super.onCreate(savedInstanceState);
         if (!um.isLogged() && um.hasAccountPermission() && um.getAccount() != null) {
