@@ -196,6 +196,10 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         setHostMode(value ? getMode() | MODE_BLOCKED | MODE_WAITING : getMode() & ~(MODE_BLOCKED | MODE_WAITING));
     }
 
+    public boolean isInWaitingMode() {
+        return (getMode() & MODE_WAITING) == MODE_WAITING;
+    }
+
     /**
      * Initialize the waiting mode of the activity.
      * 
