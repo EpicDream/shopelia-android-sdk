@@ -167,6 +167,16 @@ public class ActionBar {
         mActionBarWidget.setVisibility(View.GONE);
     }
 
+    public void clickOnItem(int id) {
+        if (mOnItemClickListener != null) {
+            for (Item item : mItems) {
+                if (item.getId() == id) {
+                    mOnItemClickListener.onItemClick(item);
+                }
+            }
+        }
+    }
+
     private OnClickListener mOnClickListener = new OnClickListener() {
 
         @Override
