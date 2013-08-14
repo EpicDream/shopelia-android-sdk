@@ -4,6 +4,10 @@ import java.util.HashSet;
 
 import junit.framework.TestCase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import com.shopelia.android.model.JsonData.JsonInflater;
 import com.shopelia.android.utils.MultiHashSet;
 
 public class MultiHashSetTests extends TestCase {
@@ -54,4 +58,22 @@ public class MultiHashSetTests extends TestCase {
         assertEquals("Should have 7 differences : ", 7, diff.size());
     }
 
+    public void testSerialization() throws JSONException {
+        for (int i = 5; i < 10; i++) {
+            mhs.put("first", "Hi Shopelia " + i);
+        }
+        for (int i = 0; i < 12; i++) {
+            mhs.put("second", "Hi Shopelia " + i);
+        }
+        JSONObject object = mhs.toJson();
+        MultiHashSet<String, String> newMhs = MultiHashSet.inflate(object, JsonInflater.STRING_INFLATER);
+        assertEquals(mhs.getSet("first").size(), newMhs.getSet("first").size());
+        assertEquals(mhs.getSet("second").size(), newMhs.getSet("second").size());
+        mhs.put("third", newMhs.getSet("first"));
+        mhs.put("fourth", newMhs.getSet("second"));
+        HashSet<String> diff = mhs.diff("fourth", "first");
+        assertTrue("Should have the item 'Hi Shopelia 2'", diff.contains("Hi Shopelia 2"));
+        assertTrue("Should have no difference", mhs.diff("first", "third").size() == 0);
+        assertTrue("Should have no difference", mhs.diff("second", "fourth").size() == 0);
+    }
 }

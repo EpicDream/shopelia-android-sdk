@@ -107,7 +107,11 @@ public class MultiHashSet<K, V> extends HashMap<K, HashSet<V>> implements JsonDa
             final int s = array.length();
             HashSet<E> list = new HashSet<E>(s);
             for (int i = 0; i < s; i++) {
-                list.add(inflater.inflate(array.getJSONObject(i)));
+                if (inflater == JsonInflater.STRING_INFLATER) {
+                    list.add((E) array.getString(i));
+                } else {
+                    list.add(inflater.inflate(array.getJSONObject(i)));
+                }
             }
             out.put(name, list);
         }
@@ -125,6 +129,8 @@ public class MultiHashSet<K, V> extends HashMap<K, HashSet<V>> implements JsonDa
                 if (item instanceof JsonData) {
                     JsonData jdata = (JsonData) item;
                     a.put(jdata.toJson());
+                } else if (item instanceof String) {
+                    a.put((String) item);
                 }
             }
             object.put(entry.getKey().toString(), a);
