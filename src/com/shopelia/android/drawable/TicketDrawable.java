@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.Path;
 import android.graphics.Path.FillType;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
@@ -40,10 +41,17 @@ public class TicketDrawable extends Drawable {
     }
 
     @Override
+    public void setBounds(Rect bounds) {
+        super.setBounds(bounds);
+        mMainRectBounds.set(0, 0, getBounds().width(), getBounds().height());
+        computeFooterPath(bounds.width(), bounds.height());
+    }
+
+    @Override
     public void draw(Canvas canvas) {
         if (getBounds().width() != mMainRectBounds.width() || getBounds().height() != mMainRectBounds.height()) {
             mMainRectBounds.set(0, 0, getBounds().width(), getBounds().height());
-            computeFooterPath(canvas);
+            computeFooterPath(canvas.getWidth(), canvas.getHeight());
         }
         canvas.save();
         canvas.clipRect(0, 0, canvas.getWidth(), canvas.getHeight() - mTriangleHeight);
@@ -69,13 +77,13 @@ public class TicketDrawable extends Drawable {
 
     }
 
-    private void computeFooterPath(Canvas canvas) {
+    private void computeFooterPath(int width, int height) {
         final float left = 0;
-        final float top = canvas.getHeight() - mTriangleHeight;
-        final float right = canvas.getWidth();
-        final float bottom = canvas.getHeight();
+        final float top = height - mTriangleHeight;
+        final float right = width;
+        final float bottom = height;
 
-        final float triangleBaseWidth = canvas.getWidth() / mTriangleCount;
+        final float triangleBaseWidth = width / mTriangleCount;
 
         mFooterPath.reset();
         mFooterPath.setFillType(FillType.EVEN_ODD);
@@ -98,7 +106,5 @@ public class TicketDrawable extends Drawable {
 
         mFooterPath.lineTo(right, bottom);
         mFooterPath.lineTo(right, top);
-        // mFooterPath.lineTo(left, top);
-        // mFooterPath.close();
     }
 }
