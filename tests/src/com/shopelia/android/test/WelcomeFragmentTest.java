@@ -8,7 +8,9 @@ import com.jayway.android.robotium.solo.Solo;
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.WelcomeActivity;
 import com.shopelia.android.app.ShopeliaActivity;
+import com.shopelia.android.model.User;
 import com.shopelia.android.test.fixtures.FixtureBundleFactory;
+import com.shopelia.android.test.model.UserFactory;
 
 @SuppressLint("NewApi")
 public class WelcomeFragmentTest extends ActivityInstrumentationTestCase2<WelcomeActivity> {
@@ -22,6 +24,9 @@ public class WelcomeFragmentTest extends ActivityInstrumentationTestCase2<Welcom
     @Override
     protected void setUp() throws Exception {
         super.setUp();
+        User user = UserFactory.get("me");
+        TestUtils.signIn(getInstrumentation().getTargetContext(), user);
+        TestUtils.signOut(null);
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.putExtras(FixtureBundleFactory.getShopeliaIntentBundle("first"));

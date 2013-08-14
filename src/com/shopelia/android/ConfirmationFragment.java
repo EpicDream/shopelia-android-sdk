@@ -60,7 +60,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        view.findViewById(R.id.confirm).setOnClickListener(mOnConfirmClickListener);
+        view.findViewById(R.id.validate).setOnClickListener(mOnConfirmClickListener);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             view.findViewById(R.id.ticket).setBackground(new TicketDrawable(getActivity()));
         } else {
@@ -262,7 +262,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         setupProductUi();
         setupPriceUi();
         setupUserUi();
-        findViewById(R.id.confirm).setEnabled(getOrder().product.isValid());
+        findViewById(R.id.validate).setEnabled(getOrder().product.isValid());
     }
 
     private void setupProductUi() {

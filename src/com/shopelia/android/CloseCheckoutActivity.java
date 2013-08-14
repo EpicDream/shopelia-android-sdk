@@ -49,7 +49,7 @@ public class CloseCheckoutActivity extends ShopeliaActivity implements OnCreateP
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.setCustomAnimations(R.anim.shopelia_fade_in_short, R.anim.shopelia_fade_out_short, R.anim.shopelia_fade_in_short,
                 R.anim.shopelia_fade_out_short);
-        ft.replace(R.id.fragment_container, new CreatePasswordFragment());
+        ft.replace(R.id.fragment_container, new CreatePasswordFragment(), CreatePasswordFragment.TAG);
         ft.commit();
     }
 

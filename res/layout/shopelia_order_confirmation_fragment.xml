@@ -92,7 +92,7 @@
                 layout="@layout/shopelia_confirmation_price" />
 
             <com.shopelia.android.widget.ValidationButton
-                android:id="@+id/confirm"
+                android:id="@+id/validate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/shopelia_margin_large"

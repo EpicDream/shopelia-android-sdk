@@ -24,6 +24,8 @@ import com.turbomanage.httpclient.HttpResponse;
 
 public class CreatePasswordFragment extends ShopeliaFragment<Void> {
 
+    public static final String TAG = "CreatePasswordFragment";
+
     private FormLinearLayout mFormContainer;
 
     @Override
