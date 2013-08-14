@@ -35,6 +35,8 @@ public interface Analytics {
             String DISPLAY = "Display";
         }
 
+        String IDENTIFY = "Identify";
+        String UNIDENTIFY = "Unidentify";
     }
 
     public interface Properties {
