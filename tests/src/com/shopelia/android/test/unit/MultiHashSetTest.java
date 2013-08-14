@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import com.shopelia.android.model.JsonData.JsonInflater;
 import com.shopelia.android.utils.MultiHashSet;
 
-public class MultiHashSetTests extends TestCase {
+public class MultiHashSetTest extends TestCase {
 
     MultiHashSet<String, String> mhs;
 
