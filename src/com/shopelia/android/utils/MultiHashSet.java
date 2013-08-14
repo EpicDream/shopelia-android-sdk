@@ -40,6 +40,10 @@ public class MultiHashSet<K, V> extends HashMap<K, HashSet<V>> implements JsonDa
         return get(setName);
     }
 
+    public boolean put(K setName, V value) {
+        return getSet(setName).add(value);
+    }
+
     public void revoke(K setName, Revokator<V> revokator) {
         HashSet<V> set = getSet(setName);
         Iterator<V> it = set.iterator();
