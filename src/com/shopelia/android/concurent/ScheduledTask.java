@@ -25,7 +25,7 @@ public class ScheduledTask {
     private Object mToken = new Object();
 
     public ScheduledTask() {
-
+        this(new Handler());
     }
 
     /**

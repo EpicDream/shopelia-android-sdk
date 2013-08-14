@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.UUID;
 
@@ -26,8 +25,8 @@ import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.shopelia.android.utils.DigestUtils;
 import com.shopelia.android.utils.IOUtils;
-import com.shopelia.android.utils.QualifiedLists;
-import com.shopelia.android.utils.QualifiedLists.Revokator;
+import com.shopelia.android.utils.MultiHashSet;
+import com.shopelia.android.utils.MultiHashSet.Revokator;
 import com.shopelia.android.utils.TimeUnits;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
@@ -35,7 +34,7 @@ import com.turbomanage.httpclient.HttpResponse;
 public class VikingTracker extends ShopeliaTracker {
 
     public interface FlushDelegate {
-        public void onFlush(ArrayList<Entry> entries);
+        public void onFlush(HashSet<Entry> entries);
     }
 
     private static VikingTracker sInstance;
@@ -51,7 +50,9 @@ public class VikingTracker extends ShopeliaTracker {
     private static final String DEFAULT_TRACKER_NAME = "Android";
     private static final long FLUSH_TASK_DELAY = 1 * TimeUnits.SECONDS;
 
-    private QualifiedLists<Entry> mData = new QualifiedLists<VikingTracker.Entry>();
+    // private QualifiedLists<Entry> mData = new
+    // QualifiedLists<VikingTracker.Entry>();
+    private MultiHashSet<String, Entry> mData = new MultiHashSet<String, VikingTracker.Entry>();
     private File mSaveFile;
     private String mUuid;
     private HashSet<String> mTrakers = new HashSet<String>();
@@ -89,17 +90,7 @@ public class VikingTracker extends ShopeliaTracker {
     }
 
     private synchronized void addEventTolist(String name, Entry entry) {
-        ArrayList<Entry> list = mData.getList(name);
-        boolean found = false;
-        for (Entry i : list) {
-            if (i.digest.equals(entry.digest)) {
-                found = true;
-                break;
-            }
-        }
-        if (!found) {
-            list.add(entry);
-        }
+        mData.put(name, entry);
     }
 
     @Override
@@ -113,7 +104,7 @@ public class VikingTracker extends ShopeliaTracker {
 
     @Override
     public synchronized void flush() {
-        mData.revoke(Lists.EVENTS_SENT, new Revokator<VikingTracker.Entry>() {
+        mData.revoke(Lists.EVENTS_SENT, new Revokator<Entry>() {
 
             @Override
             public boolean revoke(Entry item) {
@@ -121,7 +112,9 @@ public class VikingTracker extends ShopeliaTracker {
             }
 
         });
-        ArrayList<Entry> entries = mData.diff(Lists.EVENTS, Lists.EVENTS_SENT);
+        HashSet<Entry> entries = mData.diff(Lists.EVENTS, Lists.EVENTS_SENT);
+        mData.merge(Lists.EVENTS, Lists.EVENTS_SENT);
+        save();
         if (mDelegate != null) {
             mDelegate.onFlush(entries);
         } else {
@@ -129,16 +122,14 @@ public class VikingTracker extends ShopeliaTracker {
                 sendEventsToTracker(entries, tracker);
             }
         }
-        mData.merge(Lists.EVENTS, Lists.EVENTS_SENT);
-        save();
     }
 
-    private void sendEventsToTracker(ArrayList<Entry> entries, String tracker) {
+    private void sendEventsToTracker(HashSet<Entry> entries, String tracker) {
         sendEventToTracker(entries, tracker, Actions.CLICK);
         sendEventToTracker(entries, tracker, Actions.DISPLAY);
     }
 
-    private void sendEventToTracker(final ArrayList<Entry> entries, String tracker, String action) {
+    private void sendEventToTracker(final HashSet<Entry> entries, String tracker, String action) {
         JSONArray urls = prepareArray(entries, action, tracker);
         if (urls.length() == 0) {
             return;
@@ -159,6 +150,7 @@ public class VikingTracker extends ShopeliaTracker {
                 @Override
                 public void onError(Exception e) {
                     super.onError(e);
+                    mData.revert(Lists.EVENTS, Lists.EVENTS_SENT);
                 }
 
             });
@@ -167,7 +159,7 @@ public class VikingTracker extends ShopeliaTracker {
         }
     }
 
-    private JSONArray prepareArray(ArrayList<Entry> entries, String action, String tracker) {
+    private JSONArray prepareArray(HashSet<Entry> entries, String action, String tracker) {
         JSONArray array = new JSONArray();
         for (Entry entry : entries) {
             if (action.equals(entry.action) && tracker.equals(entry.tracker)) {
@@ -209,7 +201,7 @@ public class VikingTracker extends ShopeliaTracker {
                 StringWriter writer = new StringWriter();
                 IOUtils.copy(fis, writer, Charset.forName(CHARSET));
                 JSONObject object = new JSONObject(writer.toString());
-                mData = QualifiedLists.inflate(object, Entry.INFLATOR);
+                mData = MultiHashSet.inflate(object, Entry.INFLATOR);
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -219,16 +211,16 @@ public class VikingTracker extends ShopeliaTracker {
             } finally {
                 IOUtils.closeQuietly(fis);
             }
-            mData.getList(Lists.EVENTS).clear();
+            mData.getSet(Lists.EVENTS).clear();
         } else {
-            mData = new QualifiedLists<VikingTracker.Entry>();
+            mData = new MultiHashSet<String, VikingTracker.Entry>();
         }
-        ArrayList<Entry> uuids = mData.getList(Lists.UUIDS);
+        HashSet<Entry> uuids = mData.getSet(Lists.UUIDS);
         if (uuids.size() == 0) {
             mUuid = UUID.randomUUID().toString().replace("-", "").substring(0, 32).toLowerCase();
             uuids.add(new Entry(mUuid));
         } else {
-            mUuid = uuids.get(0).digest;
+            mUuid = uuids.iterator().next().digest;
         }
     }
 
@@ -243,11 +235,11 @@ public class VikingTracker extends ShopeliaTracker {
             String CREATED_AT = "created_at";
         }
 
-        long created_at;
-        String digest;
-        String action;
-        String url;
-        String tracker;
+        public long created_at;
+        public String digest;
+        public String action;
+        public String url;
+        public String tracker;
 
         public Entry(String digest) {
             this.digest = digest;
