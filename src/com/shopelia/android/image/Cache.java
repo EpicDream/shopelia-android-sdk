@@ -2,6 +2,8 @@ package com.shopelia.android.image;
 
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -65,14 +67,16 @@ class Cache {
     }
 
     private long computeSize() {
+        long size = 0;
         for (com.shopelia.android.image.Cache.Journal.Entry entry : mJournal) {
-
+            File file = new File(mCacheDir, entry.filename);
+            size += file.length();
         }
-        return 0;
+        return size;
     }
 
     private void collect() {
-
+        long size = computeSize();
     }
 
     public void clear() {
@@ -80,7 +84,14 @@ class Cache {
     }
 
     private void snapshot() {
+        try {
+            File journal = new File(mCacheDir, ".journal");
+            FileWriter writer = new FileWriter(journal);
+            StringReader reader = new StringReader(mJournal.toJson().toString());
+            IOUtils.copy(reader, writer);
+        } catch (Exception e) {
 
+        }
     }
 
     private void ensureSafe() {
