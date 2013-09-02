@@ -94,6 +94,7 @@ public class VikingTracker extends ShopeliaTracker {
     }
 
     private synchronized void addEventTolist(String name, Entry entry) {
+        mTrakers.add(entry.tracker);
         mData.put(name, entry);
     }
 
