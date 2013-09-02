@@ -251,4 +251,7 @@
     <string name="shopelia_error_server_broke_down">Les serveurs shopelia ne répondent pas</string>
     <string name="shopelia_error_user_already_exists" formatted="false">Vous avez déjà un compte shopelia.</string>
 
+    <!-- Common -->
+    <string name="shopelia_common_buy">Acheter</string>
+    
 </resources>
