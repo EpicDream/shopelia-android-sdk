@@ -1,7 +1,8 @@
 package com.shopelia.android.image;
 
 import java.io.File;
-import java.io.Reader;
+import java.io.FileReader;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -14,9 +15,10 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.shopelia.android.model.JsonData;
+import com.shopelia.android.utils.IOUtils;
 
 /**
- * Very simple cache management class. Kind of LRU cache management.n
+ * Very simple cache management class. Kind of LRU cache management.
  * 
  * @author Pierre Pollastri
  */
@@ -35,16 +37,18 @@ class Cache {
 
     public synchronized File create(String filename) {
         ensureSafe();
-        return null;
-    }
-
-    public synchronized void save(String filename, Reader reader) {
-        ensureSafe();
+        File file = new File(mCacheDir, mJournal.create(filename).filename);
+        snapshot();
+        return file;
     }
 
     public synchronized File load(String filename) {
         ensureSafe();
-
+        if (mJournal.hasEntry(filename)) {
+            File file = new File(mCacheDir, mJournal.get(filename).filename);
+            snapshot();
+            return file;
+        }
         return null;
     }
 
@@ -54,6 +58,17 @@ class Cache {
 
     public synchronized void delete(String filename) {
         ensureSafe();
+        if (mJournal.hasEntry(filename)) {
+            new File(mCacheDir, filename).delete();
+        }
+        mJournal.delete(filename);
+    }
+
+    private long computeSize() {
+        for (com.shopelia.android.image.Cache.Journal.Entry entry : mJournal) {
+
+        }
+        return 0;
     }
 
     private void collect() {
@@ -64,12 +79,32 @@ class Cache {
         mJournal.clear();
     }
 
+    private void snapshot() {
+
+    }
+
     private void ensureSafe() {
         if (mCacheDir.exists() && !mCacheDir.isDirectory()) {
             mCacheDir.delete();
         }
         if (!mCacheDir.exists()) {
             mCacheDir.mkdirs();
+        }
+        if (mJournal == null) {
+            File journal = new File(mCacheDir, ".journal");
+            if (journal.exists()) {
+                try {
+                    StringWriter writer = new StringWriter();
+                    FileReader reader = new FileReader(journal);
+                    IOUtils.copy(reader, writer);
+                    mJournal = Journal.inflate(new JSONObject(writer.toString()));
+                } catch (Exception e) {
+                    mJournal = new Journal();
+                }
+            } else {
+                mJournal = new Journal();
+            }
+            collect();
         }
     }
 
