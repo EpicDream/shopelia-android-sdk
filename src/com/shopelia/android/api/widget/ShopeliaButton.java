@@ -37,9 +37,9 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
             android.R.attr.text
         };
         TypedArray ta = context.obtainStyledAttributes(attrs, attrsArray);
-        int text = ta.getResourceId(0 /* index of attribute in attrsArray */, R.string.shopelia_common_buy);
+        String text = ta.getString(0);
         ta.recycle();
-        setText(text);
+        setText(text != null ? text : context.getString(R.string.shopelia_common_buy));
     }
 
     @Override
