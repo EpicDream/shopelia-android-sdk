@@ -33,4 +33,6 @@ public interface ShopeliaView {
 
     public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l);
 
+    public void setTrackerName(String name);
+
 }

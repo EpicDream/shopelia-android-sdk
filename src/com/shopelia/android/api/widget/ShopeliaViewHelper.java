@@ -144,4 +144,9 @@ public class ShopeliaViewHelper implements ShopeliaView {
         }
     }
 
+    @Override
+    public void setTrackerName(String name) {
+        mTrackerName = name;
+    }
+
 }

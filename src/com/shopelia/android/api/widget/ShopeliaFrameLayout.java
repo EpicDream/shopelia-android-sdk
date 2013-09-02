@@ -128,4 +128,9 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
         mHelper.setProductName(name);
     }
 
+    @Override
+    public void setTrackerName(String name) {
+        mHelper.setTrackerName(name);
+    }
+
 }
