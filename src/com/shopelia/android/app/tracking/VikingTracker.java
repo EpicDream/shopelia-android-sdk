@@ -17,9 +17,11 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.os.Environment;
+import android.util.Log;
 
 import com.shopelia.android.app.ShopeliaTracker;
 import com.shopelia.android.concurent.ScheduledTask;
+import com.shopelia.android.config.Config;
 import com.shopelia.android.model.JsonData;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
@@ -32,6 +34,8 @@ import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
 public class VikingTracker extends ShopeliaTracker {
+
+    private static final String LOG = "VikingTracker";
 
     public interface FlushDelegate {
         public void onFlush(HashSet<Entry> entries);
@@ -46,7 +50,7 @@ public class VikingTracker extends ShopeliaTracker {
     private static final String DIRECTORY = "Shopelia/";
     private static final String SAVE_FILE = "internal.json";
     private static final String CHARSET = "UTF-8";
-    private static final long REVOCATION_DELAY = 1 * TimeUnits.HOURS;
+    private static final long REVOCATION_DELAY = 20 * TimeUnits.MINUTES;
     private static final String DEFAULT_TRACKER_NAME = "Android";
     private static final long FLUSH_TASK_DELAY = 1 * TimeUnits.SECONDS;
 
@@ -95,11 +99,13 @@ public class VikingTracker extends ShopeliaTracker {
 
     @Override
     public void init(Context context) {
-        File dir = new File(Environment.getExternalStorageDirectory(), DIRECTORY);
-        dir.mkdirs();
-        mSaveFile = new File(dir, SAVE_FILE);
-        load();
-        mContext = context.getApplicationContext();
+        if (mContext == null) {
+            File dir = new File(Environment.getExternalStorageDirectory(), DIRECTORY);
+            dir.mkdirs();
+            mSaveFile = new File(dir, SAVE_FILE);
+            load();
+            mContext = context.getApplicationContext();
+        }
     }
 
     @Override
@@ -108,7 +114,7 @@ public class VikingTracker extends ShopeliaTracker {
 
             @Override
             public boolean revoke(Entry item) {
-                return System.currentTimeMillis() - item.created_at > REVOCATION_DELAY;
+                return (System.currentTimeMillis() - item.created_at) > REVOCATION_DELAY;
             }
 
         });
@@ -140,6 +146,9 @@ public class VikingTracker extends ShopeliaTracker {
             params.put(Api.TYPE, action);
             params.put(Api.URLS, urls);
             params.put(Api.VISITOR, getUuid());
+            if (Config.DEBUG) {
+                Log.d(LOG, "Tracking " + params.toString(2));
+            }
             ShopeliaRestClient.V1(mContext).post(Command.V1.Events.$, params, new AsyncCallback() {
 
                 @Override
@@ -162,6 +171,7 @@ public class VikingTracker extends ShopeliaTracker {
     private JSONArray prepareArray(HashSet<Entry> entries, String action, String tracker) {
         JSONArray array = new JSONArray();
         for (Entry entry : entries) {
+            Log.d(null, "ENTRY " + entry.action + " " + entry.url);
             if (action.equals(entry.action) && tracker.equals(entry.tracker)) {
                 array.put(entry.url);
             }
