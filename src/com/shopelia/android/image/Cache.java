@@ -70,6 +70,7 @@ class Cache {
         long size = 0;
         for (com.shopelia.android.image.Cache.Journal.Entry entry : mJournal) {
             File file = new File(mCacheDir, entry.filename);
+            entry.size = file.length();
             size += file.length();
         }
         return size;
@@ -77,6 +78,9 @@ class Cache {
 
     private void collect() {
         long size = computeSize();
+        for (com.shopelia.android.image.Cache.Journal.Entry entry : mJournal) {
+
+        }
     }
 
     public void clear() {
