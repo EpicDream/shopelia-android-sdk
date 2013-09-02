@@ -7,10 +7,10 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.app.ShopeliaTracker;
+import com.shopelia.android.app.Tracker;
 import com.shopelia.android.model.User;
 
-public class DummyTracker extends ShopeliaTracker {
+public class DummyTracker extends Tracker {
 
     public static final LinkedList<Entry> LOGS = new LinkedList<DummyTracker.Entry>();
 

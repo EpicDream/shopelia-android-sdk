@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.shopelia.android.api.Shopelia;
-import com.shopelia.android.app.ShopeliaTracker;
+import com.shopelia.android.app.Tracker;
 import com.shopelia.android.utils.TimeUnits;
 
 /**
@@ -38,13 +38,13 @@ public class ShopeliaViewHelper implements ShopeliaView {
     private String mProductUrl;
     private Shopelia mShopelia;
     private Callback mCallback;
-    private ShopeliaTracker mTracker;
+    private Tracker mTracker;
     private String mTrackerName;
     private OnProductAvailabilityChangeListener mOnProductAvailabilityChangeListener;
 
     public ShopeliaViewHelper(Context context, AttributeSet attrs) {
         mContext = context;
-        mTracker = ShopeliaTracker.Factory.getTracker(ShopeliaTracker.PROVIDER_VIKING, context);
+        mTracker = Tracker.Factory.getTracker(Tracker.PROVIDER_SHOPELIA, context);
     }
 
     public void setCallback(Callback callback) {

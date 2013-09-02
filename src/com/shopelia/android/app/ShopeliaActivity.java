@@ -76,7 +76,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     private ProgressDialog mProgressDialog;
 
     private String mSessionId;
-    private ShopeliaTracker mTrackingObject = ShopeliaTracker.Factory.create(ShopeliaTracker.PROVIDER_DEFAULT);
+    private Tracker mTrackingObject = Tracker.Factory.create(Tracker.PROVIDER_DEFAULT);
 
     private Runnable mWaitModeRunnable;
     private boolean mIsPaused = true;
@@ -180,7 +180,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         ShopeliaHttpSynchronizer.flush(this);
     }
 
-    public ShopeliaTracker getTracker() {
+    public Tracker getTracker() {
         return mTrackingObject;
     }
 

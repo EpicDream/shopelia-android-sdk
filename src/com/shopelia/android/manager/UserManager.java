@@ -14,7 +14,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.shopelia.android.app.ShopeliaTracker;
+import com.shopelia.android.app.Tracker;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.UserAPI;
@@ -64,8 +64,8 @@ public class UserManager {
             return;
         }
         setAuthToken(authToken);
-        ShopeliaTracker.Factory.getDefault(mContext).identify(user);
-        ShopeliaTracker.Factory.getDefault(mContext).flush();
+        Tracker.Factory.getDefault(mContext).identify(user);
+        Tracker.Factory.getDefault(mContext).flush();
         Editor editor = mPreferences.edit();
         editor.putInt(PREFS_LOGINS_COUNT, mPreferences.getInt(PREFS_LOGINS_COUNT, 0) + 1);
         editor.commit();
@@ -142,8 +142,8 @@ public class UserManager {
             editor.remove(PREFS_AUTH_TOKEN);
             editor.remove(PREFS_USER_JSON);
             editor.commit();
-            ShopeliaTracker.Factory.getDefault(mContext).unidentify();
-            ShopeliaTracker.Factory.getDefault(mContext).flush();
+            Tracker.Factory.getDefault(mContext).unidentify();
+            Tracker.Factory.getDefault(mContext).flush();
             setAutoSignIn(false);
         }
     }

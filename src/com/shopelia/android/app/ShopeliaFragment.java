@@ -85,7 +85,7 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
         return dialog;
     }
 
-    public ShopeliaTracker getTracker() {
+    public Tracker getTracker() {
         ShopeliaActivity activity = (ShopeliaActivity) getContract();
         if (activity != null) {
             return activity.getTracker();

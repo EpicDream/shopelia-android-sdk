@@ -19,7 +19,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
-import com.shopelia.android.app.ShopeliaTracker;
+import com.shopelia.android.app.Tracker;
 import com.shopelia.android.concurent.ScheduledTask;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.JsonData;
@@ -33,18 +33,18 @@ import com.shopelia.android.utils.TimeUnits;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class VikingTracker extends ShopeliaTracker {
+public class ShopeliaTracker extends Tracker {
 
-    private static final String LOG = "VikingTracker";
+    private static final String LOG = "ShopeliaTracker";
 
     public interface FlushDelegate {
         public void onFlush(HashSet<Entry> entries);
     }
 
-    private static VikingTracker sInstance;
+    private static ShopeliaTracker sInstance;
 
-    public static VikingTracker getInstance() {
-        return sInstance != null ? sInstance : (sInstance = new VikingTracker());
+    public static ShopeliaTracker getInstance() {
+        return sInstance != null ? sInstance : (sInstance = new ShopeliaTracker());
     }
 
     private static final String DIRECTORY = "Shopelia/";
@@ -55,8 +55,8 @@ public class VikingTracker extends ShopeliaTracker {
     private static final long FLUSH_TASK_DELAY = 1 * TimeUnits.SECONDS;
 
     // private QualifiedLists<Entry> mData = new
-    // QualifiedLists<VikingTracker.Entry>();
-    private MultiHashSet<String, Entry> mData = new MultiHashSet<String, VikingTracker.Entry>();
+    // QualifiedLists<ShopeliaTracker.Entry>();
+    private MultiHashSet<String, Entry> mData = new MultiHashSet<String, ShopeliaTracker.Entry>();
     private File mSaveFile;
     private String mUuid;
     private HashSet<String> mTrakers = new HashSet<String>();
@@ -65,7 +65,7 @@ public class VikingTracker extends ShopeliaTracker {
 
     private FlushDelegate mDelegate;
 
-    private VikingTracker() {
+    private ShopeliaTracker() {
         mTrakers.add(DEFAULT_TRACKER_NAME);
     }
 
@@ -172,7 +172,6 @@ public class VikingTracker extends ShopeliaTracker {
     private JSONArray prepareArray(HashSet<Entry> entries, String action, String tracker) {
         JSONArray array = new JSONArray();
         for (Entry entry : entries) {
-            Log.d(null, "ENTRY " + entry.action + " " + entry.url);
             if (action.equals(entry.action) && tracker.equals(entry.tracker)) {
                 array.put(entry.url);
             }
@@ -224,7 +223,7 @@ public class VikingTracker extends ShopeliaTracker {
             }
             mData.getSet(Lists.EVENTS).clear();
         } else {
-            mData = new MultiHashSet<String, VikingTracker.Entry>();
+            mData = new MultiHashSet<String, ShopeliaTracker.Entry>();
         }
         HashSet<Entry> uuids = mData.getSet(Lists.UUIDS);
         if (uuids.size() == 0) {
@@ -278,7 +277,7 @@ public class VikingTracker extends ShopeliaTracker {
             return object;
         }
 
-        public static final JsonData.JsonInflater<Entry> INFLATOR = new JsonInflater<VikingTracker.Entry>() {
+        public static final JsonData.JsonInflater<Entry> INFLATOR = new JsonInflater<ShopeliaTracker.Entry>() {
 
             @Override
             public Entry inflate(JSONObject source) throws JSONException {
