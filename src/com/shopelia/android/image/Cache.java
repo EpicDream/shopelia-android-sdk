@@ -3,6 +3,7 @@ package com.shopelia.android.image;
 import java.io.File;
 import java.io.Reader;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
@@ -72,7 +73,7 @@ class Cache {
         }
     }
 
-    private static class Journal implements JsonData {
+    private static class Journal implements JsonData, Iterable<com.shopelia.android.image.Cache.Journal.Entry> {
 
         public static final int VERSION = 0;
 
@@ -159,8 +160,14 @@ class Cache {
             Entry entry = null;
             if (mEntries.containsKey(filename)) {
                 entry = mEntries.get(filename);
+                entry.used++;
+                entry.used_at = System.currentTimeMillis();
             }
             return entry;
+        }
+
+        public Map<String, Entry> getEntries() {
+            return mEntries;
         }
 
         public void delete(String filename) {
@@ -217,6 +224,37 @@ class Cache {
             }
             return object;
         }
+
+        @Override
+        public Iterator<com.shopelia.android.image.Cache.Journal.Entry> iterator() {
+            return new It();
+        }
+
+        private class It implements Iterator<Entry> {
+
+            private Iterator<Map.Entry<String, Entry>> it;
+
+            public It() {
+                it = mEntries.entrySet().iterator();
+            }
+
+            @Override
+            public boolean hasNext() {
+                return it.hasNext();
+            }
+
+            @Override
+            public Entry next() {
+                return it.next().getValue();
+            }
+
+            @Override
+            public void remove() {
+                it.next();
+            }
+
+        }
+
     }
 
 }
