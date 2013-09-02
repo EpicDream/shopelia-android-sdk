@@ -99,7 +99,11 @@ public class ValidationButton extends FrameLayout {
     }
 
     public void setText(int resId) {
-        setText(getContext().getString(resId));
+        try {
+            setText(getContext().getString(resId));
+        } catch (Exception e) {
+
+        }
     }
 
     public CharSequence getText() {

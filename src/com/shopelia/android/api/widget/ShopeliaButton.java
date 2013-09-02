@@ -2,6 +2,7 @@ package com.shopelia.android.api.widget;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
@@ -11,6 +12,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.BounceInterpolator;
 
 import com.nineoldandroids.animation.ObjectAnimator;
+import com.shopelia.android.R;
 import com.shopelia.android.widget.ValidationButton;
 
 public class ShopeliaButton extends ValidationButton implements ShopeliaView, ShopeliaViewHelper.Callback {
@@ -31,7 +33,13 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
         mHelper = new ShopeliaViewHelper(context, attrs);
         mHelper.setCallback(this);
         // TODO Use AttributeSet
-        setText("Acheter");
+        int[] attrsArray = new int[] {
+            android.R.attr.text
+        };
+        TypedArray ta = context.obtainStyledAttributes(attrs, attrsArray);
+        int text = ta.getResourceId(0 /* index of attribute in attrsArray */, R.string.shopelia_common_buy);
+        ta.recycle();
+        setText(text);
     }
 
     @Override
