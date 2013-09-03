@@ -60,6 +60,11 @@ public class CacheTest extends InstrumentationTestCase {
         assertFalse(f.equals(files[1]));
     }
 
+    public void testGetSizeOnDisk() throws IOException {
+        int size = floodCache();
+        assertTrue(size <= cache.getSizeOnDisk());
+    }
+
     @Override
     protected void tearDown() throws Exception {
         cache.clear();
@@ -72,6 +77,14 @@ public class CacheTest extends InstrumentationTestCase {
             f.write(file);
         }
         return files.length;
+    }
+
+    private void useFiles(int from, int to, int numberOfTimes) {
+
+    }
+
+    private void useFile(int index, int numberOfTimes) {
+
     }
 
     class FileModel {

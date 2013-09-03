@@ -24,7 +24,7 @@ import com.shopelia.android.utils.IOUtils;
 /**
  * Very simple cache management class. Kind of LRU cache management. Improvement
  * : Use Thread pool executor in order to execute on a worker thread I/O
- * operations
+ * operations.
  * 
  * @author Pierre Pollastri
  */
@@ -110,7 +110,6 @@ class Cache {
     }
 
     private void collect() {
-
         long size = computeSize();
 
         for (com.shopelia.android.image.Cache.Journal.Entry entry : mJournal) {
