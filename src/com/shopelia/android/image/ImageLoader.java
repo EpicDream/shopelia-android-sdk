@@ -31,14 +31,11 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 
 import com.shopelia.android.app.ContextCompat;
-import com.shopelia.android.config.Build;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.graphics.BitmapCompat;
-import com.shopelia.android.jakewharton.disklrucache.DiskLruCache;
-import com.shopelia.android.jakewharton.disklrucache.DiskLruCache.Snapshot;
 import com.shopelia.android.os.DiskSpace;
 import com.shopelia.android.utils.IOUtils;
-import com.shopelia.android.utils.Sha1Builder;
+import com.shopelia.android.utils.TimeUnits;
 
 /**
  * This class is not thread-safe and MUST BE used from the UI Thread
@@ -54,7 +51,6 @@ public class ImageLoader {
     private static final String ASSETS_PREFIX = "icons://";
 
     private static final String CACHE_DIR = "shopelia/images";
-    private static final String TEMP_DIR = "shopelia/temp";
 
     private static final double DISK_CACHE_PERCENTAGE = 0.01f;
     private static final long DISK_INTERNAL_MINIMUM_CACHE_SIZE = 10 * 1024 * 1024;
@@ -62,12 +58,10 @@ public class ImageLoader {
     //
     private static final long DISK_ENTITY_TIME_TO_LIVE = 7 * 24 * 60 * 60 * 1000;
 
-    private static final int ENTRY_INDEX_LAST_MODIFIED = 0;
-    private static final int ENTRY_INDEX_IMAGE = 1;
-
     private static final int WORKER_POOL_COUNT = 3;
     private static final int DEFAULT_RETRY_COUNT = 0;
     private static final long KEEP_ALIVE_DURATION = 30 * 1000;
+    private static final long FILE_EXPIRATION_DELAY = 3 * TimeUnits.MONTHS;
 
     // Messages that will be used by the WorkerHandlers (associated with a
     // worker thread).
@@ -104,10 +98,9 @@ public class ImageLoader {
 
     private boolean mIsPaused;
 
-    private DiskLruCache mDiskCache;
+    private Cache mCache;
     private ArrayList<WorkerRecord> mWorkers;
 
-    private final File mTempDir;
     private AssetManager mAssetManager;
 
     private ImageLoader(Context context) {
@@ -132,29 +125,19 @@ public class ImageLoader {
         final File externalCacheDir = ContextCompat.getExternalCacheDir(context);
         if (externalCacheDir != null) {
             cacheDir = new File(externalCacheDir, CACHE_DIR);
-            cacheDir.mkdirs();
             cacheSize = Math.max(DISK_EXTERNAL_MINIMUM_CACHE_SIZE,
                     (long) (diskSpace.getExternalStorageTotalSpace() * DISK_CACHE_PERCENTAGE));
         } else {
             cacheDir = new File(context.getCacheDir(), CACHE_DIR);
-            cacheDir.mkdirs();
             cacheSize = Math.max(DISK_INTERNAL_MINIMUM_CACHE_SIZE,
                     (long) (diskSpace.getInternalStorageTotalSpace() * DISK_CACHE_PERCENTAGE));
         }
-
-        try {
-            mDiskCache = DiskLruCache.open(cacheDir, Build.VERSION.SDK_INT, 2, cacheSize);
-        } catch (IOException e) {
-            mDiskCache = null;
-        }
+        mCache = new Cache(cacheDir, FILE_EXPIRATION_DELAY, cacheSize);
 
         final DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         // Half-size of the screen in bytes, in ARGB_8888 format
         mMaximumMemoryCachedImageSize = 4 * metrics.widthPixels * metrics.heightPixels / 2;
         mMaximumDiskCachedImageSize = 5 * mMaximumMemoryCachedImageSize;
-
-        mTempDir = new File(context.getCacheDir(), TEMP_DIR);
-        mTempDir.mkdirs();
 
         mAssetManager = appContext.getAssets();
     }
@@ -171,14 +154,7 @@ public class ImageLoader {
     }
 
     public void clearUrlFromCache(String url) {
-        Sha1Builder sha1Builder = new Sha1Builder();
-        sha1Builder.reset();
-        sha1Builder.update(url);
-        final String sha1 = sha1Builder.build();
-        try {
-            mDiskCache.remove(sha1);
-        } catch (IOException e) {
-        }
+        mCache.delete(url);
         mHardMemoryCache.remove(url);
     }
 
@@ -431,16 +407,10 @@ public class ImageLoader {
 
     /* package */class WorkerHandler extends Handler {
 
-        private final Sha1Builder mSha1Builder = new Sha1Builder();
-        private File mTempFile;
         public boolean isAvailable;
 
         public WorkerHandler(Looper looper) {
             super(looper);
-            try {
-                mTempFile = File.createTempFile("worker_", null, mTempDir);
-            } catch (IOException e) {
-            }
             isAvailable = true;
         }
 
@@ -459,23 +429,17 @@ public class ImageLoader {
                     startReply.obj = request;
                     startReply.sendToTarget();
 
-                    mSha1Builder.reset();
-                    mSha1Builder.update(request.url);
-                    final String sha1 = mSha1Builder.build();
-
                     Bitmap diskBitmap = null;
                     Bitmap networkBitmap = null;
                     Exception exception = null;
-
+                    Log.d(null, "CACHE EXIST " + mCache.exists(request.url) + " " + request.url);
                     // 1: Look into the disk cache
-                    if ((request.cachePolicy & ImageRequest.CACHE_POLICY_DISK) != 0 && mDiskCache != null) {
-                        Snapshot snapshot = null;
+                    if ((request.cachePolicy & ImageRequest.CACHE_POLICY_DISK) != 0) {
                         try {
-                            snapshot = mDiskCache.get(sha1);
-                            if (snapshot != null) {
-                                long creationDate = Long.parseLong(snapshot.getString(ENTRY_INDEX_LAST_MODIFIED));
+                            if (mCache.exists(request.url)) {
+                                long creationDate = mCache.getCreationDate(request.url);
                                 if (System.currentTimeMillis() - creationDate < DISK_ENTITY_TIME_TO_LIVE) {
-                                    diskBitmap = BitmapFactory.decodeStream(snapshot.getInputStream(ENTRY_INDEX_IMAGE));
+                                    diskBitmap = BitmapFactory.decodeStream(new FileInputStream(mCache.load(request.url)));
                                 }
                             }
                         } catch (OutOfMemoryError error) {
@@ -485,7 +449,7 @@ public class ImageLoader {
                                 Log.e(LOG_TAG, "Unable to retrieve the on-disk cached image", e);
                             }
                         } finally {
-                            IOUtils.closeQuietly(snapshot);
+
                         }
                     }
 
@@ -494,33 +458,29 @@ public class ImageLoader {
                         boolean tempSuccess = false;
 
                         request.retryCount = 0;
+                        File file = mCache.create(request.url);
+                        Log.d(null, "CACHE CREATE " + request.url);
+                        Log.d(null, "CACHE SHOULD EXIST " + mCache.exists(request.url) + " " + request.url);
                         while (request.retryCount <= DEFAULT_RETRY_COUNT) {
-                            if (mTempFile != null) {
-                                // The temporary file has been successfully
-                                // created. Let's use it as a temporary bucket
-                                // for the network image.
-                                InputStream iStream = null;
-                                OutputStream oStream = null;
-                                try {
-                                    iStream = new BufferedInputStream(new URL(request.url).openStream());
-                                    oStream = new BufferedOutputStream(new FileOutputStream(mTempFile));
-
-                                    IOUtils.copy(iStream, oStream);
-
-                                    tempSuccess = true;
-                                } catch (Exception e) {
-                                    exception = e;
-                                } finally {
-                                    request.retryCount++;
-                                    IOUtils.closeQuietly(iStream);
-                                    IOUtils.closeQuietly(oStream);
-                                }
+                            InputStream iStream = null;
+                            OutputStream oStream = null;
+                            try {
+                                iStream = new BufferedInputStream(new URL(request.url).openStream());
+                                oStream = new BufferedOutputStream(new FileOutputStream(file));
+                                IOUtils.copy(iStream, oStream);
+                                tempSuccess = true;
+                            } catch (Exception e) {
+                                exception = e;
+                            } finally {
+                                request.retryCount++;
+                                IOUtils.closeQuietly(iStream);
+                                IOUtils.closeQuietly(oStream);
                             }
 
                             InputStream input = null;
                             try {
-                                input = tempSuccess ? new FlushedInputStream(new FileInputStream(mTempFile)) : new FlushedInputStream(
-                                        new URL(request.url).openStream());
+                                input = tempSuccess ? new FlushedInputStream(new FileInputStream(file)) : new FlushedInputStream(new URL(
+                                        request.url).openStream());
                                 networkBitmap = BitmapFactory.decodeStream(input, null, null);
                                 if (networkBitmap != null) {
                                     break;
@@ -544,43 +504,6 @@ public class ImageLoader {
                             // image or the image was too big to be decoded
                             exception = new Exception("Skia image decoding failed");
                         }
-
-                        // 3: Store the image in the disk cache (if it is not
-                        // already present) and change it's last use time.
-                        if (networkBitmap != null && (request.cachePolicy & ImageRequest.CACHE_POLICY_DISK) != 0 && mDiskCache != null) {
-                            if (BitmapCompat.getByteCount(networkBitmap) < mMaximumDiskCachedImageSize && tempSuccess) {
-                                DiskLruCache.Editor editor = null;
-                                InputStream iStream = null;
-                                OutputStream oStream = null;
-                                try {
-                                    // You may loose an edit here if
-                                    // edit(String) returns null. I don't have
-                                    // great way to wait here so we will simply
-                                    // drop it :s
-
-                                    // The image comes from the network
-                                    editor = mDiskCache.edit(sha1);
-                                    if (editor != null) {
-                                        // First insert the timestamp
-                                        editor.set(ENTRY_INDEX_LAST_MODIFIED, Long.toString(System.currentTimeMillis()));
-                                        // Secondly insert the image associated
-                                        // to this timestamp
-                                        oStream = editor.newOutputStream(ENTRY_INDEX_IMAGE);
-                                        iStream = new BufferedInputStream(new FileInputStream(mTempFile));
-                                        // Copy the downloaded image to the LRU
-                                        // cache
-                                        IOUtils.copy(iStream, oStream);
-                                        // Finally commit the changes
-                                        editor.commit();
-                                    }
-                                } catch (Exception e) {
-                                    Log.e(LOG_TAG, "Unable to store the image in the cache disk", e);
-                                } finally {
-                                    IOUtils.closeQuietly(iStream);
-                                    IOUtils.closeQuietly(oStream);
-                                }
-                            }
-                        }
                     }
 
                     // 4: Notify the UI Thread the loading process has been
@@ -597,9 +520,7 @@ public class ImageLoader {
         }
 
         private void quit() {
-            if (mTempFile != null) {
-                mTempFile.delete();
-            }
+
         }
     }
 

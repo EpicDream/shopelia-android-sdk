@@ -61,6 +61,21 @@ class Cache {
         return file;
     }
 
+    public synchronized File obtain(String filename) {
+        if (exists(filename)) {
+            return load(filename);
+        }
+        return create(filename);
+    }
+
+    public synchronized long getCreationDate(String filename) {
+        if (exists(filename)) {
+            filename = DigestUtils.md5(filename);
+            return mJournal.get(filename).created_at;
+        }
+        return -1;
+    }
+
     public synchronized int getEntriesCount() {
         ensureSafe();
         return mJournal.size();
@@ -86,9 +101,10 @@ class Cache {
         return null;
     }
 
-    public synchronized boolean exists(String filename) {
+    public boolean exists(String filename) {
+        ensureSafe();
         filename = DigestUtils.md5(filename);
-        return mJournal.hasEntry(filename);
+        return mJournal.hasEntry(filename) && new File(mCacheDir, filename).exists();
     }
 
     public synchronized void delete(String filename) {
@@ -171,6 +187,7 @@ class Cache {
             FileWriter writer = new FileWriter(journal);
             StringReader reader = new StringReader(mJournal.toJson().toString());
             IOUtils.copy(reader, writer);
+            writer.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -289,7 +306,7 @@ class Cache {
         }
 
         public boolean hasEntry(String filename) {
-            return mEntries.containsKey(filename);
+            return mEntries.containsKey(filename) && mEntries.get(filename) != null;
         }
 
         public Entry create(String filename) {
