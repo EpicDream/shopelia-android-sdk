@@ -40,6 +40,7 @@ public class CacheTest extends InstrumentationTestCase {
     public void testSimpleCache() throws IOException {
         File test1 = cache.create(file1.name);
         file1.write(test1);
+        assertTrue(cache.exists(file1.name));
         cache = newCache();
         FileModel file = file1.derive();
         file.read(cache.load(file.name));

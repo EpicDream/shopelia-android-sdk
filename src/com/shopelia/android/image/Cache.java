@@ -15,8 +15,10 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.shopelia.android.model.JsonData;
+import com.shopelia.android.utils.DigestUtils;
 import com.shopelia.android.utils.IOUtils;
 
 /**
@@ -26,14 +28,21 @@ import com.shopelia.android.utils.IOUtils;
  */
 class Cache {
 
+    private static final String JOURNAL_FILENAME = ".journal";
+
     private long mLifeExpectancy;
     private Journal mJournal;
     private File mCacheDir;
     private long mMaxSize;
 
-    public Cache(Context context, String baseDirectory, long lifeExpectancy, long maxCacheSize) {
-        mCacheDir = new File(context.getFilesDir(), baseDirectory);
+    public Cache(File baseDir, long lifeExpectancy, long maxCacheSize) {
+        mCacheDir = baseDir;
         mMaxSize = maxCacheSize;
+        mLifeExpectancy = lifeExpectancy;
+    }
+
+    public Cache(Context context, String baseDirectory, long lifeExpectancy, long maxCacheSize) {
+        this(new File(context.getFilesDir(), baseDirectory), lifeExpectancy, maxCacheSize);
         mLifeExpectancy = lifeExpectancy;
     }
 
@@ -91,12 +100,12 @@ class Cache {
 
     private void snapshot() {
         try {
-            File journal = new File(mCacheDir, ".journal");
+            File journal = new File(mCacheDir, JOURNAL_FILENAME);
             FileWriter writer = new FileWriter(journal);
             StringReader reader = new StringReader(mJournal.toJson().toString());
             IOUtils.copy(reader, writer);
         } catch (Exception e) {
-
+            e.printStackTrace();
         }
     }
 
@@ -108,7 +117,7 @@ class Cache {
             mCacheDir.mkdirs();
         }
         if (mJournal == null) {
-            File journal = new File(mCacheDir, ".journal");
+            File journal = new File(mCacheDir, JOURNAL_FILENAME);
             if (journal.exists()) {
                 try {
                     StringWriter writer = new StringWriter();
@@ -190,16 +199,24 @@ class Cache {
         private long mCreatedAt;
         private HashMap<String, Entry> mEntries = new HashMap<String, Cache.Journal.Entry>();
 
+        public Journal() {
+            mCreatedAt = System.currentTimeMillis();
+            mVersion = VERSION;
+        }
+
         public boolean hasEntry(String filename) {
-            return false;
+            filename = DigestUtils.md5(filename);
+            return mEntries.containsKey(filename);
         }
 
         public Entry create(String filename) {
+            filename = DigestUtils.md5(filename);
             Entry entry;
             if (mEntries.containsKey(filename)) {
                 entry = mEntries.get(filename);
             } else {
                 entry = new Entry(filename);
+                mEntries.put(entry.filename, entry);
             }
             entry.used = 1;
             entry.created_at = System.currentTimeMillis();
@@ -209,6 +226,7 @@ class Cache {
         }
 
         public Entry get(String filename) {
+            filename = DigestUtils.md5(filename);
             Entry entry = null;
             if (mEntries.containsKey(filename)) {
                 entry = mEntries.get(filename);
@@ -274,6 +292,8 @@ class Cache {
                     array.put(e.getValue().toJson());
                 }
             }
+            object.put(Api.ENTRIES, array);
+            Log.d(null, "JOURNAL " + object.toString(2));
             return object;
         }
 
