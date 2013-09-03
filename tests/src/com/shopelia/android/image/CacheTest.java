@@ -73,7 +73,7 @@ public class CacheTest extends InstrumentationTestCase {
 
     @Override
     protected void tearDown() throws Exception {
-        // cache.clear();
+        cache.clear();
         super.tearDown();
     }
 
