@@ -115,7 +115,7 @@ class Cache {
     public synchronized void collect() {
         ensureSafe();
         long size = computeSize();
-
+        collectExpiredEntries();
         if (size > mMaxSize) {
             ArrayList<com.shopelia.android.image.Cache.Journal.Entry> entries = mJournal.flatten();
             Collections.sort(entries, new Comparator<com.shopelia.android.image.Cache.Journal.Entry>() {
@@ -129,6 +129,16 @@ class Cache {
             collect(size, mJournal.flatten());
         }
         snapshot();
+    }
+
+    private void collectExpiredEntries() {
+        long now = System.currentTimeMillis();
+        for (com.shopelia.android.image.Cache.Journal.Entry entry : mJournal) {
+            if ((now - entry.used_at) >= mLifeExpectancy) {
+                mJournal.delete(entry.filename);
+                new File(mCacheDir, entry.filename).delete();
+            }
+        }
     }
 
     /**
@@ -147,7 +157,7 @@ class Cache {
 
     public void clear() {
         if (mJournal != null) {
-            mCacheDir.delete();
+            deleteContents(mCacheDir);
             mCacheDir.mkdirs();
             mJournal.clear();
             snapshot();
@@ -156,12 +166,27 @@ class Cache {
 
     private void snapshot() {
         try {
+            collectExpiredEntries();
             File journal = new File(mCacheDir, JOURNAL_FILENAME);
             FileWriter writer = new FileWriter(journal);
             StringReader reader = new StringReader(mJournal.toJson().toString());
             IOUtils.copy(reader, writer);
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Deletes the contents of {@code dir}. Throws an IOException if any file
+     * could not be deleted, or if {@code dir} is not a readable directory.
+     */
+    private static void deleteContents(File dir) {
+        File[] files = dir.listFiles();
+        for (File file : files) {
+            if (file.isDirectory()) {
+                deleteContents(file);
+            }
+            file.delete();
         }
     }
 
@@ -246,8 +271,9 @@ class Cache {
                 Entry entry = new Entry();
                 entry.created_at = object.optLong(Api.CREATED_AT);
                 entry.filename = object.optString(Api.FILENAME);
-                entry.created_at = object.optLong(Api.CREATED_AT);
+                entry.used_at = object.optLong(Api.USED_AT);
                 entry.size = object.optLong(Api.SIZE);
+                entry.used = object.optInt(Api.USED);
                 return entry;
             }
 

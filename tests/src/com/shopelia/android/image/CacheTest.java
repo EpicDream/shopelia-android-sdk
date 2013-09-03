@@ -9,7 +9,6 @@ import java.io.StringWriter;
 
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
-import android.util.Log;
 
 import com.shopelia.android.utils.IOUtils;
 
@@ -56,9 +55,6 @@ public class CacheTest extends InstrumentationTestCase {
         assertEquals(0, cache.getEntriesCount());
         cache = newCache();
         assertEquals(0, cache.getEntriesCount());
-        FileModel f = files[0].derive();
-        f.read(cache.create(f.name));
-        assertFalse(f.equals(files[0]));
     }
 
     public void testGetSizeOnDisk() throws IOException {
@@ -72,13 +68,12 @@ public class CacheTest extends InstrumentationTestCase {
         cache.collect();
         FileModel f = files[9].derive();
         f.read(cache.load(f.name));
-        Log.d(null, "CACHE " + f.content);
         assertEquals(f.source.content, f.content);
     }
 
     @Override
     protected void tearDown() throws Exception {
-        cache.clear();
+        // cache.clear();
         super.tearDown();
     }
 
@@ -128,6 +123,7 @@ public class CacheTest extends InstrumentationTestCase {
             StringReader reader = new StringReader(content);
             FileWriter writer = new FileWriter(file);
             IOUtils.copy(reader, writer);
+            writer.close();
         }
 
         public void read(File file) throws IOException {
