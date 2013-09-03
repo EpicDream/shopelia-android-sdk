@@ -9,6 +9,7 @@ import java.io.StringWriter;
 
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
+import android.util.Log;
 
 import com.shopelia.android.utils.IOUtils;
 
@@ -21,18 +22,19 @@ public class CacheTest extends InstrumentationTestCase {
     FileModel[] files;
 
     public Cache newCache() {
-        return new Cache(getInstrumentation().getTargetContext(), "shopelia/cache", 5 * 1000, 256);
+        return new Cache(getInstrumentation().getTargetContext(), "shopelia/cache", 5 * 1000, 512);
     }
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
         cache = newCache();
+        cache.clear();
         file1 = new FileModel("file1", "Hello I am the first cached file");
         file2 = new FileModel("file2", "Hello I am the second cached file");
         files = new FileModel[20];
         for (int index = 0; index < files.length; index++) {
-            files[index] = new FileModel("file#" + index, String.format("Hello I am the cached file number #$1", index));
+            files[index] = new FileModel("file#" + index, String.format("Hello I am the cached file number #%d", index));
         }
     }
 
@@ -50,19 +52,28 @@ public class CacheTest extends InstrumentationTestCase {
 
     public void testClearCache() throws IOException {
         int size = floodCache();
-        assertEquals(size, cache.getEntriesCount());
         cache.clear();
         assertEquals(0, cache.getEntriesCount());
         cache = newCache();
         assertEquals(0, cache.getEntriesCount());
         FileModel f = files[0].derive();
         f.read(cache.create(f.name));
-        assertFalse(f.equals(files[1]));
+        assertFalse(f.equals(files[0]));
     }
 
     public void testGetSizeOnDisk() throws IOException {
         int size = floodCache();
         assertTrue(size <= cache.getSizeOnDisk());
+    }
+
+    public void testCollect() throws IOException, InterruptedException {
+        floodCache();
+        useFiles(5, 10, 10, 100);
+        cache.collect();
+        FileModel f = files[9].derive();
+        f.read(cache.load(f.name));
+        Log.d(null, "CACHE " + f.content);
+        assertEquals(f.source.content, f.content);
     }
 
     @Override
@@ -79,17 +90,30 @@ public class CacheTest extends InstrumentationTestCase {
         return files.length;
     }
 
-    private void useFiles(int from, int to, int numberOfTimes) {
-
+    private void useFiles(int from, int to, int numberOfTimes, long delay) throws InterruptedException {
+        for (int i = 0; i < numberOfTimes; i++) {
+            for (; from < to; from++) {
+                cache.load(files[from].name);
+            }
+            Thread.sleep(delay);
+        }
     }
 
-    private void useFile(int index, int numberOfTimes) {
-
+    private void useFile(int index, int numberOfTimes, long delay) {
+        for (int i = 0; i < numberOfTimes; i++) {
+            cache.load(files[index].name);
+        }
     }
 
     class FileModel {
         final String name;
         String content;
+        FileModel source;
+
+        public FileModel(FileModel source) {
+            this.name = source.name;
+            this.source = source;
+        }
 
         public FileModel(String name) {
             this.name = name;
@@ -119,7 +143,11 @@ public class CacheTest extends InstrumentationTestCase {
         }
 
         public FileModel derive() {
-            return new FileModel(name);
+            return new FileModel(this);
+        }
+
+        public boolean asSource() {
+            return equals(source);
         }
 
     }

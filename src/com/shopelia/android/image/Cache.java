@@ -5,6 +5,9 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -15,7 +18,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.util.Log;
 
 import com.shopelia.android.model.JsonData;
 import com.shopelia.android.utils.DigestUtils;
@@ -106,14 +108,40 @@ class Cache {
             entry.size = file.length();
             size += file.length();
         }
+        snapshot();
         return size;
     }
 
-    private void collect() {
+    public synchronized void collect() {
+        ensureSafe();
         long size = computeSize();
 
-        for (com.shopelia.android.image.Cache.Journal.Entry entry : mJournal) {
+        if (size > mMaxSize) {
+            ArrayList<com.shopelia.android.image.Cache.Journal.Entry> entries = mJournal.flatten();
+            Collections.sort(entries, new Comparator<com.shopelia.android.image.Cache.Journal.Entry>() {
 
+                @Override
+                public int compare(com.shopelia.android.image.Cache.Journal.Entry lhs, com.shopelia.android.image.Cache.Journal.Entry rhs) {
+                    return (int) (rhs.size - lhs.size);
+                }
+
+            });
+            collect(size, mJournal.flatten());
+        }
+        snapshot();
+    }
+
+    /**
+     * Can do better. It just deletes the least recently used entries.
+     */
+    private void collect(long size, ArrayList<com.shopelia.android.image.Cache.Journal.Entry> entries) {
+        while (size > mMaxSize && entries.size() > 0) {
+            com.shopelia.android.image.Cache.Journal.Entry entry = entries.get(entries.size() - 1);
+            mJournal.delete(entry.filename);
+            entries.remove(entry);
+            File file = new File(mCacheDir, entry.filename);
+            size = size - file.length();
+            file.delete();
         }
     }
 
@@ -152,7 +180,6 @@ class Cache {
                     FileReader reader = new FileReader(journal);
                     IOUtils.copy(reader, writer);
                     reader.close();
-                    Log.d(null, "CACHE READING " + writer);
                     mJournal = Journal.inflate(new JSONObject(writer.toString()));
 
                 } catch (Exception e) {
@@ -266,6 +293,16 @@ class Cache {
 
         public Map<String, Entry> getEntries() {
             return mEntries;
+        }
+
+        public ArrayList<Entry> flatten() {
+            ArrayList<Entry> entries = new ArrayList<Cache.Journal.Entry>(mEntries.size());
+            for (Entry e : this) {
+                if (e != null) {
+                    entries.add(e);
+                }
+            }
+            return entries;
         }
 
         public void delete(String filename) {
