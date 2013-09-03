@@ -41,16 +41,37 @@ public class CacheTest extends InstrumentationTestCase {
         File test1 = cache.create(file1.name);
         file1.write(test1);
         assertTrue(cache.exists(file1.name));
+        assertEquals(1, cache.getEntriesCount());
         cache = newCache();
         FileModel file = file1.derive();
         file.read(cache.load(file.name));
         assertEquals(file1.content, file.content);
     }
 
+    public void testClearCache() throws IOException {
+        int size = floodCache();
+        assertEquals(size, cache.getEntriesCount());
+        cache.clear();
+        assertEquals(0, cache.getEntriesCount());
+        cache = newCache();
+        assertEquals(0, cache.getEntriesCount());
+        FileModel f = files[0].derive();
+        f.read(cache.create(f.name));
+        assertFalse(f.equals(files[1]));
+    }
+
     @Override
     protected void tearDown() throws Exception {
         cache.clear();
         super.tearDown();
+    }
+
+    private int floodCache() throws IOException {
+        for (FileModel f : files) {
+            File file = cache.create(f.name);
+            f.write(file);
+        }
+        return files.length;
     }
 
     class FileModel {

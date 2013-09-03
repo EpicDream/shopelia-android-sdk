@@ -22,18 +22,22 @@ import com.shopelia.android.utils.DigestUtils;
 import com.shopelia.android.utils.IOUtils;
 
 /**
- * Very simple cache management class. Kind of LRU cache management.
+ * Very simple cache management class. Kind of LRU cache management. Improvement
+ * : Use Thread pool executor in order to execute on a worker thread I/O
+ * operations
  * 
  * @author Pierre Pollastri
  */
 class Cache {
 
     private static final String JOURNAL_FILENAME = ".journal";
+    private static final long NEED_COMPUTATION = -1;
 
     private long mLifeExpectancy;
     private Journal mJournal;
     private File mCacheDir;
     private long mMaxSize;
+    private long mSize = NEED_COMPUTATION;
 
     public Cache(File baseDir, long lifeExpectancy, long maxCacheSize) {
         mCacheDir = baseDir;
@@ -47,14 +51,31 @@ class Cache {
     }
 
     public synchronized File create(String filename) {
+        filename = DigestUtils.md5(filename);
         ensureSafe();
+        mSize = NEED_COMPUTATION;
         File file = new File(mCacheDir, mJournal.create(filename).filename);
         snapshot();
         return file;
     }
 
-    public synchronized File load(String filename) {
+    public synchronized int getEntriesCount() {
         ensureSafe();
+        return mJournal.size();
+    }
+
+    public synchronized long getSizeOnDisk() {
+        ensureSafe();
+        if (mSize == NEED_COMPUTATION) {
+            mSize = computeSize();
+        }
+        return mSize;
+    }
+
+    public synchronized File load(String filename) {
+        filename = DigestUtils.md5(filename);
+        ensureSafe();
+        mSize = NEED_COMPUTATION;
         if (mJournal.hasEntry(filename)) {
             File file = new File(mCacheDir, mJournal.get(filename).filename);
             snapshot();
@@ -64,11 +85,14 @@ class Cache {
     }
 
     public synchronized boolean exists(String filename) {
+        filename = DigestUtils.md5(filename);
         return mJournal.hasEntry(filename);
     }
 
     public synchronized void delete(String filename) {
+        filename = DigestUtils.md5(filename);
         ensureSafe();
+        mSize = NEED_COMPUTATION;
         if (mJournal.hasEntry(filename)) {
             new File(mCacheDir, filename).delete();
         }
@@ -95,7 +119,12 @@ class Cache {
     }
 
     public void clear() {
-        // mJournal.clear();
+        if (mJournal != null) {
+            mCacheDir.delete();
+            mCacheDir.mkdirs();
+            mJournal.clear();
+            snapshot();
+        }
     }
 
     private void snapshot() {
@@ -104,7 +133,6 @@ class Cache {
             FileWriter writer = new FileWriter(journal);
             StringReader reader = new StringReader(mJournal.toJson().toString());
             IOUtils.copy(reader, writer);
-            Log.d(null, "CACHE SNAPSHOT " + mJournal.toJson().toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -209,12 +237,10 @@ class Cache {
         }
 
         public boolean hasEntry(String filename) {
-            filename = DigestUtils.md5(filename);
             return mEntries.containsKey(filename);
         }
 
         public Entry create(String filename) {
-            filename = DigestUtils.md5(filename);
             Entry entry;
             if (mEntries.containsKey(filename)) {
                 entry = mEntries.get(filename);
@@ -230,7 +256,6 @@ class Cache {
         }
 
         public Entry get(String filename) {
-            filename = DigestUtils.md5(filename);
             Entry entry = null;
             if (mEntries.containsKey(filename)) {
                 entry = mEntries.get(filename);
@@ -257,6 +282,10 @@ class Cache {
 
         public void clear() {
             mEntries.clear();
+        }
+
+        public int size() {
+            return mEntries.size();
         }
 
         public static Journal inflate(JSONObject object) {
@@ -297,7 +326,6 @@ class Cache {
                 }
             }
             object.put(Api.ENTRIES, array);
-            Log.d(null, "JOURNAL " + object.toString(2));
             return object;
         }
 
