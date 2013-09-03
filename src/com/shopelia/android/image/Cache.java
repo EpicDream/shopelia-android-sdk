@@ -77,7 +77,9 @@ class Cache {
     }
 
     private void collect() {
+
         long size = computeSize();
+
         for (com.shopelia.android.image.Cache.Journal.Entry entry : mJournal) {
 
         }
