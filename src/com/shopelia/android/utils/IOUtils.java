@@ -67,6 +67,7 @@ public final class IOUtils {
         while ((readChars = reader.read(buffer)) > 0) {
             writer.write(buffer, 0, readChars);
         }
+        writer.close();
     }
 
 }

@@ -95,7 +95,7 @@ class Cache {
     }
 
     public void clear() {
-        mJournal.clear();
+        // mJournal.clear();
     }
 
     private void snapshot() {
@@ -104,6 +104,7 @@ class Cache {
             FileWriter writer = new FileWriter(journal);
             StringReader reader = new StringReader(mJournal.toJson().toString());
             IOUtils.copy(reader, writer);
+            Log.d(null, "CACHE SNAPSHOT " + mJournal.toJson().toString());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -123,7 +124,10 @@ class Cache {
                     StringWriter writer = new StringWriter();
                     FileReader reader = new FileReader(journal);
                     IOUtils.copy(reader, writer);
+                    reader.close();
+                    Log.d(null, "CACHE READING " + writer);
                     mJournal = Journal.inflate(new JSONObject(writer.toString()));
+
                 } catch (Exception e) {
                     mJournal = new Journal();
                 }
