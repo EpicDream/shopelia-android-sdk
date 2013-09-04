@@ -49,6 +49,7 @@
         android:required="false" />
 
     <application
+        android:name="shopelia-android-sdk"
         android:allowBackup="true"
         android:theme="@style/Theme.Shopelia" >
         <activity
