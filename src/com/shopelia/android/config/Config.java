@@ -89,4 +89,9 @@ public final class Config {
 
     public static final String ACCOUNT_TYPE = "com.shopelia.android";
     public static final String AUTH_TOKEN_TYPE = "com.shopelia.android.standard";
+
+    public static final String PUBLIC_DIRECTORY = "Shopelia/";
+    public static final String PUBLIC_ASSETS_DIRECTORY = PUBLIC_DIRECTORY + "assets/";
+    public static final String PUBLIC_FONTS_DIRECTORY = PUBLIC_ASSETS_DIRECTORY + "fonts/";
+
 }
