@@ -59,7 +59,7 @@ public class AsyncImageView extends ImageView {
     private static final int DEFAULT_CROSS_FADING_DURATION = 300;
     private static final Drawable EMPTY_DRAWABLE = new ColorDrawable(Color.TRANSPARENT);
 
-    private static final long DELAY_FOR_CROSS = 800L;
+    private static final long DELAY_FOR_CROSS = 600L;
 
     private long mStartLoading = 0;
 
@@ -103,7 +103,7 @@ public class AsyncImageView extends ImageView {
 
     private String mUrl;
     private ImageRequest mRequest;
-    private boolean mIsLoading;
+    private boolean mIsLoading = false;
 
     private boolean mForceLoad = false;
 
@@ -344,10 +344,10 @@ public class AsyncImageView extends ImageView {
     public boolean setUrl(String url) {
         mAttempts = 0;
         // Check the url has changed
-        if (url != null && url.equals(mUrl) && (mBitmap != null || (mRequest != null && !mRequest.isCancelled()))) {
+        if (url != null && url.equals(mUrl) && (mIsLoading || (!mIsLoading && mBitmap != null))) {
             return true;
         }
-
+        mIsLoading = true;
         stopLoading();
         mUrl = url;
 
@@ -359,6 +359,7 @@ public class AsyncImageView extends ImageView {
         } else {
             return reload();
         }
+        mIsLoading = false;
         return true;
     }
 
@@ -456,6 +457,7 @@ public class AsyncImageView extends ImageView {
 
         public void onImageRequestFailed(ImageRequest request, Exception exception) {
             mRequest = null;
+            mIsLoading = false;
             if (++mAttempts < mMaxRetry) {
                 postDelayed(new Runnable() {
 
@@ -474,12 +476,13 @@ public class AsyncImageView extends ImageView {
 
         public void onImageRequestEnded(ImageRequest request, Bitmap image) {
             mRequest = null;
+            mIsLoading = false;
             mBitmap = image;
-            if (mStartLoading + DELAY_FOR_CROSS > System.currentTimeMillis()) {
+            if (System.currentTimeMillis() - mStartLoading > DELAY_FOR_CROSS) {
                 setImageBitmap(image);
                 return;
             }
-            if (canCrossFade() && !mIsLoading) {
+            if (canCrossFade()) {
                 final TransitionDrawable d = new TransitionDrawable(new Drawable[] {
                         mDefaultDrawable == null ? EMPTY_DRAWABLE : new KeepRatioDrawable(mDefaultDrawable, mAlign),
                         new KeepRatioDrawable(new BitmapDrawable(getResources(), image), mAlign)
@@ -498,6 +501,7 @@ public class AsyncImageView extends ImageView {
 
         public void onImageRequestCancelled(ImageRequest request) {
             mRequest = null;
+            mIsLoading = false;
             if (mOnAsyncImageViewLoadListener != null) {
                 mOnAsyncImageViewLoadListener.onLoadingFailed(AsyncImageView.this, null);
             }
@@ -505,7 +509,7 @@ public class AsyncImageView extends ImageView {
 
         @Override
         public boolean onSlowConnection() {
-            return mForceLoad;
+            return true;
         }
 
         @Override
