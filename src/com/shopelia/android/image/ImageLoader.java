@@ -432,7 +432,6 @@ public class ImageLoader {
                     Bitmap diskBitmap = null;
                     Bitmap networkBitmap = null;
                     Exception exception = null;
-                    Log.d(null, "CACHE EXIST " + mCache.exists(request.url) + " " + request.url);
                     // 1: Look into the disk cache
                     if ((request.cachePolicy & ImageRequest.CACHE_POLICY_DISK) != 0) {
                         try {
@@ -459,8 +458,6 @@ public class ImageLoader {
 
                         request.retryCount = 0;
                         File file = mCache.create(request.url);
-                        Log.d(null, "CACHE CREATE " + request.url);
-                        Log.d(null, "CACHE SHOULD EXIST " + mCache.exists(request.url) + " " + request.url);
                         while (request.retryCount <= DEFAULT_RETRY_COUNT) {
                             InputStream iStream = null;
                             OutputStream oStream = null;
