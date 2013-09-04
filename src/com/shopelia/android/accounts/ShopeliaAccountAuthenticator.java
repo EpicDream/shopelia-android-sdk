@@ -8,7 +8,6 @@ import android.accounts.NetworkErrorException;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.config.Config;
@@ -27,7 +26,6 @@ public class ShopeliaAccountAuthenticator extends AbstractAccountAuthenticator {
     @Override
     public Bundle addAccount(AccountAuthenticatorResponse response, String accountType, String authTokenType, String[] requiredFeatures,
             Bundle options) throws NetworkErrorException {
-        Log.d(null, "Add Account");
         final Intent intent = new Intent(mContext, PrepareOrderActivity.class);
         intent.putExtra(AccountManager.KEY_ACCOUNT_AUTHENTICATOR_RESPONSE, response);
         final Bundle bundle = new Bundle();
