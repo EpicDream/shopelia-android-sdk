@@ -85,6 +85,11 @@
             <fileset dir="res/" />
         </copy>
 
+         <copy todir="${deployment-dir}/src" >
+
+            <fileset dir="deployment-files/src/" />
+        </copy>
+        
         <copy
             file="AndroidManifest.xml"
             todir="${deployment-dir}/" />
