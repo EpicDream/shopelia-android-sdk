@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.shopelia.android.app.ShopeliaDialog.DialogCallback;
-import com.shopelia.android.app.tracking.DummyTracker;
+import com.shopelia.android.app.tracking.Tracker;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
@@ -90,7 +90,7 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
         if (activity != null) {
             return activity.getTracker();
         }
-        return new DummyTracker();
+        return Tracker.Factory.create(Tracker.PROVIDER_DUMMY);
     }
 
     public void fireScreenSeenEvent(final String screenName) {

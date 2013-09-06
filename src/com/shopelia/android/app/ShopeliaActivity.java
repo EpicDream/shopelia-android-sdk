@@ -27,6 +27,7 @@ import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
 import com.shopelia.android.api.Shopelia;
+import com.shopelia.android.app.tracking.Tracker;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.remote.api.ShopeliaHttpSynchronizer;

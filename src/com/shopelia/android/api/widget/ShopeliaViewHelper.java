@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.shopelia.android.api.Shopelia;
-import com.shopelia.android.app.Tracker;
+import com.shopelia.android.app.tracking.Tracker;
 import com.shopelia.android.utils.TimeUnits;
 
 /**

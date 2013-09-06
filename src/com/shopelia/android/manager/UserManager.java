@@ -14,7 +14,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.shopelia.android.app.Tracker;
+import com.shopelia.android.app.tracking.Tracker;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.UserAPI;

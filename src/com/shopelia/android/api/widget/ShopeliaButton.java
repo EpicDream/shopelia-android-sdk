@@ -80,7 +80,6 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
         ObjectAnimator a = ObjectAnimator.ofFloat(this, "scaleX", 0.f, 1.f);
         a.setInterpolator(new BounceInterpolator());
         a.setDuration(1000).start();
-
         a = ObjectAnimator.ofFloat(this, "scaleY", 0.f, 1.f);
         a.setInterpolator(new BounceInterpolator());
         a.setDuration(1000).start();
