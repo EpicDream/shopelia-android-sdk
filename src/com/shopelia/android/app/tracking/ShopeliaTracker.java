@@ -1,8 +1,8 @@
 package com.shopelia.android.app.tracking;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import android.content.Context;
@@ -25,7 +25,7 @@ class ShopeliaTracker extends Tracker {
          * @return The lists of events that the {@link FlushDelegate} was not
          *         able to flush.
          */
-        public List<ShopeliaEvent> flush(String uuid, String trackerName, List<ShopeliaEvent> events);
+        public List<ShopeliaEvent> flush(String uuid, String trackerName, HashSet<ShopeliaEvent> events);
     }
 
     private static ShopeliaTracker sInstance;
@@ -33,7 +33,7 @@ class ShopeliaTracker extends Tracker {
     /**
      * Must be synchronized everywhere
      */
-    private HashMap<String, ArrayList<ShopeliaEvent>> mEvents;
+    private HashMap<String, HashSet<ShopeliaEvent>> mEvents;
 
     @Override
     public void init(Context context) {
@@ -42,25 +42,39 @@ class ShopeliaTracker extends Tracker {
 
     @Override
     public void flush() {
-
+        requestFlush();
     }
 
     @Override
     public void onDisplayShopeliaButton(String url, String tracker) {
         super.onDisplayShopeliaButton(url, tracker);
+        save();
+        requestFlush();
     }
 
     @Override
     public void onClickShopeliaButton(String url, String tracker) {
         super.onClickShopeliaButton(url, tracker);
+        save();
+        requestFlush();
     }
 
     public static ShopeliaTracker getInstance() {
         return sInstance == null ? sInstance = new ShopeliaTracker() : sInstance;
     }
 
-    private void save() {
+    private void addShopeliaEvent(String tracker, ShopeliaEvent event) {
 
+    }
+
+    private void requestFlush() {
+
+    }
+
+    private void save() {
+        if (mApplicationContext.get() != null) {
+
+        }
     }
 
 }
