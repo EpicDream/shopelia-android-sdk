@@ -28,6 +28,12 @@ class ShopeliaEvent implements JsonData {
         digest = DigestUtils.md5(action + "://" + url);
     }
 
+    public void update(ShopeliaEvent event) {
+        action = event.action;
+        url = event.url;
+        digest = DigestUtils.md5(action + "://" + url);
+    }
+
     public void notifySent() {
         sent_at = System.currentTimeMillis();
     }
@@ -35,6 +41,15 @@ class ShopeliaEvent implements JsonData {
     @Override
     public int hashCode() {
         return digest != null ? digest.hashCode() : 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o instanceof ShopeliaEvent) {
+            ShopeliaEvent other = (ShopeliaEvent) o;
+            return digest != null && digest.equals(other.digest);
+        }
+        return super.equals(o);
     }
 
     public static ShopeliaEvent inflate(JSONObject object) throws JSONException {

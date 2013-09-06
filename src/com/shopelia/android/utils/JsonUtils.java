@@ -2,6 +2,7 @@ package com.shopelia.android.utils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,6 +46,18 @@ public final class JsonUtils {
         for (Map.Entry<String, T> entry : map.entrySet()) {
             try {
                 out.put(entry.getKey(), entry.getValue().toJson());
+            } catch (JSONException e) {
+
+            }
+        }
+        return out;
+    }
+
+    public static <T extends JsonData> JSONArray toJson(Set<T> set) {
+        JSONArray out = new JSONArray();
+        for (T entry : set) {
+            try {
+                out.put(entry.toJson());
             } catch (JSONException e) {
 
             }

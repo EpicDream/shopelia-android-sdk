@@ -3,7 +3,9 @@ package com.shopelia.android.config;
 import com.shopelia.android.BuildConfig;
 
 /**
- * @author Cyril Mottier
+ * Config for Shopelio
+ * 
+ * @author Pierre Pollastri
  */
 @SuppressWarnings("all")
 public final class Config {
