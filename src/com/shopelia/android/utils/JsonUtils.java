@@ -1,6 +1,7 @@
 package com.shopelia.android.utils;
 
 import java.util.List;
+import java.util.Map;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -37,6 +38,18 @@ public final class JsonUtils {
             }
         }
         return array;
+    }
+
+    public static <T extends JsonData> JSONObject toJson(Map<String, T> map) {
+        JSONObject out = new JSONObject();
+        for (Map.Entry<String, T> entry : map.entrySet()) {
+            try {
+                out.put(entry.getKey(), entry.getValue().toJson());
+            } catch (JSONException e) {
+
+            }
+        }
+        return out;
     }
 
     public static void mergeObject(JSONObject root, String key, JSONObject toMerge) throws JSONException {
