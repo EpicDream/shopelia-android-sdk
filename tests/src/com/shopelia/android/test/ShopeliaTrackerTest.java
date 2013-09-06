@@ -7,16 +7,16 @@ import java.util.concurrent.TimeUnit;
 import android.test.InstrumentationTestCase;
 import android.test.suitebuilder.annotation.SmallTest;
 
-import com.shopelia.android.app.tracking.ShopeliaTracker;
-import com.shopelia.android.app.tracking.ShopeliaTracker.Entry;
-import com.shopelia.android.app.tracking.ShopeliaTracker.FlushDelegate;
+import com.shopelia.android.app.tracking.ShopeliaOldTracker;
+import com.shopelia.android.app.tracking.ShopeliaOldTracker.Entry;
+import com.shopelia.android.app.tracking.ShopeliaOldTracker.FlushDelegate;
 import com.shopelia.android.test.TestUtils.Mutable;
 
 public class ShopeliaTrackerTest extends InstrumentationTestCase {
 
     public static final String URL = "http://my_fake_web_site.fk/product_";
 
-    ShopeliaTracker tracker;
+    ShopeliaOldTracker tracker;
 
     @Override
     protected void setUp() throws Exception {
@@ -26,7 +26,7 @@ public class ShopeliaTrackerTest extends InstrumentationTestCase {
 
             @Override
             public void run() {
-                tracker = ShopeliaTracker.getInstance();
+                tracker = ShopeliaOldTracker.getInstance();
                 barrier.countDown();
             }
         });
