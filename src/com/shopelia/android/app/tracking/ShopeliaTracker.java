@@ -19,7 +19,6 @@ import android.content.Context;
 import android.os.Environment;
 import android.util.Log;
 
-import com.shopelia.android.app.Tracker;
 import com.shopelia.android.concurent.ScheduledTask;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.JsonData;
@@ -33,7 +32,7 @@ import com.shopelia.android.utils.TimeUnits;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class ShopeliaTracker extends Tracker {
+final class ShopeliaTracker extends Tracker {
 
     private static final String LOG = "ShopeliaTracker";
 
@@ -51,11 +50,9 @@ public class ShopeliaTracker extends Tracker {
     private static final String SAVE_FILE = "internal.json";
     private static final String CHARSET = "UTF-8";
     private static final long REVOCATION_DELAY = 20 * TimeUnits.MINUTES;
-    private static final String DEFAULT_TRACKER_NAME = "Android";
+    private static final String DEFAULT_TRACKER_NAME = "Shopelia Android SDK";
     private static final long FLUSH_TASK_DELAY = 1 * TimeUnits.SECONDS;
 
-    // private QualifiedLists<Entry> mData = new
-    // QualifiedLists<ShopeliaTracker.Entry>();
     private MultiHashSet<String, Entry> mData = new MultiHashSet<String, ShopeliaTracker.Entry>();
     private File mSaveFile;
     private String mUuid;
@@ -171,8 +168,9 @@ public class ShopeliaTracker extends Tracker {
 
     private JSONArray prepareArray(HashSet<Entry> entries, String action, String tracker) {
         JSONArray array = new JSONArray();
+        HashSet<String> exclude = new HashSet<String>();
         for (Entry entry : entries) {
-            if (action.equals(entry.action) && tracker.equals(entry.tracker)) {
+            if (action.equals(entry.action) && tracker.equals(entry.tracker) && !exclude.contains(entry.url)) {
                 array.put(entry.url);
             }
         }

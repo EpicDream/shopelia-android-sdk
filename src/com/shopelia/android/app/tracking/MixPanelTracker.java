@@ -10,11 +10,10 @@ import android.util.Log;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.ShopeliaActivity;
-import com.shopelia.android.app.Tracker;
 import com.shopelia.android.config.Build;
 import com.shopelia.android.model.User;
 
-public class MixPanelTracker extends Tracker {
+class MixPanelTracker extends Tracker {
 
     private static final String MIXPANEL_API_TOKEN = "95c15bf80bf7bf93cb1c673865c75a22";
 
