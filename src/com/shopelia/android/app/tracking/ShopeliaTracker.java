@@ -127,18 +127,26 @@ class ShopeliaTracker extends Tracker {
         SharedPreferences preferences = context.getSharedPreferences(PRIVATE_PREFERENCE, Context.MODE_PRIVATE);
         if (preferences.contains(PREFS_VERSION) && preferences.contains(PREFS_EVENTS)) {
             synchronized (mEvents) {
-
+                int version = preferences.getInt(PREFS_VERSION, CURRENT_VERSION);
                 try {
                     JSONObject eventsObject = new JSONObject(preferences.getString(PREFS_EVENTS, ""));
                     JSONArray names = eventsObject.names();
                     final int size = names.length();
                     for (int index = 0; index < size; index++) {
-
+                        JSONArray eventArray = eventsObject.getJSONArray(names.getString(index));
+                        HashSet<ShopeliaEvent> events = new HashSet<ShopeliaEvent>(eventArray.length());
+                        final int eventArrayLength = eventArray.length();
+                        for (int indexEventArray = 0; indexEventArray < eventArrayLength; index++) {
+                            events.add(ShopeliaEvent.inflate(eventArray.getJSONObject(indexEventArray)));
+                        }
+                        mEvents.put(names.getString(index), events);
                     }
                 } catch (JSONException e) {
 
                 }
-
+                if (version != CURRENT_VERSION) {
+                    migrate(version, CURRENT_VERSION);
+                }
             }
         }
     }
