@@ -13,6 +13,8 @@ class ShopeliaEvent implements JsonData {
         String SENT_AT = "sent_at";
     }
 
+    public static final long NEVER_SENT = 0;
+
     public String digest;
     public String action;
     public String url;

@@ -13,7 +13,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.SharedPreferences;
 
-import com.shopelia.android.utils.JsonUtils;
+import com.shopelia.android.utils.TimeUnits;
 
 class ShopeliaTracker extends Tracker {
 
@@ -40,10 +40,13 @@ class ShopeliaTracker extends Tracker {
     private static final String PREFS_VERSION = "tracker:version";
     private static final String PREFS_EVENTS = "tracker:events";
 
+    private static final long EXPIRY_DELAY = 20 * TimeUnits.MINUTES;
+
     private static final int CURRENT_VERSION = 0;
 
     private static ShopeliaTracker sInstance;
 
+    private FlushDelegate mFlushDelegate;
     private WeakReference<Context> mApplicationContext = new WeakReference<Context>(null);
 
     /**
@@ -52,7 +55,14 @@ class ShopeliaTracker extends Tracker {
     private HashMap<String, HashSet<ShopeliaEvent>> mEvents;
 
     private ShopeliaTracker() {
+        setFlushDelegate(mPrivateFlushDelegate);
+    }
 
+    public void setFlushDelegate(FlushDelegate delegate) {
+        if (delegate == null) {
+            delegate = mPrivateFlushDelegate;
+        }
+        mFlushDelegate = delegate;
     }
 
     @Override
@@ -111,7 +121,14 @@ class ShopeliaTracker extends Tracker {
                 try {
                     JSONObject eventsObject = new JSONObject();
                     for (Map.Entry<String, HashSet<ShopeliaEvent>> entry : mEvents.entrySet()) {
-                        eventsObject.put(entry.getKey(), JsonUtils.toJson(entry.getValue()));
+                        JSONArray entryArray = new JSONArray();
+                        final long now = System.currentTimeMillis();
+                        for (ShopeliaEvent event : entry.getValue()) {
+                            if (event.sent_at + EXPIRY_DELAY <= now && event.sent_at != ShopeliaEvent.NEVER_SENT) {
+                                entryArray.put(event.toJson());
+                            }
+                        }
+                        eventsObject.put(entry.getKey(), entryArray);
                     }
                     editor.putInt(PREFS_VERSION, CURRENT_VERSION);
                     editor.putString(PREFS_EVENTS, eventsObject.toString());
@@ -168,5 +185,14 @@ class ShopeliaTracker extends Tracker {
         String CLICK = "click";
         String DISPLAY = "view";
     }
+
+    private FlushDelegate mPrivateFlushDelegate = new FlushDelegate() {
+
+        @Override
+        public List<ShopeliaEvent> flush(String uuid, String trackerName, HashSet<ShopeliaEvent> events) {
+
+            return null;
+        }
+    };
 
 }
