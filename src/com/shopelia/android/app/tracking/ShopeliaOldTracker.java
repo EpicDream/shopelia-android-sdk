@@ -64,6 +64,7 @@ final class ShopeliaOldTracker extends Tracker {
 
     private ShopeliaOldTracker() {
         mTrakers.add(DEFAULT_TRACKER_NAME);
+        throw new IllegalAccessError();
     }
 
     public void setFlushDelegate(FlushDelegate delegate) {
