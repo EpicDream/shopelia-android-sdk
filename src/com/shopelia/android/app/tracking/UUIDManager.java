@@ -42,7 +42,7 @@ final class UUIDManager {
         mUuid = uuid;
     }
 
-    public static void ObtainUuidTask(OnReceiveUuidListener listener) {
+    public static void obtainUuid(OnReceiveUuidListener listener) {
         UUIDManager manager = getInstance();
         if (manager.mUuid != null) {
             listener.onReceiveUuid(manager.mUuid);
