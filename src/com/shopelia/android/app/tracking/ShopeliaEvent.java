@@ -19,6 +19,7 @@ class ShopeliaEvent implements JsonData {
     public String action;
     public String url;
     public long sent_at;
+    public int request = 0;
 
     public ShopeliaEvent() {
 
@@ -34,6 +35,7 @@ class ShopeliaEvent implements JsonData {
         action = event.action;
         url = event.url;
         digest = DigestUtils.md5(action + "://" + url);
+        request = event.request;
     }
 
     public void notifySent() {
