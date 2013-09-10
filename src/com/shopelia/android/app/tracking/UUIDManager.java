@@ -51,6 +51,10 @@ final class UUIDManager {
         }
     }
 
+    public static void release() {
+        sInstance = null;
+    }
+
     private static class RetrieveUuid extends AsyncTask<Void, Void, String> {
 
         private OnReceiveUuidListener mListener;
