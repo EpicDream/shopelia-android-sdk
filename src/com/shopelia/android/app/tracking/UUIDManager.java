@@ -69,6 +69,7 @@ final class UUIDManager {
                     StringWriter writer = new StringWriter();
                     InputStreamReader reader = new InputStreamReader(new FileInputStream(uuidFile), CHARSET);
                     IOUtils.copy(reader, writer);
+                    uuid = writer.toString();
                 } catch (Exception e) {
 
                 }
@@ -99,6 +100,8 @@ final class UUIDManager {
                 StringReader reader = new StringReader(uuid);
                 OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(dir, SAVE_FILE)), CHARSET);
                 IOUtils.copy(reader, writer);
+                writer.close();
+                reader.close();
             } catch (IOException e) {
 
             }
