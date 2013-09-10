@@ -14,15 +14,13 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.shopelia.android.app.tracking.UUIDManager.OnReceiveUuidListener;
 import com.shopelia.android.concurent.ScheduledTask;
 import com.shopelia.android.config.Config;
-import com.shopelia.android.remote.api.Command;
-import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.shopelia.android.utils.TimeUnits;
-import com.turbomanage.httpclient.HttpResponse;
 
 class ShopeliaTracker extends Tracker {
 
@@ -50,8 +48,9 @@ class ShopeliaTracker extends Tracker {
     private static final String PRIVATE_PREFERENCE = "Shopelia$Tracker.PrivatePreference";
     private static final String PREFS_VERSION = "tracker:version";
     private static final String PREFS_EVENTS = "tracker:events";
+    private static final String DEFAULT_TRACKER_NAME = "android-sdk";
 
-    private static final long EXPIRY_DELAY = 20 * TimeUnits.MINUTES;
+    private static final long EXPIRY_DELAY = 10 * TimeUnits.SECONDS;
     private static final long FLUSH_DELAY = 2 * TimeUnits.SECONDS;
 
     private static final int CURRENT_VERSION = 0;
@@ -66,7 +65,7 @@ class ShopeliaTracker extends Tracker {
     /**
      * Must be synchronized everywhere
      */
-    private HashMap<String, HashSet<ShopeliaEvent>> mEvents = new HashMap<String, HashSet<ShopeliaEvent>>();
+    private HashMap<String, HashSet<ShopeliaEvent>> mEvents;
 
     private ShopeliaTracker() {
         setFlushDelegate(mPrivateFlushDelegate);
@@ -93,14 +92,12 @@ class ShopeliaTracker extends Tracker {
     @Override
     public void onDisplayShopeliaButton(String url, String tracker) {
         addShopeliaEvent(tracker, new ShopeliaEvent(Actions.DISPLAY, url));
-        save();
         requestFlush();
     }
 
     @Override
     public void onClickShopeliaButton(String url, String tracker) {
         addShopeliaEvent(tracker, new ShopeliaEvent(Actions.CLICK, url));
-        save();
         requestFlush();
     }
 
@@ -109,6 +106,10 @@ class ShopeliaTracker extends Tracker {
     }
 
     private void addShopeliaEvent(String tracker, ShopeliaEvent event) {
+        if (mEvents == null) {
+            return;
+        }
+        tracker = !TextUtils.isEmpty(tracker) ? tracker : DEFAULT_TRACKER_NAME;
         synchronized (mEvents) {
             event.request++;
             HashSet<ShopeliaEvent> events = mEvents.get(tracker);
@@ -132,6 +133,9 @@ class ShopeliaTracker extends Tracker {
     }
 
     private void requestFlush() {
+        if (mEvents == null) {
+            return;
+        }
         UUIDManager.obtainUuid(new OnReceiveUuidListener() {
 
             @Override
@@ -175,21 +179,26 @@ class ShopeliaTracker extends Tracker {
     }
 
     private void save() {
+        if (mEvents == null) {
+            return;
+        }
         Context context = mApplicationContext.get();
-        if (context != null) {
+        if (context != null && mEvents != null) {
             SharedPreferences.Editor editor = context.getSharedPreferences(PRIVATE_PREFERENCE, Context.MODE_PRIVATE).edit();
             synchronized (mEvents) {
                 try {
                     JSONObject eventsObject = new JSONObject();
                     for (Map.Entry<String, HashSet<ShopeliaEvent>> entry : mEvents.entrySet()) {
-                        JSONArray entryArray = new JSONArray();
-                        final long now = System.currentTimeMillis();
-                        for (ShopeliaEvent event : entry.getValue()) {
-                            if (event.sent_at + EXPIRY_DELAY >= now && event.sent_at != ShopeliaEvent.NEVER_SENT) {
-                                entryArray.put(event.toJson());
+                        if (entry.getKey() != null) {
+                            JSONArray entryArray = new JSONArray();
+                            final long now = System.currentTimeMillis();
+                            for (ShopeliaEvent event : entry.getValue()) {
+                                if (event.sent_at + EXPIRY_DELAY >= now && event.sent_at != ShopeliaEvent.NEVER_SENT) {
+                                    entryArray.put(event.toJson());
+                                }
                             }
+                            eventsObject.put(entry.getKey(), entryArray);
                         }
-                        eventsObject.put(entry.getKey(), entryArray);
                     }
                     editor.putInt(PREFS_VERSION, CURRENT_VERSION);
                     editor.putString(PREFS_EVENTS, eventsObject.toString());
@@ -202,29 +211,29 @@ class ShopeliaTracker extends Tracker {
     }
 
     private void load(Context context) {
+        if (mEvents != null) {
+            return;
+        }
+        mEvents = new HashMap<String, HashSet<ShopeliaEvent>>();
         SharedPreferences preferences = context.getSharedPreferences(PRIVATE_PREFERENCE, Context.MODE_PRIVATE);
         if (preferences.contains(PREFS_VERSION) && preferences.contains(PREFS_EVENTS)) {
             synchronized (mEvents) {
                 int version = preferences.getInt(PREFS_VERSION, CURRENT_VERSION);
                 try {
                     JSONObject eventsObject = new JSONObject(preferences.getString(PREFS_EVENTS, ""));
-                    JSONArray names = eventsObject.names();
+                    JSONArray names = eventsObject.names() != null ? eventsObject.names() : new JSONArray();
                     final int size = names.length();
                     for (int index = 0; index < size; index++) {
                         JSONArray eventArray = eventsObject.getJSONArray(names.getString(index));
                         HashSet<ShopeliaEvent> events = new HashSet<ShopeliaEvent>(eventArray.length());
                         final int eventArrayLength = eventArray.length();
-                        for (int indexEventArray = 0; indexEventArray < eventArrayLength; index++) {
+                        for (int indexEventArray = 0; indexEventArray < eventArrayLength; indexEventArray++) {
                             ShopeliaEvent loaded = ShopeliaEvent.inflate(eventArray.getJSONObject(indexEventArray));
-                            if (events.contains(loaded)) {
-                                getEvent(events, loaded).sent_at = loaded.sent_at;
-                            } else {
-                                events.add(loaded);
-                            }
+                            events.add(loaded);
                         }
                         mEvents.put(names.getString(index), events);
                     }
-                } catch (JSONException e) {
+                } catch (Exception e) {
 
                 }
                 if (version != CURRENT_VERSION) {
@@ -314,10 +323,14 @@ class ShopeliaTracker extends Tracker {
                 params.put(Api.URLS, urls);
                 params.put(Api.VISITOR, uuid);
                 if (Config.DEBUG) {
+                    Log.d(LOG, "Tracking for " + uuid);
                     Log.d(LOG, "Tracking " + params.toString(2));
                 }
-                HttpResponse response = ShopeliaRestClient.V1(context).post(Command.V1.Events.$, params);
-                return response != null && response.getStatus() == 204;
+                // HttpResponse response =
+                // ShopeliaRestClient.V1(context).post(Command.V1.Events.$,
+                // params);
+                return true;
+                // return response != null && response.getStatus() == 204;
             } catch (Exception e) {
 
             }
