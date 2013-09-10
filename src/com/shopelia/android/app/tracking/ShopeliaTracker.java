@@ -14,13 +14,18 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
 
 import com.shopelia.android.app.tracking.UUIDManager.OnReceiveUuidListener;
 import com.shopelia.android.concurent.ScheduledTask;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.remote.api.Command;
+import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.shopelia.android.utils.TimeUnits;
+import com.turbomanage.httpclient.HttpResponse;
 
 class ShopeliaTracker extends Tracker {
 
@@ -31,16 +36,7 @@ class ShopeliaTracker extends Tracker {
      * @author Pierre Pollastri
      */
     interface FlushDelegate {
-        /**
-         * Called on proper thread
-         * 
-         * @param uuid The uuid of the phone
-         * @param trackerName The tracker name
-         * @param events The list of events
-         * @return The lists of events that the {@link FlushDelegate} was not
-         *         able to flush.
-         */
-        public List<ShopeliaEvent> flush(String uuid, String trackerName, ShopeliaEvent[] events);
+        public boolean send(String uuid, String tracker, String action, ArrayList<ShopeliaEvent> events);
     }
 
     private static final String LOG = "ShopeliaTracker";
@@ -50,7 +46,7 @@ class ShopeliaTracker extends Tracker {
     private static final String PREFS_EVENTS = "tracker:events";
     private static final String DEFAULT_TRACKER_NAME = "android-sdk";
 
-    private static final long EXPIRY_DELAY = 10 * TimeUnits.SECONDS;
+    private static final long EXPIRY_DELAY = 20 * TimeUnits.MINUTES;
     private static final long FLUSH_DELAY = 2 * TimeUnits.SECONDS;
 
     private static final int CURRENT_VERSION = 0;
@@ -60,7 +56,8 @@ class ShopeliaTracker extends Tracker {
     private FlushDelegate mFlushDelegate;
     private SerialExecutor mFlushExecutor = new SerialExecutor();
     private WeakReference<Context> mApplicationContext = new WeakReference<Context>(null);
-    private ScheduledTask mFlushTask = new ScheduledTask();
+    private ScheduledTask mFlushTask = new ScheduledTask(new Handler(Looper.getMainLooper()));
+    private long mExpiryDelay = EXPIRY_DELAY;
 
     /**
      * Must be synchronized everywhere
@@ -69,6 +66,10 @@ class ShopeliaTracker extends Tracker {
 
     private ShopeliaTracker() {
         setFlushDelegate(mPrivateFlushDelegate);
+    }
+
+    void setExpiryDelay(long expiryDelay) {
+        mExpiryDelay = expiryDelay;
     }
 
     public void setFlushDelegate(FlushDelegate delegate) {
@@ -92,13 +93,11 @@ class ShopeliaTracker extends Tracker {
     @Override
     public void onDisplayShopeliaButton(String url, String tracker) {
         addShopeliaEvent(tracker, new ShopeliaEvent(Actions.DISPLAY, url));
-        requestFlush();
     }
 
     @Override
     public void onClickShopeliaButton(String url, String tracker) {
         addShopeliaEvent(tracker, new ShopeliaEvent(Actions.CLICK, url));
-        requestFlush();
     }
 
     public static ShopeliaTracker getInstance() {
@@ -147,7 +146,7 @@ class ShopeliaTracker extends Tracker {
                         // Loop on entries
                         Map<String, ShopeliaEvent[]> events = getReadOnlyVersion(mEvents);
                         for (Map.Entry<String, ShopeliaEvent[]> event : events.entrySet()) {
-                            List<ShopeliaEvent> notSent = mFlushDelegate.flush(uuid, event.getKey(), event.getValue());
+                            List<ShopeliaEvent> notSent = flush(uuid, event.getKey(), event.getValue());
                             // Update sent entries
                             synchronized (mEvents) {
                                 HashSet<ShopeliaEvent> e = mEvents.get(event.getKey());
@@ -193,7 +192,7 @@ class ShopeliaTracker extends Tracker {
                             JSONArray entryArray = new JSONArray();
                             final long now = System.currentTimeMillis();
                             for (ShopeliaEvent event : entry.getValue()) {
-                                if (event.sent_at + EXPIRY_DELAY >= now && event.sent_at != ShopeliaEvent.NEVER_SENT) {
+                                if (event.sent_at + mExpiryDelay >= now && event.sent_at != ShopeliaEvent.NEVER_SENT) {
                                     entryArray.put(event.toJson());
                                 }
                             }
@@ -243,15 +242,6 @@ class ShopeliaTracker extends Tracker {
         }
     }
 
-    private ShopeliaEvent getEvent(HashSet<ShopeliaEvent> events, ShopeliaEvent e) {
-        for (ShopeliaEvent event : events) {
-            if (event.equals(e)) {
-                return event;
-            }
-        }
-        return null;
-    }
-
     public void migrate(int from, int to) {
 
     }
@@ -273,45 +263,8 @@ class ShopeliaTracker extends Tracker {
     private FlushDelegate mPrivateFlushDelegate = new FlushDelegate() {
 
         @Override
-        public List<ShopeliaEvent> flush(String uuid, String trackerName, ShopeliaEvent[] events) {
-            final long now = System.currentTimeMillis();
-            ArrayList<ShopeliaEvent> notSent = new ArrayList<ShopeliaEvent>(events.length);
-            HashMap<String, ArrayList<ShopeliaEvent>> sortedByAction = new HashMap<String, ArrayList<ShopeliaEvent>>();
-
-            for (ShopeliaEvent event : events) {
-                if (event.request > 0 && (event.sent_at == ShopeliaEvent.NEVER_SENT || event.sent_at + EXPIRY_DELAY <= now)) {
-                    if (!sortedByAction.containsKey(event.action)) {
-                        sortedByAction.put(event.action, new ArrayList<ShopeliaEvent>(events.length));
-                    }
-                    sortedByAction.get(event.action).add(event);
-                } else {
-                    notSent.add(event);
-                }
-            }
-
-            sendAll(uuid, trackerName, sortedByAction, notSent);
-
-            return notSent;
-        }
-
-        private void sendAll(String uuid, String tracker, HashMap<String, ArrayList<ShopeliaEvent>> sortedByAction,
-                ArrayList<ShopeliaEvent> notSent) {
-            for (Map.Entry<String, ArrayList<ShopeliaEvent>> entry : sortedByAction.entrySet()) {
-                if (!send(uuid, tracker, entry.getKey(), toJsonArray(entry.getValue()))) {
-                    notSent.addAll(entry.getValue());
-                }
-            }
-        }
-
-        private JSONArray toJsonArray(ArrayList<ShopeliaEvent> events) {
-            JSONArray array = new JSONArray();
-            for (ShopeliaEvent event : events) {
-                array.put(event.url);
-            }
-            return array;
-        }
-
-        public boolean send(String uuid, String tracker, String action, JSONArray urls) {
+        public boolean send(String uuid, String tracker, String action, ArrayList<ShopeliaEvent> events) {
+            JSONArray urls = toJsonArray(events);
             Context context = mApplicationContext.get();
             if (urls.length() == 0 || context == null) {
                 return false;
@@ -326,11 +279,8 @@ class ShopeliaTracker extends Tracker {
                     Log.d(LOG, "Tracking for " + uuid);
                     Log.d(LOG, "Tracking " + params.toString(2));
                 }
-                // HttpResponse response =
-                // ShopeliaRestClient.V1(context).post(Command.V1.Events.$,
-                // params);
-                return true;
-                // return response != null && response.getStatus() == 204;
+                HttpResponse response = ShopeliaRestClient.V1(context).post(Command.V1.Events.$, params);
+                return response != null && response.getStatus() == 204;
             } catch (Exception e) {
 
             }
@@ -338,6 +288,44 @@ class ShopeliaTracker extends Tracker {
         }
 
     };
+
+    public List<ShopeliaEvent> flush(String uuid, String trackerName, ShopeliaEvent[] events) {
+        final long now = System.currentTimeMillis();
+        ArrayList<ShopeliaEvent> notSent = new ArrayList<ShopeliaEvent>(events.length);
+        HashMap<String, ArrayList<ShopeliaEvent>> sortedByAction = new HashMap<String, ArrayList<ShopeliaEvent>>();
+
+        for (ShopeliaEvent event : events) {
+            if (event.request > 0 && (event.sent_at == ShopeliaEvent.NEVER_SENT || event.sent_at + mExpiryDelay <= now)) {
+                if (!sortedByAction.containsKey(event.action)) {
+                    sortedByAction.put(event.action, new ArrayList<ShopeliaEvent>(events.length));
+                }
+                sortedByAction.get(event.action).add(event);
+            } else {
+                notSent.add(event);
+            }
+        }
+
+        sendAll(uuid, trackerName, sortedByAction, notSent);
+
+        return notSent;
+    }
+
+    private void sendAll(String uuid, String tracker, HashMap<String, ArrayList<ShopeliaEvent>> sortedByAction,
+            ArrayList<ShopeliaEvent> notSent) {
+        for (Map.Entry<String, ArrayList<ShopeliaEvent>> entry : sortedByAction.entrySet()) {
+            if (!mFlushDelegate.send(uuid, tracker, entry.getKey(), entry.getValue())) {
+                notSent.addAll(entry.getValue());
+            }
+        }
+    }
+
+    private JSONArray toJsonArray(ArrayList<ShopeliaEvent> events) {
+        JSONArray array = new JSONArray();
+        for (ShopeliaEvent event : events) {
+            array.put(event.url);
+        }
+        return array;
+    }
 
     private interface Api {
         String URLS = "urls";

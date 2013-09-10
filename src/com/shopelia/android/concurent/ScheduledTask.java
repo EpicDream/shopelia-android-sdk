@@ -1,7 +1,5 @@
 package com.shopelia.android.concurent;
 
-import java.lang.ref.WeakReference;
-
 import android.os.Handler;
 
 /**
@@ -20,7 +18,7 @@ public class ScheduledTask {
     private Handler mHandler;
     private long mPeriod = SINGLE_SHOT;
     private long mDelay;
-    private WeakReference<Runnable> mRunnable = new WeakReference<Runnable>(null);
+    private Runnable mRunnable;
 
     private Object mToken = new Object();
 
@@ -38,14 +36,14 @@ public class ScheduledTask {
     }
 
     public void scheduleAtFixedRate(final Runnable runnable, final long delay, final long period) {
-        mRunnable = new WeakReference<Runnable>(runnable);
+        mRunnable = runnable;
         mPeriod = period;
         mDelay = delay;
         start();
     }
 
     public void schedule(final Runnable runnable, final long delay) {
-        mRunnable = new WeakReference<Runnable>(runnable);
+        mRunnable = runnable;
         mPeriod = SINGLE_SHOT;
         mDelay = delay;
         start();
@@ -74,8 +72,8 @@ public class ScheduledTask {
         @Override
         public void run() {
             mDelay = 0L;
-            if (mRunnable.get() != null) {
-                mRunnable.get().run();
+            if (mRunnable != null) {
+                mRunnable.run();
                 if (mPeriod != SINGLE_SHOT) {
                     mHandler.postDelayed(mPrivateRunnable, mPeriod);
                 }
