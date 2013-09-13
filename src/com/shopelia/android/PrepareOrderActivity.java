@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -182,13 +183,30 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
         } else {
             Product product = Product.inflate(getIntent().getExtras());
             new ProductAPI(this, new CallbackAdapter() {
+
                 @Override
                 public void onProductUpdate(Product product, boolean fromNetwork) {
+                    super.onProductUpdate(product, fromNetwork);
+                    Log.d(null, "PRODUCT UPDATE");
                     if (product.isValid()) {
                         mProduct = product;
                         ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(product, fromNetwork);
                     }
                 }
+
+                @Override
+                public void onProductNotAvailable(Product product) {
+                    Log.d(null, "PRODUCT AVAILABLE");
+                    ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(product);
+                    fragment.show(getSupportFragmentManager(), null);
+                }
+
+                @Override
+                public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+                    super.onError(step, httpResponse, response, e);
+                    Log.d(null, "PRODUCT ERROR");
+                }
+
             }).getProduct(product);
         }
     }

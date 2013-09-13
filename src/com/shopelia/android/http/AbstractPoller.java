@@ -61,6 +61,10 @@ public abstract class AbstractPoller<ParamType, ResultType> {
     private static final int MESSAGE_POLL = 1;
     private static final int MESSAGE_STOP = 2;
 
+    private static final int POLLING_EXPIRED = 2;
+    private static final int POLLING_SUCCESS = 1;
+    private static final int POLLING_WAITING = 0;
+
     private String mPollerName;
     private ResultType mResult;
     private OnPollerEventListener<ResultType> mOnPollerEventListener;
@@ -71,7 +75,6 @@ public abstract class AbstractPoller<ParamType, ResultType> {
     private PollerThread mPollerThread;
     private PollerHandler mPollerHandler;
     private AtomicReference<ParamType> mParam = new AtomicReference<ParamType>();
-    private int mIteration = 0;
 
     public AbstractPoller(String name) {
         mPollerName = name;
@@ -97,7 +100,6 @@ public abstract class AbstractPoller<ParamType, ResultType> {
             setState(STATE_POLLING);
             sendMessageToPollerThread();
         } else if (isStopped()) {
-            mIteration = 0;
             setState(STATE_POLLING);
             mStartTime = System.currentTimeMillis();
             mPollerThread = new PollerThread();
@@ -206,6 +208,7 @@ public abstract class AbstractPoller<ParamType, ResultType> {
             super(looper);
         }
 
+        @SuppressWarnings("unchecked")
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
@@ -214,13 +217,21 @@ public abstract class AbstractPoller<ParamType, ResultType> {
                     getLooper().quit();
                     break;
                 case MESSAGE_POLL:
-                    ResultType result = execute((ParamType) msg.obj);
+                    ResultType result = null;
+                    try {
+                        result = execute((ParamType) msg.obj);
+                    } catch (Exception e) {
+
+                    }
                     Message message = mHandler.obtainMessage();
                     message.what = MESSAGE_POLL;
                     ResultType old = mResult;
                     mResult = result;
+                    message.arg1 = mExpiryTime == NO_EXPIRATION || mStartTime + mExpiryTime > System.currentTimeMillis() ? POLLING_WAITING
+                            : POLLING_EXPIRED;
                     if (mOnPollerEventListener != null && mResult != null) {
                         if (mOnPollerEventListener.onResult(old, mResult)) {
+                            message.arg1 = POLLING_SUCCESS;
                             stop();
                         }
                     }
@@ -238,17 +249,19 @@ public abstract class AbstractPoller<ParamType, ResultType> {
             super.handleMessage(msg);
             switch (msg.what) {
                 case MESSAGE_POLL:
-                    mIteration++;
-                    if ((mExpiryTime == NO_EXPIRATION || mStartTime + mExpiryTime > System.currentTimeMillis()) && isPolling()) {
-                        sendMessageToPollerThread();
-                    } else if (mOnPollerEventListener != null && isPolling()) {
-                        mOnPollerEventListener.onTimeExpired();
-                    } else if (mOnPollerEventListener != null) {
-                        mOnPollerEventListener.onPollingSucceed();
+                    if (mOnPollerEventListener != null) {
+                        switch (msg.arg1) {
+                            case POLLING_WAITING:
+                                sendMessageToPollerThread();
+                                break;
+                            case POLLING_EXPIRED:
+                                mOnPollerEventListener.onTimeExpired();
+                                break;
+                            case POLLING_SUCCESS:
+                                mOnPollerEventListener.onPollingSucceed();
+                                break;
+                        }
                     }
-                    break;
-
-                default:
                     break;
             }
         }

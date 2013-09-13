@@ -86,7 +86,7 @@ public class VerifyAPITest extends InstrumentationTestCase {
         api.verify(new JSONObject("{" + User.Api.PASSWORD + ": " + "\"" + password + "\"}"));
 
         try {
-            barrier.await(30, TimeUnit.SECONDS);
+            barrier.await(5, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
 
         }
