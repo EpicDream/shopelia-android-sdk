@@ -28,6 +28,7 @@ public class Product implements BaseModel<Product> {
         String SHIPPING_EXTRAS = "shipping_info";
         String MERCHANT = "merchant";
         String VERSIONS = "versions";
+        String CASHFRONT_VALUE = "cashfront_value";
     }
 
     public static final String IDENTIFIER = Product.class.getName();
@@ -46,6 +47,7 @@ public class Product implements BaseModel<Product> {
     // Shipping info
     public float productPrice;
     public float deliveryPrice;
+    public float cashfrontValue;
 
     public String shippingExtra;
 
@@ -65,12 +67,17 @@ public class Product implements BaseModel<Product> {
         name = source.readString();
         productPrice = source.readFloat();
         deliveryPrice = source.readFloat();
+        cashfrontValue = source.readFloat();
         shippingExtra = source.readString();
         image = ParcelUtils.readParcelable(source, Uri.class.getClassLoader());
         description = source.readString();
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
+    }
+
+    public float getTotalPrice() {
+        return (deliveryPrice > 0 ? deliveryPrice : 0) + (productPrice > 0 ? productPrice : 0) - (cashfrontValue > 0 ? cashfrontValue : 0);
     }
 
     @Override
@@ -95,6 +102,7 @@ public class Product implements BaseModel<Product> {
         dest.writeString(name);
         dest.writeFloat(productPrice);
         dest.writeFloat(deliveryPrice);
+        dest.writeFloat(cashfrontValue);
         dest.writeString(shippingExtra);
         ParcelUtils.writeParcelable(dest, image, flags);
         dest.writeString(description);
@@ -125,6 +133,7 @@ public class Product implements BaseModel<Product> {
         }
         deliveryPrice = (float) object.optDouble(Api.EXPECTED_SHIPPING_PRICE, NO_PRICE);
         productPrice = (float) object.optDouble(Api.EXPECTED_PRODUCT_PRICE, NO_PRICE);
+        cashfrontValue = (float) object.optDouble(Api.CASHFRONT_VALUE, NO_PRICE);
         shippingExtra = object.optString(Api.SHIPPING_EXTRAS);
         if (object.has(Api.VERSIONS)) {
             versions = inflate(this, object.getJSONArray(Api.VERSIONS));
