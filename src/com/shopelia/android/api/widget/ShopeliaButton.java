@@ -30,7 +30,7 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
     @SuppressLint("NewApi")
     public ShopeliaButton(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, 0);
-        mHelper = new ShopeliaViewHelper(context, attrs);
+        mHelper = new ShopeliaViewHelper(context, attrs, isInEditMode());
         mHelper.setCallback(this);
         // TODO Use AttributeSet
         int[] attrsArray = new int[] {

@@ -24,7 +24,7 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
 
     public ShopeliaFrameLayout(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-        mHelper = new ShopeliaViewHelper(context, attrs);
+        mHelper = new ShopeliaViewHelper(context, attrs, isInEditMode());
         mHelper.setCallback(this);
         setCheckoutDelegate(this);
         onViewShouldBeInvisible();
