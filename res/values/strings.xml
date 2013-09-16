@@ -196,7 +196,7 @@
     <string name="shopelia_recover_pin_network_error">Une erreur réseau est survenue</string>
 
     <!-- Product not found -->
-    <string name="shopelia_product_not_found_title">Désolé, le produit que vous recherchez n\'est pas disponible.</string>
+    <string name="shopelia_product_not_found_title">Désolé, ce produit n\'est pas disponible.</string>
     <string name="shopelia_product_not_fount_text" formatted="false">Vous pouvez visiter la fiche produit chez le marchand %s afin d\'avoir plus d\'informations.</string>
     <string name="shopelia_product_not_fount_validation">Voir la fiche produit</string>
     

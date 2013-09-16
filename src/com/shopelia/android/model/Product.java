@@ -29,6 +29,7 @@ public class Product implements BaseModel<Product> {
         String MERCHANT = "merchant";
         String VERSIONS = "versions";
         String CASHFRONT_VALUE = "cashfront_value";
+        String PRICE_STRIKEOUT = "price_strikeout";
     }
 
     public static final String IDENTIFIER = Product.class.getName();
@@ -48,6 +49,7 @@ public class Product implements BaseModel<Product> {
     public float productPrice;
     public float deliveryPrice;
     public float cashfrontValue;
+    public float priceStrikeOut;
 
     public String shippingExtra;
 
@@ -68,6 +70,7 @@ public class Product implements BaseModel<Product> {
         productPrice = source.readFloat();
         deliveryPrice = source.readFloat();
         cashfrontValue = source.readFloat();
+        priceStrikeOut = source.readFloat();
         shippingExtra = source.readString();
         image = ParcelUtils.readParcelable(source, Uri.class.getClassLoader());
         description = source.readString();
@@ -103,6 +106,7 @@ public class Product implements BaseModel<Product> {
         dest.writeFloat(productPrice);
         dest.writeFloat(deliveryPrice);
         dest.writeFloat(cashfrontValue);
+        dest.writeFloat(priceStrikeOut);
         dest.writeString(shippingExtra);
         ParcelUtils.writeParcelable(dest, image, flags);
         dest.writeString(description);
@@ -134,6 +138,7 @@ public class Product implements BaseModel<Product> {
         deliveryPrice = (float) object.optDouble(Api.EXPECTED_SHIPPING_PRICE, NO_PRICE);
         productPrice = (float) object.optDouble(Api.EXPECTED_PRODUCT_PRICE, NO_PRICE);
         cashfrontValue = (float) object.optDouble(Api.CASHFRONT_VALUE, NO_PRICE);
+        priceStrikeOut = (float) object.optDouble(Api.PRICE_STRIKEOUT, NO_PRICE);
         shippingExtra = object.optString(Api.SHIPPING_EXTRAS);
         if (object.has(Api.VERSIONS)) {
             versions = inflate(this, object.getJSONArray(Api.VERSIONS));
