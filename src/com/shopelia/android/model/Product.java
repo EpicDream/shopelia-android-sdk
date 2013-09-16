@@ -30,6 +30,7 @@ public class Product implements BaseModel<Product> {
         String VERSIONS = "versions";
         String CASHFRONT_VALUE = "cashfront_value";
         String PRICE_STRIKEOUT = "price_strikeout";
+        String AVAILABILITY_INFO = "availability_info";
     }
 
     public static final String IDENTIFIER = Product.class.getName();
@@ -52,6 +53,7 @@ public class Product implements BaseModel<Product> {
     public float priceStrikeOut;
 
     public String shippingExtra;
+    public String availabilityInfo;
 
     public ArrayList<Product> versions = new ArrayList<Product>();
 
@@ -72,6 +74,7 @@ public class Product implements BaseModel<Product> {
         cashfrontValue = source.readFloat();
         priceStrikeOut = source.readFloat();
         shippingExtra = source.readString();
+        availabilityInfo = source.readString();
         image = ParcelUtils.readParcelable(source, Uri.class.getClassLoader());
         description = source.readString();
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
@@ -108,6 +111,7 @@ public class Product implements BaseModel<Product> {
         dest.writeFloat(cashfrontValue);
         dest.writeFloat(priceStrikeOut);
         dest.writeString(shippingExtra);
+        dest.writeString(availabilityInfo);
         ParcelUtils.writeParcelable(dest, image, flags);
         dest.writeString(description);
         ParcelUtils.writeParcelable(dest, merchant, flags);
@@ -140,6 +144,7 @@ public class Product implements BaseModel<Product> {
         cashfrontValue = (float) object.optDouble(Api.CASHFRONT_VALUE, NO_PRICE);
         priceStrikeOut = (float) object.optDouble(Api.PRICE_STRIKEOUT, NO_PRICE);
         shippingExtra = object.optString(Api.SHIPPING_EXTRAS);
+        availabilityInfo = object.optString(Api.AVAILABILITY_INFO);
         if (object.has(Api.VERSIONS)) {
             versions = inflate(this, object.getJSONArray(Api.VERSIONS));
             if (versions.size() > 0) {
@@ -212,6 +217,9 @@ public class Product implements BaseModel<Product> {
             productPrice = cpy.productPrice;
             deliveryPrice = cpy.deliveryPrice;
             shippingExtra = cpy.shippingExtra;
+            priceStrikeOut = cpy.priceStrikeOut;
+            cashfrontValue = cpy.cashfrontValue;
+            availabilityInfo = cpy.availabilityInfo;
         }
     }
 
