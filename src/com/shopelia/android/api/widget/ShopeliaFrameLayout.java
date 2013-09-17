@@ -8,6 +8,7 @@ import android.widget.FrameLayout;
 
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.shopelia.android.R;
+import com.shopelia.android.api.Shopelia.OnProductAvailabilityChangeListener;
 
 public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, ShopeliaViewHelper.Callback {
 
@@ -68,12 +69,6 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
     @Override
     public void setProductShippingExtras(String shippingExtras) {
         mHelper.setProductShippingExtras(shippingExtras);
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mHelper.onDetachFromWindow();
     }
 
     @Override

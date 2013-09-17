@@ -1,6 +1,7 @@
 package com.shopelia.android.api;
 
-import java.util.ArrayList;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 import android.app.Activity;
 import android.app.Fragment.SavedState;
@@ -10,14 +11,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.WelcomeActivity;
 import com.shopelia.android.app.ShopeliaActivity;
+import com.shopelia.android.app.tracking.Tracker;
+import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Merchant;
-import com.shopelia.android.remote.api.ApiHandler;
-import com.shopelia.android.remote.api.MerchantsAPI;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 
@@ -30,26 +32,20 @@ import com.shopelia.android.utils.Tax;
  */
 public final class Shopelia implements Parcelable {
 
-    public interface Callback {
-
-        public void onShopeliaIsAvailable(Shopelia instance);
-
-        public void onUpdateDone();
-
-    }
-
-    public static class CallbackAdapter implements Callback {
-
-        @Override
-        public void onShopeliaIsAvailable(Shopelia instance) {
-
-        }
-
-        @Override
-        public void onUpdateDone() {
-
-        }
-
+    /**
+     * Listener class for observing status changes of an instance of Shopelia.
+     * 
+     * @author Pierre Pollastri
+     */
+    public interface OnProductAvailabilityChangeListener {
+        /**
+         * Called when the status of the instance state changes.
+         * 
+         * @param shopelia The changed instance.
+         * @param newStatus The new status may be one of the Shopelia.STATUS_*
+         *            integers.
+         */
+        public void onProductAvailabilityChanged(Shopelia shopelia, int newStatus);
     }
 
     /**
@@ -113,20 +109,97 @@ public final class Shopelia implements Parcelable {
      */
     public static final String EXTRA_USER_PHONE = PrepareOrderActivity.EXTRA_USER_PHONE;
 
+    /**
+     * A boolean stating if the display screen must display
+     */
+    public static final String EXTRA_DISPLAY_WELCOME_SCREEN = Config.EXTRA_PREFIX + "DISPLAY_WELCOME_SCREEN";
+
     public static final int RESULT_SUCCESS = Activity.RESULT_OK;
     public static final int RESULT_CANCELED = Activity.RESULT_CANCELED;
     public static final int RESULT_REDIRECT_ON_MERCHANT = 0x1602;
 
     public static final int REQUEST_SHOPELIA = ShopeliaActivity.REQUEST_CHECKOUT;
 
-    private Intent mData;
-    private Context mContext;
+    public static final int STATUS_SEARCHING = -1;
+    public static final int STATUS_NOT_AVAILABLE = 0;
+    public static final int STATUS_AVAILABLE = 1;
+    public static final int STATUS_INVALID_URL = -2;
 
-    private Shopelia(Context context, String productUrl, Merchant merchant) {
+    private Intent mData;
+    private int mStatus = STATUS_SEARCHING;
+    private OnProductAvailabilityChangeListener mOnProductAvailabilityChangeListener;
+    private ShopeliaController mController;
+    private boolean mHasNotifyView = false;
+    private Tracker mTracker;
+    private String mTrackerName;
+
+    public Shopelia(Context context, String productUrl, String trackerName, OnProductAvailabilityChangeListener l) {
+        setOnProductAvailabilityChangeListener(mOnProductAvailabilityChangeListener);
+        mTrackerName = trackerName;
+        mTracker = Tracker.Factory.getTracker(Tracker.PROVIDER_SHOPELIA, context);
         mData = new Intent();
         mData.putExtra(EXTRA_PRODUCT_URL, productUrl);
+        mController = ShopeliaController.getInstance();
+        try {
+            new URL(productUrl);
+        } catch (MalformedURLException e) {
+            productUrl = null;
+        }
+        if (TextUtils.isEmpty(productUrl)) {
+            setStatus(STATUS_INVALID_URL);
+        } else {
+            mController.fetch(context.getApplicationContext(), this);
+        }
+    }
+
+    public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l) {
+        mOnProductAvailabilityChangeListener = l;
+    }
+
+    /**
+     * Notify to Shopelia that the product is currently visible on the
+     * application User Interface.
+     */
+    public void notifyView() {
+        if (!mHasNotifyView) {
+            mTracker.onDisplayShopeliaButton(getProductUrl(), mTrackerName);
+            mHasNotifyView = true;
+        }
+    }
+
+    void setMerchant(final Merchant merchant) {
         mData.putExtra(EXTRA_MERCHANT, merchant);
-        mContext = context;
+    }
+
+    void setStatus(final int status) {
+        if (status != mStatus) {
+            mStatus = status;
+            if (mOnProductAvailabilityChangeListener != null) {
+                mOnProductAvailabilityChangeListener.onProductAvailabilityChanged(this, status);
+            }
+        }
+    }
+
+    /**
+     * Gets the url of the product for this instance of Shopelia.
+     * 
+     * @return The url of the product
+     */
+    public String getProductUrl() {
+        return mData.getStringExtra(EXTRA_PRODUCT_URL);
+    }
+
+    /**
+     * Get the current status of this instance of shopelia.
+     * 
+     * @return {@link Shopelia#STATUS_AVAILABLE} if the product is available,
+     *         {@link Shopelia#STATUS_SEARCHING} if Shopelia is looking for the
+     *         availability of the product.
+     *         {@link Shopelia#STATUS_NOT_AVAILABLE} if the product is not
+     *         available on Shopelia.
+     */
+    public int getStatus() {
+        return mStatus;
     }
 
     private Shopelia(Parcel source) {
@@ -165,47 +238,9 @@ public final class Shopelia implements Parcelable {
     }
 
     public void checkout(Context context, int requestCode) {
+        notifyView();
+        mTracker.onClickShopeliaButton(getProductUrl(), mTrackerName);
         checkout(context, null, mData, requestCode);
-    }
-
-    /**
-     * Obtains a new instance of {@link Shopelia} only if the merchant of the
-     * product url is available on Shopelia. Even if the method returns null, it
-     * will check online if the merchant is available and notify you later.
-     * 
-     * @param context
-     * @param productUrl The product url
-     * @param callback The {@link Callback} instance used to notify you that the
-     *            merchant is available
-     * @return
-     */
-    public static Shopelia obtain(final Context context, final String productUrl, final Callback callback) {
-        MerchantsAPI api = new MerchantsAPI(context, new ApiHandler.CallbackAdapter() {
-            @Override
-            public void onRetrieveMerchant(Merchant merchant) {
-                super.onRetrieveMerchant(merchant);
-                if (callback != null) {
-                    callback.onShopeliaIsAvailable(new Shopelia(context, productUrl, merchant));
-                }
-            }
-        });
-        Merchant out = api.getMerchant(productUrl);
-        if (out != null) {
-            return new Shopelia(context, productUrl, out);
-        }
-        return null;
-    }
-
-    /**
-     * Obtains a new instance of {@link Shopelia} only if the merchant of the
-     * product url is available on Shopelia.
-     * 
-     * @param context
-     * @param productUrl
-     * @return
-     */
-    public static Shopelia obtain(final Context context, final String productUrl) {
-        return obtain(context, productUrl, null);
     }
 
     /**
@@ -310,23 +345,5 @@ public final class Shopelia implements Parcelable {
             return new Shopelia(source);
         }
     };
-
-    /**
-     * Update Shopelia's data. This method is useful if you want to avoid
-     * retrieving {@link Shopelia} instances asynchronously. Once update is done
-     * it will call {@link Callback#onUpdateDone()}. You should do your Shopelia
-     * operations in this method.
-     */
-    public static void update(Context context, final Callback callback) {
-        new MerchantsAPI(context, new com.shopelia.android.remote.api.ApiHandler.CallbackAdapter() {
-            @Override
-            public void onRetrieveMerchants(ArrayList<Merchant> merchants) {
-                super.onRetrieveMerchants(merchants);
-                if (callback != null) {
-                    callback.onUpdateDone();
-                }
-            }
-        }).update();
-    }
 
 }

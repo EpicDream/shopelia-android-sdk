@@ -207,7 +207,7 @@ public class Product implements BaseModel<Product> {
     @Override
     public void merge(Product cpy) {
         if (cpy != null) {
-            url = cpy.url;
+            url = TextUtils.isEmpty(cpy.url) ? url : cpy.url;
             name = cpy.name;
             description = cpy.description;
             image = cpy.image;

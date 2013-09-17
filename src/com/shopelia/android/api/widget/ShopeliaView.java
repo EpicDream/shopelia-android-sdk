@@ -2,16 +2,14 @@ package com.shopelia.android.api.widget;
 
 import android.net.Uri;
 
+import com.shopelia.android.api.Shopelia.OnProductAvailabilityChangeListener;
+
 /**
  * A view used by Shopelia in order to trigger ShopeliaSDK launch.
  * 
  * @author Pierre Pollastri
  */
 public interface ShopeliaView {
-
-    public interface OnProductAvailabilityChangeListener {
-        public void onProductAvailabilityChange(String url, boolean available);
-    }
 
     public void callCheckout();
 

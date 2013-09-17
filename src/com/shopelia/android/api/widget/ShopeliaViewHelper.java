@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 import com.shopelia.android.api.Shopelia;
-import com.shopelia.android.app.tracking.Tracker;
+import com.shopelia.android.api.Shopelia.OnProductAvailabilityChangeListener;
 import com.shopelia.android.utils.TimeUnits;
 
 /**
@@ -38,13 +38,11 @@ public class ShopeliaViewHelper implements ShopeliaView {
     private String mProductUrl;
     private Shopelia mShopelia;
     private Callback mCallback;
-    private Tracker mTracker;
     private String mTrackerName;
     private OnProductAvailabilityChangeListener mOnProductAvailabilityChangeListener;
 
     public ShopeliaViewHelper(Context context, AttributeSet attrs, boolean editMode) {
         mContext = context;
-        mTracker = Tracker.Factory.getTracker(editMode ? Tracker.PROVIDER_DUMMY : Tracker.PROVIDER_SHOPELIA, context);
     }
 
     public void setCallback(Callback callback) {
@@ -57,7 +55,6 @@ public class ShopeliaViewHelper implements ShopeliaView {
     @Override
     public void callCheckout() {
         if (mShopelia != null) {
-            mTracker.onClickShopeliaButton(mProductUrl, mTrackerName);
             mShopelia.checkout(mContext);
         }
     }
@@ -67,23 +64,25 @@ public class ShopeliaViewHelper implements ShopeliaView {
         if (url != null && !url.toString().equals(mProductUrl)) {
             mProductUrl = url.toString();
             final long begin = System.currentTimeMillis();
-            mTracker.onDisplayShopeliaButton(mProductUrl, mTrackerName);
-            Shopelia.update(mContext, new Shopelia.CallbackAdapter() {
+            mShopelia = new Shopelia(mContext, mProductUrl, mTrackerName, new OnProductAvailabilityChangeListener() {
+
                 @Override
-                public void onUpdateDone() {
-                    super.onUpdateDone();
-                    mShopelia = Shopelia.obtain(mContext, mProductUrl);
-                    if (mShopelia != null && mCallback != null) {
-                        if (mOnProductAvailabilityChangeListener != null) {
-                            mOnProductAvailabilityChangeListener.onProductAvailabilityChange(mProductUrl, true);
+                public void onProductAvailabilityChanged(Shopelia shopelia, int newStatus) {
+                    if (mCallback != null) {
+                        switch (newStatus) {
+                            case Shopelia.STATUS_AVAILABLE:
+                                if (begin + DELAY_FOR_SMOOTH_CHANGES < System.currentTimeMillis()) {
+                                    mCallback.onViewShouldSmoothlyAppear();
+                                } else {
+                                    mCallback.onViewShouldBeVisible();
+                                }
+                                break;
+                            default:
+                                break;
                         }
-                        if (begin + DELAY_FOR_SMOOTH_CHANGES < System.currentTimeMillis()) {
-                            mCallback.onViewShouldSmoothlyAppear();
-                        } else {
-                            mCallback.onViewShouldBeVisible();
-                        }
-                    } else if (mOnProductAvailabilityChangeListener != null) {
-                        mOnProductAvailabilityChangeListener.onProductAvailabilityChange(mProductUrl, false);
+                    }
+                    if (mOnProductAvailabilityChangeListener != null) {
+                        mOnProductAvailabilityChangeListener.onProductAvailabilityChanged(shopelia, newStatus);
                     }
                 }
             });
@@ -126,10 +125,6 @@ public class ShopeliaViewHelper implements ShopeliaView {
         if (mShopelia != null) {
             mShopelia.setProductShippingInfo(shippingExtras);
         }
-    }
-
-    public void onDetachFromWindow() {
-        mTracker.flush();
     }
 
     @Override

@@ -99,12 +99,17 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
         } else if (um.getCheckoutCount() > 0 || um.isAutoSignedIn()) {
             startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
         } else {
-            setHostContentView(R.layout.shopelia_welcome_activity);
-            getShopeliaActionBar().hide();
-            FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.fragment_container, new WelcomeFragment());
-            ft.commit();
+            if (getIntent().getExtras().getBoolean(Shopelia.EXTRA_DISPLAY_WELCOME_SCREEN, true)) {
+                setHostContentView(R.layout.shopelia_welcome_activity);
+                getShopeliaActionBar().hide();
+                FragmentManager fm = getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.fragment_container, new WelcomeFragment());
+                ft.commit();
+            } else {
+                startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
+            }
+
         }
     }
 

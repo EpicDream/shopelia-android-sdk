@@ -13,6 +13,7 @@ import android.view.animation.BounceInterpolator;
 
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.shopelia.android.R;
+import com.shopelia.android.api.Shopelia.OnProductAvailabilityChangeListener;
 import com.shopelia.android.widget.ValidationButton;
 
 public class ShopeliaButton extends ValidationButton implements ShopeliaView, ShopeliaViewHelper.Callback {
@@ -107,12 +108,6 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
                 setVisibility(View.INVISIBLE);
             }
         });
-    }
-
-    @Override
-    protected void onDetachedFromWindow() {
-        super.onDetachedFromWindow();
-        mHelper.onDetachFromWindow();
     }
 
     @Override
