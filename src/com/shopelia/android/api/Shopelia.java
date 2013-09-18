@@ -312,6 +312,17 @@ public final class Shopelia implements Parcelable {
     }
 
     /**
+     * Sets if the welcome screen should be displayed or not. By default a
+     * Welcome screen is displayed. This screen explains to the user what is
+     * Shopelia and how does it work.
+     * 
+     * @param display True for displaying the screen (default behaviour)
+     */
+    public void setDisplayWelcomeScreen(boolean display) {
+        mData.putExtra(EXTRA_DISPLAY_WELCOME_SCREEN, display);
+    }
+
+    /**
      * Sets a possible phone for the user. It can ease the registration of the
      * user on Shopelia if you already know it.
      * 

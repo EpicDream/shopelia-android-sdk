@@ -89,6 +89,10 @@ public class ShopeliaViewHelper implements ShopeliaView {
         }
     }
 
+    public Shopelia getShopelia() {
+        return mShopelia;
+    }
+
     @Override
     public String getProductUrl() {
         return mProductUrl;
