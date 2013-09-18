@@ -134,7 +134,7 @@ public final class Shopelia implements Parcelable {
     private String mTrackerName;
 
     public Shopelia(Context context, String productUrl, String trackerName, OnProductAvailabilityChangeListener l) {
-        setOnProductAvailabilityChangeListener(mOnProductAvailabilityChangeListener);
+        setOnProductAvailabilityChangeListener(l);
         mTrackerName = trackerName;
         mTracker = Tracker.Factory.getTracker(Tracker.PROVIDER_SHOPELIA, context);
         mData = new Intent();
