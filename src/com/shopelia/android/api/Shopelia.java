@@ -318,8 +318,9 @@ public final class Shopelia implements Parcelable {
      * 
      * @param display True for displaying the screen (default behaviour)
      */
-    public void setDisplayWelcomeScreen(boolean display) {
+    public Shopelia setDisplayWelcomeScreen(boolean display) {
         mData.putExtra(EXTRA_DISPLAY_WELCOME_SCREEN, display);
+        return this;
     }
 
     /**
