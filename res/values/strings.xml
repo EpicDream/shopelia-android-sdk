@@ -21,7 +21,7 @@
     <string name="shopelia_action_bar_add_payment_card">Ajouter une carte de paiement</string>
 
     <!-- Welcome -->
-    <string name="shopelia_welcome_introduction">DÉCOUVREZ SHOPELIA, LE NOUVEAU SERVICE POUR COMMANDER FACILEMENT EN LIGNE !</string>
+    <string name="shopelia_welcome_introduction">Découvrez Shopelia, le nouveau service pour commander facilement en ligne !</string>
 
     <string-array name="shopelia_welcome_list">
         <item>
@@ -51,8 +51,8 @@
     <!-- Authenticate -->
     <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
     <string name="shopelia_authenticate_title">Authentification</string>
-    <string name="shopelia_authenticate_remember_me">NE PLUS ME LE DEMANDER</string>
-    <string name="shopelia_authenticate_validate">CONFIRMER</string>
+    <string name="shopelia_authenticate_remember_me">Ne plus me le demander</string>
+    <string name="shopelia_authenticate_validate">Confirmer</string>
     <string name="shopelia_authenticate_your_password">Votre mot de passe Shopelia</string>
     <string name="shopelia_authenticate_wrong_password">Mot de passe incorrect</string>
     <string name="shopelia_authenticate_waiting_message">Authentification...</string>
@@ -64,10 +64,10 @@
     <string name="shopelia_form_main_email">Email</string>
     <string name="shopelia_form_main_password">Mot de passe</string>
     <string name="shopelia_form_main_validate">Poursuivre ma commande</string>
-    <string name="shopelia_form_main_sign_in">CONNEXION</string>
-    <string name="shopelia_form_main_personal_info">INFORMATIONS PERSONNELLES</string>
-    <string name="shopelia_form_main_shipping_address">ADRESSE DE LIVRAISON</string>
-    <string name="shopelia_form_main_payment_method">MOYEN DE PAIEMENT</string>
+    <string name="shopelia_form_main_sign_in">Connexion</string>
+    <string name="shopelia_form_main_personal_info">Informations personelles</string>
+    <string name="shopelia_form_main_shipping_address">Adresse de livraison</string>
+    <string name="shopelia_form_main_payment_method">Moyen de paiement</string>
     <string name="shopelia_form_main_card_number">Numéro de la carte</string>
     <string name="shopelia_form_main_address">Adresse</string>
     <string name="shopelia_form_main_header_text" formatted="false">
@@ -124,7 +124,7 @@
     <!-- Payment card creation form -->
     <string name="shopelia_form_payment_card_number">Numéro de la carte</string>
     <string name="shopelia_form_payment_card_expiry_date">MM/AA</string>
-    <string name="shopelia_form_payment_card_cvv">CCV</string>
+    <string name="shopelia_form_payment_card_cvv">CVV</string>
     <string name="shopelia_form_payment_card_scan"> scanner ma carte</string>
     <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
     <string name="shopelia_form_payment_card_scan_or_fill">Scannez votre carte bancaire ou saisissez manuellement les informations</string>
@@ -132,7 +132,7 @@
     <string name="shopelia_form_payment_card_secured_server">(Serveur sécurisé)</string>
 
     <!-- Shopelia footer -->
-    <string name="shopelia_footer">PAIEMENT SECURISE PAR</string>
+    <string name="shopelia_footer">Paiement sécurisé par</string>
 
     <!-- Taxes -->
     <string name="shopelia_tax_et">HT</string>
@@ -141,7 +141,7 @@
     <!-- Product sheet -->
     <string name="shopelia_product_shipping_fees" formatted="false">+ %s de frais de livraison</string>
     <string name="shopelia_product_free_shipping">Livraison gratuite</string>
-	<string name="shopelia_product_loading">VEUILLEZ PATIENTER...</string>
+	<string name="shopelia_product_loading">Veuillez patienter...</string>
     
     <!-- Waiting process -->
     <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
@@ -178,7 +178,7 @@
     <string name="shopelia_recover_password_title">Mot de passe oublié ?</string>
     <string name="shopelia_recover_password_description">Les instructions de réinitialisation du mot de passe vous seront envoyées sur votre email</string>
     <string name="shopelia_recover_password_email">Votre email</string>
-    <string name="shopelia_recover_password_send">ENVOYER L\'EMAIL</string>
+    <string name="shopelia_recover_password_send">Envoyer l\'email</string>
     <string name="shopelia_recover_password_unknown_email">Email inconnu.\n Saisissez l\'email associé à votre compte Shopelia puis cliquez sur \"Envoyer l\'email\".</string>
     <string name="shopelia_recover_password_network_error">Une erreur réseau est survenue</string>
     <string name="shopelia_recover_password_email_sent">Vous allez recevoir les instructions de réinitialisation du mot de passe dans quelques instants sur votre email</string>
