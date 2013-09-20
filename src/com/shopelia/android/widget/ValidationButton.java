@@ -7,7 +7,6 @@ import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
-import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -25,7 +24,6 @@ public class ValidationButton extends FrameLayout {
 
     private ImageView mIcon;
     private TextView mLabel;
-    private View mSeparator;
 
     public ValidationButton(Context context) {
         super(context);
@@ -50,7 +48,6 @@ public class ValidationButton extends FrameLayout {
         try {
             mIcon = (ImageView) findViewById(R.id.icon);
             mLabel = (TextView) findViewById(R.id.text);
-            mSeparator = findViewById(R.id.separator);
         } catch (Exception e) {
 
         }
@@ -86,7 +83,7 @@ public class ValidationButton extends FrameLayout {
 
     public void setText(CharSequence text) {
         if (text != null) {
-            text = text.toString().toUpperCase();
+            // text = text.toString().toUpperCase();
         }
         if (mLabel != null) {
             mLabel.setText(text);
@@ -95,7 +92,7 @@ public class ValidationButton extends FrameLayout {
     }
 
     public void setTextSize(float textSize) {
-        mLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+        // mLabel.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
     }
 
     public void setText(int resId) {
@@ -120,7 +117,8 @@ public class ValidationButton extends FrameLayout {
     private void refreshIcon() {
         if (mIcon != null) {
             mIcon.setVisibility(mIcon.getDrawable() != null ? View.VISIBLE : View.GONE);
-            mSeparator.setVisibility(mIcon.getDrawable() != null ? View.VISIBLE : View.GONE);
+            // mSeparator.setVisibility(mIcon.getDrawable() != null ?
+            // View.VISIBLE : View.GONE);
         }
     }
 

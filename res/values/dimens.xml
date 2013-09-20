@@ -39,4 +39,7 @@
 	<dimen name="shopelia_segment_padding_h">12dp</dimen>
 	<dimen name="shopelia_segment_padding_v">10dp</dimen>
 	<dimen name="shopelia_segment_width">80dp</dimen>
+	<dimen name="shopelia_btn_vertical_margin">12dp</dimen>
+	<dimen name="shopelia_btn_horizontal_margin">12dp</dimen>
+	
 </resources>

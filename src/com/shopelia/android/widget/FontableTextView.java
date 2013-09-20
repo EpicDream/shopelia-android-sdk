@@ -33,10 +33,10 @@ public class FontableTextView extends TextView {
     public static final int STYLE_ITALIC = Typeface.ITALIC;
     public static final int STYLE_BOLD_ITALIC = Typeface.BOLD_ITALIC;
 
-    public static final String ASAP_BOLD = "asap_bold.otf";
-    public static final String ASAP_BOLD_ITALIC = "asap_bold_italic.otf";
-    public static final String ASAP_ITALIC = "asap_italic.otf";
-    public static final String ASAP_REGULAR = "asap_regular.ttf";
+    public static final String ASAP_BOLD = "shopelia_default_font.otf";
+    public static final String ASAP_BOLD_ITALIC = "shopelia_default_font.otf";
+    public static final String ASAP_ITALIC = "shopelia_default_font.otf";
+    public static final String ASAP_REGULAR = "shopelia_default_font.otf";
 
     private static final SparseArray<SparseArray<Typeface>> sTypefaces = new SparseArray<SparseArray<Typeface>>(3);
 
@@ -116,18 +116,18 @@ public class FontableTextView extends TextView {
                 final AssetManager assetManager = getContext().getAssets();
                 switch (fontStyle) {
                     case STYLE_NORMAL:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_REGULAR, R.raw.shopelia_fonts_asap_regular);
+                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_REGULAR, R.raw.shopelia_default_font);
                         break;
 
                     default:
                     case STYLE_BOLD:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_BOLD, R.raw.shopelia_fonts_asap_bold);
+                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_BOLD, R.raw.shopelia_default_font);
                         break;
                     case STYLE_ITALIC:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_ITALIC, R.raw.shopelia_fonts_asap_italic);
+                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_ITALIC, R.raw.shopelia_default_font);
                         break;
                     case STYLE_BOLD_ITALIC:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_BOLD_ITALIC, R.raw.shopelia_fonts_asap_bold_italic);
+                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_BOLD_ITALIC, R.raw.shopelia_default_font);
                         break;
                 }
                 break;
@@ -137,7 +137,7 @@ public class FontableTextView extends TextView {
                 final AssetManager assetManager = getContext().getAssets();
                 switch (fontStyle) {
                     case STYLE_NORMAL:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_REGULAR, R.raw.shopelia_fonts_asap_regular);
+                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_REGULAR, R.raw.shopelia_default_font);
                         break;
 
                     default:
@@ -157,11 +157,11 @@ public class FontableTextView extends TextView {
                 final AssetManager assetManager = getContext().getAssets();
                 switch (fontStyle) {
                     case STYLE_BOLD:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_REGULAR, R.raw.shopelia_fonts_asap_regular);
+                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_REGULAR, R.raw.shopelia_default_font);
                         break;
 
                     case STYLE_BOLD_ITALIC:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_BOLD_ITALIC, R.raw.shopelia_fonts_asap_italic);
+                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_BOLD_ITALIC, R.raw.shopelia_default_font);
                         break;
 
                     default:

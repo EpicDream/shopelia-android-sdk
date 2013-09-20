@@ -4,7 +4,7 @@
     android:layout_height="@dimen/shopelia_title_bar_height"
     android:orientation="vertical" >
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/title_logo_frame"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
@@ -17,32 +17,33 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/shopelia_margin_small"
             android:src="@drawable/shopelia_logo" />
-    </FrameLayout>
+
+    </LinearLayout>
 
     <LinearLayout
         android:id="@+id/title_options_container_first"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/shopelia_margin_normal"
         android:layout_toRightOf="@+id/title_logo_frame"
-        android:gravity="right" >
+        android:gravity="right"
+        android:orientation="horizontal" >
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/title_options_container_second"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/shopelia_margin_normal"
         android:layout_toRightOf="@+id/title_logo_frame"
-        android:gravity="right" >
-
+        android:gravity="right"
+        android:orientation="horizontal" >
     </LinearLayout>
-    
+
 </RelativeLayout>

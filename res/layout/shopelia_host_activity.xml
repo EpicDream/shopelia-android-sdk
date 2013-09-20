@@ -8,9 +8,8 @@
     <com.shopelia.android.widget.actionbar.ActionBarWidget
         android:id="@+id/action_bar"
         android:layout_width="match_parent"
-        android:background="@drawable/shopelia_title_bar_background"
-        android:layout_height="@dimen/shopelia_title_bar_height" />
-
+        android:layout_height="@dimen/shopelia_title_bar_height"
+        android:background="@drawable/shopelia_action_bar_background" />
 
     <FrameLayout
         android:id="@+id/host_container"

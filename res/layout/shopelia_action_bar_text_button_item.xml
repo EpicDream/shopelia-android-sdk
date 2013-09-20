@@ -13,20 +13,20 @@
         android:layout_marginBottom="@dimen/shopelia_margin_normal"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
         android:alpha="0.4"
-        android:background="@color/shopelia_light" />
+        android:background="@color/shopelia_white" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/action_bar_item_textview"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:background="@drawable/shopelia_list_selector"
+        android:ellipsize="end"
         android:gravity="center"
+        android:maxLines="1"
         android:paddingLeft="@dimen/shopelia_margin_large"
         android:paddingRight="@dimen/shopelia_margin_large"
         android:text="Déjà inscrit ?"
-       	android:maxLines="1"
-       	android:ellipsize="end"
-        android:textColor="@color/shopelia_light"
+        android:textColor="@color/shopelia_white"
         android:textSize="@dimen/shopelia_font_size_small"
         app:shopelia_fontFamily="normal"
         app:shopelia_fontStyle="normal" />
