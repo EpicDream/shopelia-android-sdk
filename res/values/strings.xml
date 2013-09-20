@@ -218,7 +218,7 @@
     <!-- Close checkout -->
     <string name="shopelia_close_checkout_main_text">Votre commande a bien\nété prise en compte !</string>
     <string name="shopelia_close_checkout_sub_text">Vous allez recevoir une confirmation de la part du marchand dans les minutes qui viennent.\n \n Merci d\'avoir utilisé le service Shopelia !</string>
-    <string name="shopelia_close_checkout_validation" formatted="false">REVENIR SUR %s</string>
+    <string name="shopelia_close_checkout_validation" formatted="false">Revenir %s</string>
     <string name="shopelia_close_checkout_validation_or_exit" formatted="false">ou revenir sur %s</string>
     <string name="shopelia_close_checkout_create_a_password" formatted="false">Créer un mot de passe</string>
 

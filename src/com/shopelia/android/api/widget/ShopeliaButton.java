@@ -33,7 +33,6 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
         super(context, attrs, 0);
         mHelper = new ShopeliaViewHelper(context, attrs, isInEditMode());
         mHelper.setCallback(this);
-        // TODO Use AttributeSet
         int[] attrsArray = new int[] {
             android.R.attr.text
         };
