@@ -13,66 +13,78 @@
         android:gravity="center"
         android:orientation="vertical" >
 
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/shopelia_margin_normal"
-            android:src="@drawable/shopelia_present" />
-
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/title"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/shopelia_margin_extra_large"
-            android:layout_marginRight="@dimen/shopelia_margin_extra_large"
-            android:layout_marginTop="@dimen/shopelia_margin_large"
-            android:gravity="center"
-            android:text="@string/shopelia_close_checkout_main_text"
-            android:textColor="@color/shopelia_dark"
-            android:textSize="@dimen/shopelia_font_size_normal"
-            app:shopelia_fontStyle="bold" />
-
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/message"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/shopelia_margin_extra_large"
-            android:layout_marginRight="@dimen/shopelia_margin_extra_large"
-            android:layout_marginTop="@dimen/shopelia_margin_large"
-            android:gravity="center"
-            android:text="@string/shopelia_close_checkout_sub_text"
-            android:textColor="@color/shopelia_dark"
-            android:textSize="@dimen/shopelia_font_size_small"
-            app:shopelia_fontStyle="normal" />
-
-        <com.shopelia.android.widget.ValidationButton
-            android:id="@+id/validate"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/shopelia_margin_large"
-            android:layout_marginLeft="@dimen/shopelia_margin_large"
-            android:layout_marginRight="@dimen/shopelia_margin_large"
-            android:layout_marginTop="@dimen/shopelia_margin_large"
-            app:shopelia_icon="@drawable/shopelia_check_white"
-            app:shopelia_text="@string/shopelia_close_checkout_create_a_password" >
-        </com.shopelia.android.widget.ValidationButton>
-
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/exit"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
+            android:layout_gravity="center_horizontal"
             android:layout_marginBottom="@dimen/shopelia_margin_normal"
-            android:textSize="@dimen/shopelia_font_size_small"
-            android:textColor="@color/shopelia_link_text_color"
-            android:text="@string/shopelia_close_checkout_validation_or_exit" />
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
+            android:background="@drawable/shopelia_field_normal"
+            android:orientation="vertical" >
 
-        <com.shopelia.android.widget.ShopeliaSupportInclude
-            android:id="@+id/shopeliaSupportInclude1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" >
-        </com.shopelia.android.widget.ShopeliaSupportInclude>
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/shopelia_margin_normal"
+                android:src="@drawable/shopelia_present" />
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/shopelia_margin_extra_large"
+                android:layout_marginRight="@dimen/shopelia_margin_extra_large"
+                android:layout_marginTop="@dimen/shopelia_margin_large"
+                android:gravity="center"
+                android:text="@string/shopelia_close_checkout_main_text"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_normal"
+                app:shopelia_fontStyle="bold" />
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/shopelia_margin_extra_large"
+                android:layout_marginRight="@dimen/shopelia_margin_extra_large"
+                android:layout_marginTop="@dimen/shopelia_margin_large"
+                android:gravity="center"
+                android:text="@string/shopelia_close_checkout_sub_text"
+                android:textColor="@color/shopelia_dark"
+                android:textSize="@dimen/shopelia_font_size_small"
+                app:shopelia_fontStyle="normal" />
+
+            <com.shopelia.android.widget.ValidationButton
+                android:id="@+id/validate"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/shopelia_margin_large"
+                android:layout_marginLeft="@dimen/shopelia_margin_large"
+                android:layout_marginRight="@dimen/shopelia_margin_large"
+                android:layout_marginTop="@dimen/shopelia_margin_large"
+                app:shopelia_icon="@drawable/shopelia_check_white"
+                app:shopelia_text="@string/shopelia_close_checkout_create_a_password" >
+            </com.shopelia.android.widget.ValidationButton>
+
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/shopelia_margin_normal"
+                android:gravity="center"
+                android:text="@string/shopelia_close_checkout_validation_or_exit"
+                android:textColor="@color/shopelia_link_text_color"
+                android:textSize="@dimen/shopelia_font_size_small" />
+
+            <com.shopelia.android.widget.ShopeliaSupportInclude
+                android:id="@+id/shopeliaSupportInclude1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" >
+            </com.shopelia.android.widget.ShopeliaSupportInclude>
+        </LinearLayout>
 
         <include
             android:layout_width="wrap_content"
