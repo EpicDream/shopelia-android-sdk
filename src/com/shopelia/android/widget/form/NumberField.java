@@ -1,7 +1,6 @@
 package com.shopelia.android.widget.form;
 
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.InputType;
 import android.util.AttributeSet;
 
@@ -30,7 +29,6 @@ public class NumberField extends EditTextField {
     protected void setViewStyle(ViewHolder holder) {
         super.setViewStyle(holder);
         holder.editText.setInputType(InputType.TYPE_CLASS_NUMBER);
-        holder.editText.setTypeface(Typeface.DEFAULT);
     }
 
     @Override

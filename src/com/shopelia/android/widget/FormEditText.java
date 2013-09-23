@@ -1,6 +1,7 @@
 package com.shopelia.android.widget;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.Checkable;
@@ -22,15 +23,28 @@ public class FormEditText extends EditText implements Checkable, Errorable {
     };
 
     public FormEditText(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public FormEditText(Context context, AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public FormEditText(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+        setTypeface(CustomFontHelper.getTypeface(getContext(), CustomFontHelper.FAMILY_NORMAL, CustomFontHelper.STYLE_NORMAL));
+        if (attrs != null) {
+
+            TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.FontableTextView, defStyle, 0);
+
+            final int fontFamily = a.getInt(R.styleable.FormEditText_shopelia_fontFamily, CustomFontHelper.FAMILY_NORMAL);
+            final int fontStyle = a.getInt(R.styleable.FormEditText_shopelia_fontStyle, CustomFontHelper.STYLE_NORMAL);
+            if (!isInEditMode()) {
+                setTypeface(CustomFontHelper.getTypeface(getContext(), fontFamily, fontStyle));
+            }
+
+            a.recycle();
+        }
     }
 
     @Override
