@@ -22,7 +22,7 @@ import com.turbomanage.httpclient.ParameterMap;
  * 
  * @author Pierre Pollastri
  */
-public class MerchantsAPI extends ApiHandler {
+public class MerchantsAPI extends ApiController {
 
     private static final String PRIVATE_PREFERENCE = "Shopelia$MerchantAPI.PrivatePreference";
     private static final String PREFS_MERCHANTS = "merchant:merchants";

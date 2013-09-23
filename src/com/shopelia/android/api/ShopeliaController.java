@@ -5,7 +5,7 @@ import org.json.JSONObject;
 import android.content.Context;
 
 import com.shopelia.android.model.Merchant;
-import com.shopelia.android.remote.api.ApiHandler;
+import com.shopelia.android.remote.api.ApiController;
 import com.shopelia.android.remote.api.MerchantsAPI;
 import com.turbomanage.httpclient.HttpResponse;
 
@@ -22,7 +22,7 @@ class ShopeliaController {
     }
 
     public void fetch(final Context context, final Shopelia instance) {
-        ApiHandler.CallbackAdapter callback = new ApiHandler.CallbackAdapter() {
+        ApiController.CallbackAdapter callback = new ApiController.CallbackAdapter() {
             @Override
             public void onRetrieveMerchant(Merchant merchant) {
                 super.onRetrieveMerchant(merchant);

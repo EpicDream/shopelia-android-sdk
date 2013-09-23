@@ -28,7 +28,7 @@ import com.turbomanage.httpclient.ParameterMap;
  * 
  * @author Pierre Pollastri
  */
-public class ProductAPI extends ApiHandler {
+public class ProductAPI extends ApiController {
 
     private static final String PRIVATE_PREFERENCE = "Shopelia$ProductAPI.PrivatePreference";
     private static final String PREFS_PRODUCT = "product:products";

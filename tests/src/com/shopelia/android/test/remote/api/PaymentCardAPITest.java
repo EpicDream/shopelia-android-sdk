@@ -10,7 +10,7 @@ import android.test.InstrumentationTestCase;
 
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
 import com.shopelia.android.remote.api.PaymentCardAPI;
 import com.shopelia.android.test.TestUtils;
 import com.shopelia.android.test.model.PaymentCardFactory;

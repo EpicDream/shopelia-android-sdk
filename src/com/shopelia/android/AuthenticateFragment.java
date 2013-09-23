@@ -18,7 +18,7 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.ApiHandler;
+import com.shopelia.android.remote.api.ApiController;
 import com.shopelia.android.remote.api.VerifyAPI;
 import com.shopelia.android.utils.DialogHelper;
 import com.shopelia.android.widget.FontableTextView;
@@ -156,7 +156,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
         }
     };
 
-    private ApiHandler.CallbackAdapter mApiCallback = new ApiHandler.CallbackAdapter() {
+    private ApiController.CallbackAdapter mApiCallback = new ApiController.CallbackAdapter() {
 
         @Override
         public void onVerifySucceed() {
@@ -221,7 +221,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
             if (e != null) {
                 mErrorMessage.setText(R.string.shopelia_error_network_error);
             } else if (httpResponse != null) {
-                String error = ApiHandler.ErrorInflater.grabErrorMessage(httpResponse.getBodyAsString());
+                String error = ApiController.ErrorInflater.grabErrorMessage(httpResponse.getBodyAsString());
                 mErrorMessage.setText(error);
             }
         };

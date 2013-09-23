@@ -10,7 +10,59 @@ import com.turbomanage.httpclient.HttpResponse;
 
 import de.greenrobot.event.EventBus;
 
-public abstract class ApiHandler {
+public abstract class ApiController {
+
+    public static final int ERROR_EXCEPTION = 0;
+    public static final int ERROR_HTTP = 1;
+    public static final int ERROR_JSON = 2;
+
+    public static class OnApiErrorEvent {
+        public final ApiController sender;
+        public final HttpResponse response;
+        public final Exception exception;
+        public final JSONObject json;
+        public final int reason;
+
+        private OnApiErrorEvent(ApiController s, HttpResponse r, Exception e, JSONObject j) {
+            sender = s;
+            response = r;
+            exception = e;
+            json = j;
+            if (response != null) {
+                reason = ERROR_HTTP;
+            } else if (e != null) {
+                reason = ERROR_EXCEPTION;
+            } else {
+                reason = ERROR_JSON;
+            }
+        }
+
+    }
+
+    private static class OnResourceEvent<T> {
+        public final T resource;
+
+        public OnResourceEvent(T resource) {
+            this.resource = resource;
+        }
+
+    }
+
+    public static class OnAddResourceEvent<T> extends OnResourceEvent<T> {
+
+        public OnAddResourceEvent(T resource) {
+            super(resource);
+        }
+
+    }
+
+    public static class OnEditResourceEvent<T> extends OnResourceEvent<T> {
+
+        public OnEditResourceEvent(T resource) {
+            super(resource);
+        }
+
+    }
 
     public static class ErrorInflater {
 
@@ -58,7 +110,7 @@ public abstract class ApiHandler {
     private static Class<?> sStickyEventTypeCache;
     private static Class<?>[] sMoreStickyEventTypesCache;
 
-    public ApiHandler(Context context) {
+    public ApiController(Context context) {
         this.mContext = context;
     }
 
@@ -112,18 +164,19 @@ public abstract class ApiHandler {
 
     }
 
-    protected void fireError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+    protected void fireError(HttpResponse httpResponse, JSONObject response, Exception e) {
         if (Config.INFO_LOGS_ENABLED && e != null) {
             e.printStackTrace();
         }
+        getEventBus().post(new OnApiErrorEvent(this, httpResponse, e, response));
     }
 
-    private static final Class<?> GetEventType(ApiHandler handler) {
+    private static final Class<?> GetEventType(ApiController handler) {
         GetMoreEventTypes(handler);
         return sEventTypeCache;
     }
 
-    private static final Class<?>[] GetMoreEventTypes(ApiHandler handler) {
+    private static final Class<?>[] GetMoreEventTypes(ApiController handler) {
         if (sEventTypeCache == null || sMoreEventTypesCache == null) {
             Class<?>[] classes = handler.getEventTypes();
             if (classes != null && classes.length > 0) {
@@ -137,12 +190,12 @@ public abstract class ApiHandler {
         return sMoreEventTypesCache;
     }
 
-    private static final Class<?> GetStickyEventType(ApiHandler handler) {
+    private static final Class<?> GetStickyEventType(ApiController handler) {
         GetMoreStickyEventTypes(handler);
         return sStickyEventTypeCache;
     }
 
-    private static final Class<?>[] GetMoreStickyEventTypes(ApiHandler handler) {
+    private static final Class<?>[] GetMoreStickyEventTypes(ApiController handler) {
         if (sStickyEventTypeCache == null || sMoreStickyEventTypesCache == null) {
             Class<?>[] classes = handler.getStickyEventTypes();
             if (classes != null && classes.length > 0) {

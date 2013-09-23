@@ -29,7 +29,7 @@ import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.AddressesAPI;
-import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
 import com.shopelia.android.remote.api.PlacesAutoCompleteAPI;
 import com.shopelia.android.remote.api.PlacesAutoCompleteAPI.OnAddressDetailsListener;
 import com.shopelia.android.utils.LocaleUtils;

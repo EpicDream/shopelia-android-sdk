@@ -11,7 +11,7 @@ import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class PaymentCardAPI extends ApiHandler {
+public class PaymentCardAPI extends ApiController {
 
     public PaymentCardAPI(Context context, Callback callback) {
         super(context, callback);

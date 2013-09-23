@@ -43,9 +43,9 @@ import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.Product;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.ApiHandler;
-import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
-import com.shopelia.android.remote.api.ApiHandler.ErrorInflater;
+import com.shopelia.android.remote.api.ApiController;
+import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiController.ErrorInflater;
 import com.shopelia.android.remote.api.ProductAPI;
 import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.utils.Currency;
@@ -266,7 +266,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     private void createAccount() {
         final Order order = getOrder();
         startWaiting(getString(R.string.shopelia_form_main_waiting), true, true);
-        new UserAPI(this, new ApiHandler.CallbackAdapter() {
+        new UserAPI(this, new ApiController.CallbackAdapter() {
 
             @Override
             public void onAccountCreationSucceed(final User user, Address address) {

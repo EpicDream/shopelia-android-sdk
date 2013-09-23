@@ -14,7 +14,7 @@ import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class VerifyAPI extends ApiHandler {
+public class VerifyAPI extends ApiController {
 
     public static final String PREFERENCE_NAME = "ShopeliaVerifyAPI";
 

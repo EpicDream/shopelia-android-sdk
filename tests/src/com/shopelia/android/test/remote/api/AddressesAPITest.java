@@ -12,7 +12,7 @@ import android.util.Log;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.AddressesAPI;
-import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
 import com.shopelia.android.test.TestUtils;
 import com.shopelia.android.test.model.AddressFactory;
 import com.shopelia.android.test.model.UserFactory;

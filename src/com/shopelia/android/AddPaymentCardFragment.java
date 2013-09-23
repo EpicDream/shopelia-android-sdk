@@ -13,7 +13,7 @@ import com.shopelia.android.AddPaymentCardFragment.OnPaymentCardAddedListener;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
-import com.shopelia.android.remote.api.ApiHandler.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
 import com.shopelia.android.remote.api.PaymentCardAPI;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.TextButtonItem;

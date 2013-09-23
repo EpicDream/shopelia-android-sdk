@@ -12,7 +12,7 @@ import android.widget.Toast;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.ApiHandler;
+import com.shopelia.android.remote.api.ApiController;
 import com.shopelia.android.remote.api.Command;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
 import com.shopelia.android.widget.form.EditTextField;
@@ -98,7 +98,7 @@ public class CreatePasswordFragment extends ShopeliaFragment<Void> {
                                 getActivity().finish();
                             } else {
                                 mFormContainer.findFieldById(R.id.password, PasswordField.class).setError(
-                                        ApiHandler.ErrorInflater.grabErrorMessage(httpResponse.getBodyAsString()));
+                                        ApiController.ErrorInflater.grabErrorMessage(httpResponse.getBodyAsString()));
                             }
                         }
 

@@ -14,10 +14,34 @@ import com.shopelia.android.model.Order;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class AddressesAPI extends ApiHandler {
+public class AddressesAPI extends ApiController {
 
-    public AddressesAPI(Context context, Callback callback) {
-        super(context, callback);
+    public static class OnRequestDone {
+
+    }
+
+    public static class OnAddressEvent extends OnAddResourceEvent<Address> {
+
+        public OnAddressEvent(Address resource) {
+            super(resource);
+        }
+
+    }
+
+    public static class OnEditAddressEvent extends OnEditResourceEvent<Address> {
+
+        public OnEditAddressEvent(Address resource) {
+            super(resource);
+        }
+
+    }
+
+    private static Class<?>[] sEventTypes = new Class<?>[] {
+            OnRequestDone.class, OnAddressEvent.class, OnEditAddressEvent.class, OnApiErrorEvent.class
+    };
+
+    public AddressesAPI(Context context) {
+        super(context);
     }
 
     public void addAddress(Address address) {
@@ -32,9 +56,7 @@ public class AddressesAPI extends ApiHandler {
 
                 @Override
                 public void onSuccess(int status, JSONObject object, Address address) {
-                    if (hasCallback()) {
-                        getCallback().onAddressAdded(address);
-                    }
+                    getEventBus().post(new OnAddressEvent(address));
                 }
 
             });
@@ -61,9 +83,7 @@ public class AddressesAPI extends ApiHandler {
 
                 @Override
                 public void onSuccess(int status, JSONObject object, Address a) {
-                    if (hasCallback()) {
-                        getCallback().onAddressEdited(address);
-                    }
+                    getEventBus().post(new OnEditAddressEvent(a));
                 }
 
             });
@@ -85,17 +105,13 @@ public class AddressesAPI extends ApiHandler {
 
                 @Override
                 public void onComplete(HttpResponse httpResponse) {
-                    if (hasCallback()) {
-                        getCallback().onRequestDone();
-                    }
+                    getEventBus().post(new OnRequestDone());
                 }
 
                 @Override
                 public void onError(Exception e) {
                     super.onError(e);
-                    if (hasCallback()) {
-                        getCallback().onError(STEP_ADDRESS, null, null, e);
-                    }
+                    fireError(null, null, e);
                 }
 
             });
@@ -130,8 +146,8 @@ public class AddressesAPI extends ApiHandler {
                 } catch (JSONException e) {
 
                 }
-            } else if (hasCallback()) {
-                getCallback().onError(STEP_ADDRESS, httpResponse, object, null);
+            } else {
+                fireError(httpResponse, object, null);
             }
         }
 
@@ -140,11 +156,14 @@ public class AddressesAPI extends ApiHandler {
         @Override
         public void onError(Exception e) {
             super.onError(e);
-            if (hasCallback()) {
-                getCallback().onError(STEP_ADDRESS, null, null, e);
-            }
+            fireError(null, null, e);
         }
 
+    }
+
+    @Override
+    public Class<?>[] getEventTypes() {
+        return sEventTypes;
     }
 
 }
