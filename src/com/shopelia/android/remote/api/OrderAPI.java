@@ -18,14 +18,30 @@ import com.turbomanage.httpclient.HttpResponse;
 
 public class OrderAPI extends ApiController {
 
-    public OrderAPI(Context context, Callback callback) {
-        super(context, callback);
+    public static class OnOrderConfirmationEvent {
+
+    }
+
+    public static class OnInvalidOrderRequestEvent {
+        public final String message;
+
+        private OnInvalidOrderRequestEvent(String message) {
+            this.message = message;
+        }
+
+    }
+
+    private static Class<?>[] sEventTypes = new Class<?>[] {
+            OnOrderConfirmationEvent.class, OnInvalidOrderRequestEvent.class
+    };
+
+    public OrderAPI(Context context) {
+        super(context);
     }
 
     public void order(final Order order, boolean test) {
 
         JSONObject params = new JSONObject();
-        setCurrentStep(STEP_ORDER);
         try {
             JSONObject orderObject = new JSONObject();
             JSONArray products = new JSONArray();
@@ -43,7 +59,7 @@ public class OrderAPI extends ApiController {
                 Log.d(null, "ORDER " + params.toString(2));
             }
         } catch (JSONException e) {
-            fireError(STEP_ORDER, null, null, e);
+            fireError(null, null, e);
             return;
         }
         ShopeliaRestClient.V1(getContext()).post(Command.V1.Orders.$, params, new AsyncCallback() {
@@ -52,15 +68,11 @@ public class OrderAPI extends ApiController {
             public void onComplete(HttpResponse httpResponse) {
 
                 if (httpResponse.getStatus() == 201) {
-                    if (hasCallback()) {
-                        getCallback().onOrderConfirmation(true);
-                    }
+                    getEventBus().post(new OnOrderConfirmationEvent());
                 } else if (httpResponse.getStatus() == 422) {
-                    if (hasCallback()) {
-                        getCallback().onInvalidOrderRequest(ErrorInflater.grabErrorMessage(httpResponse.getBodyAsString()));
-                    }
+                    getEventBus().post(new OnInvalidOrderRequestEvent(ErrorInflater.grabErrorMessage(httpResponse.getBodyAsString())));
                 } else {
-                    fireError(STEP_ORDER, httpResponse, null, new IllegalStateException(httpResponse.getBodyAsString()));
+                    fireError(httpResponse, null, new IllegalStateException(httpResponse.getBodyAsString()));
                 }
 
             }
@@ -68,7 +80,7 @@ public class OrderAPI extends ApiController {
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_ORDER, null, null, e);
+                fireError(null, null, e);
             }
 
         });
@@ -76,6 +88,11 @@ public class OrderAPI extends ApiController {
 
     public void order(final Order order) {
         order(order, false);
+    }
+
+    @Override
+    public Class<?>[] getEventTypes() {
+        return sEventTypes;
     }
 
     private static double round(double unrounded, int precision, int roundingMode) {

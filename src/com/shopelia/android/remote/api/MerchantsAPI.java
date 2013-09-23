@@ -126,6 +126,11 @@ public class MerchantsAPI extends ApiController {
         return true;
     }
 
+    @Override
+    public Class<?>[] getEventTypes() {
+        return sEventTypes;
+    }
+
     private void loadMerchantsFromCache() {
         String json = mPreferences.getString(PREFS_MERCHANTS, null);
         if (!TextUtils.isEmpty(json)) {
