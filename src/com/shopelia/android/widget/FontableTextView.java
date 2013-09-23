@@ -35,15 +35,13 @@ public class FontableTextView extends TextView {
     private static final SparseArray<SparseArray<Typeface>> sTypefaces = new SparseArray<SparseArray<Typeface>>(3);
 
     private static final Font[] FONTS;
-    private static final String OTF = "otf";
-    private static final String TTF = "ttf";
 
     static {
         // Add fonts here
         FONTS = new Font[] {
-                new Font(FAMILY_NORMAL, STYLE_NORMAL, R.raw.shopelia_helvetica_neue, OTF),
-
-                new Font(FAMILY_LIGHT, STYLE_NORMAL, R.raw.shopelia_helvetica_light, TTF)
+                new Font(FAMILY_NORMAL, STYLE_NORMAL, R.raw.shopelia_helvetica_neue),
+                new Font(FAMILY_NORMAL, STYLE_BOLD, R.raw.shopelia_helvetica_neue_bold),
+                new Font(FAMILY_LIGHT, STYLE_NORMAL, R.raw.shopelia_helvetica_light)
         };
     }
 
@@ -165,13 +163,11 @@ public class FontableTextView extends TextView {
         private final int mResId;
         private final int mFamily;
         private final int mStyle;
-        private final String mExt;
 
-        public Font(int family, int style, int resId, String ext) {
+        public Font(int family, int style, int resId) {
             mFamily = family;
             mStyle = style;
             mResId = resId;
-            mExt = ext;
         }
 
         public int match(int family, int style) {
@@ -183,7 +179,7 @@ public class FontableTextView extends TextView {
         }
 
         public String getFilename() {
-            return String.format("shopelia_font_%d_%d.%s", mFamily, mStyle, mExt);
+            return String.format("shopelia_font_%d_%d", mFamily, mStyle);
         }
 
         public int getResId() {
