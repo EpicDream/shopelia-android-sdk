@@ -1,182 +1,16 @@
 package com.shopelia.android.remote.api;
 
-import java.util.ArrayList;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
 
 import com.shopelia.android.config.Config;
-import com.shopelia.android.model.Address;
-import com.shopelia.android.model.Merchant;
-import com.shopelia.android.model.PaymentCard;
-import com.shopelia.android.model.Product;
-import com.shopelia.android.model.User;
 import com.turbomanage.httpclient.HttpResponse;
 
-public class ApiHandler {
+import de.greenrobot.event.EventBus;
 
-    public interface Callback {
-        public void onAccountCreationSucceed(User user, Address address);
-
-        public void onPaymentCardAdded(PaymentCard paymentCard);
-
-        public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e);
-
-        public void onOrderConfirmation(boolean succeed);
-
-        public void onInvalidOrderRequest(String errorMessage);
-
-        public void onUserRetrieved(User user);
-
-        public void onUserUpdateDone();
-
-        public void onUserDestroyed(long userId);
-
-        public void onSignIn(User user);
-
-        public void onRetrieveMerchant(Merchant merchant);
-
-        public void onRetrieveMerchants(ArrayList<Merchant> merchants);
-
-        public void onSignOut();
-
-        public void onAddressAdded(Address address);
-
-        public void onAddressEdited(Address address);
-
-        public void onAddressDeleted(long id);
-
-        public void onVerifyFailed();
-
-        public void onVerifySucceed();
-
-        public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message);
-
-        public void onAuthTokenRevoked();
-
-        public void onProductUpdate(Product product, boolean fromNetwork);
-
-        public void onProductNotAvailable(Product product);
-
-        public void onRequestDone();
-
-    }
-
-    public static class CallbackAdapter implements Callback {
-
-        @Override
-        public void onAccountCreationSucceed(User user, Address address) {
-
-        }
-
-        @Override
-        public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-
-        }
-
-        @Override
-        public void onOrderConfirmation(boolean succeed) {
-
-        }
-
-        @Override
-        public void onUserRetrieved(User user) {
-
-        }
-
-        @Override
-        public void onUserDestroyed(long userId) {
-
-        }
-
-        @Override
-        public void onSignIn(User user) {
-
-        }
-
-        @Override
-        public void onRetrieveMerchant(Merchant merchant) {
-
-        }
-
-        @Override
-        public void onRetrieveMerchants(ArrayList<Merchant> merchants) {
-
-        }
-
-        @Override
-        public void onSignOut() {
-
-        }
-
-        @Override
-        public void onAddressAdded(Address address) {
-
-        }
-
-        @Override
-        public void onAddressEdited(Address address) {
-
-        }
-
-        @Override
-        public void onAddressDeleted(long id) {
-
-        }
-
-        @Override
-        public void onUserUpdateDone() {
-
-        }
-
-        @Override
-        public void onPaymentCardAdded(PaymentCard paymentCard) {
-
-        }
-
-        @Override
-        public void onVerifyFailed() {
-
-        }
-
-        @Override
-        public void onVerifySucceed() {
-
-        }
-
-        @Override
-        public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message) {
-
-        }
-
-        @Override
-        public void onAuthTokenRevoked() {
-
-        }
-
-        @Override
-        public void onInvalidOrderRequest(String errorMessage) {
-
-        }
-
-        @Override
-        public void onProductNotAvailable(Product product) {
-
-        }
-
-        @Override
-        public void onProductUpdate(Product product, boolean fromNetwork) {
-
-        }
-
-        @Override
-        public void onRequestDone() {
-
-        }
-
-    }
+public abstract class ApiHandler {
 
     public static class ErrorInflater {
 
@@ -216,64 +50,54 @@ public class ApiHandler {
         }
     }
 
-    public static final int STEP_DEAD = 0;
-    public static final int STEP_ACCOUNT_CREATION = 1;
-    public static final int STEP_SEND_PAYMENT_INFORMATION = 2;
-    public static final int STEP_ORDER = 3;
-    public static final int STEP_ORDERING = 4;
-    public static final int STEP_CONFIRM = 5;
-    public static final int STEP_WAITING_CONFIRMATION = 6;
-    public static final int STEP_RETRIEVE_USER = 7;
-    public static final int STEP_SIGN_IN = 8;
-    public static final int STEP_ADDRESS = 9;
-    public static final int STEP_VERIFY = 10;
-    public static final int STEP_PRODUCT = 11;
-
-    public static final int STATE_RUNNING = 0;
-    public static final int STATE_PAUSED = 1;
-    public static final int STATE_RECYCLED = 2;
-
     private Context mContext;
-    private Callback mCallback;
+    private EventBus mEventBus;
 
-    private int mCurrentStep = STEP_DEAD;
-    private int mInternalState = STATE_RUNNING;
+    private static Class<?> sEventTypeCache;
+    private static Class<?>[] sMoreEventTypesCache;
+    private static Class<?> sStickyEventTypeCache;
+    private static Class<?>[] sMoreStickyEventTypesCache;
 
-    public ApiHandler(Context context, Callback callback) {
+    public ApiHandler(Context context) {
         this.mContext = context;
-        setCallback(callback);
     }
 
-    public void setCallback(Callback callback) {
-        mCallback = callback;
+    public EventBus getEventBus() {
+        return mEventBus != null ? mEventBus : (mEventBus = new EventBus());
     }
 
-    public boolean hasCallback() {
-        return mCallback != null;
+    public void setEventBus(EventBus eventBus) {
+        mEventBus = new EventBus();
     }
 
-    public Callback getCallback() {
-        return mCallback;
+    public Class<?>[] getEventTypes() {
+        return null;
+    }
+
+    public Class<?>[] getStickyEventTypes() {
+        return null;
+    }
+
+    public void register(Object subscriber) {
+        if (GetEventType(this) != null) {
+            getEventBus().register(subscriber, GetEventType(this), GetMoreEventTypes(this));
+        }
+        if (GetStickyEventType(this) != null) {
+            getEventBus().registerSticky(subscriber, GetStickyEventType(this), GetMoreStickyEventTypes(this));
+        }
+    }
+
+    public void unregister(Object subscriber) {
+        if (GetEventType(this) != null) {
+            getEventBus().unregister(subscriber, getEventTypes());
+        }
+        if (GetStickyEventType(this) != null) {
+            getEventBus().unregister(subscriber, getStickyEventTypes());
+        }
     }
 
     public Context getContext() {
         return mContext;
-    }
-
-    public int getCurrentStep() {
-        return mCurrentStep;
-    }
-
-    public int getInternalState() {
-        return mInternalState;
-    }
-
-    protected void setCurrentStep(int step) {
-        mCurrentStep = step;
-    }
-
-    protected void setInternalState(int state) {
-        mInternalState = state;
     }
 
     public void stopOrderForError() {
@@ -281,24 +105,55 @@ public class ApiHandler {
     }
 
     public void pause() {
-        mInternalState = STATE_PAUSED;
+
     }
 
     public void resume() {
-        mInternalState = STATE_RUNNING;
-    }
 
-    public void recycle() {
-        mInternalState = STATE_RECYCLED;
     }
 
     protected void fireError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
         if (Config.INFO_LOGS_ENABLED && e != null) {
             e.printStackTrace();
         }
-        if (mCallback != null) {
-            mCallback.onError(step, httpResponse, response, e);
+    }
+
+    private static final Class<?> GetEventType(ApiHandler handler) {
+        GetMoreEventTypes(handler);
+        return sEventTypeCache;
+    }
+
+    private static final Class<?>[] GetMoreEventTypes(ApiHandler handler) {
+        if (sEventTypeCache == null || sMoreEventTypesCache == null) {
+            Class<?>[] classes = handler.getEventTypes();
+            if (classes != null && classes.length > 0) {
+                sEventTypeCache = classes[0];
+                sMoreEventTypesCache = new Class<?>[classes.length - 1];
+                for (int index = 1; index < classes.length; index++) {
+                    sMoreEventTypesCache[index - 1] = classes[index];
+                }
+            }
         }
+        return sMoreEventTypesCache;
+    }
+
+    private static final Class<?> GetStickyEventType(ApiHandler handler) {
+        GetMoreStickyEventTypes(handler);
+        return sStickyEventTypeCache;
+    }
+
+    private static final Class<?>[] GetMoreStickyEventTypes(ApiHandler handler) {
+        if (sStickyEventTypeCache == null || sMoreStickyEventTypesCache == null) {
+            Class<?>[] classes = handler.getStickyEventTypes();
+            if (classes != null && classes.length > 0) {
+                sStickyEventTypeCache = classes[0];
+                sMoreStickyEventTypesCache = new Class<?>[classes.length - 1];
+                for (int index = 1; index < classes.length; index++) {
+                    sMoreStickyEventTypesCache[index - 1] = classes[index];
+                }
+            }
+        }
+        return sMoreStickyEventTypesCache;
     }
 
 }
