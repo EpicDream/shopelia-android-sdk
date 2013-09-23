@@ -82,7 +82,9 @@
             <com.shopelia.android.widget.ShopeliaSupportInclude
                 android:id="@+id/shopeliaSupportInclude1"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" >
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/shopelia_margin_normal" >
+
             </com.shopelia.android.widget.ShopeliaSupportInclude>
         </LinearLayout>
 
