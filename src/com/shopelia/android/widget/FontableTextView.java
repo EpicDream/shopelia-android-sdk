@@ -32,22 +32,18 @@ public class FontableTextView extends TextView {
     public static final int STYLE_ITALIC = Typeface.ITALIC;
     public static final int STYLE_BOLD_ITALIC = Typeface.BOLD_ITALIC;
 
-    public static final String HELVETICA_BOLD = "shopelia_default_font_bold.otf";
-    public static final String HELVETICA_BOLD_ITALIC = "shopelia_default_font_bold.otf";
-    public static final String HELVETICA_ITALIC = "shopelia_default_font.otf";
-    public static final String HELVETICA_LIGHT = "shopelia_default_font.otf";
-
-    public static final String DEFAULT_FONT = "shopelia_default_font.otf";
-
     private static final SparseArray<SparseArray<Typeface>> sTypefaces = new SparseArray<SparseArray<Typeface>>(3);
 
     private static final Font[] FONTS;
+    private static final String OTF = "otf";
+    private static final String TTF = "ttf";
 
     static {
         // Add fonts here
         FONTS = new Font[] {
-                new Font(FAMILY_NORMAL, STYLE_NORMAL, R.raw.shopelia_default_font, DEFAULT_FONT),
-                new Font(FAMILY_LIGHT, STYLE_NORMAL, R.raw.shopelia_default_font, DEFAULT_FONT)
+                new Font(FAMILY_NORMAL, STYLE_NORMAL, R.raw.shopelia_helvetica_neue, OTF),
+
+                new Font(FAMILY_LIGHT, STYLE_NORMAL, R.raw.shopelia_helvetica_light, TTF)
         };
     }
 
@@ -128,7 +124,7 @@ public class FontableTextView extends TextView {
         }
 
         if (bestMatchFont != null) {
-            typeface = tryCreateTypefaceFromAsset(getContext(), bestMatchFont.getFilename(), bestMatchFont.getResId());
+            typeface = tryCreateTypefaceFromSharedDirectory(getContext(), bestMatchFont.getFilename(), bestMatchFont.getResId());
         }
 
         if (typeface == null) {
@@ -144,7 +140,7 @@ public class FontableTextView extends TextView {
         return typeface;
     }
 
-    public static Typeface tryCreateTypefaceFromAsset(Context context, String path, int resId) {
+    public static Typeface tryCreateTypefaceFromSharedDirectory(Context context, String path, int resId) {
         File fontDir = new File(Environment.getExternalStorageDirectory(), Config.PUBLIC_FONTS_DIRECTORY);
         fontDir.mkdirs();
         File fontFile = new File(fontDir, path);
@@ -169,17 +165,17 @@ public class FontableTextView extends TextView {
         private final int mResId;
         private final int mFamily;
         private final int mStyle;
-        private final String mFilename;
+        private final String mExt;
 
-        public Font(int family, int style, int resId, String filename) {
+        public Font(int family, int style, int resId, String ext) {
             mFamily = family;
             mStyle = style;
             mResId = resId;
-            mFilename = filename;
+            mExt = ext;
         }
 
         public int match(int family, int style) {
-            return matchIntegers(family, mFamily) + matchIntegers(style, mStyle);
+            return 2 * matchIntegers(family, mFamily) + matchIntegers(style, mStyle);
         }
 
         private int matchIntegers(int i1, int i2) {
@@ -187,7 +183,7 @@ public class FontableTextView extends TextView {
         }
 
         public String getFilename() {
-            return mFilename;
+            return String.format("shopelia_font_%d_%d.%s", mFamily, mStyle, mExt);
         }
 
         public int getResId() {
