@@ -99,7 +99,7 @@ public class HeaderField extends FormField {
         holder.title.setTextColor(isValid() ? getContext().getResources().getColor(R.color.shopelia_headerTitleSectionOkColor)
                 : getContext().getResources().getColor(R.color.shopelia_headerTitleSectionRegularColor));
         if (mHasIcon && isValid()) {
-            holder.icon.setImageResource(R.drawable.shopelia_check_ok);
+            holder.icon.setImageResource(R.drawable.shopelia_check);
         } else if (mHasIcon && !isValid()) {
             holder.icon.setImageDrawable(mIcon);
         } else {

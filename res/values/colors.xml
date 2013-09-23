@@ -8,27 +8,27 @@
 
     <!-- Light -->
     <color name="shopelia_light">#f5f5f5</color>
-
-    <!-- Red -->
-    <color name="shopelia_light_red">#d5263b</color>
-    <color name="shopelia_red">#d5263b</color>
-    <color name="shopelia_dark_red">#d5263b</color>
-
-    <!-- Green -->
-    <color name="shopelia_light_green">#3cc8ad</color>
-    <color name="shopelia_green">#3cc8ad</color>
-    <color name="shopelia_dark_green">#3cc8ad</color>
-
-    <!-- Blue -->
-    <color name="shopelia_light_blue">#005b7a</color>
-    <color name="shopelia_blue">#0080a5</color>
-    <color name="shopelia_dark_blue">#005b7a</color>
     <color name="shopelia_white">#FFFFFF</color>
     <color name="shopelia_grey">#999999</color>
+    
+    <!-- Red -->
+    <color name="shopelia_light_red">#f6513e</color>
+    <color name="shopelia_red">#d34231</color>
+    <color name="shopelia_dark_red">#a2291e</color>
+
+    <!-- Green -->
+    <color name="shopelia_light_green">#46e7c8</color>
+    <color name="shopelia_green">#3cc8ad</color>
+    <color name="shopelia_dark_green">#22977d</color>
+
+    <!-- Blue -->
+    <color name="shopelia_light_blue">#03a1ce</color>
+    <color name="shopelia_blue">#0084aa</color>
+    <color name="shopelia_dark_blue">#005a7c</color>
 
     <!-- Elements -->
     <color name="shopelia_divider_color">#e5e5e5</color>
-    <color name="shopelia_validation_green">#2d9f35</color>
+    <color name="shopelia_validation_green">@color/shopelia_green</color>
     <color name="shopelia_validation_grey">#F5F5F5</color>
     <color name="shopelia_validation_textColor_enabled">@color/shopelia_white</color>
     <color name="shopelia_validation_textColor_disabled">@color/shopelia_grey</color>
@@ -36,8 +36,8 @@
     <color name="shopelia_titleBarBackground">#333333</color>
     <color name="shopelia_titleBarBottomBorder">#000000</color>
     <color name="shopelia_titleBarTopBorder">#555555</color>
-    <color name="shopelia_headerTitleSectionOkColor">#2d9f35</color>
-    <color name="shopelia_headerTitleSectionRegularColor">#000000</color>
+    <color name="shopelia_headerTitleSectionOkColor">@color/shopelia_green</color>
+    <color name="shopelia_headerTitleSectionRegularColor">@color/shopelia_dark</color>
 
     <!-- Holo -->
     <color name="shopelia_holo_blue_light">#ff33b5e5</color>

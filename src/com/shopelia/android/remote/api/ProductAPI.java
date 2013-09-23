@@ -33,7 +33,7 @@ public class ProductAPI extends ApiHandler {
     private static final String PRIVATE_PREFERENCE = "Shopelia$ProductAPI.PrivatePreference";
     private static final String PREFS_PRODUCT = "product:products";
 
-    private static final long KEEP_ALIVE = 20 * TimeUnits.MINUTES;
+    private static final long KEEP_ALIVE = 10 * TimeUnits.MILISECONDS;
 
     private static final long POLLING_FREQUENCY = TimeUnits.SECONDS / 2;
     private static final long POLLING_EXPIRATION = 20 * TimeUnits.SECONDS;
