@@ -23,6 +23,8 @@
         <item name="android:windowBackground">@color/shopelia_windowsBackground</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:alertDialogStyle">@style/Theme.Shopelia.AlertDialog</item>
+        <item name="android:textViewStyle">@style/Theme.Shopelia.Widget.TextView</item>
+        <item name="android:textAppearance">@style/Theme.Shopelia.TextAppearance.Default</item>
     </style>
 
     <style name="Theme.Shopelia.FloatingFrame" parent="Theme.Shopelia">
@@ -49,6 +51,11 @@
 
     <style name="Theme.Shopelia.Widget"></style>
 
+    <style name="Theme.Shopelia.Widget.TextView" parent="@android:style/Widget.TextView">
+        <item name="android:textColor">@color/shopelia_red</item>
+        
+    </style>
+
     <style name="Theme.Shopelia.Widget.EditText" parent="@android:style/Widget.EditText">
         <item name="android:background">@drawable/shopelia_field</item>
         <item name="android:paddingLeft">10dp</item>
@@ -72,10 +79,23 @@
         <item name="android:textColor">@color/shopelia_white</item>
     </style>
 
-    <style name="Theme.Shopelia.TextAppearance" parent="@android:style/TextAppearance"></style>
+    <style name="Theme.Shopelia.TextAppearance" parent="@android:style/TextAppearance">
+    </style>
 
-    <style name="Theme.Shopelia.TextAppearance.Header" parent="@android:style/TextAppearance.Large">
-        <item name="android:textSize">15sp</item>
+    <style name="Theme.Shopelia.TextAppearance.Default" parent="@style/Theme.Shopelia.TextAppearance">
+        <item name="android:textColor">@color/shopelia_dark</item>
+        <item name="android:textSize">@dimen/shopelia_font_size_small</item>
+        <item name="shopelia_fontStyle">normal</item>
+        <item name="shopelia_fontFamily">light</item>
+    </style>
+    
+    <style name="Theme.Shopelia.TextAppearance.Default.Bold" parent="@style/Theme.Shopelia.TextAppearance.Default">
+         <item name="shopelia_fontStyle">bold</item>
+        <item name="shopelia_fontFamily">normal</item>
+    </style>
+    
+    <style name="Theme.Shopelia.TextAppearance.Header" parent="@style/Theme.Shopelia.TextAppearance.Default.Bold">
+        <item name="android:textSize">16sp</item>
         <item name="android:textStyle">bold</item>
     </style>
 

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center|clip_horizontal"
-    android:orientation="vertical"
     android:clickable="false"
     android:focusable="false"
-    android:paddingTop="@dimen/shopelia_activity_vertical_margin"
-     xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:gravity="center|clip_horizontal"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/shopelia_activity_vertical_margin" >
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/introduction_text"
@@ -17,9 +17,8 @@
         android:layout_marginRight="5dp"
         android:layout_marginTop="5dp"
         android:gravity="center"
-        android:text="@string/shopelia_form_main_header_text"
-        android:textColor="@color/shopelia_dark"
-        android:textSize="@dimen/shopelia_font_size_small" />
+        app:shopelia_fontStyle="normal"
+        android:text="@string/shopelia_form_main_header_text" />
 
     <com.shopelia.android.widget.ProductSheetWidget
         android:id="@+id/product_sheet"
@@ -27,7 +26,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_large"
         android:background="@drawable/shopelia_field_normal" >
-
     </com.shopelia.android.widget.ProductSheetWidget>
 
 </LinearLayout>
