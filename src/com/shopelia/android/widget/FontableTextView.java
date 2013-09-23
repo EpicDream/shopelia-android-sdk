@@ -6,7 +6,6 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.os.Environment;
@@ -33,12 +32,24 @@ public class FontableTextView extends TextView {
     public static final int STYLE_ITALIC = Typeface.ITALIC;
     public static final int STYLE_BOLD_ITALIC = Typeface.BOLD_ITALIC;
 
-    public static final String ASAP_BOLD = "shopelia_default_font.otf";
-    public static final String ASAP_BOLD_ITALIC = "shopelia_default_font.otf";
-    public static final String ASAP_ITALIC = "shopelia_default_font.otf";
-    public static final String ASAP_REGULAR = "shopelia_default_font.otf";
+    public static final String HELVETICA_BOLD = "shopelia_default_font_bold.otf";
+    public static final String HELVETICA_BOLD_ITALIC = "shopelia_default_font_bold.otf";
+    public static final String HELVETICA_ITALIC = "shopelia_default_font.otf";
+    public static final String HELVETICA_LIGHT = "shopelia_default_font.otf";
+
+    public static final String DEFAULT_FONT = "shopelia_default_font.otf";
 
     private static final SparseArray<SparseArray<Typeface>> sTypefaces = new SparseArray<SparseArray<Typeface>>(3);
+
+    private static final Font[] FONTS;
+
+    static {
+        // Add fonts here
+        FONTS = new Font[] {
+                new Font(FAMILY_NORMAL, STYLE_NORMAL, R.raw.shopelia_default_font, DEFAULT_FONT),
+                new Font(FAMILY_LIGHT, STYLE_NORMAL, R.raw.shopelia_default_font, DEFAULT_FONT)
+        };
+    }
 
     private boolean mIsHtml;
 
@@ -81,7 +92,7 @@ public class FontableTextView extends TextView {
     }
 
     /**
-     * Gets thes best typeface for the given family & style.
+     * Gets the best typeface for the given family & style.
      * 
      * @param fontFamily
      * @param fontStyle
@@ -90,12 +101,7 @@ public class FontableTextView extends TextView {
     private Typeface getTypeface(int fontFamily, int fontStyle) {
 
         if (isInEditMode() || android.os.Build.VERSION.SDK_INT < android.os.Build.VERSION_CODES.GINGERBREAD) {
-            switch (fontStyle) {
-                case STYLE_BOLD:
-                    return Typeface.DEFAULT_BOLD;
-                default:
-                    return Typeface.DEFAULT;
-            }
+            return fontStyle == STYLE_BOLD ? Typeface.DEFAULT_BOLD : Typeface.DEFAULT;
         }
 
         SparseArray<Typeface> typefacesForFamily = sTypefaces.get(fontFamily);
@@ -110,71 +116,19 @@ public class FontableTextView extends TextView {
         Typeface typeface = null;
 
         // There has been a cache miss. Let's load the appropriate typeface
-        switch (fontFamily) {
-            default:
-            case FAMILY_NORMAL: {
-                final AssetManager assetManager = getContext().getAssets();
-                switch (fontStyle) {
-                    case STYLE_NORMAL:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_REGULAR, R.raw.shopelia_default_font);
-                        break;
 
-                    default:
-                    case STYLE_BOLD:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_BOLD, R.raw.shopelia_default_font);
-                        break;
-                    case STYLE_ITALIC:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_ITALIC, R.raw.shopelia_default_font);
-                        break;
-                    case STYLE_BOLD_ITALIC:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_BOLD_ITALIC, R.raw.shopelia_default_font);
-                        break;
-                }
-                break;
+        int bestMatch = 0;
+        Font bestMatchFont = null;
+
+        for (Font font : FONTS) {
+            int match = font.match(fontFamily, fontStyle);
+            if (match > bestMatch) {
+                bestMatchFont = font;
             }
+        }
 
-            case FAMILY_LIGHT: {
-                final AssetManager assetManager = getContext().getAssets();
-                switch (fontStyle) {
-                    case STYLE_NORMAL:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_REGULAR, R.raw.shopelia_default_font);
-                        break;
-
-                    default:
-                    case STYLE_BOLD:
-                    case STYLE_ITALIC:
-                    case STYLE_BOLD_ITALIC:
-                        // These fonts are not used for now in the
-                        // application. Let's fallback to the default font
-                        // instead. We'll add them to the application only if
-                        // necessary
-                        break;
-                }
-                break;
-            }
-
-            case FAMILY_CONDENSED: {
-                final AssetManager assetManager = getContext().getAssets();
-                switch (fontStyle) {
-                    case STYLE_BOLD:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_REGULAR, R.raw.shopelia_default_font);
-                        break;
-
-                    case STYLE_BOLD_ITALIC:
-                        typeface = tryCreateTypefaceFromAsset(getContext(), ASAP_BOLD_ITALIC, R.raw.shopelia_default_font);
-                        break;
-
-                    default:
-                    case STYLE_NORMAL:
-                    case STYLE_ITALIC:
-                        // These fonts are not used for now in the
-                        // application. Let's fallback to the default font
-                        // instead. We'll add them to the application only if
-                        // necessary
-                        break;
-                }
-                break;
-            }
+        if (bestMatchFont != null) {
+            typeface = tryCreateTypefaceFromAsset(getContext(), bestMatchFont.getFilename(), bestMatchFont.getResId());
         }
 
         if (typeface == null) {
@@ -209,4 +163,37 @@ public class FontableTextView extends TextView {
             return Typeface.DEFAULT;
         }
     }
+
+    private static class Font {
+
+        private final int mResId;
+        private final int mFamily;
+        private final int mStyle;
+        private final String mFilename;
+
+        public Font(int family, int style, int resId, String filename) {
+            mFamily = family;
+            mStyle = style;
+            mResId = resId;
+            mFilename = filename;
+        }
+
+        public int match(int family, int style) {
+            return matchIntegers(family, mFamily) + matchIntegers(style, mStyle);
+        }
+
+        private int matchIntegers(int i1, int i2) {
+            return i1 == i2 ? 1 : 0;
+        }
+
+        public String getFilename() {
+            return mFilename;
+        }
+
+        public int getResId() {
+            return mResId;
+        }
+
+    }
+
 }
