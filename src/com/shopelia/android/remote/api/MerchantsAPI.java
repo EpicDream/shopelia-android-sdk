@@ -24,17 +24,36 @@ import com.turbomanage.httpclient.ParameterMap;
  */
 public class MerchantsAPI extends ApiController {
 
+    public static class OnRetrieveMerchantEvent extends OnResourceEvent<Merchant> {
+        private OnRetrieveMerchantEvent(Merchant resource) {
+            super(resource);
+        }
+    }
+
+    public static class OnRetriveMerchantsEvent {
+        public ArrayList<Merchant> resources;
+
+        private OnRetriveMerchantsEvent(ArrayList<Merchant> merchants) {
+            resources = merchants;
+        }
+
+    }
+
     private static final String PRIVATE_PREFERENCE = "Shopelia$MerchantAPI.PrivatePreference";
     private static final String PREFS_MERCHANTS = "merchant:merchants";
     private static final String PREFS_LAST_UPDATE = "merchant:last_update";
 
     private static final long DELAY_BEFORE_UPDATE = 1 * 60 * 60 * 1000;
 
+    private static Class<?>[] sEventTypes = new Class<?>[] {
+            OnRetrieveMerchantEvent.class, OnRetriveMerchantsEvent.class
+    };
+
     private SharedPreferences mPreferences;
     private ArrayList<Merchant> mMerchants;
 
-    public MerchantsAPI(Context context, Callback callback) {
-        super(context, callback);
+    public MerchantsAPI(Context context) {
+        super(context);
         mPreferences = context.getSharedPreferences(PRIVATE_PREFERENCE, Context.MODE_PRIVATE);
         loadMerchantsFromCache();
     }
@@ -57,8 +76,8 @@ public class MerchantsAPI extends ApiController {
                         mMerchants = Merchant.inflate(new JSONArray(httpResponse.getBodyAsString()));
                         saveMerchants(mMerchants);
                         Merchant out = findMerchantByUrl(url);
-                        if (out != null && hasCallback()) {
-                            getCallback().onRetrieveMerchant(out);
+                        if (out != null) {
+                            getEventBus().post(new OnRetrieveMerchantEvent(out));
                         }
                     } catch (JSONException e) {
                         if (Config.ERROR_LOGS_ENABLED) {
@@ -83,9 +102,7 @@ public class MerchantsAPI extends ApiController {
                     try {
                         mMerchants = Merchant.inflate(new JSONArray(httpResponse.getBodyAsString()));
                         saveMerchants(mMerchants);
-                        if (hasCallback()) {
-                            getCallback().onRetrieveMerchants(mMerchants);
-                        }
+                        getEventBus().post(new OnRetriveMerchantsEvent(mMerchants));
                     } catch (Exception e) {
                         if (Config.ERROR_LOGS_ENABLED) {
                             e.printStackTrace();
@@ -103,8 +120,8 @@ public class MerchantsAPI extends ApiController {
 
             });
             return false;
-        } else if (hasCallback()) {
-            getCallback().onRetrieveMerchants(mMerchants);
+        } else {
+            getEventBus().post(new OnRetriveMerchantsEvent(mMerchants));
         }
         return true;
     }

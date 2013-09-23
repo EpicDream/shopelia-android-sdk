@@ -39,10 +39,10 @@ public abstract class ApiController {
 
     }
 
-    private static class OnResourceEvent<T> {
+    protected static class OnResourceEvent<T> {
         public final T resource;
 
-        public OnResourceEvent(T resource) {
+        protected OnResourceEvent(T resource) {
             this.resource = resource;
         }
 
@@ -50,7 +50,7 @@ public abstract class ApiController {
 
     public static class OnAddResourceEvent<T> extends OnResourceEvent<T> {
 
-        public OnAddResourceEvent(T resource) {
+        protected OnAddResourceEvent(T resource) {
             super(resource);
         }
 
@@ -58,7 +58,7 @@ public abstract class ApiController {
 
     public static class OnEditResourceEvent<T> extends OnResourceEvent<T> {
 
-        public OnEditResourceEvent(T resource) {
+        protected OnEditResourceEvent(T resource) {
             super(resource);
         }
 
