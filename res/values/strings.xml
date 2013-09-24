@@ -141,8 +141,9 @@
     <!-- Product sheet -->
     <string name="shopelia_product_shipping_fees" formatted="false">+ %s de frais de livraison</string>
     <string name="shopelia_product_free_shipping">Livraison gratuite</string>
-	<string name="shopelia_product_loading">Veuillez patienter...</string>
-    
+    <string name="shopelia_product_shipping_is_included">livraison <font fgcolor="#FF2b9b82">incluse</font></string>
+    <string name="shopelia_product_loading">Veuillez patienter...</string>
+
     <!-- Waiting process -->
     <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
     <string name="shopelia_waiting_with_shopelia_order_with_1_click">Avec Shopelia, commandez facilement en 1-clic avec votre mobile sur n\'importe quel site e-commerce !</string>
@@ -199,7 +200,7 @@
     <string name="shopelia_product_not_found_title">Désolé, ce produit n\'est pas disponible.</string>
     <string name="shopelia_product_not_fount_text" formatted="false">Vous pouvez visiter la fiche produit chez le marchand %s afin d\'avoir plus d\'informations.</string>
     <string name="shopelia_product_not_fount_validation">Voir la fiche produit</string>
-    
+
     <!-- Time -->
     <plurals name="hour">
         <item formatted="false" quantity="one">%d heure</item>
@@ -230,7 +231,7 @@
     <string name="shopelia_form_password_no_match">Les mots de passe doivent être identiques</string>
     <string name="shopelia_form_password_min_length">Le mot de passe doit contenir au minimum 6 caractères</string>
     <string name="shopelia_form_password_waiting">Création de votre mot de passe en cours...</string>
-    
+
     <!-- Log Out -->
     <string name="shopelia_logout_are_you_sure">Voulez-vous vraiment vous déconnecter ?</string>
     <string name="shopelia_logout_positive">Se déconnecter</string>
@@ -253,5 +254,5 @@
 
     <!-- Common -->
     <string name="shopelia_common_buy">Acheter</string>
-    
+
 </resources>

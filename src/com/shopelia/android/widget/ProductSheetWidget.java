@@ -24,15 +24,12 @@ public class ProductSheetWidget extends FrameLayout {
 
     // Views
     private FontableTextView mProductName;
-    private FontableTextView mProductDescription;
     private FontableTextView mProductShippingInfo;
-    private FontableTextView mShippingFees;
     private AsyncImageView mProductImage;
     @SuppressWarnings("unused")
     private FontableTextView mVendorText;
     private AsyncImageView mVendorLogo;
     private FontableTextView mProductPrice;
-    private FontableTextView mTax;
     private Product mProduct;
     private View mLoading;
     private View mContent;
@@ -52,15 +49,12 @@ public class ProductSheetWidget extends FrameLayout {
 
     public void onViewCreated() {
         mProductName = (FontableTextView) findViewById(R.id.product_name);
-        mProductDescription = (FontableTextView) findViewById(R.id.product_description);
         mProductShippingInfo = (FontableTextView) findViewById(R.id.product_shipping_info);
-        mShippingFees = (FontableTextView) findViewById(R.id.product_shipping_fees);
         mProductImage = (AsyncImageView) findViewById(R.id.product_image);
         mProductPrice = (FontableTextView) findViewById(R.id.product_price);
         mVendorLogo = (AsyncImageView) findViewById(R.id.product_vendor_icon);
         mVendorLogo.setDrawableAlignement(AsyncImageView.ALIGN_LEFT | AsyncImageView.ALIGN_CENTER_VERTICAL);
         mVendorText = (FontableTextView) findViewById(R.id.product_vendor_text);
-        mTax = (FontableTextView) findViewById(R.id.product_tax);
         mLoading = findViewById(R.id.loading);
         mContent = findViewById(R.id.content);
         mSwitcher = findViewById(R.id.switcher);
@@ -90,18 +84,11 @@ public class ProductSheetWidget extends FrameLayout {
 
             mProductImage.setImageURI(mProduct.image);
             mProductName.setText(mProduct.name);
-            mProductPrice.setText(mProduct.currency.format(mProduct.productPrice));
+            mProductPrice.setText(mProduct.currency.format(mProduct.getTotalPrice()));
             mProductShippingInfo.setText(mProduct.shippingExtra);
             int visibility = TextUtils.isEmpty(mProduct.shippingExtra) ? View.GONE : View.VISIBLE;
             mProductShippingInfo.setVisibility(visibility);
-            mTax.setText(getString(mProduct.tax.getResId()));
             mVendorLogo.setUrl(mProduct.merchant.logo);
-            mProductDescription.setVisibility(View.GONE);
-            if (mProduct.deliveryPrice == 0.0f) {
-                mShippingFees.setText(R.string.shopelia_product_free_shipping);
-            } else {
-                mShippingFees.setText(getString(R.string.shopelia_product_shipping_fees, mProduct.currency.format(mProduct.deliveryPrice)));
-            }
             if (animate) {
                 switchViews();
             } else {
@@ -187,6 +174,7 @@ public class ProductSheetWidget extends FrameLayout {
             dest.writeParcelable(product, flags);
         }
 
+        @SuppressWarnings("unused")
         public static final Creator<SavedState> CREATOR = new Creator<ProductSheetWidget.SavedState>() {
 
             @Override
