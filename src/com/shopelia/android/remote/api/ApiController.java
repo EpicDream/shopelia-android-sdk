@@ -111,11 +111,6 @@ public abstract class ApiController {
     private Context mContext;
     private EventBus mEventBus;
 
-    private static Class<?> sEventTypeCache;
-    private static Class<?>[] sMoreEventTypesCache;
-    private static Class<?> sStickyEventTypeCache;
-    private static Class<?>[] sMoreStickyEventTypesCache;
-
     public ApiController(Context context) {
         this.mContext = context.getApplicationContext();
     }
@@ -137,21 +132,15 @@ public abstract class ApiController {
     }
 
     public void register(Object subscriber) {
-        if (GetEventType(this) != null) {
-            getEventBus().register(subscriber, GetEventType(this), GetMoreEventTypes(this));
-        }
-        if (GetStickyEventType(this) != null) {
-            getEventBus().registerSticky(subscriber, GetStickyEventType(this), GetMoreStickyEventTypes(this));
-        }
+        getEventBus().register(subscriber);
     }
 
     public void unregister(Object subscriber) {
-        if (GetEventType(this) != null) {
-            getEventBus().unregister(subscriber, getEventTypes());
-        }
-        if (GetStickyEventType(this) != null) {
-            getEventBus().unregister(subscriber, getStickyEventTypes());
-        }
+        getEventBus().unregister(subscriber);
+    }
+
+    public void registerSticky(Object subscriber) {
+        getEventBus().registerSticky(subscriber);
     }
 
     public Context getContext() {
@@ -175,44 +164,6 @@ public abstract class ApiController {
             e.printStackTrace();
         }
         getEventBus().post(new OnApiErrorEvent(this, httpResponse, e, response));
-    }
-
-    private static final Class<?> GetEventType(ApiController handler) {
-        GetMoreEventTypes(handler);
-        return sEventTypeCache;
-    }
-
-    private static final Class<?>[] GetMoreEventTypes(ApiController handler) {
-        if (sEventTypeCache == null || sMoreEventTypesCache == null) {
-            Class<?>[] classes = handler.getEventTypes();
-            if (classes != null && classes.length > 0) {
-                sEventTypeCache = classes[0];
-                sMoreEventTypesCache = new Class<?>[classes.length - 1];
-                for (int index = 1; index < classes.length; index++) {
-                    sMoreEventTypesCache[index - 1] = classes[index];
-                }
-            }
-        }
-        return sMoreEventTypesCache;
-    }
-
-    private static final Class<?> GetStickyEventType(ApiController handler) {
-        GetMoreStickyEventTypes(handler);
-        return sStickyEventTypeCache;
-    }
-
-    private static final Class<?>[] GetMoreStickyEventTypes(ApiController handler) {
-        if (sStickyEventTypeCache == null || sMoreStickyEventTypesCache == null) {
-            Class<?>[] classes = handler.getStickyEventTypes();
-            if (classes != null && classes.length > 0) {
-                sStickyEventTypeCache = classes[0];
-                sMoreStickyEventTypesCache = new Class<?>[classes.length - 1];
-                for (int index = 1; index < classes.length; index++) {
-                    sMoreStickyEventTypesCache[index - 1] = classes[index];
-                }
-            }
-        }
-        return sMoreStickyEventTypesCache;
     }
 
 }
