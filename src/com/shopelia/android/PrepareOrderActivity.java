@@ -192,7 +192,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     @Override
     protected void onResume() {
         super.onResume();
-        mProductAPI.register(this);
+        mProductAPI.registerSticky(this);
     }
 
     public void onEventMainThread(OnProductUpdateEvent event) {
