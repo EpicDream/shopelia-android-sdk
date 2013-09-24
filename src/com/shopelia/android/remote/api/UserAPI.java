@@ -17,7 +17,15 @@ import com.turbomanage.httpclient.ParameterMap;
 
 public class UserAPI extends ApiController {
 
-    public class OnAccountCreationSucceedEvent extends OnAddResourceEvent<User> {
+    public static class OnUserRetrievedEvent extends OnResourceEvent<User> {
+
+        protected OnUserRetrievedEvent(User resource) {
+            super(resource);
+        }
+
+    }
+
+    public static class OnAccountCreationSucceedEvent extends OnAddResourceEvent<User> {
 
         protected OnAccountCreationSucceedEvent(User resource) {
             super(resource);
@@ -25,7 +33,7 @@ public class UserAPI extends ApiController {
 
     }
 
-    public class OnSignInEvent extends OnResourceEvent<User> {
+    public static class OnSignInEvent extends OnResourceEvent<User> {
 
         protected OnSignInEvent(User resource) {
             super(resource);
@@ -33,7 +41,7 @@ public class UserAPI extends ApiController {
 
     }
 
-    public class OnSignOutEvent extends Event {
+    public static class OnSignOutEvent extends Event {
 
     }
 
@@ -139,7 +147,7 @@ public class UserAPI extends ApiController {
                             try {
                                 User user = User.inflate(new JSONObject(httpResponse.getBodyAsString()).getJSONObject(User.Api.USER));
                                 UserManager.get(getContext()).update(user);
-                                getEventBus().post(new OnUserUpdateDoneEvent());
+                                getEventBus().post(new OnUserRetrievedEvent(user));
                                 getEventBus().post(new OnUserUpdateDoneEvent());
                             } catch (JSONException e) {
                                 onError(e);

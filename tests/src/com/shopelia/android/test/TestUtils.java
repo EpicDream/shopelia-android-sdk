@@ -3,16 +3,15 @@ package com.shopelia.android.test;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import org.json.JSONObject;
-
 import android.content.Context;
 
 import com.shopelia.android.manager.UserManager;
-import com.shopelia.android.model.Address;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
 import com.shopelia.android.remote.api.UserAPI;
-import com.turbomanage.httpclient.HttpResponse;
+import com.shopelia.android.remote.api.UserAPI.OnAccountCreationSucceedEvent;
+import com.shopelia.android.remote.api.UserAPI.OnSignInEvent;
+import com.shopelia.android.remote.api.UserAPI.OnUserRetrievedEvent;
 
 /**
  * Utils for every test operation
@@ -31,20 +30,20 @@ public class TestUtils {
     public static User signIn(Context context, User user) {
         final CountDownLatch barrier = new CountDownLatch(1);
         final Mutable<User> result = new Mutable<User>();
-        new UserAPI(context, new CallbackAdapter() {
+        final UserAPI api = new UserAPI(context);
+        api.register(new Object() {
 
-            @Override
-            public void onSignIn(User user) {
-                result.value = user;
+            public void onEventMainThread(OnSignInEvent event) {
+                result.value = event.resource;
                 barrier.countDown();
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+            public void onEventMainThread(OnApiErrorEvent event) {
                 barrier.countDown();
             }
 
-        }).signIn(user);
+        });
+        api.signIn(user);
         try {
             barrier.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -59,20 +58,20 @@ public class TestUtils {
     public static User signUp(Context context, User user) {
         final CountDownLatch barrier = new CountDownLatch(1);
         final Mutable<User> result = new Mutable<User>();
-        new UserAPI(context, new CallbackAdapter() {
+        final UserAPI api = new UserAPI(context);
+        api.register(new Object() {
 
-            @Override
-            public void onAccountCreationSucceed(User user, Address address) {
-                result.value = user;
+            public void onEventMainThread(OnAccountCreationSucceedEvent event) {
+                result.value = event.resource;
                 barrier.countDown();
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
+            public void onEventMainThread(OnApiErrorEvent event) {
                 barrier.countDown();
             }
 
-        }).createAccount(user, user.getDefaultAddress(), user.getDefaultPaymentCard());
+        });
+        api.createAccount(user, user.getDefaultAddress(), user.getDefaultPaymentCard());
         try {
             barrier.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -93,19 +92,20 @@ public class TestUtils {
     public static User updateUser(Context context) {
         final CountDownLatch barrier = new CountDownLatch(1);
         final Mutable<User> result = new Mutable<User>();
-        new UserAPI(context, new CallbackAdapter() {
+        final UserAPI api = new UserAPI(context);
+        api.register(new Object() {
 
-            @Override
-            public void onUserRetrieved(User user) {
-                result.value = user;
-            }
-
-            @Override
-            public void onUserUpdateDone() {
+            public void onEventMainThread(OnUserRetrievedEvent event) {
+                result.value = event.resource;
                 barrier.countDown();
             }
 
-        }).updateUser();
+            public void onEventMainThread(OnApiErrorEvent event) {
+                barrier.countDown();
+            }
+
+        });
+        api.updateUser();
         try {
             barrier.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
