@@ -13,7 +13,6 @@ import com.shopelia.android.AddPaymentCardFragment.OnPaymentCardAddedListener;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
-import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
 import com.shopelia.android.remote.api.PaymentCardAPI;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
@@ -28,6 +27,7 @@ public class AddPaymentCardFragment extends ShopeliaFragment<OnPaymentCardAddedL
     }
 
     private FormLinearLayout mFormContainer;
+    private PaymentCardAPI mApi;
 
     @Override
     protected void onCreateShopeliaActionBar(ActionBar actionBar) {
@@ -41,6 +41,24 @@ public class AddPaymentCardFragment extends ShopeliaFragment<OnPaymentCardAddedL
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.shopelia_add_payment_card_fragment, container, false);
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mApi = new PaymentCardAPI(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mApi.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mApi.unregister(this);
     }
 
     @Override
@@ -67,25 +85,16 @@ public class AddPaymentCardFragment extends ShopeliaFragment<OnPaymentCardAddedL
             if (mFormContainer.validate()) {
                 try {
                     PaymentCard card = PaymentCard.inflate(mFormContainer.toJson().getJSONObject(Order.Api.PAYMENT_CARD));
-                    new PaymentCardAPI(getActivity(), new CallbackAdapter() {
-
-                        @Override
-                        public void onPaymentCardAdded(PaymentCard paymentCard) {
-                            getContract().onPaymentCardAdded(paymentCard);
-                        };
-
-                        @Override
-                        public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response,
-                                Exception e) {
-
-                        };
-
-                    }).addPaymentCard(card);
+                    mApi.addPaymentCard(card);
                 } catch (JSONException e) {
 
                 }
             }
         }
     };
+
+    public void onEventMainThread(PaymentCardAPI.OnAddPaymentCardEvent event) {
+        getContract().onPaymentCardAdded(event.resource);
+    }
 
 }
