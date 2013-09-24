@@ -83,7 +83,8 @@ public class Product implements BaseModel<Product> {
     }
 
     public float getTotalPrice() {
-        return (deliveryPrice > 0 ? deliveryPrice : 0) + (productPrice > 0 ? productPrice : 0) - (cashfrontValue > 0 ? cashfrontValue : 0);
+        return ((int) (deliveryPrice > 0 ? deliveryPrice * 100 : 0) + (int) (productPrice > 0 ? productPrice * 100 : 0) - (int) (cashfrontValue > 0 ? cashfrontValue * 100
+                : 0)) / 100.f;
     }
 
     @Override

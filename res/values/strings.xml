@@ -153,6 +153,7 @@
     <string name="shopelia_confirmation_confirm">Valider ma commande</string>
     <string name="shopelia_confirmation_title">Vérification et validation de votre commande</string>
     <string name="shopelia_confirmation_shipping_fees">Frais de livraison</string>
+    <string name="shopelia_confirmation_cashfront">Réduction Shopelia</string>
     <string name="shopelia_confirmation_total_price">TOTAL</string>
     <string name="shopelia_confirmation_error">Une erreur est survenue. Impossible de valider votre commande.</string>
     <string name="shopelia_confirmation_free">Gratuit</string>

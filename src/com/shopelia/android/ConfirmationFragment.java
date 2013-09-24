@@ -21,6 +21,7 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.manager.UserManager;
+import com.shopelia.android.model.Product;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
 import com.shopelia.android.remote.api.OrderAPI;
@@ -305,8 +306,15 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                         getOrder().product.currency.format(getOrder().product.deliveryPrice));
             }
             findViewById(R.id.price_value_total, TextView.class).setText(
-                    getOrder().product.currency.format(getOrder().product.productPrice + getOrder().product.deliveryPrice));
+                    getOrder().product.currency.format(getOrder().product.getTotalPrice()));
             findViewById(R.id.price_shipping_info, TextView.class).setText(getOrder().product.shippingExtra);
+
+            findViewById(R.id.price_cashfront, TextView.class).setText(
+                    getOrder().product.currency.format(getOrder().product.cashfrontValue));
+
+            if (getOrder().product.cashfrontValue == Product.NO_PRICE || getOrder().product.cashfrontValue == 0) {
+                findViewById(R.id.price_cashfront_layout).setVisibility(View.GONE);
+            }
 
             // Testing purposes
             if (getOrder().user.email.equals("elarch@gmail.com") || getOrder().user.email.contains("shopelia")
