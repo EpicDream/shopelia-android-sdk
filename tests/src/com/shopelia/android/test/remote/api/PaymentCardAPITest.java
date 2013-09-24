@@ -4,18 +4,16 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.json.JSONObject;
-
 import android.test.InstrumentationTestCase;
 
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
 import com.shopelia.android.remote.api.PaymentCardAPI;
+import com.shopelia.android.remote.api.PaymentCardAPI.OnAddPaymentCardEvent;
 import com.shopelia.android.test.TestUtils;
 import com.shopelia.android.test.model.PaymentCardFactory;
 import com.shopelia.android.test.model.UserFactory;
-import com.turbomanage.httpclient.HttpResponse;
 
 public class PaymentCardAPITest extends InstrumentationTestCase {
 
@@ -33,22 +31,22 @@ public class PaymentCardAPITest extends InstrumentationTestCase {
         final CountDownLatch barrier = new CountDownLatch(1);
         final AtomicBoolean result = new AtomicBoolean(false);
         int before = user.paymentCards.size();
-        new PaymentCardAPI(getInstrumentation().getTargetContext(), new CallbackAdapter() {
 
-            @Override
-            public void onPaymentCardAdded(PaymentCard paymentCard) {
-                super.onPaymentCardAdded(paymentCard);
+        PaymentCardAPI api = new PaymentCardAPI(getInstrumentation().getTargetContext());
+        api.register(new Object() {
+
+            public void onEventMainThread(OnAddPaymentCardEvent event) {
                 result.set(true);
                 barrier.countDown();
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                super.onError(step, httpResponse, response, e);
+            public void onEventMainThread(OnApiErrorEvent event) {
                 barrier.countDown();
             }
 
-        }).addPaymentCard(paymentCard);
+        });
+        api.addPaymentCard(paymentCard);
+
         try {
             barrier.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
