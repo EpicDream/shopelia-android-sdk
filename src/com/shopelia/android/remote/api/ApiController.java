@@ -117,7 +117,7 @@ public abstract class ApiController {
     private static Class<?>[] sMoreStickyEventTypesCache;
 
     public ApiController(Context context) {
-        this.mContext = context;
+        this.mContext = context.getApplicationContext();
     }
 
     public EventBus getEventBus() {
