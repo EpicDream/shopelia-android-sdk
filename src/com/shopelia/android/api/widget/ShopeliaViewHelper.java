@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.api.Shopelia.OnProductAvailabilityChangeListener;
+import com.shopelia.android.app.tracking.Tracker;
 import com.shopelia.android.utils.TimeUnits;
 
 /**
@@ -40,9 +41,11 @@ public class ShopeliaViewHelper implements ShopeliaView {
     private Callback mCallback;
     private String mTrackerName;
     private OnProductAvailabilityChangeListener mOnProductAvailabilityChangeListener;
+    private Tracker mTracker;
 
     public ShopeliaViewHelper(Context context, AttributeSet attrs, boolean editMode) {
         mContext = context;
+        mTracker = Tracker.Factory.getTracker(Tracker.PROVIDER_SHOPELIA, context);
     }
 
     public void setCallback(Callback callback) {
@@ -71,6 +74,7 @@ public class ShopeliaViewHelper implements ShopeliaView {
                     if (mCallback != null) {
                         switch (newStatus) {
                             case Shopelia.STATUS_AVAILABLE:
+                                mTracker.onDisplayShopeliaButton(shopelia.getProductUrl(), mTrackerName);
                                 if (begin + DELAY_FOR_SMOOTH_CHANGES < System.currentTimeMillis()) {
                                     mCallback.onViewShouldSmoothlyAppear();
                                 } else {

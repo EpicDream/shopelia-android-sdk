@@ -212,7 +212,8 @@ public final class Shopelia implements Parcelable {
      * @param productUrl The product URL
      * @param data Extra data or null if unnecessary
      */
-    public static final void checkout(Context context, String productUrl, Intent data, int requestCode) {
+    private final void checkout(Context context, String productUrl, Intent data, int requestCode) {
+        notifyView();
         if (data == null) {
             data = new Intent();
         }
@@ -226,6 +227,8 @@ public final class Shopelia implements Parcelable {
             data.putExtra(EXTRA_PRODUCT_URL, productUrl);
         }
         data.putExtra(ShopeliaActivity.EXTRA_STYLE, ShopeliaActivity.STYLE_DIALOG);
+        mTracker.onClickShopeliaButton(getProductUrl(), mTrackerName);
+        mTracker.flush();
         if (context instanceof Activity) {
             ((Activity) context).startActivityForResult(data, requestCode);
         } else {
@@ -238,8 +241,6 @@ public final class Shopelia implements Parcelable {
     }
 
     public void checkout(Context context, int requestCode) {
-        notifyView();
-        mTracker.onClickShopeliaButton(getProductUrl(), mTrackerName);
         checkout(context, null, mData, requestCode);
     }
 
