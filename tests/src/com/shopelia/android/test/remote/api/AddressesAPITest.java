@@ -4,19 +4,19 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import org.json.JSONObject;
-
 import android.test.InstrumentationTestCase;
 import android.util.Log;
 
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.AddressesAPI;
-import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
+import com.shopelia.android.remote.api.AddressesAPI.OnAddressEvent;
+import com.shopelia.android.remote.api.AddressesAPI.OnEditAddressEvent;
+import com.shopelia.android.remote.api.AddressesAPI.OnRequestDone;
+import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
 import com.shopelia.android.test.TestUtils;
 import com.shopelia.android.test.model.AddressFactory;
 import com.shopelia.android.test.model.UserFactory;
-import com.turbomanage.httpclient.HttpResponse;
 
 public class AddressesAPITest extends InstrumentationTestCase {
 
@@ -33,22 +33,20 @@ public class AddressesAPITest extends InstrumentationTestCase {
     public void testAddAddress() {
         final CountDownLatch barrier = new CountDownLatch(1);
         final AtomicBoolean result = new AtomicBoolean(false);
-        new AddressesAPI(getInstrumentation().getTargetContext(), new CallbackAdapter() {
+        AddressesAPI api = new AddressesAPI(getInstrumentation().getTargetContext());
+        api.register(new Object() {
 
-            @Override
-            public void onAddressAdded(Address address) {
-                super.onAddressAdded(address);
+            public void onEventMainThread(OnAddressEvent event) {
                 result.set(true);
                 barrier.countDown();
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                super.onError(step, httpResponse, response, e);
+            public void onEventMainThread(OnApiErrorEvent event) {
                 barrier.countDown();
             }
 
-        }).addAddress(address);
+        });
+        api.addAddress(address);
         try {
             barrier.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -70,22 +68,20 @@ public class AddressesAPITest extends InstrumentationTestCase {
         final CountDownLatch barrier = new CountDownLatch(1);
         final AtomicBoolean result = new AtomicBoolean(false);
         address.id = user.getDefaultAddress().id;
-        new AddressesAPI(getInstrumentation().getTargetContext(), new CallbackAdapter() {
+        AddressesAPI api = new AddressesAPI(getInstrumentation().getTargetContext());
+        api.register(new Object() {
 
-            @Override
-            public void onAddressEdited(Address a) {
-                super.onAddressEdited(address);
-                result.set(address.address.equals(a.address));
+            public void onEventMainThread(OnEditAddressEvent event) {
+                result.set(true);
                 barrier.countDown();
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                super.onError(step, httpResponse, response, e);
+            public void onEventMainThread(OnApiErrorEvent event) {
                 barrier.countDown();
             }
 
-        }).editAddress(address);
+        });
+        api.editAddress(address);
         try {
             barrier.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
@@ -107,21 +103,19 @@ public class AddressesAPITest extends InstrumentationTestCase {
             fail("No non-default address (must be a bug)");
         }
         final CountDownLatch barrier = new CountDownLatch(1);
-        new AddressesAPI(getInstrumentation().getTargetContext(), new CallbackAdapter() {
+        AddressesAPI api = new AddressesAPI(getInstrumentation().getTargetContext());
+        api.register(new Object() {
 
-            @Override
-            public void onRequestDone() {
-                super.onRequestDone();
+            public void onEventMainThread(OnRequestDone event) {
                 barrier.countDown();
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                super.onError(step, httpResponse, response, e);
+            public void onEventMainThread(OnApiErrorEvent event) {
                 barrier.countDown();
             }
 
-        }).setDefaultAddress(toDefault);
+        });
+        api.setDefaultAddress(toDefault);
         try {
             barrier.await(30, TimeUnit.SECONDS);
         } catch (InterruptedException e) {
