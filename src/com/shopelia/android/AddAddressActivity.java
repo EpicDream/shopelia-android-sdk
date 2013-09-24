@@ -9,7 +9,6 @@ import org.json.JSONException;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,8 @@ import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Address;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.AddressesAPI;
-import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
+import com.shopelia.android.remote.api.AddressesAPI.OnEditAddressEvent;
+import com.shopelia.android.remote.api.ApiController;
 import com.shopelia.android.remote.api.PlacesAutoCompleteAPI;
 import com.shopelia.android.remote.api.PlacesAutoCompleteAPI.OnAddressDetailsListener;
 import com.shopelia.android.utils.LocaleUtils;
@@ -95,9 +95,14 @@ public class AddAddressActivity extends ShopeliaActivity {
 
     private Address mResult = new Address();
 
+    // API
+    private AddressesAPI mApi;
+
     @Override
     protected void onCreate(Bundle saveState) {
         super.onCreate(saveState);
+
+        mApi = new AddressesAPI(this);
 
         setHostContentView(R.layout.shopelia_add_address_activity);
         mLayoutInflater = LayoutInflater.from(this);
@@ -328,6 +333,29 @@ public class AddAddressActivity extends ShopeliaActivity {
 
     };
 
+    public void onEventMainThread(AddressesAPI.OnAddressEvent event) {
+        stopWaiting();
+        User user = UserManager.get(AddAddressActivity.this).getUser();
+        user.addAddress(event.resource);
+        UserManager.get(AddAddressActivity.this).saveUser();
+        mResult = event.resource;
+        createAddress();
+    }
+
+    public void onEventMainThread(ApiController.OnApiErrorEvent event) {
+        stopWaiting();
+    }
+
+    private void createAddress() {
+        Intent data = new Intent();
+        Bundle extras = new Bundle();
+        extras.putParcelable(EXTRA_ADDRESS_OBJECT, mResult);
+        data.putExtras(extras);
+        setResult(RESULT_OK, data);
+        // @formatter:on
+        finish();
+    }
+
     private OnClickListener mOnValidateClickListener = new OnClickListener() {
 
         @Override
@@ -350,66 +378,33 @@ public class AddAddressActivity extends ShopeliaActivity {
             }
         }
 
-        public void createAddress() {
-            Intent data = new Intent();
-            Bundle extras = new Bundle();
-            extras.putParcelable(EXTRA_ADDRESS_OBJECT, mResult);
-            data.putExtras(extras);
-            setResult(RESULT_OK, data);
-            // @formatter:on
-            finish();
-        }
-
         public void addAddress() {
             startWaiting(getString(R.string.shopelia_form_address_wait_for_adding), true, false);
-            new AddressesAPI(AddAddressActivity.this, new CallbackAdapter() {
-
-                public void onAddressAdded(Address address) {
-                    stopWaiting();
-                    User user = UserManager.get(AddAddressActivity.this).getUser();
-                    user.addAddress(address);
-                    UserManager.get(AddAddressActivity.this).saveUser();
-                    mResult = address;
-                    createAddress();
-                };
-
-                public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response,
-                        Exception e) {
-                    stopWaiting();
-                };
-
-            }).addAddress(mResult);
+            mApi.addAddress(mResult);
         }
 
         public void editAddress() {
             startWaiting(getString(R.string.shopelia_form_address_loading_editing), true, false);
             long id = getIntent().getLongExtra(EXTRA_ID, Address.NO_ID);
             mResult.id = id;
-            new AddressesAPI(AddAddressActivity.this, new CallbackAdapter() {
-
-                public void onAddressEdited(Address address) {
-                    stopWaiting();
-                    User user = UserManager.get(AddAddressActivity.this).getUser();
-                    long id = getIntent().getLongExtra(EXTRA_ID, Address.NO_ID);
-                    for (Address item : user.addresses) {
-                        if (item.id == id && id != Address.NO_ID) {
-                            item.merge(mResult);
-                            break;
-                        }
-                    }
-                    UserManager.get(AddAddressActivity.this).saveUser();
-                    createAddress();
-                };
-
-                public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response,
-                        Exception e) {
-                    stopWaiting();
-                };
-
-            }).editAddress(mResult);
+            mApi.editAddress(mResult);
         }
 
     };
+
+    public void onEventMainThread(OnEditAddressEvent event) {
+        stopWaiting();
+        User user = UserManager.get(AddAddressActivity.this).getUser();
+        long id = getIntent().getLongExtra(EXTRA_ID, Address.NO_ID);
+        for (Address item : user.addresses) {
+            if (item.id == id && id != Address.NO_ID) {
+                item.merge(mResult);
+                break;
+            }
+        }
+        UserManager.get(AddAddressActivity.this).saveUser();
+        createAddress();
+    }
 
     public boolean isRequired() {
         return getIntent().getBooleanExtra(EXTRA_REQUIRED, false);
@@ -419,9 +414,7 @@ public class AddAddressActivity extends ShopeliaActivity {
         boolean out = mFormLayout.validate();
         if (out) {
             try {
-                Log.d(null, "SHOULD HAVE " + mFormLayout.toJson());
                 mResult = Address.inflate(mFormLayout.toJson());
-                Log.d(null, "GOT ADDRESS " + mResult.toJson());
                 mResult.country = LocaleUtils.getCountryISO2Code(mResult.country);
             } catch (JSONException e) {
                 if (Config.INFO_LOGS_ENABLED) {
