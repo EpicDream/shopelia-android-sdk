@@ -86,6 +86,8 @@ public class MerchantsAPI extends ApiController {
                     }
                 }
             });
+        } else {
+            getEventBus().post(new OnRetrieveMerchantEvent(out));
         }
         return out;
     }
