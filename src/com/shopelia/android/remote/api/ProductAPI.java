@@ -121,7 +121,7 @@ public class ProductAPI extends ApiController {
                     mProducts.add(mProduct);
                     saveProducts(mProducts);
                     if (mProduct.isValid() && mProduct.ready) {
-                        getEventBus().post(new OnProductUpdateEvent(mProduct.getProduct(), true));
+                        getEventBus().postSticky(new OnProductUpdateEvent(mProduct.getProduct(), true));
                     }
                     return mProduct.isValid();
                 } catch (JSONException e) {
