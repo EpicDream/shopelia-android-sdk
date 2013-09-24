@@ -11,10 +11,38 @@ import com.shopelia.android.R;
 import com.shopelia.android.concurent.ScheduledTask;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
+import com.shopelia.android.remote.api.UserAPI.OnSignInEvent;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 
 public class VerifyAPI extends ApiController {
+
+    public static class OnVerifySucceedEvent extends Event {
+
+    }
+
+    public static class OnVerifyFailedEvent extends Event {
+
+    }
+
+    public static class OnUpdateUiEvent extends Event {
+        public final VerifyAPI api;
+        public final boolean shouldBlock;
+        public final long delay;
+        public final String message;
+
+        private OnUpdateUiEvent(VerifyAPI api, boolean shouldBlock, long delay, String message) {
+            this.api = api;
+            this.shouldBlock = shouldBlock;
+            this.delay = delay;
+            this.message = message;
+        }
+
+    }
+
+    private static final Class<?>[] sEventTypes = new Class<?>[] {
+            OnVerifyFailedEvent.class, OnVerifySucceedEvent.class, OnUpdateUiEvent.class
+    };
 
     public static final String PREFERENCE_NAME = "ShopeliaVerifyAPI";
 
@@ -25,9 +53,11 @@ public class VerifyAPI extends ApiController {
 
     private long mTimeToBlock;
     private ScheduledTask mRefreshTask = new ScheduledTask();
+    private UserAPI mApi;
 
-    public VerifyAPI(Context context, Callback callback) {
-        super(context, callback);
+    public VerifyAPI(Context context) {
+        super(context);
+        mApi = new UserAPI(context);
         mTimeToBlock = getSharedPreferences().getLong(PREF_TIME_TO_BLOCK, 0L);
         startRefreshing();
     }
@@ -42,6 +72,11 @@ public class VerifyAPI extends ApiController {
 
     public boolean isOrderForbidden() {
         return getUnlockDelay() > 0;
+    }
+
+    @Override
+    public Class<?>[] getEventTypes() {
+        return sEventTypes;
     }
 
     private void forbidOrder(long delay) {
@@ -59,35 +94,35 @@ public class VerifyAPI extends ApiController {
 
             @Override
             public void onComplete(HttpResponse httpResponse) {
-                if (httpResponse.getStatus() == 200 && hasCallback()) {
+                if (httpResponse.getStatus() == 200) {
                     try {
                         User user = User.inflate(new JSONObject(httpResponse.getBodyAsString()).getJSONObject(User.Api.USER));
                         UserManager.get(getContext()).update(user);
                     } catch (JSONException e) {
                         // Do nothing
                     }
-                    getCallback().onVerifySucceed();
-                } else if (hasCallback() && httpResponse.getStatus() == 401 && object.has(User.Api.PASSWORD)
+                    getEventBus().post(new OnVerifySucceedEvent());
+                } else if (httpResponse.getStatus() == 401 && object.has(User.Api.PASSWORD)
                         && UserManager.get(getContext()).getUser() != null) {
                     User user = UserManager.get(getContext()).getUser();
                     user.password = object.optString(User.Api.PASSWORD);
-                    new UserAPI(getContext(), new CallbackAdapter() {
-                        @Override
-                        public void onSignIn(User user) {
-                            super.onSignIn(user);
-                            getCallback().onVerifySucceed();
+                    mApi.register(new Object() {
+
+                        @SuppressWarnings("unused")
+                        public void onEvent(OnSignInEvent event) {
+                            getEventBus().post(new OnVerifySucceedEvent());
+                            mApi.unregister(this);
                         }
 
-                        @Override
-                        public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                            super.onError(step, httpResponse, response, e);
-                            if (hasCallback()) {
-                                getCallback().onError(STEP_VERIFY, httpResponse, response, e);
-                            }
+                        @SuppressWarnings("unused")
+                        public void onEvent(OnApiErrorEvent event) {
+                            fireError(event.response, event.json, event.exception);
+                            mApi.unregister(this);
                         }
 
-                    }).signIn(user);
-                } else if (hasCallback()) {
+                    });
+                    mApi.signIn(user);
+                } else {
                     if (httpResponse.getStatus() == 503) {
                         try {
                             JSONObject object = new JSONObject(httpResponse.getBodyAsString());
@@ -97,16 +132,14 @@ public class VerifyAPI extends ApiController {
 
                         }
                     } else {
-                        getCallback().onVerifyFailed();
+                        getEventBus().post(new OnVerifyFailedEvent());
                     }
                 }
             }
 
             @Override
             public void onError(Exception e) {
-                if (hasCallback()) {
-                    getCallback().onError(STEP_VERIFY, null, null, e);
-                }
+                fireError(null, null, e);
             }
 
         });
@@ -149,11 +182,9 @@ public class VerifyAPI extends ApiController {
             } else {
                 errorMessage = null;
             }
-            if (hasCallback()) {
-                getCallback().onVerifyUpdateUI(VerifyAPI.this, true, delay, errorMessage);
-            }
+            getEventBus().post(new OnUpdateUiEvent(VerifyAPI.this, true, delay, errorMessage));
             if (delay <= 0) {
-                getCallback().onVerifyUpdateUI(VerifyAPI.this, false, 0, null);
+                getEventBus().post(new OnUpdateUiEvent(VerifyAPI.this, false, 0, null));
                 mRefreshTask.stop();
             }
         }
