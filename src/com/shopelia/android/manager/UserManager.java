@@ -136,7 +136,7 @@ public class UserManager {
     public void logout() {
         if (mUser != null) {
             removeAccount();
-            new UserAPI(mContext, null).signOut(mUser.email);
+            new UserAPI(mContext).signOut(mUser.email);
             mUser = null;
             Editor editor = mPreferences.edit();
             editor.remove(PREFS_AUTH_TOKEN);
