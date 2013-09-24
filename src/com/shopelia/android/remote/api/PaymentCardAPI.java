@@ -13,21 +13,32 @@ import com.turbomanage.httpclient.HttpResponse;
 
 public class PaymentCardAPI extends ApiController {
 
-    public PaymentCardAPI(Context context, Callback callback) {
-        super(context, callback);
+    public static class OnAddPaymentCardEvent extends OnAddResourceEvent<PaymentCard> {
+
+        protected OnAddPaymentCardEvent(PaymentCard resource) {
+            super(resource);
+        }
+
+    }
+
+    private static Class<?>[] sEventTypes = new Class<?>[] {
+        OnAddPaymentCardEvent.class
+    };
+
+    public PaymentCardAPI(Context context) {
+        super(context);
     }
 
     public void addPaymentCard(PaymentCard card) {
         final User user = UserManager.get(getContext()).getUser();
         JSONObject params = new JSONObject();
-        setCurrentStep(STEP_SEND_PAYMENT_INFORMATION);
         try {
             JSONObject cardObject = card.toJson();
             cardObject.put(PaymentCard.Api.NAME, user.lastname);
             params.put(PaymentCard.Api.PAYMENT_CARD, cardObject);
             params = cardObject;
         } catch (JSONException e) {
-            fireError(STEP_SEND_PAYMENT_INFORMATION, null, null, e);
+            fireError(null, null, e);
             return;
         }
         ShopeliaRestClient.V1(getContext()).post(Command.V1.PaymentCards.$, params, new JsonAsyncCallback() {
@@ -37,22 +48,25 @@ public class PaymentCardAPI extends ApiController {
                 try {
                     PaymentCard card = PaymentCard.inflate(object.getJSONObject(PaymentCard.Api.PAYMENT_CARD));
                     user.paymentCards.add(card);
-                    if (hasCallback()) {
-                        getCallback().onPaymentCardAdded(card);
-                    }
+                    getEventBus().post(new OnAddPaymentCardEvent(card));
                 } catch (JSONException e) {
-                    fireError(STEP_SEND_PAYMENT_INFORMATION, response, null, e);
+                    fireError(response, null, e);
                 }
             }
 
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_SEND_PAYMENT_INFORMATION, null, null, e);
+                fireError(null, null, e);
             }
 
         });
 
+    }
+
+    @Override
+    public Class<?>[] getEventTypes() {
+        return sEventTypes;
     }
 
 }
