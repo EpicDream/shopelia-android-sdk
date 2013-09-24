@@ -71,7 +71,7 @@ public class ProductSheetWidget extends FrameLayout {
     }
 
     public ProductSheetWidget setProductInfo(Product product, boolean animate) {
-        if (mProduct != null && !mProduct.isValid()) {
+        if (mProduct == null || !mProduct.isValid()) {
             mProduct = product;
             refreshView(animate);
         }
