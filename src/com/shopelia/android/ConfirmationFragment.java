@@ -59,7 +59,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     @Override
     public void onResume() {
         super.onResume();
-        mProductAPI.register(this);
+        mProductAPI.registerSticky(this);
     }
 
     @Override

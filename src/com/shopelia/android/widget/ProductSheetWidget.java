@@ -14,6 +14,7 @@ import android.widget.FrameLayout;
 
 import com.shopelia.android.R;
 import com.shopelia.android.model.Product;
+import com.shopelia.android.utils.TimeUnits;
 import com.shopelia.android.view.animation.CrossFadingTransition;
 import com.shopelia.android.view.animation.ResizeAnimation;
 import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedListener;
@@ -35,6 +36,10 @@ public class ProductSheetWidget extends FrameLayout {
     private View mContent;
     private View mSwitcher;
 
+    private long mAttachTime;
+
+    private static final long DELAY_BEFORE_CROSS_FADING = 1 * TimeUnits.SECONDS;
+
     public ProductSheetWidget(Context context, AttributeSet attrs) {
         super(context, attrs);
         if (mRootView == null) {
@@ -45,6 +50,12 @@ public class ProductSheetWidget extends FrameLayout {
 
     public View onCreateView(LayoutInflater inflater) {
         return inflater.inflate(R.layout.shopelia_product_sheet, this, true);
+    }
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        mAttachTime = System.currentTimeMillis();
     }
 
     public void onViewCreated() {
