@@ -39,7 +39,13 @@ public abstract class ApiController {
 
     }
 
-    protected static class OnResourceEvent<T> {
+    protected static class Event {
+        protected Event() {
+
+        }
+    }
+
+    protected static class OnResourceEvent<T> extends Event {
         public final T resource;
 
         protected OnResourceEvent(T resource) {
