@@ -148,6 +148,7 @@ public class SegmentedEditText extends LinearLayout implements Errorable, Checka
             editText.setOnEditorActionListener(mEditorActionListener);
             editText.setOnKeyListener(mOnKeyListener);
             editText.setSaveEnabled(false);
+            editText.setTypeface(CustomFontHelper.getTypeface(getContext(), CustomFontHelper.FAMILY_NORMAL, CustomFontHelper.STYLE_NORMAL));
             mEditText = editText;
         }
 

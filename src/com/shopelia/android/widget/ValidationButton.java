@@ -3,7 +3,6 @@ package com.shopelia.android.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -13,11 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.nineoldandroids.animation.ArgbEvaluator;
-import com.nineoldandroids.animation.ObjectAnimator;
-import com.nineoldandroids.animation.ValueAnimator;
 import com.shopelia.android.R;
-import com.shopelia.android.graphics.ColorDrawableAnimation;
 
 @SuppressLint("DefaultLocale")
 public class ValidationButton extends FrameLayout {
@@ -56,8 +51,7 @@ public class ValidationButton extends FrameLayout {
             try {
                 setText(ta.getText(R.styleable.ValidationButton_shopelia_text));
                 setIcon(ta.getDrawable(R.styleable.ValidationButton_shopelia_icon));
-                setTextSize(ta.getDimension(R.styleable.ValidationButton_shopelia_textSize,
-                        getResources().getDimension(R.dimen.shopelia_font_size_small)));
+                setTextSize(ta.getDimension(R.styleable.ValidationButton_shopelia_textSize, mLabel.getTextSize()));
             } finally {
                 ta.recycle();
             }
@@ -128,54 +122,6 @@ public class ValidationButton extends FrameLayout {
 
     @Override
     public void setEnabled(boolean enabled) {
-        if (enabled != isEnabled()) {
-            super.setEnabled(enabled);
-            final int count = getChildCount();
-            for (int index = 0; index < count; index++) {
-                getChildAt(index).setEnabled(enabled);
-            }
-            setCompatBackground(getResources().getDrawable(R.drawable.shopelia_white_button_background));
-            if (!enabled) {
-                {
-                    ColorDrawableAnimation anim = new ColorDrawableAnimation(getBackground(), Color.WHITE);
-                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
-                    anim.start(getResources().getColor(R.color.shopelia_validation_green),
-                            getResources().getColor(R.color.shopelia_validation_grey));
-                }
-                {
-                    ColorDrawableAnimation anim = new ColorDrawableAnimation(mIcon.getDrawable(), Color.WHITE);
-                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
-                    anim.start(getResources().getColor(R.color.shopelia_validation_textColor_disabled));
-                }
-                {
-                    ValueAnimator colorAnim = ObjectAnimator.ofInt(mLabel, "textColor", getResources().getColor(R.color.shopelia_white),
-                            getResources().getColor(R.color.shopelia_validation_textColor_disabled));
-                    colorAnim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
-                    colorAnim.setEvaluator(new ArgbEvaluator());
-                    colorAnim.start();
-                }
-            } else {
-                {
-                    ColorDrawableAnimation anim = new ColorDrawableAnimation(getBackground(), Color.WHITE);
-                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
-                    anim.start(getResources().getColor(R.color.shopelia_validation_grey),
-                            getResources().getColor(R.color.shopelia_validation_green));
-                }
-                {
-                    ColorDrawableAnimation anim = new ColorDrawableAnimation(mIcon.getDrawable(), Color.WHITE);
-                    anim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
-                    anim.start(getResources().getColor(R.color.shopelia_validation_textColor_disabled), Color.WHITE);
-                }
-                {
-                    ValueAnimator colorAnim = ObjectAnimator.ofInt(mLabel, "textColor",
-                            getResources().getColor(R.color.shopelia_validation_textColor_disabled),
-                            getResources().getColor(R.color.shopelia_white));
-                    colorAnim.setDuration(getResources().getInteger(R.integer.shopelia_animation_time));
-                    colorAnim.setEvaluator(new ArgbEvaluator());
-                    colorAnim.start();
-                }
-            }
 
-        }
     }
 }

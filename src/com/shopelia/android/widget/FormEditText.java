@@ -2,7 +2,6 @@ package com.shopelia.android.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.graphics.Canvas;
 import android.util.AttributeSet;
 import android.widget.Checkable;
 import android.widget.EditText;
@@ -23,7 +22,7 @@ public class FormEditText extends EditText implements Checkable, Errorable {
     };
 
     public FormEditText(Context context) {
-        this(context, null);
+        super(context);
     }
 
     public FormEditText(Context context, AttributeSet attrs) {
@@ -94,11 +93,6 @@ public class FormEditText extends EditText implements Checkable, Errorable {
         }
 
         return drawableState;
-    }
-
-    @Override
-    public void draw(Canvas canvas) {
-        super.draw(canvas);
     }
 
 }

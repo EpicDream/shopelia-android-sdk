@@ -3,5 +3,5 @@
 
     <item android:drawable="@drawable/shopelia_fg_button" android:state_pressed="true"/>
     <item android:drawable="@drawable/shopelia_fg_button" android:state_hovered="true"/>
-
+    
 </selector>

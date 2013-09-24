@@ -104,18 +104,24 @@
             android:scaleType="fitStart"
             android:src="@drawable/shopelia_logo_bottom" />
 
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/validate"
+        <FrameLayout
+             android:id="@+id/validate"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
-            android:background="@drawable/shopelia_validation_button_background"
-            android:gravity="center"
-            android:paddingLeft="@dimen/shopelia_margin_normal"
-            android:paddingRight="@dimen/shopelia_margin_normal"
-            android:text="@string/shopelia_authenticate_validate"
-            android:textColor="@color/shopelia_validation_button_text_color"
-            android:textSize="@dimen/shopelia_font_size_small"
-            app:shopelia_fontStyle="bold" />
+            android:layout_height="wrap_content"
+            android:background="@drawable/shopelia_bg_green_button"
+            android:foreground="@drawable/shopelia_btn_hover" >
+
+            <com.shopelia.android.widget.FontableTextView
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:gravity="center"
+                android:paddingLeft="@dimen/shopelia_margin_normal"
+                android:paddingRight="@dimen/shopelia_margin_normal"
+                android:text="@string/shopelia_authenticate_validate"
+                android:textColor="@color/shopelia_validation_button_text_color"
+                android:textSize="@dimen/shopelia_font_size_small"
+                app:shopelia_fontStyle="normal" />
+        </FrameLayout>
     </LinearLayout>
 
 </com.shopelia.android.widget.form.FormLinearLayout>
