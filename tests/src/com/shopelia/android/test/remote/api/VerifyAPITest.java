@@ -11,11 +11,13 @@ import android.test.InstrumentationTestCase;
 
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
 import com.shopelia.android.remote.api.VerifyAPI;
+import com.shopelia.android.remote.api.VerifyAPI.OnUpdateUiEvent;
+import com.shopelia.android.remote.api.VerifyAPI.OnVerifyFailedEvent;
+import com.shopelia.android.remote.api.VerifyAPI.OnVerifySucceedEvent;
 import com.shopelia.android.test.TestUtils;
 import com.shopelia.android.test.model.UserFactory;
-import com.turbomanage.httpclient.HttpResponse;
 
 public class VerifyAPITest extends InstrumentationTestCase {
 
@@ -29,12 +31,11 @@ public class VerifyAPITest extends InstrumentationTestCase {
     }
 
     public void testVerifyUser() throws JSONException {
-        assertTrue("Should be authentified",
-                verifiy(new VerifyAPI(getInstrumentation().getTargetContext(), new CallbackAdapter()), user.password));
+        assertTrue("Should be authentified", verifiy(new VerifyAPI(getInstrumentation().getTargetContext()), user.password));
     }
 
     public void testBlockOrder() throws JSONException, InterruptedException {
-        VerifyAPI api = new VerifyAPI(getInstrumentation().getTargetContext(), new CallbackAdapter());
+        VerifyAPI api = new VerifyAPI(getInstrumentation().getTargetContext());
         assertFalse("Should not be blocked", api.isOrderForbidden());
         for (int iteration = 0; iteration < 10; iteration++) {
             verifiy(api, "wrong" + user.password);
@@ -54,35 +55,29 @@ public class VerifyAPITest extends InstrumentationTestCase {
     private boolean verifiy(VerifyAPI api, String password) throws JSONException {
         final CountDownLatch barrier = new CountDownLatch(1);
         final AtomicBoolean result = new AtomicBoolean(false);
-        api.setCallback(new CallbackAdapter() {
-            @Override
-            public void onVerifySucceed() {
-                super.onVerifySucceed();
+        api.register(new Object() {
+
+            public void onEventMainThread(OnVerifySucceedEvent event) {
                 result.set(true);
                 barrier.countDown();
             }
 
-            @Override
-            public void onVerifyFailed() {
-                super.onVerifyFailed();
+            public void onEventMainThread(OnVerifyFailedEvent event) {
                 barrier.countDown();
             }
 
-            @Override
-            public void onVerifyUpdateUI(VerifyAPI api, boolean locked, long delay, String message) {
-                super.onVerifyUpdateUI(api, locked, delay, message);
-                if (locked) {
+            public void onEventMainThread(OnUpdateUiEvent event) {
+                if (event.shouldBlock) {
                     barrier.countDown();
                 }
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                super.onError(step, httpResponse, response, e);
+            public void onEventMainThread(OnApiErrorEvent event) {
                 barrier.countDown();
             }
 
         });
+
         api.verify(new JSONObject("{" + User.Api.PASSWORD + ": " + "\"" + password + "\"}"));
 
         try {
