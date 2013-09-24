@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -37,17 +36,19 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
-import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.Product;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.ApiController;
-import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
 import com.shopelia.android.remote.api.ApiController.ErrorInflater;
+import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
 import com.shopelia.android.remote.api.ProductAPI;
+import com.shopelia.android.remote.api.ProductAPI.OnProductNotAvailable;
+import com.shopelia.android.remote.api.ProductAPI.OnProductUpdateEvent;
 import com.shopelia.android.remote.api.UserAPI;
+import com.shopelia.android.remote.api.UserAPI.OnAccountCreationSucceedEvent;
+import com.shopelia.android.remote.api.UserAPI.OnSignInEvent;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.Tax;
 import com.shopelia.android.view.animation.ResizeAnimation;
@@ -58,7 +59,6 @@ import com.shopelia.android.widget.FormListHeader;
 import com.shopelia.android.widget.ProductSheetWidget;
 import com.shopelia.android.widget.ValidationButton;
 import com.shopelia.android.widget.form.SingleLinePaymentCardField;
-import com.turbomanage.httpclient.HttpResponse;
 
 public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity implements OnSignUpListener, OnSignInListener {
 
@@ -134,12 +134,14 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
 
     private int mSignInViewCount = 0;
 
-    private boolean mCardScanned = false;
-
     // Cache
     private String mCachedPincode = null;
 
     private Map<Class<?>, Fragment.SavedState> mSavedStates = new HashMap<Class<?>, Fragment.SavedState>();
+
+    private ProductAPI mProductAPI;
+
+    private boolean mCardScanned = false;
 
     @SuppressLint("NewApi")
     @Override
@@ -147,6 +149,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
         getIntent().putExtra(EXTRA_INIT_ORDER, true);
         setActivityStyle(STYLE_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        mProductAPI = new ProductAPI(this);
         setHostContentView(R.layout.shopelia_prepare_order_activity);
         mScrollView = (ScrollView) findViewById(R.id.scrollview);
 
@@ -182,33 +185,36 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
             ((LinearLayout) findViewById(R.id.main_form)).setGravity(Gravity.TOP);
         } else {
             Product product = Product.inflate(getIntent().getExtras());
-            new ProductAPI(this, new CallbackAdapter() {
-
-                @Override
-                public void onProductUpdate(Product product, boolean fromNetwork) {
-                    super.onProductUpdate(product, fromNetwork);
-                    Log.d(null, "PRODUCT UPDATE");
-                    if (product.isValid()) {
-                        mProduct = product;
-                        ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(product, fromNetwork);
-                    }
-                }
-
-                @Override
-                public void onProductNotAvailable(Product product) {
-                    Log.d(null, "PRODUCT AVAILABLE");
-                    ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(product);
-                    fragment.show(getSupportFragmentManager(), null);
-                }
-
-                @Override
-                public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                    super.onError(step, httpResponse, response, e);
-                    Log.d(null, "PRODUCT ERROR");
-                }
-
-            }).getProduct(product);
+            mProductAPI.getProduct(product);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        mProductAPI.register(this);
+    }
+
+    public void onEventMainThread(OnProductUpdateEvent event) {
+        if (event.resource.isValid()) {
+            mProduct = event.resource;
+            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(event.resource, event.isFromNetwork);
+        }
+    }
+
+    public void onEventMainThread(OnProductNotAvailable event) {
+        ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(event.resource);
+        fragment.show(getSupportFragmentManager(), null);
+    }
+
+    public void onEventMainThread(OnApiErrorEvent event) {
+
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mProductAPI.unregister(this);
     }
 
     @Override
@@ -266,22 +272,21 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     private void createAccount() {
         final Order order = getOrder();
         startWaiting(getString(R.string.shopelia_form_main_waiting), true, true);
-        new UserAPI(this, new ApiController.CallbackAdapter() {
-
-            @Override
-            public void onAccountCreationSucceed(final User user, Address address) {
-                super.onAccountCreationSucceed(user, address);
+        final UserAPI api = new UserAPI(this);
+        api.register(new Object() {
+            public void onEventMainThread(OnAccountCreationSucceedEvent event) {
+                api.unregister(this);
                 if (mCardScanned) {
                     getTracker().track(Analytics.Events.AddPaymentCardMethod.CARD_SCANNED);
                 } else {
                     getTracker().track(Analytics.Events.AddPaymentCardMethod.CARD_NOT_SCANNED);
                 }
                 stopWaiting();
-                order.user = user;
+                order.user = event.resource;
                 if (isCalledByAcountManager()) {
-                    finishAccountRegistration(user);
+                    finishAccountRegistration(order.user);
                 } else {
-                    if (user.paymentCards.size() == 0) {
+                    if (order.user.paymentCards.size() == 0) {
                         Intent intent = new Intent(PrepareOrderActivity.this, AddPaymentCardActivity.class);
                         intent.putExtra(AddPaymentCardActivity.EXTRA_REQUIRED, true);
                         startActivityForResult(intent, REQUEST_ADD_PAYMENT_CARD);
@@ -291,18 +296,19 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
                 }
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                super.onError(step, httpResponse, response, e);
+            @SuppressWarnings("unused")
+            public void onEventMainThread(OnApiErrorEvent event) {
+                api.unregister(this);
                 stopWaiting();
-                if (e != null) {
+                if (event.exception != null) {
                     Toast.makeText(PrepareOrderActivity.this, R.string.shopelia_error_network_error, Toast.LENGTH_LONG).show();
                 } else {
-                    mSignUpFragment.onCreateAccountError(response);
+                    mSignUpFragment.onCreateAccountError(event.json);
                 }
             }
 
-        }).createAccount(order.user, order.address, order.card);
+        });
+        api.createAccount(order.user, order.address, order.card);
     }
 
     private void finishAccountRegistration(User user) {
@@ -357,37 +363,38 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     public void onSignIn(JSONObject result) {
         User user = User.inflate(result.optJSONObject(User.Api.USER));
         startWaiting(getString(R.string.shopelia_sign_in_waiting), true, true);
-        new UserAPI(this, new CallbackAdapter() {
-
-            @Override
-            public void onSignIn(User user) {
+        final UserAPI api = new UserAPI(this);
+        api.register(new Object() {
+            @SuppressWarnings("unused")
+            public void onEventMainThread(OnSignInEvent event) {
+                api.unregister(this);
                 stopWaiting();
-                super.onSignIn(user);
                 if (isCalledByAcountManager()) {
-                    finishAccountRegistration(user);
+                    finishAccountRegistration(event.resource);
                 } else {
                     Order order = getOrder();
-                    order.user = user;
+                    order.user = event.resource;
                     checkoutOrder(order);
                 }
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                super.onError(step, httpResponse, response, e);
+            @SuppressWarnings("unused")
+            public void onEventMainThread(OnApiErrorEvent event) {
+                api.unregister(this);
                 stopWaiting();
-                if (e != null) {
+                if (event.exception != null) {
                     if (Config.INFO_LOGS_ENABLED) {
-                        e.printStackTrace();
+                        event.exception.printStackTrace();
                     }
                     Toast.makeText(PrepareOrderActivity.this, R.string.shopelia_error_network_error, Toast.LENGTH_SHORT).show();
                 }
-                if (response != null) {
-                    Toast.makeText(PrepareOrderActivity.this, response.optString(ErrorInflater.Api.ERROR), Toast.LENGTH_SHORT).show();
+                if (event.json != null) {
+                    Toast.makeText(PrepareOrderActivity.this, event.json.optString(ErrorInflater.Api.ERROR), Toast.LENGTH_SHORT).show();
                 }
             }
 
-        }).signIn(user);
+        });
+        api.signIn(user);
     }
 
     @Override
