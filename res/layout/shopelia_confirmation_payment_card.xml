@@ -92,7 +92,7 @@
             android:layout_toRightOf="@+id/imageView1"
             android:orientation="vertical" >
 
-            <TextView
+            <com.shopelia.android.widget.FontableTextView
                 android:id="@+id/payment_card_number"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
