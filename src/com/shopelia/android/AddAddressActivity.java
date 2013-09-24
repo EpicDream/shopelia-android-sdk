@@ -208,6 +208,18 @@ public class AddAddressActivity extends ShopeliaActivity {
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        mApi.register(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        mApi.unregister(this);
+    }
+
+    @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putString(EXTRA_REFERENCE, (String) mAddressField.getTag());
