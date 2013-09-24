@@ -9,7 +9,6 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.os.Handler;
 import android.text.TextUtils;
 
 import com.shopelia.android.http.AbstractPoller.OnPollerEventListener;
@@ -30,6 +29,25 @@ import com.turbomanage.httpclient.ParameterMap;
  */
 public class ProductAPI extends ApiController {
 
+    public class OnProductUpdateEvent extends OnResourceEvent<Product> {
+
+        public final boolean isFromNetwork;
+
+        protected OnProductUpdateEvent(Product resource, boolean fromNetwork) {
+            super(resource);
+            isFromNetwork = fromNetwork;
+        }
+
+    }
+
+    public class OnProductNotAvailable extends OnResourceEvent<Product> {
+
+        protected OnProductNotAvailable(Product resource) {
+            super(resource);
+        }
+
+    }
+
     private static final String PRIVATE_PREFERENCE = "Shopelia$ProductAPI.PrivatePreference";
     private static final String PREFS_PRODUCT = "product:products";
 
@@ -42,10 +60,13 @@ public class ProductAPI extends ApiController {
     private SharedPreferences mPreferences;
     private ArrayList<ExtendedProduct> mProducts;
     private ExtendedProduct mProduct;
-    private Handler mHandler = new Handler();
 
-    public ProductAPI(Context context, Callback callback) {
-        super(context, callback);
+    private static final Class<?>[] sEventTypes = new Class<?>[] {
+            OnProductNotAvailable.class, OnProductUpdateEvent.class
+    };
+
+    public ProductAPI(Context context) {
+        super(context);
         mPreferences = context.getSharedPreferences(PRIVATE_PREFERENCE, Context.MODE_PRIVATE);
         loadProductsFromCache();
     }
@@ -68,9 +89,7 @@ public class ProductAPI extends ApiController {
                     .setParam(new HttpGetRequest(Command.V1.Products.$, map)).setOnPollerEventListener(mOnPollerEventListener).poll();
             return false;
         } else {
-            if (hasCallback()) {
-                getCallback().onProductUpdate(mProduct.getProduct(), false);
-            }
+            getEventBus().post(new OnProductUpdateEvent(mProduct.getProduct(), false));
         }
         return true;
     }
@@ -79,41 +98,30 @@ public class ProductAPI extends ApiController {
         return mProduct.getProduct();
     }
 
+    @Override
+    public Class<?>[] getEventTypes() {
+        return sEventTypes;
+    }
+
     private OnPollerEventListener<HttpGetResponse> mOnPollerEventListener = new OnPollerEventListener<HttpGetPoller.HttpGetResponse>() {
 
         @Override
         public void onTimeExpired() {
-            if (hasCallback()) {
-                getCallback().onProductNotAvailable(mProduct.getProduct());
-            }
+            getEventBus().post(new OnProductNotAvailable(mProduct.getProduct()));
         }
 
         @Override
         public boolean onResult(HttpGetResponse previousResult, final HttpGetResponse newResult) {
             if (newResult.exception != null) {
-                if (hasCallback()) {
-                    mHandler.post(new Runnable() {
-
-                        @Override
-                        public void run() {
-                            getCallback().onError(STEP_PRODUCT, newResult.response, null, newResult.exception);
-                        }
-                    });
-                }
+                fireError(newResult.response, null, newResult.exception);
             } else if (newResult.response != null) {
                 try {
                     mProduct.setJson(new JSONObject(newResult.response.getBodyAsString()));
                     mProduct.download_at = System.currentTimeMillis();
                     mProducts.add(mProduct);
                     saveProducts(mProducts);
-                    if (hasCallback() && mProduct.isValid() && mProduct.ready) {
-                        mHandler.post(new Runnable() {
-
-                            @Override
-                            public void run() {
-                                getCallback().onProductUpdate(mProduct.getProduct(), true);
-                            }
-                        });
+                    if (mProduct.isValid() && mProduct.ready) {
+                        getEventBus().post(new OnProductUpdateEvent(mProduct.getProduct(), true));
                     }
                     return mProduct.isValid();
                 } catch (JSONException e) {
