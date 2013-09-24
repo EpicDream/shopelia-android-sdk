@@ -11,49 +11,91 @@ import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
+import com.shopelia.android.remote.api.AddressesAPI.OnAddressEvent;
+import com.shopelia.android.remote.api.AddressesAPI.OnEditAddressEvent;
+import com.shopelia.android.remote.api.AddressesAPI.OnRequestDone;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
 
 public class UserAPI extends ApiController {
 
-    public UserAPI(Context context, Callback callback) {
-        super(context, callback);
+    public class OnAccountCreationSucceedEvent extends OnAddResourceEvent<User> {
+
+        protected OnAccountCreationSucceedEvent(User resource) {
+            super(resource);
+        }
+
+    }
+
+    public class OnSignInEvent extends OnResourceEvent<User> {
+
+        protected OnSignInEvent(User resource) {
+            super(resource);
+        }
+
+    }
+
+    public class OnSignOutEvent extends Event {
+
+    }
+
+    public class OnAccountDestroyedEvent {
+        public final long id;
+
+        protected OnAccountDestroyedEvent(long id) {
+            this.id = id;
+        }
+    }
+
+    public class OnUserUpdateDoneEvent extends Event {
+
+    }
+
+    public class OnAuthTokenRevokedEvent extends Event {
+
+    }
+
+    private static Class<?>[] sEventTypes = new Class<?>[] {
+            OnRequestDone.class, OnAddressEvent.class, OnEditAddressEvent.class, OnApiErrorEvent.class
+    };
+
+    public UserAPI(Context context) {
+        super(context);
     }
 
     public void createAccount(User user, Address address, PaymentCard card) {
 
-        setCurrentStep(STEP_ACCOUNT_CREATION);
         JSONObject params = new JSONObject();
 
         try {
             params.put(Order.Api.USER, User.createObjectForAccountCreation(user, address, card));
         } catch (JSONException e) {
-            fireError(STEP_ACCOUNT_CREATION, null, null, e);
+            fireError(null, null, e);
             return;
         }
         ShopeliaRestClient.V1(getContext()).post(Command.V1.Users.$, params, new JsonAsyncCallback() {
 
             @Override
             public void onComplete(HttpResponse response, JSONObject object) {
-                if (hasCallback() && object.has(User.Api.USER) && object.has(User.Api.AUTH_TOKEN)) {
+                if (object.has(User.Api.USER) && object.has(User.Api.AUTH_TOKEN)) {
                     User user = User.inflate(object.optJSONObject(User.Api.USER));
                     UserManager.get(getContext()).login(user, object.optString(User.Api.AUTH_TOKEN));
                     UserManager.get(getContext()).saveUser();
                     if (user.addresses.size() > 0) {
-                        getCallback().onAccountCreationSucceed(user, user.getDefaultAddress());
+                        getEventBus().post(new OnAccountCreationSucceedEvent(user));
                     } else {
-                        fireError(STEP_ACCOUNT_CREATION, response, null, new IllegalStateException("No address registered"));
+                        fireError(response, null, new IllegalStateException("No address registered"));
                     }
                 } else {
-                    fireError(STEP_ACCOUNT_CREATION, response, object, null);
+                    fireError(response, object, null);
                 }
             }
 
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_ACCOUNT_CREATION, null, null, e);
+                fireError(null, null, e);
             }
 
         });
@@ -69,15 +111,13 @@ public class UserAPI extends ApiController {
 
             @Override
             public void onComplete(HttpResponse response) {
-                if (hasCallback()) {
-                    getCallback().onUserDestroyed(id);
-                }
+                getEventBus().post(new OnAccountDestroyedEvent(id));
             }
 
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_RETRIEVE_USER, null, null, e);
+                fireError(null, null, e);
             }
         });
     }
@@ -89,24 +129,20 @@ public class UserAPI extends ApiController {
                     @Override
                     public void onError(Exception e) {
                         super.onError(e);
-                        fireError(STEP_RETRIEVE_USER, null, null, e);
-                        if (hasCallback()) {
-                            getCallback().onUserUpdateDone();
-                        }
+                        fireError(null, null, e);
+                        getEventBus().post(new OnUserUpdateDoneEvent());
                     }
 
                     @Override
                     public void onComplete(HttpResponse httpResponse) {
-                        if (httpResponse.getStatus() == 401 && hasCallback()) {
-                            getCallback().onAuthTokenRevoked();
+                        if (httpResponse.getStatus() == 401) {
+                            getEventBus().post(new OnAuthTokenRevokedEvent());
                         } else {
                             try {
                                 User user = User.inflate(new JSONObject(httpResponse.getBodyAsString()).getJSONObject(User.Api.USER));
                                 UserManager.get(getContext()).update(user);
-                                if (hasCallback()) {
-                                    getCallback().onUserRetrieved(user);
-                                    getCallback().onUserUpdateDone();
-                                }
+                                getEventBus().post(new OnUserUpdateDoneEvent());
+                                getEventBus().post(new OnUserUpdateDoneEvent());
                             } catch (JSONException e) {
                                 onError(e);
                             }
@@ -117,13 +153,12 @@ public class UserAPI extends ApiController {
     }
 
     public void signIn(User user) {
-        setCurrentStep(STEP_SIGN_IN);
         JSONObject params = new JSONObject();
         try {
             params.put(User.Api.EMAIL, user.email);
             params.put(User.Api.PASSWORD, user.password);
         } catch (JSONException e) {
-            fireError(STEP_SIGN_IN, null, null, e);
+            fireError(null, null, e);
             return;
         }
 
@@ -135,23 +170,23 @@ public class UserAPI extends ApiController {
                 try {
                     object = new JSONObject(httpResponse.getBodyAsString());
                 } catch (JSONException e) {
-                    fireError(STEP_SIGN_IN, httpResponse, null, e);
+                    fireError(httpResponse, null, e);
                     return;
                 }
                 if (httpResponse.getStatus() == 200) {
                     User user = User.inflate(object.optJSONObject(User.Api.USER));
                     UserManager.get(getContext()).login(user, object.optString(User.Api.AUTH_TOKEN));
                     UserManager.get(getContext()).saveUser();
-                    getCallback().onSignIn(user);
+                    getEventBus().post(new OnSignInEvent(user));
                 } else {
-                    fireError(STEP_SIGN_IN, httpResponse, ErrorInflater.inflate(httpResponse.getBodyAsString()), null);
+                    fireError(httpResponse, ErrorInflater.inflate(httpResponse.getBodyAsString()), null);
                 }
             }
 
             @Override
             public void onError(Exception e) {
                 super.onError(e);
-                fireError(STEP_SIGN_IN, null, null, e);
+                fireError(null, null, e);
             }
 
         });
@@ -165,9 +200,7 @@ public class UserAPI extends ApiController {
 
             @Override
             public void onComplete(HttpResponse httpResponse) {
-                if (hasCallback()) {
-                    getCallback().onSignOut();
-                }
+                getEventBus().post(new OnSignOutEvent());
             }
         });
 
