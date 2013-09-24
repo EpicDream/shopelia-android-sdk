@@ -11,9 +11,6 @@ import com.shopelia.android.model.Address;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.AddressesAPI.OnAddressEvent;
-import com.shopelia.android.remote.api.AddressesAPI.OnEditAddressEvent;
-import com.shopelia.android.remote.api.AddressesAPI.OnRequestDone;
 import com.turbomanage.httpclient.AsyncCallback;
 import com.turbomanage.httpclient.HttpResponse;
 import com.turbomanage.httpclient.ParameterMap;
@@ -56,8 +53,9 @@ public class UserAPI extends ApiController {
 
     }
 
-    private static Class<?>[] sEventTypes = new Class<?>[] {
-            OnRequestDone.class, OnAddressEvent.class, OnEditAddressEvent.class, OnApiErrorEvent.class
+    private static final Class<?>[] sEventTypes = new Class<?>[] {
+            OnAccountCreationSucceedEvent.class, OnAccountDestroyedEvent.class, OnSignInEvent.class, OnSignOutEvent.class,
+            OnUserUpdateDoneEvent.class, OnAuthTokenRevokedEvent.class
     };
 
     public UserAPI(Context context) {
@@ -205,4 +203,10 @@ public class UserAPI extends ApiController {
         });
 
     }
+
+    @Override
+    public Class<?>[] getEventTypes() {
+        return sEventTypes;
+    }
+
 }
