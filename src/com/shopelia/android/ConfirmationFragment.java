@@ -1,7 +1,5 @@
 package com.shopelia.android;
 
-import org.json.JSONObject;
-
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -23,12 +21,17 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.manager.UserManager;
-import com.shopelia.android.model.Product;
 import com.shopelia.android.model.User;
-import com.shopelia.android.remote.api.ApiController.CallbackAdapter;
+import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
 import com.shopelia.android.remote.api.OrderAPI;
+import com.shopelia.android.remote.api.OrderAPI.OnInvalidOrderRequestEvent;
+import com.shopelia.android.remote.api.OrderAPI.OnOrderConfirmationEvent;
 import com.shopelia.android.remote.api.ProductAPI;
+import com.shopelia.android.remote.api.ProductAPI.OnProductNotAvailable;
+import com.shopelia.android.remote.api.ProductAPI.OnProductUpdateEvent;
 import com.shopelia.android.remote.api.UserAPI;
+import com.shopelia.android.remote.api.UserAPI.OnAuthTokenRevokedEvent;
+import com.shopelia.android.remote.api.UserAPI.OnUserUpdateDoneEvent;
 import com.shopelia.android.utils.DialogHelper;
 import com.shopelia.android.view.animation.ResizeAnimation;
 import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedListener;
@@ -37,7 +40,6 @@ import com.shopelia.android.widget.ProductSheetWidget;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.TextButtonItem;
-import com.turbomanage.httpclient.HttpResponse;
 
 public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
@@ -45,10 +47,24 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     private static final int REQUEST_PAYMENT_CARD = 0x201;
 
     private boolean mIsOrdering = false;
+    private ProductAPI mProductAPI;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mProductAPI = new ProductAPI(getActivity());
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mProductAPI.register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        mProductAPI.unregister(this);
     }
 
     @Override
@@ -72,32 +88,26 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         if (UserManager.get(getActivity()).isAutoSignedIn()) {
             updateUser(false);
         }
-        new ProductAPI(getActivity(), new CallbackAdapter() {
+        mProductAPI.getProduct(getOrder().product);
+    }
 
-            @Override
-            public void onProductUpdate(Product product, boolean fromNetwork) {
-                super.onProductUpdate(product, fromNetwork);
-                if (getActivity() != null) {
-                    getOrder().product = product;
-                    findViewById(R.id.product_sheet, ProductSheetWidget.class).setProductInfo(getOrder().product, fromNetwork);
-                    setupUi();
-                }
-            }
+    public void onEventMainThread(OnProductUpdateEvent event) {
+        if (getActivity() != null) {
+            getOrder().product = event.resource;
+            findViewById(R.id.product_sheet, ProductSheetWidget.class).setProductInfo(getOrder().product, event.isFromNetwork);
+            setupUi();
+        }
+    }
 
-            @Override
-            public void onProductNotAvailable(Product product) {
-                if (getActivity() != null) {
-                    ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(product);
-                    fragment.show(getChildFragmentManager(), null);
-                }
-            }
+    public void onEventMainThread(OnProductNotAvailable event) {
+        if (getActivity() != null) {
+            ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(event.resource);
+            fragment.show(getChildFragmentManager(), null);
+        }
+    }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                super.onError(step, httpResponse, response, e);
-            }
+    public void onEventMainThread(OnApiErrorEvent event) {
 
-        }).getProduct(getOrder().product);
     }
 
     @Override
@@ -121,11 +131,12 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     protected void updateUser(final boolean block) {
         startWaiting(getString(R.string.shopelia_confirmation_update_user), block, false);
-        new UserAPI(getActivity(), new CallbackAdapter() {
+        final UserAPI api = new UserAPI(getActivity());
+        api.register(new Object() {
 
-            @Override
-            public void onUserUpdateDone() {
-                super.onUserUpdateDone();
+            @SuppressWarnings("unused")
+            public void onEventMainThread(OnUserUpdateDoneEvent event) {
+                api.unregister(this);
                 User user = UserManager.get(getActivity()).getUser();
                 getBaseActivity().getOrder().updateUser(user);
                 setupUi();
@@ -134,20 +145,21 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                 }
             }
 
-            @Override
-            public void onError(int step, HttpResponse httpResponse, JSONObject response, Exception e) {
-                super.onError(step, httpResponse, response, e);
+            @SuppressWarnings("unused")
+            public void onEventMainThread(OnApiErrorEvent event) {
+                api.unregister(this);
                 stopWaiting();
             }
 
-            @Override
-            public void onAuthTokenRevoked() {
-                super.onAuthTokenRevoked();
+            @SuppressWarnings("unused")
+            public void onEventMainThread(OnAuthTokenRevokedEvent event) {
+                api.unregister(this);
                 stopWaiting();
                 new AuthenticateFragment().show(getFragmentManager(), AuthenticateFragment.DIALOG_NAME);
             }
 
-        }).updateUser();
+        });
+        api.updateUser();
     }
 
     @Override
@@ -210,10 +222,12 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
         getBaseActivity().startDelayedWaiting(getString(R.string.shopelia_confirmation_waiting, getOrder().product.merchant.name), true,
                 false, 500);
-        new OrderAPI(getActivity(), new CallbackAdapter() {
+        final OrderAPI api = new OrderAPI(getActivity());
+        api.register(new Object() {
 
-            @Override
-            public void onOrderConfirmation(boolean succeed) {
+            @SuppressWarnings("unused")
+            public void onEventMainThread(OnOrderConfirmationEvent event) {
+                api.unregister(this);
                 stopWaiting();
                 mIsOrdering = false;
                 UserManager.get(getActivity()).notifyCheckoutSucceed();
@@ -222,27 +236,30 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                 getActivity().startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
             }
 
-            @Override
-            public void onInvalidOrderRequest(String message) {
-                super.onInvalidOrderRequest(message);
+            @SuppressWarnings("unused")
+            public void onEventMainThread(OnInvalidOrderRequestEvent event) {
+                api.unregister(this);
                 stopWaiting();
                 mIsOrdering = false;
                 if (!reentrant) {
                     updateUser(true);
                 } else {
-                    Toast.makeText(getActivity(), TextUtils.isEmpty(message) ? getString(R.string.shopelia_confirmation_error) : message,
+                    Toast.makeText(getActivity(),
+                            TextUtils.isEmpty(event.message) ? getString(R.string.shopelia_confirmation_error) : event.message,
                             Toast.LENGTH_SHORT).show();
                 }
             }
 
-            @Override
-            public void onError(int step, com.turbomanage.httpclient.HttpResponse httpResponse, org.json.JSONObject response, Exception e) {
+            @SuppressWarnings("unused")
+            public void onEventMainThread(OnApiErrorEvent event) {
+                api.unregister(this);
                 stopWaiting();
                 mIsOrdering = false;
                 Toast.makeText(getActivity(), R.string.shopelia_confirmation_error, Toast.LENGTH_LONG).show();
-            };
+            }
 
-        }).order(getOrder(), findViewById(R.id.auto_cancel, CheckBox.class).isChecked());
+        });
+        api.order(getOrder(), findViewById(R.id.auto_cancel, CheckBox.class).isChecked());
     }
 
     // ////////////////////////////////////////////////////////////////
