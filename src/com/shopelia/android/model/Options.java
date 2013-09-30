@@ -22,7 +22,9 @@ public class Options extends ArrayList<Option> {
 
     @Override
     public boolean add(Option object) {
-
+        if (contains(object)) {
+            return false;
+        }
         return super.add(object);
     }
 
