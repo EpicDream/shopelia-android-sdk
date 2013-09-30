@@ -150,13 +150,14 @@ public class ProductAPI extends ApiController {
     };
 
     private ExtendedProduct findProductByUrl(String url) {
-        final int count = mProducts.size();
+        int count = mProducts.size();
         for (int index = 0; index < count; index++) {
             ExtendedProduct product = mProducts.get(index);
             if (product.url.equals(url)) {
                 if (product.download_at + KEEP_ALIVE < System.currentTimeMillis() || !product.isValid()) {
                     mProducts.remove(index);
-                    index--;
+                    index -= 1;
+                    count -= 1;
                     continue;
                 }
                 saveProducts(mProducts);

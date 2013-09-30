@@ -17,12 +17,13 @@ public class Order implements BaseModel<Order> {
         String PRODUCT = "product";
         String PRODUCTS = "products";
         String EXPECTED_PRICE_TOTAL = "expected_price_total";
+        String EXPECTED_CASHFRONT_VALUE = "expected_cashfront_value";
         String ORDER = "order";
     }
 
     public String uuid = NO_UUID;
 
-    public Product product = new Product();
+    public Product product;
 
     // Shipping
     public Address address;

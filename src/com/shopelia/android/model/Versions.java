@@ -7,8 +7,11 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Parcel;
+import android.util.SparseArray;
 
 public class Versions implements BaseModel<Versions> {
+
+    private SparseArray<Product> mVersions;
 
     public int getOptionsCount() {
         return 0;
@@ -54,6 +57,10 @@ public class Versions implements BaseModel<Versions> {
     @Override
     public boolean isValid() {
         return true;
+    }
+
+    public long getFirst() {
+        return 0;
     }
 
 }

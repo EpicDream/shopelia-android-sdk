@@ -6,13 +6,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.net.Uri;
-import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.text.TextUtils;
 
-import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.ParcelUtils;
 import com.shopelia.android.utils.Tax;
@@ -20,81 +16,47 @@ import com.shopelia.android.utils.Tax;
 public class Product implements BaseModel<Product> {
 
     public interface Api {
-        String NAME = "name";
         String URL = "url";
-        String IMAGE_URL = "image_url";
-        String EXPECTED_PRODUCT_PRICE = "price";
-        String EXPECTED_SHIPPING_PRICE = "price_shipping";
-        String SHIPPING_EXTRAS = "shipping_info";
         String MERCHANT = "merchant";
         String VERSIONS = "versions";
-        String CASHFRONT_VALUE = "cashfront_value";
-        String PRICE_STRIKEOUT = "price_strikeout";
-        String AVAILABILITY_INFO = "availability_info";
     }
 
     public static final String IDENTIFIER = Product.class.getName();
     public static final float NO_PRICE = -1.f;
 
     public String url;
-    public String name;
-    public String description;
-
-    public Uri image;
 
     public Merchant merchant;
     public Tax tax;
     public Currency currency;
 
-    // Shipping info
-    public float productPrice;
-    public float deliveryPrice;
-    public float cashfrontValue;
-    public float priceStrikeOut;
+    public final Versions versions;
 
-    public String shippingExtra;
-    public String availabilityInfo;
-
-    public ArrayList<Product> versions = new ArrayList<Product>();
-
-    public Product() {
-
-    }
-
-    public Product(Product cpy) {
-        merge(cpy);
-        ensureDefaultValues();
+    public Product(String url) {
+        this.url = url;
+        versions = new Versions();
     }
 
     protected Product(Parcel source) {
         url = source.readString();
-        name = source.readString();
-        productPrice = source.readFloat();
-        deliveryPrice = source.readFloat();
-        cashfrontValue = source.readFloat();
-        priceStrikeOut = source.readFloat();
-        shippingExtra = source.readString();
-        availabilityInfo = source.readString();
-        image = ParcelUtils.readParcelable(source, Uri.class.getClassLoader());
-        description = source.readString();
+        Versions v = ParcelUtils.readParcelable(source, Versions.class.getClassLoader());
+        versions = v != null ? v : new Versions();
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
     }
 
     public float getTotalPrice() {
-        return ((int) (deliveryPrice > 0 ? deliveryPrice * 100 : 0) + (int) (productPrice > 0 ? productPrice * 100 : 0) - (int) (cashfrontValue > 0 ? cashfrontValue * 100
-                : 0)) / 100.f;
+        return getCurrentVersion().getTotalPrice();
+    }
+
+    public float getExpectedTotalPrice() {
+        return getCurrentVersion().getExpectedTotalPrice();
     }
 
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
-        json.put(Api.NAME, name);
-        json.put(Api.URL, url);
-        if (image != null) {
-            json.put(Api.IMAGE_URL, image.toString());
-        }
         return json;
     }
 
@@ -106,15 +68,7 @@ public class Product implements BaseModel<Product> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);
-        dest.writeString(name);
-        dest.writeFloat(productPrice);
-        dest.writeFloat(deliveryPrice);
-        dest.writeFloat(cashfrontValue);
-        dest.writeFloat(priceStrikeOut);
-        dest.writeString(shippingExtra);
-        dest.writeString(availabilityInfo);
-        ParcelUtils.writeParcelable(dest, image, flags);
-        dest.writeString(description);
+        ParcelUtils.writeParcelable(dest, versions, flags);
         ParcelUtils.writeParcelable(dest, merchant, flags);
         ParcelUtils.writeParcelable(dest, tax, flags);
         ParcelUtils.writeParcelable(dest, currency, flags);
@@ -133,47 +87,17 @@ public class Product implements BaseModel<Product> {
         }
     };
 
-    public Product inflateSelf(JSONObject object) throws JSONException {
-        name = object.optString(Api.NAME);
+    public Product(JSONObject object) throws JSONException {
         url = object.optString(Api.URL);
-        image = Uri.parse(object.optString(Api.IMAGE_URL));
         if (object.has(Api.MERCHANT)) {
             merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
         }
-        deliveryPrice = (float) object.optDouble(Api.EXPECTED_SHIPPING_PRICE, NO_PRICE);
-        productPrice = (float) object.optDouble(Api.EXPECTED_PRODUCT_PRICE, NO_PRICE);
-        cashfrontValue = (float) object.optDouble(Api.CASHFRONT_VALUE, NO_PRICE);
-        priceStrikeOut = (float) object.optDouble(Api.PRICE_STRIKEOUT, NO_PRICE);
-        shippingExtra = object.optString(Api.SHIPPING_EXTRAS);
-        availabilityInfo = object.optString(Api.AVAILABILITY_INFO);
-        if (object.has(Api.VERSIONS)) {
-            versions = inflate(this, object.getJSONArray(Api.VERSIONS));
-            if (versions.size() > 0) {
-                merge(versions.get(0));
-            }
-        }
+        versions = Versions.inflate(object.getJSONArray(Api.VERSIONS));
         ensureDefaultValues();
-        return this;
     }
 
     public static Product inflate(JSONObject object) throws JSONException {
-        return new Product().inflateSelf(object);
-    }
-
-    public static Product inflate(Bundle bundle) {
-        Product product = new Product();
-        product.name = bundle.getString(Shopelia.EXTRA_PRODUCT_TITLE);
-        product.image = bundle.getParcelable(Shopelia.EXTRA_PRODUCT_IMAGE);
-        product.url = bundle.getString(Shopelia.EXTRA_PRODUCT_URL);
-        product.description = bundle.getString(Shopelia.EXTRA_PRODUCT_DESCRIPTION);
-        product.currency = bundle.getParcelable(Shopelia.EXTRA_CURRENCY);
-        product.deliveryPrice = bundle.getFloat(Shopelia.EXTRA_SHIPPING_PRICE, NO_PRICE);
-        product.merchant = bundle.getParcelable(Shopelia.EXTRA_MERCHANT);
-        product.tax = bundle.getParcelable(Shopelia.EXTRA_TAX);
-        product.shippingExtra = bundle.getString(Shopelia.EXTRA_SHIPPING_INFO);
-        product.productPrice = bundle.getFloat(Shopelia.EXTRA_PRICE, NO_PRICE);
-        product.ensureDefaultValues();
-        return product;
+        return new Product(object);
     }
 
     public static ArrayList<Product> inflate(JSONArray a) throws JSONException {
@@ -181,15 +105,6 @@ public class Product implements BaseModel<Product> {
         ArrayList<Product> products = new ArrayList<Product>(size);
         for (int index = 0; index < size; index++) {
             products.add(Product.inflate(a.getJSONObject(index)));
-        }
-        return products;
-    }
-
-    public static ArrayList<Product> inflate(Product base, JSONArray array) throws JSONException {
-        final int size = array.length();
-        ArrayList<Product> products = new ArrayList<Product>(size);
-        for (int index = 0; index < size; index++) {
-            products.add(new Product(base).inflateSelf(array.getJSONObject(index)));
         }
         return products;
     }
@@ -206,22 +121,13 @@ public class Product implements BaseModel<Product> {
     }
 
     @Override
+    @Deprecated
     public void merge(Product cpy) {
-        if (cpy != null) {
-            url = TextUtils.isEmpty(cpy.url) ? url : cpy.url;
-            name = cpy.name;
-            description = cpy.description;
-            image = cpy.image;
-            merchant = cpy.merchant;
-            tax = cpy.tax;
-            currency = cpy.currency;
-            productPrice = cpy.productPrice;
-            deliveryPrice = cpy.deliveryPrice;
-            shippingExtra = cpy.shippingExtra;
-            priceStrikeOut = cpy.priceStrikeOut;
-            cashfrontValue = cpy.cashfrontValue;
-            availabilityInfo = cpy.availabilityInfo;
-        }
+
+    }
+
+    public Version getCurrentVersion() {
+        return null;
     }
 
     @Override
@@ -231,7 +137,7 @@ public class Product implements BaseModel<Product> {
 
     @Override
     public boolean isValid() {
-        return !TextUtils.isEmpty(name) && deliveryPrice != NO_PRICE && productPrice != NO_PRICE && merchant != null;
+        return getCurrentVersion().isValid() && merchant != null;
     }
 
 }

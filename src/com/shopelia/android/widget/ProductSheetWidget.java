@@ -93,11 +93,11 @@ public class ProductSheetWidget extends FrameLayout {
             mContent.setVisibility(View.INVISIBLE);
         } else {
 
-            mProductImage.setImageURI(mProduct.image);
-            mProductName.setText(mProduct.name);
+            mProductImage.setUrl(mProduct.getCurrentVersion().imageUrl);
+            mProductName.setText(mProduct.getCurrentVersion().name);
             mProductPrice.setText(mProduct.currency.format(mProduct.getTotalPrice()));
-            mProductShippingInfo.setText(mProduct.shippingExtra);
-            int visibility = TextUtils.isEmpty(mProduct.shippingExtra) ? View.GONE : View.VISIBLE;
+            // mProductShippingInfo.setText(mProduct.shippingExtra);
+            int visibility = TextUtils.isEmpty(mProduct.getCurrentVersion().shippingExtra) ? View.GONE : View.VISIBLE;
             mProductShippingInfo.setVisibility(visibility);
             mVendorLogo.setUrl(mProduct.merchant.logo);
             if (animate) {

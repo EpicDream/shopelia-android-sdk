@@ -295,24 +295,25 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
     private void setupPriceUi() {
         if (getOrder().product != null && getOrder().product.isValid()) {
-            findViewById(R.id.price_product_name, TextView.class).setText(getOrder().product.name);
+            findViewById(R.id.price_product_name, TextView.class).setText(getOrder().product.getCurrentVersion().name);
             findViewById(R.id.price_value_no_shipping, TextView.class).setText(
-                    getOrder().product.currency.format(getOrder().product.productPrice));
-            if ((int) (getOrder().product.deliveryPrice * 100) == 0) {
+                    getOrder().product.currency.format(getOrder().product.getCurrentVersion().productPrice));
+            if (getOrder().product.getCurrentVersion().isShippingFree()) {
                 FontableTextView fees = findViewById(R.id.price_value_shipping);
                 fees.setText(R.string.shopelia_confirmation_free);
             } else {
                 findViewById(R.id.price_value_shipping, TextView.class).setText(
-                        getOrder().product.currency.format(getOrder().product.deliveryPrice));
+                        getOrder().product.currency.format(getOrder().product.getCurrentVersion().shippingPrice));
             }
             findViewById(R.id.price_value_total, TextView.class).setText(
                     getOrder().product.currency.format(getOrder().product.getTotalPrice()));
-            findViewById(R.id.price_shipping_info, TextView.class).setText(getOrder().product.shippingExtra);
+            findViewById(R.id.price_shipping_info, TextView.class).setText(getOrder().product.getCurrentVersion().shippingExtra);
 
             findViewById(R.id.price_cashfront, TextView.class).setText(
-                    getOrder().product.currency.format(getOrder().product.cashfrontValue));
+                    getOrder().product.currency.format(getOrder().product.getCurrentVersion().cashfrontValue));
 
-            if (getOrder().product.cashfrontValue == Product.NO_PRICE || getOrder().product.cashfrontValue == 0) {
+            if (getOrder().product.getCurrentVersion().cashfrontValue == Product.NO_PRICE
+                    || getOrder().product.getCurrentVersion().cashfrontValue == 0) {
                 findViewById(R.id.price_cashfront_layout).setVisibility(View.GONE);
             }
 

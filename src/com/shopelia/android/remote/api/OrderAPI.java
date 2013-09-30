@@ -48,7 +48,7 @@ public class OrderAPI extends ApiController {
             products.put(order.product.toJson());
             orderObject.put(Order.Api.PRODUCTS, products);
             orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL,
-                    round(order.product.deliveryPrice + order.product.productPrice, 2, BigDecimal.ROUND_HALF_UP));
+                    round(order.product.getCurrentVersion().getExpectedTotalPrice(), 2, BigDecimal.ROUND_HALF_UP));
             orderObject.put(PaymentCard.Api.PAYMENT_CARD_ID, order.card.id);
             orderObject.put(Address.Api.ADDRESS_ID, order.address.id);
             if (test) {

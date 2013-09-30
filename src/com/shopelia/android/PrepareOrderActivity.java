@@ -36,7 +36,6 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
-import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
 import com.shopelia.android.model.Product;
@@ -49,8 +48,6 @@ import com.shopelia.android.remote.api.ProductAPI.OnProductUpdateEvent;
 import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.remote.api.UserAPI.OnAccountCreationSucceedEvent;
 import com.shopelia.android.remote.api.UserAPI.OnSignInEvent;
-import com.shopelia.android.utils.Currency;
-import com.shopelia.android.utils.Tax;
 import com.shopelia.android.view.animation.ResizeAnimation;
 import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedListener;
 import com.shopelia.android.widget.ExtendedFrameLayout;
@@ -72,46 +69,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
      * purchase
      */
     public static final String EXTRA_PRODUCT_IMAGE = Config.EXTRA_PREFIX + "PRODUCT_IMAGE";
-
-    /**
-     * Title of the product to purchase
-     */
-    public static final String EXTRA_PRODUCT_TITLE = Config.EXTRA_PREFIX + "PRODUCT_TITLE";
-
-    /**
-     * Description of the product to purchase
-     */
-    public static final String EXTRA_PRODUCT_DESCRIPTION = Config.EXTRA_PREFIX + "PRODUCT_DESCRIPTION";
-
-    /**
-     * The {@link Merchant} of the product to purchase
-     */
-    public static final String EXTRA_MERCHANT = Config.EXTRA_PREFIX + "MERCHANT";
-
-    /**
-     * The price of the product to purchase
-     */
-    public static final String EXTRA_PRICE = Config.EXTRA_PREFIX + "PRICE";
-
-    /**
-     * The shipping fees of the product to purchase
-     */
-    public static final String EXTRA_SHIPPING_PRICE = Config.EXTRA_PREFIX + "SHIPPING_FEES";
-
-    /**
-     * The shipping info of the product to purchase
-     */
-    public static final String EXTRA_SHIPPING_INFO = Config.EXTRA_PREFIX + "SHIPPING_INFO";
-
-    /**
-     * A {@link Tax} object
-     */
-    public static final String EXTRA_TAX = Config.EXTRA_PREFIX + "TAX";
-
-    /**
-     * The {@link Currency} of the price
-     */
-    public static final String EXTRA_CURRENCY = Config.EXTRA_PREFIX + "CURRENCY";
 
     /**
      * An email that will be pre-filled for the user
@@ -184,7 +141,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
             findViewById(R.id.header).setVisibility(View.GONE);
             ((LinearLayout) findViewById(R.id.main_form)).setGravity(Gravity.TOP);
         } else {
-            Product product = Product.inflate(getIntent().getExtras());
+            Product product = new Product(getIntent().getExtras().getString(EXTRA_PRODUCT_URL));
             mProductAPI.getProduct(product);
         }
     }
@@ -321,16 +278,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     }
 
     private void prepareOrder(Order order) {
-        order.product = mProduct != null ? mProduct : Product.inflate(getIntent().getExtras());
-
-        Bundle extras = getIntent().getExtras();
-        if (extras.containsKey(PrepareOrderActivity.EXTRA_CURRENCY)) {
-            order.product.currency = extras.getParcelable(PrepareOrderActivity.EXTRA_CURRENCY);
-        }
-
-        if (extras.containsKey(PrepareOrderActivity.EXTRA_TAX)) {
-            order.product.tax = extras.getParcelable(PrepareOrderActivity.EXTRA_TAX);
-        }
+        order.product = mProduct;
 
         order.user = UserManager.get(this).getUser();
     }
