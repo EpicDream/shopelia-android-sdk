@@ -7,11 +7,16 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Parcel;
-import android.util.SparseArray;
+import android.support.v4.util.LongSparseArray;
 
 public class Versions implements BaseModel<Versions> {
 
-    private SparseArray<Product> mVersions;
+    private LongSparseArray<Version> mVersions = new LongSparseArray<Version>();
+    private Options[] mOptions;
+
+    public Versions() {
+
+    }
 
     public int getOptionsCount() {
         return 0;
@@ -26,7 +31,31 @@ public class Versions implements BaseModel<Versions> {
     }
 
     public static Versions inflate(JSONArray source) throws JSONException {
-        return null;
+        final int size = source.length();
+        Versions versions = new Versions();
+        for (int index = 0; index < size; index++) {
+            JSONObject object = source.getJSONObject(index);
+            Version version = Version.inflate(object);
+            Option[] options = Option.inflateFromVersion(object);
+            long key = Option.hashCode(options);
+            version.setOptions(key);
+            versions.mVersions.append(key, version);
+            versions.appendOptions(options);
+        }
+        return versions;
+    }
+
+    private void appendOptions(Option... options) {
+        if (mOptions == null) {
+            mOptions = new Options[options.length];
+            for (int index = 0; index < mOptions.length; index++) {
+                mOptions[index] = new Options();
+            }
+        }
+        final int size = options.length;
+        for (int index = 0; index < size; index++) {
+            mOptions[index].add(options[index]);
+        }
     }
 
     @Override

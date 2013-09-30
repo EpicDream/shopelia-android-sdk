@@ -111,6 +111,10 @@ public class Version implements BaseModel<Version> {
         ParcelUtils.writeNullable(dest, optionsHashcode);
     }
 
+    public static Version inflate(JSONObject object) throws JSONException {
+        return new Version(object);
+    }
+
     @Override
     public JSONObject toJson() throws JSONException {
         return null;

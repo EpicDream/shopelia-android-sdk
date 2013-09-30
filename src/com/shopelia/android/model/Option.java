@@ -42,4 +42,13 @@ public class Option implements BaseModel<Option> {
 
     }
 
+    public static Option[] inflateFromVersion(JSONObject object) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public static long hashCode(Option... options) {
+        return 0;
+    }
+
 }
