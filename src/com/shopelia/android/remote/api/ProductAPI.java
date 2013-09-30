@@ -98,6 +98,17 @@ public class ProductAPI extends ApiController {
         return mProduct.getProduct();
     }
 
+    public void addProductToCache(Product base, JSONObject object) {
+        ExtendedProduct p = new ExtendedProduct(base);
+        p.setJson(object);
+        p.download_at = System.currentTimeMillis();
+        mProducts.add(p);
+    }
+
+    public void save() {
+        saveProducts(mProducts);
+    }
+
     @Override
     public Class<?>[] getEventTypes() {
         return sEventTypes;
@@ -143,9 +154,9 @@ public class ProductAPI extends ApiController {
             if (product.url.equals(url)) {
                 if (product.download_at + KEEP_ALIVE < System.currentTimeMillis() || !product.isValid()) {
                     mProducts.remove(product);
-                    saveProducts(mProducts);
-                    return null;
+                    continue;
                 }
+                saveProducts(mProducts);
                 return product;
             }
         }
