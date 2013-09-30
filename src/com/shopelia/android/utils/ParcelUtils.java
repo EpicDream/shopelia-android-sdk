@@ -68,4 +68,24 @@ public final class ParcelUtils {
         return list;
     }
 
+    public static void writeNullable(Parcel destination, Object object) {
+        destination.writeByte((byte) (object != null ? 1 : 0));
+        if (object != null) {
+            destination.writeValue(destination);
+        }
+    }
+
+    /**
+     * @param source
+     * @param loader may be null for default class loader
+     * @return
+     */
+    public static <T> T readNullable(Parcel source, ClassLoader loader, T fallback) {
+        boolean exists = source.readByte() == 1;
+        if (exists) {
+            return (T) source.readValue(loader);
+        } else {
+            return fallback;
+        }
+    }
 }
