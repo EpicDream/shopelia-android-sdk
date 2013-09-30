@@ -13,6 +13,8 @@ public class Versions implements BaseModel<Versions> {
 
     private LongSparseArray<Version> mVersions = new LongSparseArray<Version>();
     private Options[] mOptions;
+    private long mFirstKey = 0;
+    private boolean mIsValid = false;
 
     public Versions() {
 
@@ -33,14 +35,19 @@ public class Versions implements BaseModel<Versions> {
     public static Versions inflate(JSONArray source) throws JSONException {
         final int size = source.length();
         Versions versions = new Versions();
+        versions.mIsValid = true;
         for (int index = 0; index < size; index++) {
             JSONObject object = source.getJSONObject(index);
             Version version = Version.inflate(object);
             Option[] options = Option.inflateFromVersion(object);
             long key = Option.hashCode(options);
+            if (index == 0) {
+                versions.mFirstKey = key;
+            }
             version.setOptions(key);
             versions.mVersions.append(key, version);
             versions.appendOptions(options);
+            versions.mIsValid = versions.mIsValid && version.isValid();
         }
         return versions;
     }
@@ -85,11 +92,11 @@ public class Versions implements BaseModel<Versions> {
 
     @Override
     public boolean isValid() {
-        return true;
+        return mIsValid;
     }
 
-    public long getFirst() {
-        return 0;
+    public long getFirstKey() {
+        return mFirstKey;
     }
 
 }

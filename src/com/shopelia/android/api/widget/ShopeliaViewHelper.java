@@ -1,7 +1,6 @@
 package com.shopelia.android.api.widget;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -108,43 +107,8 @@ public class ShopeliaViewHelper implements ShopeliaView {
     }
 
     @Override
-    public void setProductPrice(float price) {
-        if (mShopelia != null) {
-            mShopelia.setProductPrice(price);
-        }
-    }
-
-    @Override
-    public void setProductDeliveryPrice(float shippingPrice) {
-        if (mShopelia != null) {
-            mShopelia.setProductShippingPrice(shippingPrice);
-        }
-    }
-
-    @Override
-    public void setProductImage(Uri imageUri) {
-        if (mShopelia != null) {
-            mShopelia.setProductImageUri(imageUri);
-        }
-    }
-
-    @Override
-    public void setProductShippingExtras(String shippingExtras) {
-        if (mShopelia != null) {
-            mShopelia.setProductShippingInfo(shippingExtras);
-        }
-    }
-
-    @Override
     public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l) {
         mOnProductAvailabilityChangeListener = l;
-    }
-
-    @Override
-    public void setProductName(String name) {
-        if (mShopelia != null) {
-            mShopelia.setProductName(name);
-        }
     }
 
     @Override

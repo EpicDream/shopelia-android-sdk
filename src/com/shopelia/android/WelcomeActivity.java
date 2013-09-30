@@ -151,11 +151,6 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
     }
 
     @Override
-    public Merchant getMerchant() {
-        return getIntent().getExtras().getParcelable(Shopelia.EXTRA_MERCHANT);
-    }
-
-    @Override
     public void cancel() {
         onBackPressed();
     }
@@ -164,6 +159,11 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
     public void onUserAuthenticate(boolean autoSignIn) {
         UserManager.get(this).setAutoSignIn(autoSignIn);
         startActivityForResult(new Intent(this, PrepareOrderActivity.class), REQUEST_CHECKOUT);
+    }
+
+    @Override
+    public Merchant getMerchant() {
+        return null;
     }
 
 }

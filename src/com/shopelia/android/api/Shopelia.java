@@ -20,8 +20,6 @@ import com.shopelia.android.app.tracking.Tracker;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Merchant;
-import com.shopelia.android.utils.Currency;
-import com.shopelia.android.utils.Tax;
 
 /**
  * This class eases the use of the Shopelia service and should be the only one
@@ -58,46 +56,6 @@ public final class Shopelia implements Parcelable {
      * purchase
      */
     public static final String EXTRA_PRODUCT_IMAGE = PrepareOrderActivity.EXTRA_PRODUCT_IMAGE;
-
-    /**
-     * Title of the product to purchase
-     */
-    public static final String EXTRA_PRODUCT_TITLE = PrepareOrderActivity.EXTRA_PRODUCT_TITLE;
-
-    /**
-     * Description of the product to purchase
-     */
-    public static final String EXTRA_PRODUCT_DESCRIPTION = PrepareOrderActivity.EXTRA_PRODUCT_DESCRIPTION;
-
-    /**
-     * The {@link Merchant} of the product to purchase
-     */
-    public static final String EXTRA_MERCHANT = PrepareOrderActivity.EXTRA_MERCHANT;
-
-    /**
-     * The price of the product to purchase
-     */
-    public static final String EXTRA_PRICE = PrepareOrderActivity.EXTRA_PRICE;
-
-    /**
-     * The shipping fees of the product to purchase
-     */
-    public static final String EXTRA_SHIPPING_PRICE = PrepareOrderActivity.EXTRA_SHIPPING_PRICE;
-
-    /**
-     * The shipping info of the product to purchase
-     */
-    public static final String EXTRA_SHIPPING_INFO = PrepareOrderActivity.EXTRA_SHIPPING_INFO;
-
-    /**
-     * A {@link Tax} object
-     */
-    public static final String EXTRA_TAX = PrepareOrderActivity.EXTRA_TAX;
-
-    /**
-     * The {@link Currency} of the price
-     */
-    public static final String EXTRA_CURRENCY = PrepareOrderActivity.EXTRA_CURRENCY;
 
     /**
      * An email that will be pre-filled for the user
@@ -165,10 +123,6 @@ public final class Shopelia implements Parcelable {
             mTracker.onDisplayShopeliaButton(getProductUrl(), mTrackerName);
             mHasNotifyView = true;
         }
-    }
-
-    void setMerchant(final Merchant merchant) {
-        mData.putExtra(EXTRA_MERCHANT, merchant);
     }
 
     void setStatus(final int status) {
@@ -252,51 +206,6 @@ public final class Shopelia implements Parcelable {
      */
     public Shopelia setProductImageUri(Uri imageUri) {
         mData.putExtra(EXTRA_PRODUCT_IMAGE, imageUri);
-        return this;
-    }
-
-    /**
-     * Sets the product name
-     * 
-     * @param productName
-     * @return
-     */
-    public Shopelia setProductName(String productName) {
-        mData.putExtra(EXTRA_PRODUCT_TITLE, productName);
-        return this;
-    }
-
-    /**
-     * Sets the product price (without shipping price
-     * 
-     * @param price
-     * @return
-     */
-    public Shopelia setProductPrice(float price) {
-        mData.putExtra(EXTRA_PRICE, price);
-        return this;
-    }
-
-    /**
-     * Sets the product delivery price
-     * 
-     * @param price
-     * @return
-     */
-    public Shopelia setProductShippingPrice(float price) {
-        mData.putExtra(EXTRA_SHIPPING_PRICE, price);
-        return this;
-    }
-
-    /**
-     * Sets the extras informations associated with the product (stock, delivery
-     * delay...)
-     * 
-     * @param info
-     * @return
-     */
-    public Shopelia setProductShippingInfo(String info) {
-        mData.putExtra(EXTRA_SHIPPING_INFO, info);
         return this;
     }
 

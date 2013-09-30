@@ -1,7 +1,6 @@
 package com.shopelia.android.api.widget;
 
 import android.content.Context;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -52,26 +51,6 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
     }
 
     @Override
-    public void setProductPrice(float price) {
-        mHelper.setProductPrice(price);
-    }
-
-    @Override
-    public void setProductDeliveryPrice(float shippingPrice) {
-        mHelper.setProductDeliveryPrice(shippingPrice);
-    }
-
-    @Override
-    public void setProductImage(Uri imageUri) {
-        mHelper.setProductImage(imageUri);
-    }
-
-    @Override
-    public void setProductShippingExtras(String shippingExtras) {
-        mHelper.setProductShippingExtras(shippingExtras);
-    }
-
-    @Override
     public void onViewShouldBeInvisible() {
         setVisibility(View.GONE);
     }
@@ -116,11 +95,6 @@ public class ShopeliaFrameLayout extends FrameLayout implements ShopeliaView, Sh
     @Override
     public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l) {
         mHelper.setOnProductAvailabilityChangeListener(l);
-    }
-
-    @Override
-    public void setProductName(String name) {
-        mHelper.setProductName(name);
     }
 
     @Override

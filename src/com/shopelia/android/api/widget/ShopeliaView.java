@@ -1,7 +1,5 @@
 package com.shopelia.android.api.widget;
 
-import android.net.Uri;
-
 import com.shopelia.android.api.Shopelia.OnProductAvailabilityChangeListener;
 
 /**
@@ -18,16 +16,6 @@ public interface ShopeliaView {
     public String getProductUrl();
 
     public boolean canCheckout();
-
-    public void setProductName(String name);
-
-    public void setProductPrice(float price);
-
-    public void setProductDeliveryPrice(float shippingPrice);
-
-    public void setProductImage(Uri imageUri);
-
-    public void setProductShippingExtras(String shippingExtras);
 
     public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l);
 

@@ -23,7 +23,6 @@ class ShopeliaController {
         api.register(new Object() {
             @SuppressWarnings("unused")
             public void onEventMainThread(OnRetrieveMerchantEvent event) {
-                instance.setMerchant(event.resource);
                 instance.setStatus(Shopelia.STATUS_AVAILABLE);
             }
 

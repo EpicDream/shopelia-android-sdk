@@ -3,7 +3,6 @@ package com.shopelia.android.api.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.animation.Animation;
@@ -120,33 +119,8 @@ public class ShopeliaButton extends ValidationButton implements ShopeliaView, Sh
     }
 
     @Override
-    public void setProductPrice(float price) {
-        mHelper.setProductPrice(price);
-    }
-
-    @Override
-    public void setProductDeliveryPrice(float shippingPrice) {
-        mHelper.setProductDeliveryPrice(shippingPrice);
-    }
-
-    @Override
-    public void setProductImage(Uri imageUri) {
-        mHelper.setProductImage(imageUri);
-    }
-
-    @Override
-    public void setProductShippingExtras(String shippingExtras) {
-        mHelper.setProductShippingExtras(shippingExtras);
-    }
-
-    @Override
     public void setOnProductAvailabilityChangeListener(OnProductAvailabilityChangeListener l) {
         mHelper.setOnProductAvailabilityChangeListener(l);
-    }
-
-    @Override
-    public void setProductName(String name) {
-        mHelper.setProductName(name);
     }
 
     @Override

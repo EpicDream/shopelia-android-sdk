@@ -1,5 +1,7 @@
 package com.shopelia.android.model;
 
+import java.io.StringWriter;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -30,6 +32,10 @@ public class Option implements BaseModel<Option> {
 
     public boolean isImage() {
         return src != null;
+    }
+
+    public String getValue() {
+        return isText() ? text : src;
     }
 
     @Override
@@ -93,7 +99,15 @@ public class Option implements BaseModel<Option> {
     }
 
     public static long hashCode(Option... options) {
-        return 0;
+        if (options == null || options.length == 0) {
+            return 0;
+        }
+        StringWriter writer = new StringWriter();
+        for (Option option : options) {
+            writer.append(option.getValue());
+            writer.append('&');
+        }
+        return writer.toString().hashCode();
     }
 
 }
