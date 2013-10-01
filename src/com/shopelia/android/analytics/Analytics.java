@@ -26,11 +26,6 @@ public interface Analytics {
 
         }
 
-        public interface AddPaymentCardMethod {
-            String CARD_SCANNED = "Payment Card Scanned";
-            String CARD_NOT_SCANNED = "Payment Card Not Scanned";
-        }
-
         public interface Activities {
             String DISPLAY = "Display";
         }

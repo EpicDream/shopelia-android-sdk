@@ -18,18 +18,6 @@
         app:shopelia_text="@string/shopelia_form_main_payment_method" >
     </com.shopelia.android.widget.form.HeaderField>
 
-    <com.shopelia.android.widget.FontableTextView
-        android:id="@+id/description"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/shopelia_margin_large"
-        android:layout_marginRight="@dimen/shopelia_margin_large"
-        android:layout_marginTop="@dimen/shopelia_margin_large"
-        android:gravity="center"
-        android:text="@string/shopelia_form_payment_card_scan_or_fill"
-        android:textColor="@color/shopelia_dark"
-        android:textSize="@dimen/shopelia_font_size_small" />
-
     <com.shopelia.android.widget.form.SingleLinePaymentCardField
         android:id="@+id/payment_card"
         android:layout_width="match_parent"

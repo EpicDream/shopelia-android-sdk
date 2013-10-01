@@ -2,7 +2,6 @@ package com.shopelia.android.app;
 
 import android.app.Activity;
 import android.app.Dialog;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
@@ -122,22 +121,6 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
         } else {
             getShopeliaDialog().startWaiting(message, blockUi, isCancelable);
         }
-    }
-
-    @Override
-    public void startActivity(Intent intent) {
-        if (intent != null) {
-            intent.putExtra(ShopeliaActivity.EXTRA_SESSION_ID, getBaseActivity().getSessionId());
-        }
-        super.startActivity(intent);
-    }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        if (intent != null) {
-            intent.putExtra(ShopeliaActivity.EXTRA_SESSION_ID, getBaseActivity().getSessionId());
-        }
-        super.startActivityForResult(intent, requestCode);
     }
 
     public Order getOrder() {

@@ -29,7 +29,6 @@ import android.widget.Toast;
 
 import com.shopelia.android.SignInFragment.OnSignInListener;
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
-import com.shopelia.android.analytics.Analytics;
 import com.shopelia.android.app.AccountAuthenticatorShopeliaActivity;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
@@ -54,7 +53,6 @@ import com.shopelia.android.widget.FormListFooter;
 import com.shopelia.android.widget.FormListHeader;
 import com.shopelia.android.widget.ProductSheetWidget;
 import com.shopelia.android.widget.ValidationButton;
-import com.shopelia.android.widget.form.SingleLinePaymentCardField;
 
 public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity implements OnSignUpListener, OnSignInListener {
 
@@ -85,8 +83,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     private Map<Class<?>, Fragment.SavedState> mSavedStates = new HashMap<Class<?>, Fragment.SavedState>();
 
     private ProductAPI mProductAPI;
-
-    private boolean mCardScanned = false;
 
     @SuppressLint("NewApi")
     @Override
@@ -153,9 +149,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SingleLinePaymentCardField.REQUEST_CARD && resultCode == RESULT_OK) {
-            mCardScanned = true;
-        }
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
         switch (requestCode) {
@@ -210,11 +203,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
         api.register(new Object() {
             public void onEventMainThread(OnAccountCreationSucceedEvent event) {
                 api.unregister(this);
-                if (mCardScanned) {
-                    getTracker().track(Analytics.Events.AddPaymentCardMethod.CARD_SCANNED);
-                } else {
-                    getTracker().track(Analytics.Events.AddPaymentCardMethod.CARD_NOT_SCANNED);
-                }
                 stopWaiting();
                 order.user = event.resource;
                 if (isCalledByAcountManager()) {

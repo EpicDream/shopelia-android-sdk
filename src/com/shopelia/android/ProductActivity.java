@@ -2,10 +2,10 @@ package com.shopelia.android;
 
 import android.os.Bundle;
 
-import com.shopelia.android.app.ShopeliaActivity;
+import com.shopelia.android.app.CardHolderActivity;
 import com.shopelia.android.config.Config;
 
-public class ProductActivity extends ShopeliaActivity {
+public class ProductActivity extends CardHolderActivity {
 
     /**
      * Url of the product to purchase
@@ -21,6 +21,7 @@ public class ProductActivity extends ShopeliaActivity {
         getIntent().putExtra(EXTRA_INIT_ORDER, true);
         setActivityStyle(STYLE_FULLSCREEN);
         super.onCreate(savedInstanceState);
+        addCard(new ProductSummaryCardFragment(), 0, false, ProductSummaryCardFragment.TAG);
     }
 
     @Override

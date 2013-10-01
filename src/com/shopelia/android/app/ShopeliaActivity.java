@@ -7,7 +7,6 @@ import java.util.List;
 
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
@@ -31,7 +30,6 @@ import com.shopelia.android.app.tracking.Tracker;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.remote.api.ShopeliaHttpSynchronizer;
-import com.shopelia.android.utils.DigestUtils;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 import com.shopelia.android.widget.actionbar.ActionBar.OnItemClickListener;
@@ -76,7 +74,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     private List<WeakReference<ShopeliaFragment>> mAttachedFragment = new ArrayList<WeakReference<ShopeliaFragment>>();
     private ProgressDialog mProgressDialog;
 
-    private String mSessionId;
     private Tracker mTrackingObject = Tracker.Factory.create(Tracker.PROVIDER_DEFAULT);
 
     private Runnable mWaitModeRunnable;
@@ -90,12 +87,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         Window w = getWindow();
         w.setFormat(PixelFormat.RGBA_8888);
         w.addFlags(WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN);
-
-        if (savedInstanceState != null) {
-            mSessionId = savedInstanceState.getString(EXTRA_SESSION_ID);
-        } else {
-            mSessionId = getIntent().getExtras().getString(EXTRA_SESSION_ID);
-        }
 
         if (isTracked()) {
             mTrackingObject.init(this);
@@ -142,11 +133,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     protected void onPause() {
         super.onPause();
         mIsPaused = true;
-    }
-
-    protected void createSessionId(long value, String str) {
-        String input = value + str;
-        mSessionId = DigestUtils.SHA1(input, "UTF-8");
     }
 
     public void setActivityVisibility(int visibility) {
@@ -316,22 +302,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         mHandler.postDelayed(runnable, delay);
     }
 
-    @Override
-    public void startActivity(Intent intent) {
-        if (intent != null) {
-            intent.putExtra(EXTRA_SESSION_ID, getSessionId());
-        }
-        super.startActivity(intent);
-    }
-
-    @Override
-    public void startActivityForResult(Intent intent, int requestCode) {
-        if (intent != null) {
-            intent.putExtra(EXTRA_SESSION_ID, getSessionId());
-        }
-        super.startActivityForResult(intent, requestCode);
-    }
-
     @SuppressWarnings("rawtypes")
     @Override
     public void onAttachFragment(android.support.v4.app.Fragment fragment) {
@@ -398,7 +368,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelable(EXTRA_ORDER, mOrder);
-        outState.putString(EXTRA_SESSION_ID, getSessionId());
     }
 
     @Override
@@ -503,9 +472,5 @@ public abstract class ShopeliaActivity extends FragmentActivity {
             onActionItemSelected(item);
         }
     };
-
-    public String getSessionId() {
-        return mSessionId;
-    }
 
 }

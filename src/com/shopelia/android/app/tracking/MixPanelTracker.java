@@ -9,7 +9,6 @@ import android.util.Log;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.config.Build;
 import com.shopelia.android.model.User;
 
@@ -35,9 +34,6 @@ class MixPanelTracker extends Tracker {
 
     public void init(Context context) {
         mMixpanelInstance = MixpanelAPI.getInstance(context, MIXPANEL_API_TOKEN);
-        if (context instanceof ShopeliaActivity) {
-            mSessionId = ((ShopeliaActivity) context).getSessionId();
-        }
         mMixpanelInstance.registerSuperProperties(getSuperProperties(context));
     }
 

@@ -59,7 +59,6 @@ public class WelcomeFragment extends ShopeliaFragment<WelcomeParent> {
         } catch (Exception e) {
             // XML Pull parser failed to load the animation
         }
-
     }
 
     protected void addItemInViewGroup(LayoutInflater inflater, ViewGroup container, String item) {

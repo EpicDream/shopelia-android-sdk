@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:clipToPadding="false"
+    android:fillViewport="true"
+    android:foregroundGravity="center"
+    android:paddingBottom="@dimen/shopelia_margin_normal"
+    android:paddingTop="@dimen/shopelia_margin_normal"
+    android:scrollbarAlwaysDrawVerticalTrack="false"
+    android:scrollbarStyle="outsideOverlay"
+    android:scrollbars="none" >
+
+    <LinearLayout
+        android:id="@+id/card_holder_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:animateLayoutChanges="false"
+        android:clipChildren="false"
+        android:clipToPadding="false"
+        android:orientation="vertical" >
+         
+    </LinearLayout>
+
+
+</ScrollView>
