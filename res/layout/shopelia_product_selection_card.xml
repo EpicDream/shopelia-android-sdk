@@ -3,13 +3,114 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/shopelia_margin_normal"
     android:layout_marginLeft="@dimen/shopelia_margin_normal"
     android:layout_marginRight="@dimen/shopelia_margin_normal"
     android:layout_marginTop="@dimen/shopelia_margin_normal"
     android:background="@drawable/shopelia_card_background"
     android:orientation="vertical"
-    android:padding="@dimen/shopelia_margin_normal" >
+    android:padding="@dimen/shopelia_margin_large" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView05"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/shopelia_product_price_product"
+            android:textColorHint="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView06"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:text="40.50€"
+            android:textColor="@color/shopelia_red"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView03"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/shopelia_product_price_delivery"
+            android:textColorHint="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:text="2.50€"
+            android:textColor="@color/shopelia_red"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_weight="1" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView07"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/shopelia_product_price_delivery"
+            android:textColorHint="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView08"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:layout_weight="0.0"
+            android:text="@string/shopelia_product_price_delivery_free"
+            android:textColor="@color/shopelia_dark_green"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/shopelia_product_price_shopelia"
+            android:textColorHint="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView02"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:text="-0.50€"
+            android:textColor="@color/shopelia_dark_green"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,13 +122,17 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/shopelia_product_price_total" />
+            android:text="@string/shopelia_product_price_total"
+            android:textColorHint="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_xxl" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/product_total_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="40.50€" />
+            android:text="42.50€"
+            android:textColor="@color/shopelia_dark_green"
+            android:textSize="@dimen/shopelia_font_size_huge" />
 
     </LinearLayout>
 

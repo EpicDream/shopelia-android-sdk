@@ -21,6 +21,8 @@ public class ProductActivity extends CardHolderActivity {
 
     private ProductAPI mProductAPI;
     private Product mProduct;
+    private boolean mHasProductSummary = false;
+    private boolean mHasProductSelection = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,8 +67,13 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     public void onEventMainThread(OnProductUpdateEvent event) {
-        if (mProduct == null) {
+        if (!mHasProductSummary) {
+            mHasProductSummary = true;
             addCard(new ProductSummaryCardFragment(), 0, false, ProductSummaryCardFragment.TAG);
+        }
+        if (!mHasProductSelection) {
+            mHasProductSelection = true;
+            addCard(new ProductSelectionCardFragment(), 0, false, ProductSelectionCardFragment.TAG);
         }
         mProduct = event.resource;
         getEventBus().postSticky(event.resource);

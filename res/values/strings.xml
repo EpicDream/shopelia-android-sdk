@@ -45,13 +45,15 @@
     <string name="shopelia_welcome_continue_on"><u>continuer sur le site du marchand</u></string>
 
     <!-- Product -->
-	<string name="shopelia_product_more_information">En savoir plus</string>
-	<string name="shopelia_product_sold_and_delivered_by_merchant">Vendu et expédié par</string>
-	<string name="shopelia_product_purchase_this">Acheter</string>
-	<string name="shopelia_product_price_total">Total</string>
-	<string name="shopelia_product_price_delivery">Livraison</string>
-	<string name="shopelia_product_price_shopelia">Avantage Shopelia</string>
-	
+    <string name="shopelia_product_more_information">En savoir plus</string>
+    <string name="shopelia_product_sold_and_delivered_by_merchant">Vendu et expédié par</string>
+    <string name="shopelia_product_purchase_this">Acheter</string>
+    <string name="shopelia_product_price_total">Total</string>
+    <string name="shopelia_product_price_product">Prix du produit</string>
+    <string name="shopelia_product_price_delivery">Livraison</string>
+    <string name="shopelia_product_price_delivery_free">gratuite</string>
+    <string name="shopelia_product_price_shopelia">Avantage Shopelia</string>
+
     <!-- Authenticate -->
     <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
     <string name="shopelia_authenticate_title">Authentification</string>

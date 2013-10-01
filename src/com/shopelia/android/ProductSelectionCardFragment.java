@@ -14,7 +14,7 @@ public class ProductSelectionCardFragment extends CardFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.shopelia_product_summary_card, container, false);
+        return inflater.inflate(R.layout.shopelia_product_selection_card, container, false);
     }
 
     @Override

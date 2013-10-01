@@ -1,7 +1,6 @@
 package com.shopelia.android.app;
 
 import java.util.ArrayList;
-import com.shopelia.android.app.CardChoregrapher.Transaction.Entry;
 
 public class CardChoregrapher {
 
