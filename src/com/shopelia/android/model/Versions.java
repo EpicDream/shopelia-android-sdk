@@ -9,7 +9,6 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.util.LongSparseArray;
-import android.util.Log;
 
 import com.shopelia.android.utils.ParcelUtils;
 
@@ -44,7 +43,7 @@ public class Versions implements BaseModel<Versions> {
     }
 
     public ArrayList<Option> getOptions(int index) {
-        return null;
+        return mOptions[index];
     }
 
     public Version getVersion(Option... options) {
@@ -60,7 +59,6 @@ public class Versions implements BaseModel<Versions> {
     }
 
     public static Versions inflate(JSONArray source) throws JSONException {
-        Log.d(null, "INFLATING VERSIONS " + source.toString(2));
         final int size = source.length();
         Versions versions = new Versions();
         versions.mIsValid = true;

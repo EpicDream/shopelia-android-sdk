@@ -26,6 +26,11 @@ public class Option implements BaseModel<Option> {
         }
     }
 
+    private Option(Parcel source) {
+        text = source.readString();
+        src = source.readString();
+    }
+
     public boolean isText() {
         return text != null;
     }
@@ -45,7 +50,8 @@ public class Option implements BaseModel<Option> {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeString(text);
+        dest.writeString(src);
     }
 
     @Override
@@ -109,5 +115,18 @@ public class Option implements BaseModel<Option> {
         }
         return writer.toString().hashCode();
     }
+
+    public static final Creator<Option> CREATOR = new Creator<Option>() {
+
+        @Override
+        public Option[] newArray(int size) {
+            return new Option[size];
+        }
+
+        @Override
+        public Option createFromParcel(Parcel source) {
+            return new Option(source);
+        }
+    };
 
 }

@@ -2,7 +2,10 @@ package com.shopelia.android.model;
 
 import java.util.ArrayList;
 
-public class Options extends ArrayList<Option> {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Options extends ArrayList<Option> implements Parcelable {
 
     /**
      * 
@@ -11,6 +14,10 @@ public class Options extends ArrayList<Option> {
 
     public Options() {
         super();
+    }
+
+    private Options(Parcel source) {
+        this(source.readArrayList(Options.class.getClassLoader()));
     }
 
     public Options(ArrayList<Option> options) {
@@ -27,5 +34,28 @@ public class Options extends ArrayList<Option> {
         }
         return super.add(object);
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeList(this);
+    }
+
+    public static final Creator<Options> CREATOR = new Creator<Options>() {
+
+        @Override
+        public Options[] newArray(int size) {
+            return new Options[size];
+        }
+
+        @Override
+        public Options createFromParcel(Parcel source) {
+            return new Options(source);
+        }
+    };
 
 }
