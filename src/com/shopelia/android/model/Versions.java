@@ -7,7 +7,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.v4.util.LongSparseArray;
+import android.util.Log;
 
 public class Versions implements BaseModel<Versions> {
 
@@ -20,6 +22,10 @@ public class Versions implements BaseModel<Versions> {
 
     }
 
+    private Versions(Parcel source) {
+
+    }
+
     public int getOptionsCount() {
         return 0;
     }
@@ -28,11 +34,20 @@ public class Versions implements BaseModel<Versions> {
         return null;
     }
 
-    public Product getProduct(Option... options) {
-        return null;
+    public Version getVersion(Option... options) {
+        return getVersion(Option.hashCode(options));
+    }
+
+    public Version getVersion(long key) {
+        return mVersions.get(key);
+    }
+
+    public int getVersionsCount() {
+        return mVersions.size();
     }
 
     public static Versions inflate(JSONArray source) throws JSONException {
+        Log.d(null, "INFLATING VERSIONS " + source.toString(2));
         final int size = source.length();
         Versions versions = new Versions();
         versions.mIsValid = true;
@@ -72,7 +87,7 @@ public class Versions implements BaseModel<Versions> {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-
+        dest.writeList(mVersions);
     }
 
     @Override
@@ -98,5 +113,18 @@ public class Versions implements BaseModel<Versions> {
     public long getFirstKey() {
         return mFirstKey;
     }
+
+    public static final Parcelable.Creator<Versions> CREATOR = new Creator<Versions>() {
+
+        @Override
+        public Versions[] newArray(int size) {
+            return new Versions[size];
+        }
+
+        @Override
+        public Versions createFromParcel(Parcel source) {
+            return new Versions(source);
+        }
+    };
 
 }

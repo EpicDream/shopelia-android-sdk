@@ -31,6 +31,7 @@ public class Product implements BaseModel<Product> {
     public Currency currency;
 
     public final Versions versions;
+    public long mCurrentVersionKey;
 
     public Product(String url) {
         this.url = url;
@@ -127,7 +128,11 @@ public class Product implements BaseModel<Product> {
     }
 
     public Version getCurrentVersion() {
-        return null;
+        return versions.getVersion(mCurrentVersionKey);
+    }
+
+    public boolean hasVersion() {
+        return versions.getVersionsCount() > 0;
     }
 
     @Override
@@ -137,7 +142,7 @@ public class Product implements BaseModel<Product> {
 
     @Override
     public boolean isValid() {
-        return getCurrentVersion().isValid() && merchant != null;
+        return hasVersion() && getCurrentVersion().isValid() && merchant != null;
     }
 
 }

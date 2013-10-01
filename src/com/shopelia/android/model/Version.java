@@ -7,8 +7,6 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.shopelia.android.utils.ParcelUtils;
-
 public class Version implements BaseModel<Version> {
 
     public interface Api {
@@ -25,7 +23,7 @@ public class Version implements BaseModel<Version> {
     }
 
     public static final float NO_PRICE = -1;
-    public static final Long NO_OPTION = null;
+    public static final long FIRST_OPTION = 0;
     private final long id;
 
     // Prices
@@ -42,7 +40,7 @@ public class Version implements BaseModel<Version> {
     public final String availabilityInfo;
 
     // Options
-    private Long optionsHashcode = NO_OPTION;
+    private long optionsHashcode = FIRST_OPTION;
 
     private Version(JSONObject object) throws JSONException {
         // Informations
@@ -76,7 +74,7 @@ public class Version implements BaseModel<Version> {
         priceStrikeOut = source.readFloat();
 
         // Options
-        optionsHashcode = ParcelUtils.readNullable(source, null, NO_OPTION);
+        optionsHashcode = source.readLong();
     }
 
     public void setOptions(long optionsHash) {
@@ -108,7 +106,7 @@ public class Version implements BaseModel<Version> {
         dest.writeFloat(priceStrikeOut);
 
         // Options
-        ParcelUtils.writeNullable(dest, optionsHashcode);
+        dest.writeLong(optionsHashcode);
     }
 
     public static Version inflate(JSONObject object) throws JSONException {

@@ -6,9 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.TextView;
 
-import com.shopelia.android.PrepareOrderActivity;
 import com.shopelia.android.R;
-import com.shopelia.android.model.Merchant;
 
 public class FormListHeader {
 
@@ -25,10 +23,7 @@ public class FormListHeader {
             mView = inflater.inflate(R.layout.shopelia_form_list_header, null);
             TextView introductionText = (TextView) mView.findViewById(R.id.introduction_text);
             String vendor = "";
-            if (mContext.getIntent().hasExtra(PrepareOrderActivity.EXTRA_MERCHANT)) {
-                Merchant v = mContext.getIntent().getParcelableExtra(PrepareOrderActivity.EXTRA_MERCHANT);
-                vendor = v.name;
-            }
+
             introductionText.setText(Html.fromHtml(mContext.getString(R.string.shopelia_form_main_header_text, vendor)));
         }
         return mView;
@@ -38,10 +33,6 @@ public class FormListHeader {
         mView = view;
         TextView introductionText = (TextView) mView.findViewById(R.id.introduction_text);
         String vendor = "";
-        if (mContext.getIntent().hasExtra(PrepareOrderActivity.EXTRA_MERCHANT)) {
-            Merchant v = mContext.getIntent().getParcelableExtra(PrepareOrderActivity.EXTRA_MERCHANT);
-            vendor = v.name;
-        }
         introductionText.setText(Html.fromHtml(mContext.getString(R.string.shopelia_form_main_header_text, vendor)));
     }
 
