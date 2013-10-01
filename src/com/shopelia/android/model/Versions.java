@@ -11,6 +11,8 @@ import android.os.Parcelable;
 import android.support.v4.util.LongSparseArray;
 import android.util.Log;
 
+import com.shopelia.android.utils.ParcelUtils;
+
 public class Versions implements BaseModel<Versions> {
 
     private LongSparseArray<Version> mVersions = new LongSparseArray<Version>();
@@ -23,7 +25,18 @@ public class Versions implements BaseModel<Versions> {
     }
 
     private Versions(Parcel source) {
+        mVersions = ParcelUtils.readLongSparseArray(source, Version.class.getClassLoader());
+        mOptions = (Options[]) source.readArray(Option.class.getClassLoader());
+        mFirstKey = source.readLong();
+        mIsValid = source.readByte() == 1;
+    }
 
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        ParcelUtils.writeLongSparseArray(dest, mVersions, flags);
+        dest.writeArray(mOptions);
+        dest.writeLong(mFirstKey);
+        dest.writeByte((byte) (mIsValid ? 1 : 0));
     }
 
     public int getOptionsCount() {
@@ -83,11 +96,6 @@ public class Versions implements BaseModel<Versions> {
     @Override
     public int describeContents() {
         return 0;
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeList(mVersions);
     }
 
     @Override

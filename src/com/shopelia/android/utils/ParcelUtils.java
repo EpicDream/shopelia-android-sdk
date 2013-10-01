@@ -13,6 +13,10 @@ import android.support.v4.util.LongSparseArray;
  */
 public final class ParcelUtils {
 
+    public interface ArrayCreator<T> {
+        public T[] newArray(int size);
+    }
+
     private ParcelUtils() {
 
     }
@@ -122,4 +126,5 @@ public final class ParcelUtils {
         }
         return out;
     }
+
 }
