@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.support.v4.util.LongSparseArray;
 
 /**
  * Utility class made to ease {@link Parcel} usage.
@@ -87,5 +88,38 @@ public final class ParcelUtils {
         } else {
             return fallback;
         }
+    }
+
+    public static <T> void writeLongSparseArray(Parcel dest, LongSparseArray<T> array, int flags) {
+        dest.writeByte((byte) (array != null ? 1 : 0));
+        if (array == null) {
+            return;
+        }
+
+        final int size = array.size();
+        final long[] keys = new long[size];
+
+        dest.writeInt(size);
+        for (int index = 0; index < size; index++) {
+            keys[index] = array.keyAt(index);
+        }
+        dest.writeLongArray(keys);
+        for (int index = 0; index < size; index++) {
+            dest.writeValue(array.valueAt(index));
+        }
+    }
+
+    public static <T> LongSparseArray<T> readLongSparseArray(Parcel source, ClassLoader classLoader) {
+        if (source.readByte() == 0) {
+            return null;
+        }
+        final int size = source.readInt();
+        final long[] keys = new long[size];
+        source.readLongArray(keys);
+        LongSparseArray<T> out = new LongSparseArray<T>();
+        for (int index = 0; index < size; index++) {
+            out.append(keys[index], (T) source.readValue(classLoader));
+        }
+        return out;
     }
 }
