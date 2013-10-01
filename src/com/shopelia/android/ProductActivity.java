@@ -73,7 +73,7 @@ public class ProductActivity extends CardHolderActivity {
         }
         if (!mHasProductSelection) {
             mHasProductSelection = true;
-            addCard(new ProductSelectionCardFragment(), 0, false, ProductSelectionCardFragment.TAG);
+            addCard(ProductSelectionCardFragment.newInstance(event.resource), 0, false, ProductSelectionCardFragment.TAG);
         }
         mProduct = event.resource;
         getEventBus().postSticky(event.resource);

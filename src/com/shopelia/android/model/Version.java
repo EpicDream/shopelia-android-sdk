@@ -149,7 +149,11 @@ public class Version implements BaseModel<Version> {
 
     // Price utility methods
     public float getTotalPrice() {
-        return 0;
+        return (centify(productPrice) + centify(shippingPrice) - centify(cashfrontValue)) / 100.f;
+    }
+
+    private int centify(float price) {
+        return (int) (price != NO_PRICE ? price * 100 : 0);
     }
 
     public float getExpectedTotalPrice() {

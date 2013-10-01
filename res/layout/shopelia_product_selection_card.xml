@@ -25,7 +25,7 @@
             android:textSize="@dimen/shopelia_font_size_normal" />
 
         <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/FontableTextView06"
+            android:id="@+id/product_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/shopelia_margin_normal"
@@ -36,6 +36,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/product_delivery_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_normal" >
@@ -50,7 +51,7 @@
             android:textSize="@dimen/shopelia_font_size_normal" />
 
         <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/FontableTextView04"
+            android:id="@+id/delivery_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/shopelia_margin_normal"
@@ -61,6 +62,7 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/product_delivery_free_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_normal"
@@ -102,7 +104,7 @@
             android:textSize="@dimen/shopelia_font_size_normal" />
 
         <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/FontableTextView02"
+            android:id="@+id/price_cashfront"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/shopelia_margin_normal"

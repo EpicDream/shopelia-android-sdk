@@ -6,7 +6,7 @@
     android:clipToPadding="false"
     android:fillViewport="true"
     android:foregroundGravity="center"
-    android:paddingBottom="@dimen/shopelia_margin_normal"
+    android:paddingBottom="@dimen/shopelia_margin_large"
     android:paddingTop="@dimen/shopelia_margin_normal"
     android:scrollbarAlwaysDrawVerticalTrack="false"
     android:scrollbarStyle="outsideOverlay"
