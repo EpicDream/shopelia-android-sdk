@@ -58,6 +58,12 @@
             android:theme="@style/Theme.Shopelia.FloatingFrame"
             android:windowSoftInputMode="adjustResize|stateHidden" />
         <activity
+            android:name="com.shopelia.android.ProductActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="sensorPortrait"
+            android:theme="@style/Theme.Shopelia"
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
             android:name="com.shopelia.android.PrepareOrderActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorPortrait"
@@ -88,18 +94,7 @@
             android:theme="@style/Theme.Shopelia"
             android:windowSoftInputMode="adjustPan" />
         <activity
-            android:name="com.shopelia.android.CloseCheckoutActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.Shopelia"
-            android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity
             android:name="com.shopelia.android.RecoverPasswordActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="sensorPortrait"
-            android:theme="@style/Theme.Shopelia" />
-        <activity
-            android:name="com.shopelia.android.RecoverPincodeActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="sensorPortrait"
             android:theme="@style/Theme.Shopelia" />

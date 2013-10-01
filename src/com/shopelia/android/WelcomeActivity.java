@@ -141,7 +141,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
 
     @Override
     public void continueWithShopelia() {
-        startActivityForResult(new Intent(this, PrepareOrderActivity.class), REQUEST_CHECKOUT);
+        startActivityForResult(new Intent(this, ProductActivity.class), REQUEST_CHECKOUT);
     }
 
     @Override

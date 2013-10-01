@@ -59,8 +59,6 @@ public class WelcomeFragment extends ShopeliaFragment<WelcomeParent> {
         } catch (Exception e) {
             // XML Pull parser failed to load the animation
         }
-        findViewById(R.id.continue_with_merchant_site, TextView.class).setText(
-                Html.fromHtml(getResources().getString(R.string.shopelia_welcome_continue_on, getContract().getMerchant().name)));
 
     }
 

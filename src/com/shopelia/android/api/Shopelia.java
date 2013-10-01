@@ -7,13 +7,13 @@ import android.app.Activity;
 import android.app.Fragment.SavedState;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.text.TextUtils;
 
 import com.shopelia.android.PrepareOrderActivity;
+import com.shopelia.android.ProductActivity;
 import com.shopelia.android.WelcomeActivity;
 import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.tracking.Tracker;
@@ -49,13 +49,7 @@ public final class Shopelia implements Parcelable {
     /**
      * Url of the product to purchase
      */
-    public static final String EXTRA_PRODUCT_URL = PrepareOrderActivity.EXTRA_PRODUCT_URL;
-
-    /**
-     * A resource ID or {@link Uri} representing the image of product to
-     * purchase
-     */
-    public static final String EXTRA_PRODUCT_IMAGE = PrepareOrderActivity.EXTRA_PRODUCT_IMAGE;
+    public static final String EXTRA_PRODUCT_URL = ProductActivity.EXTRA_PRODUCT_URL;
 
     /**
      * An email that will be pre-filled for the user
@@ -196,17 +190,6 @@ public final class Shopelia implements Parcelable {
 
     public void checkout(Context context, int requestCode) {
         checkout(context, null, mData, requestCode);
-    }
-
-    /**
-     * Sets the image uri of the product
-     * 
-     * @param imageUri
-     * @return
-     */
-    public Shopelia setProductImageUri(Uri imageUri) {
-        mData.putExtra(EXTRA_PRODUCT_IMAGE, imageUri);
-        return this;
     }
 
     /**

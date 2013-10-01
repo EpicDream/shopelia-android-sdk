@@ -10,7 +10,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Rect;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -60,17 +59,6 @@ import com.shopelia.android.widget.form.SingleLinePaymentCardField;
 public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity implements OnSignUpListener, OnSignInListener {
 
     /**
-     * Url of the product to purchase
-     */
-    public static final String EXTRA_PRODUCT_URL = Config.EXTRA_PREFIX + "PRODUCT_URL";
-
-    /**
-     * A resource ID or {@link Uri} representing the image of product to
-     * purchase
-     */
-    public static final String EXTRA_PRODUCT_IMAGE = Config.EXTRA_PREFIX + "PRODUCT_IMAGE";
-
-    /**
      * An email that will be pre-filled for the user
      */
     public static final String EXTRA_USER_EMAIL = Config.EXTRA_PREFIX + "USER_EMAIL";
@@ -103,8 +91,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        getIntent().putExtra(EXTRA_INIT_ORDER, true);
-        setActivityStyle(STYLE_FULLSCREEN);
         super.onCreate(savedInstanceState);
         mProductAPI = new ProductAPI(this);
         setHostContentView(R.layout.shopelia_prepare_order_activity);
@@ -116,13 +102,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
             return;
         }
 
-        if (!isCalledByAcountManager() && (getIntent().getExtras() == null || !getIntent().getExtras().containsKey(EXTRA_PRODUCT_URL))) {
-            finish();
-            return;
-        }
-
         if (savedInstanceState == null) {
-            createSessionId(System.currentTimeMillis(), getIntent().getStringExtra(EXTRA_PRODUCT_URL));
             if (!UserManager.get(this).isLogged() || isCalledByAcountManager()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                 if (UserManager.get(this).getLoginsCount() > 0) {
@@ -140,9 +120,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
         if (isCalledByAcountManager()) {
             findViewById(R.id.header).setVisibility(View.GONE);
             ((LinearLayout) findViewById(R.id.main_form)).setGravity(Gravity.TOP);
-        } else {
-            Product product = new Product(getIntent().getExtras().getString(EXTRA_PRODUCT_URL));
-            mProductAPI.getProduct(product);
         }
     }
 
