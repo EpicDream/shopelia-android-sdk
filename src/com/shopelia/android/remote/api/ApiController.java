@@ -120,7 +120,7 @@ public abstract class ApiController {
     }
 
     public void setEventBus(EventBus eventBus) {
-        mEventBus = new EventBus();
+        mEventBus = eventBus;
     }
 
     public Class<?>[] getEventTypes() {

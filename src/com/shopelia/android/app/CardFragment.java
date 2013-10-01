@@ -26,6 +26,7 @@ public class CardFragment extends ShopeliaFragment<Void> {
     }
 
     public void onCardShouldAppear(final Transaction transaction) {
+        getView().setVisibility(View.VISIBLE);
         transaction.endTransaction();
     }
 

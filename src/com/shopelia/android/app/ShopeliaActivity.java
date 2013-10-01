@@ -36,6 +36,8 @@ import com.shopelia.android.widget.actionbar.ActionBar.OnItemClickListener;
 import com.shopelia.android.widget.actionbar.ActionBarWidget;
 import com.shopelia.android.widget.actionbar.ProgressBarItem;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * Base activity of the shopelia SDK. This Activity has a default appearance and
  * is a fragment container.
@@ -47,8 +49,6 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     public static final String EXTRA_ORDER = Config.EXTRA_PREFIX + "ORDER";
     protected static final String EXTRA_INIT_ORDER = Config.EXTRA_PREFIX + "INIT_ORDER";
     public static final String EXTRA_USER = Config.EXTRA_PREFIX + "USER";
-
-    public static final String EXTRA_SESSION_ID = Config.EXTRA_PREFIX + "PRIVATE_SESSION_ID";
 
     public static final String EXTRA_STYLE = Config.EXTRA_PREFIX + "STYLE";
 
@@ -78,6 +78,8 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     private Runnable mWaitModeRunnable;
     private boolean mIsPaused = true;
+
+    private EventBus mEventBus;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -129,10 +131,8 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mIsPaused = true;
+    public EventBus getEventBus() {
+        return mEventBus != null ? mEventBus : (mEventBus = new EventBus());
     }
 
     public void setActivityVisibility(int visibility) {
@@ -152,8 +152,16 @@ public abstract class ShopeliaActivity extends FragmentActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        getEventBus().register(this);
         mIsPaused = false;
         ShopeliaHttpSynchronizer.flush(this);
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        getEventBus().unregister(this);
+        mIsPaused = true;
     }
 
     public boolean isPaused() {
@@ -472,5 +480,11 @@ public abstract class ShopeliaActivity extends FragmentActivity {
             onActionItemSelected(item);
         }
     };
+
+    // Events
+
+    public void onEvent(Object event) {
+
+    }
 
 }

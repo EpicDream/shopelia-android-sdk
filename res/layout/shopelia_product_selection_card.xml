@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/shopelia_margin_normal"
+    android:layout_marginLeft="@dimen/shopelia_margin_normal"
+    android:layout_marginRight="@dimen/shopelia_margin_normal"
+    android:layout_marginTop="@dimen/shopelia_margin_normal"
+    android:background="@drawable/shopelia_card_background"
+    android:orientation="vertical"
+    android:padding="@dimen/shopelia_margin_normal" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_large" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/fontableTextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/shopelia_product_price_total" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/product_total_price"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="40.50€" />
+
+    </LinearLayout>
+
+    <com.shopelia.android.widget.ValidationButton
+        android:id="@+id/validationButton1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:shopelia_text="@string/shopelia_product_purchase_this"
+        app:shopelia_icon="@drawable/shopelia_logo_picture"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal" >
+
+    </com.shopelia.android.widget.ValidationButton>
+
+</LinearLayout>

@@ -14,6 +14,8 @@ import com.shopelia.android.model.Order;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
 
+import de.greenrobot.event.EventBus;
+
 /**
  * Base fragment class used by the Shopeliad SDK
  * 
@@ -44,6 +46,13 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
         if (getShopeliaDialog() == null) {
             onCreateShopeliaActionBar(getBaseActivity().getShopeliaActionBar());
         }
+    }
+
+    public EventBus getActivityEventBus() {
+        if (getBaseActivity() != null) {
+            return getBaseActivity().getEventBus();
+        }
+        return EventBus.getDefault();
     }
 
     @Override
