@@ -40,7 +40,7 @@ public class ProductSelectionCardFragment extends CardFragment {
 
     private void refreshPrices() {
         setPriceOrHide(R.id.product_price, mProduct.getCurrentVersion().productPrice);
-        setPriceOrHide(R.id.delivery_price, mProduct.getCurrentVersion().shippingPrice);
+        setPriceOrHide(R.id.delivery_price, mProduct.getCurrentVersion().shippingPrice, 0);
         setPriceOrHide(R.id.product_total_price, mProduct.getCurrentVersion().getTotalPrice());
         setMinusPriceOrHide(R.id.price_cashfront, mProduct.getCurrentVersion().cashfrontValue);
         findViewById(R.id.product_delivery_free_layout).setVisibility(
