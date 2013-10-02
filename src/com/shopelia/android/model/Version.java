@@ -84,6 +84,10 @@ public class Version implements BaseModel<Version> {
         this.options = options;
     }
 
+    public Option[] getOptions() {
+        return options;
+    }
+
     @Override
     public int describeContents() {
         return 0;

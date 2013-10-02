@@ -60,10 +60,6 @@ public class ProductSummaryCardFragment extends CardFragment {
         mMerchantName.setText(product.merchant.name);
     }
 
-    public void onEventMainThread(ProductOptionsFragment.OnOptionsChanged event) {
-
-    }
-
     private static TextView clear(TextView tv) {
         tv.setText(null);
         return tv;

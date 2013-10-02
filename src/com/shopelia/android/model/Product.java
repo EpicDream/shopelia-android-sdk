@@ -130,6 +130,41 @@ public class Product implements BaseModel<Product> {
 
     }
 
+    public void setCurrentVersion(long key) {
+        mCurrentVersionKey = key;
+    }
+
+    public void setCurrentVersion(Option... options) {
+        setCurrentVersion(Option.hashCode(options));
+    }
+
+    public void setCurrentVersion(int lastOptionChanged, Option... options) {
+        if (versions.getVersion(options) == null) {
+            int index = 0;
+            for (; index < options.length; index++) {
+                if (index != lastOptionChanged)
+                    break;
+            }
+            setCurrentVersion(getAvailableOptions(index, lastOptionChanged, options).getOptions());
+        } else {
+            setCurrentVersion(options);
+        }
+
+    }
+
+    private Version getAvailableOptions(int indexToChange, int lastIndexToChange, Option[] base) {
+        Version version = null;
+        Options options = versions.getOptions(indexToChange);
+        for (Option option : options) {
+            base[indexToChange] = option;
+            version = versions.getVersion(base);
+            if (version != null) {
+                break;
+            }
+        }
+        return version;
+    }
+
     public Version getCurrentVersion() {
         return versions.getVersion(mCurrentVersionKey);
     }

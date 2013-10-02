@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,7 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
         }
         final int size = product.versions.getOptionsCount();
         for (int index = 0; index < size; index++) {
-            mOptionsItems.get(index).refreshUi(product.versions.getOptions(index));
+            mOptionsItems.get(index).refreshUi(product, product.versions.getOptions(index));
         }
     }
 
@@ -113,13 +114,14 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
             mOptionLabel = findViewById(R.id.option_label);
             mAdapter = new OptionsAdapter(mView.getContext());
             mSelector.setAdapter(mAdapter);
+            mSelector.setOnItemSelectedListener(mAdapter);
         }
 
         public <T extends View> T findViewById(int id) {
             return (T) mView.findViewById(id);
         }
 
-        public void refreshUi(Options options) {
+        public void refreshUi(Product product, Options options) {
             ArrayAdapter<Option> adapter = new ArrayAdapter<Option>(mView.getContext(), android.R.layout.simple_dropdown_item_1line);
             for (Option option : options) {
                 adapter.add(option);
@@ -128,6 +130,12 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
             mOptionLabel.setText(getResources().getString(R.string.shopelia_product_options_option_pattern, (mIndex + 1)));
             if (mOptions[mIndex] == null) {
                 setCurrentOption(mIndex, options.get(0));
+            }
+            Log.d(null, "REFRESH UI");
+            if (!product.getCurrentVersion().getOptions()[mIndex].equals(mOptions[mIndex])) {
+                mOptions[mIndex] = product.getCurrentVersion().getOptions()[mIndex];
+                mSelector.setSelection(mAdapter.indexOf(product.getCurrentVersion().getOptions()[mIndex]));
+                Log.d(null, "REFRESH SELECTION");
             }
         }
 
@@ -149,6 +157,10 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
                     }
                     notifyDataSetChanged();
                 }
+            }
+
+            public int indexOf(Option option) {
+                return mOptions.indexOf(option);
             }
 
             @Override
@@ -217,6 +229,7 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
                 if (position >= mOptions.size()) {
                     mSelector.setSelection(0);
                 }
+                setCurrentOption(mIndex, mOptions.get(mSelector.getSelectedItemPosition()));
             }
 
             @Override
@@ -228,11 +241,14 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     }
 
     public void setCurrentOption(int index, Option option) {
+        Log.d(null, "CURRENT OPTION CHANGED");
         mOptions[index] = option;
         boolean canSend = true;
         for (Option o : mOptions) {
             canSend = o != null;
-            break;
+            if (!canSend) {
+                break;
+            }
         }
         if (canSend) {
             getActivityEventBus().post(new OnOptionsChanged(index, mOptions));

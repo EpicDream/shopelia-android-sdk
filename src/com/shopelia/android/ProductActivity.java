@@ -1,9 +1,11 @@
 package com.shopelia.android;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import com.shopelia.android.app.CardHolderActivity;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.model.Option;
 import com.shopelia.android.model.Product;
 import com.shopelia.android.remote.api.ProductAPI;
 import com.shopelia.android.remote.api.ProductAPI.OnProductUpdateEvent;
@@ -23,6 +25,7 @@ public class ProductActivity extends CardHolderActivity {
     private Product mProduct;
     private boolean mHasProductSummary = false;
     private boolean mHasProductSelection = false;
+    private Option[] mCurrentOptions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +70,10 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     public void onEventMainThread(OnProductUpdateEvent event) {
+        mProduct = event.resource;
+        if (mCurrentOptions != null) {
+            mProduct.setCurrentVersion(mCurrentOptions);
+        }
         if (!mHasProductSummary && event.resource.hasVersion()) {
             mHasProductSummary = true;
             addCard(new ProductSummaryCardFragment(), 0, false, ProductSummaryCardFragment.TAG);
@@ -75,8 +82,16 @@ public class ProductActivity extends CardHolderActivity {
             mHasProductSelection = true;
             addCard(ProductSelectionCardFragment.newInstance(event.resource), 0, false, ProductSelectionCardFragment.TAG);
         }
-        mProduct = event.resource;
         getEventBus().postSticky(event.resource);
+    }
+
+    public void onEventMainThread(ProductOptionsFragment.OnOptionsChanged event) {
+        if (mProduct != null) {
+            mProduct.setCurrentVersion(event.lastChange, event.options);
+            mCurrentOptions = mProduct.getCurrentVersion().getOptions();
+            getEventBus().postSticky(mProduct);
+            Log.d(null, "UPDATE PRODUCT");
+        }
     }
 
 }
