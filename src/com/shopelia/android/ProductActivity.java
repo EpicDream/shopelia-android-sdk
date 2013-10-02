@@ -67,11 +67,11 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     public void onEventMainThread(OnProductUpdateEvent event) {
-        if (!mHasProductSummary) {
+        if (!mHasProductSummary && event.resource.hasVersion()) {
             mHasProductSummary = true;
             addCard(new ProductSummaryCardFragment(), 0, false, ProductSummaryCardFragment.TAG);
         }
-        if (!mHasProductSelection) {
+        if (!mHasProductSelection && event.resource.hasVersion()) {
             mHasProductSelection = true;
             addCard(ProductSelectionCardFragment.newInstance(event.resource), 0, false, ProductSelectionCardFragment.TAG);
         }

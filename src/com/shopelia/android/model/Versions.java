@@ -1,7 +1,5 @@
 package com.shopelia.android.model;
 
-import java.util.ArrayList;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -39,10 +37,10 @@ public class Versions implements BaseModel<Versions> {
     }
 
     public int getOptionsCount() {
-        return 0;
+        return mOptions != null ? mOptions.length : 0;
     }
 
-    public ArrayList<Option> getOptions(int index) {
+    public Options getOptions(int index) {
         return mOptions[index];
     }
 

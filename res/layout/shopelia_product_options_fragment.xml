@@ -5,9 +5,24 @@
     android:orientation="vertical" >
 
     <com.shopelia.android.widget.FontableTextView
-        android:id="@+id/fontableTextView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="FontableTextView" />
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:gravity="center"
+        android:text="@string/shopelia_product_options_choose"
+        android:textSize="@dimen/shopelia_font_size_large" />
+
+    <View
+        android:id="@+id/view1"
+        android:layout_width="wrap_content"
+        android:layout_height="1dp"
+        android:background="@color/shopelia_light_grey" />
+
+    <LinearLayout
+        android:id="@+id/options_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+    </LinearLayout>
 
 </LinearLayout>

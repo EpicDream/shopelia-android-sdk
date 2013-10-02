@@ -10,6 +10,7 @@
     <color name="shopelia_light">#f5f5f5</color>
     <color name="shopelia_white">#FFFFFF</color>
     <color name="shopelia_grey">#999999</color>
+    <color name="shopelia_light_grey">#dcdad9</color>
     
     <!-- Red -->
     <color name="shopelia_light_red">#f6513e</color>

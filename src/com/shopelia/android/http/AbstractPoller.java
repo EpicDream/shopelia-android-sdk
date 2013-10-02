@@ -242,7 +242,7 @@ public abstract class AbstractPoller<ParamType, ResultType> {
 
     }
 
-    private Handler mHandler = new Handler() {
+    private Handler mHandler = new Handler(Looper.getMainLooper()) {
 
         @Override
         public void handleMessage(Message msg) {

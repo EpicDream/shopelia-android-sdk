@@ -1,6 +1,8 @@
 package com.shopelia.android;
 
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +19,7 @@ public class ProductSelectionCardFragment extends CardFragment {
     private static final String ARGS_PRODUCT = "args:product";
 
     private Product mProduct;
+    private ProductOptionsFragment mOptionsFragment;
 
     public static ProductSelectionCardFragment newInstance(Product product) {
         ProductSelectionCardFragment fragment = new ProductSelectionCardFragment();
@@ -36,6 +39,7 @@ public class ProductSelectionCardFragment extends CardFragment {
         super.onBindView(view, savedInstanceState);
         mProduct = getArguments().getParcelable(ARGS_PRODUCT);
         refreshPrices();
+        refreshOptionsFragment();
     }
 
     private void refreshPrices() {
@@ -46,6 +50,19 @@ public class ProductSelectionCardFragment extends CardFragment {
         findViewById(R.id.product_delivery_free_layout).setVisibility(
                 mProduct.getCurrentVersion().shippingPrice <= 0.f ? View.VISIBLE : View.GONE);
 
+    }
+
+    private void refreshOptionsFragment() {
+        if (mProduct.versions.getOptionsCount() > 0) {
+            if (mOptionsFragment == null) {
+                mOptionsFragment = new ProductOptionsFragment();
+                FragmentManager fm = getChildFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.option_fragment, mOptionsFragment, ProductOptionsFragment.TAG);
+                ft.commit();
+            }
+
+        }
     }
 
     private void setPriceOrHide(int id, float price) {

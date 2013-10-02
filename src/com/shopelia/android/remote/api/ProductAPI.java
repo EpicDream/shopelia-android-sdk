@@ -2,6 +2,7 @@ package com.shopelia.android.remote.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CountDownLatch;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -23,7 +24,7 @@ import com.turbomanage.httpclient.ParameterMap;
 
 /**
  * Reliable for only one product at the same (use multiple instances for
- * multiple products)
+ * multiple products). Thread safe, non-blocking parsing.
  * 
  * @author Pierre Pollastri
  */
@@ -32,10 +33,12 @@ public class ProductAPI extends ApiController {
     public class OnProductUpdateEvent extends OnResourceEvent<Product> {
 
         public final boolean isFromNetwork;
+        public final boolean isDone;
 
-        protected OnProductUpdateEvent(Product resource, boolean fromNetwork) {
+        protected OnProductUpdateEvent(Product resource, boolean fromNetwork, boolean isDone) {
             super(resource);
             isFromNetwork = fromNetwork;
+            this.isDone = isDone;
         }
 
     }
@@ -60,6 +63,7 @@ public class ProductAPI extends ApiController {
     private SharedPreferences mPreferences;
     private ArrayList<ExtendedProduct> mProducts;
     private ExtendedProduct mProduct;
+    private CountDownLatch mCacheLoaded = new CountDownLatch(1);
 
     private static final Class<?>[] sEventTypes = new Class<?>[] {
             OnProductNotAvailable.class, OnProductUpdateEvent.class
@@ -68,41 +72,25 @@ public class ProductAPI extends ApiController {
     public ProductAPI(Context context) {
         super(context);
         mPreferences = context.getSharedPreferences(PRIVATE_PREFERENCE, Context.MODE_PRIVATE);
-        loadProductsFromCache();
+        getEventBus().register(this);
+        getEventBus().post(new LoadProductFromCacheEvent());
     }
 
-    public boolean getProduct(Product product) {
-        mProduct = new ExtendedProduct(product);
-        ExtendedProduct fromCache = findProductByUrl(product.url);
-        if (fromCache != null && !product.isValid()) {
-            mProduct = fromCache;
-        }
-        if (mProduct.getProduct() == null || !mProduct.getProduct().isValid()) {
-            if (mPoller != null) {
-                mPoller.stop();
-            }
-            ShopeliaRestClient client = ShopeliaRestClient.V1(getContext());
-            ParameterMap map = client.newParams();
-            map.add(Product.Api.URL, mProduct.url);
-            mPoller = new HttpGetPoller(client);
-            mPoller.setExpiryDuration(POLLING_EXPIRATION).setRequestFrequency(POLLING_FREQUENCY)
-                    .setParam(new HttpGetRequest(Command.V1.Products.$, map)).setOnPollerEventListener(mOnPollerEventListener).poll();
-            return false;
-        } else {
-            getEventBus().postSticky(new OnProductUpdateEvent(mProduct.getProduct(), false));
-        }
-        return true;
-    }
-
-    public Product getProduct() {
-        return mProduct.getProduct();
+    public void getProduct(Product product) {
+        getEventBus().post(new GetProductEvent(product));
     }
 
     public void addProductToCache(Product base, JSONObject object) {
         ExtendedProduct p = new ExtendedProduct(base);
         p.setJson(object);
         p.download_at = System.currentTimeMillis();
-        mProducts.add(p);
+        addProductToCache(p);
+    }
+
+    private void addProductToCache(ExtendedProduct p) {
+        synchronized (mProducts) {
+            mProducts.add(p);
+        }
     }
 
     public void save() {
@@ -129,10 +117,10 @@ public class ProductAPI extends ApiController {
                 try {
                     mProduct.setJson(new JSONObject(newResult.response.getBodyAsString()));
                     mProduct.download_at = System.currentTimeMillis();
-                    mProducts.add(mProduct);
-                    saveProducts(mProducts);
+                    getEventBus().postSticky(new OnProductUpdateEvent(mProduct.getProduct(), true, mProduct.isValid() && mProduct.ready));
                     if (mProduct.isValid() && mProduct.ready) {
-                        getEventBus().postSticky(new OnProductUpdateEvent(mProduct.getProduct(), true));
+                        addProductToCache(mProduct);
+                        saveProducts(mProducts);
                     }
                     return mProduct.isValid();
                 } catch (JSONException e) {
@@ -150,21 +138,23 @@ public class ProductAPI extends ApiController {
     };
 
     private ExtendedProduct findProductByUrl(String url) {
-        int count = mProducts.size();
-        for (int index = 0; index < count; index++) {
-            ExtendedProduct product = mProducts.get(index);
-            if (product.url.equals(url)) {
-                if (product.download_at + KEEP_ALIVE < System.currentTimeMillis() || !product.isValid()) {
-                    mProducts.remove(index);
-                    index -= 1;
-                    count -= 1;
-                    continue;
+        synchronized (mProducts) {
+            int count = mProducts.size();
+            for (int index = 0; index < count; index++) {
+                ExtendedProduct product = mProducts.get(index);
+                if (product.url.equals(url)) {
+                    if (product.download_at + KEEP_ALIVE < System.currentTimeMillis() || !product.isValid()) {
+                        mProducts.remove(index);
+                        index -= 1;
+                        count -= 1;
+                        continue;
+                    }
+                    saveProducts(mProducts);
+                    return product;
                 }
-                saveProducts(mProducts);
-                return product;
             }
+            return null;
         }
-        return null;
     }
 
     private void loadProductsFromCache() {
@@ -178,12 +168,59 @@ public class ProductAPI extends ApiController {
         } else {
             mProducts = new ArrayList<ExtendedProduct>();
         }
+        mCacheLoaded.countDown();
     }
 
     private void saveProducts(List<ExtendedProduct> products) {
-        SharedPreferences.Editor editor = mPreferences.edit();
-        editor.putString(PREFS_PRODUCT, JsonUtils.toJson(products).toString());
-        editor.commit();
+        synchronized (products) {
+            SharedPreferences.Editor editor = mPreferences.edit();
+            editor.putString(PREFS_PRODUCT, JsonUtils.toJson(products).toString());
+            editor.commit();
+        }
+    }
+
+    // Private Events
+    private class GetProductEvent {
+        public final Product product;
+
+        public GetProductEvent(Product product) {
+            this.product = product;
+        }
+    }
+
+    private class LoadProductFromCacheEvent {
+
+    }
+
+    public void onEventAsync(GetProductEvent event) {
+        try {
+            mCacheLoaded.await();
+        } catch (InterruptedException e) {
+            // Do nothing
+        }
+        Product product = event.product;
+        mProduct = new ExtendedProduct(product);
+        ExtendedProduct fromCache = findProductByUrl(product.url);
+        if (fromCache != null && !product.isValid()) {
+            mProduct = fromCache;
+        }
+        if (mProduct.getProduct() == null || !mProduct.getProduct().isValid()) {
+            if (mPoller != null) {
+                mPoller.stop();
+            }
+            ShopeliaRestClient client = ShopeliaRestClient.V1(getContext());
+            ParameterMap map = client.newParams();
+            map.add(Product.Api.URL, mProduct.url);
+            mPoller = new HttpGetPoller(client);
+            mPoller.setExpiryDuration(POLLING_EXPIRATION).setRequestFrequency(POLLING_FREQUENCY)
+                    .setParam(new HttpGetRequest(Command.V1.Products.$, map)).setOnPollerEventListener(mOnPollerEventListener).poll();
+        } else {
+            getEventBus().postSticky(new OnProductUpdateEvent(mProduct.getProduct(), false, mProduct.isValid()));
+        }
+    }
+
+    public void onEventAsync(LoadProductFromCacheEvent event) {
+        loadProductsFromCache();
     }
 
 }
