@@ -40,6 +40,7 @@ public class Product implements BaseModel<Product> {
 
     protected Product(Parcel source) {
         url = source.readString();
+        mCurrentVersionKey = source.readLong();
         Versions v = ParcelUtils.readParcelable(source, Versions.class.getClassLoader());
         versions = v != null ? v : new Versions();
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
@@ -69,6 +70,7 @@ public class Product implements BaseModel<Product> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);
+        dest.writeLong(mCurrentVersionKey);
         ParcelUtils.writeParcelable(dest, versions, flags);
         ParcelUtils.writeParcelable(dest, merchant, flags);
         ParcelUtils.writeParcelable(dest, tax, flags);
@@ -94,6 +96,7 @@ public class Product implements BaseModel<Product> {
             merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
         }
         versions = Versions.inflate(object.getJSONArray(Api.VERSIONS));
+        mCurrentVersionKey = versions.getFirstKey();
         ensureDefaultValues();
     }
 
