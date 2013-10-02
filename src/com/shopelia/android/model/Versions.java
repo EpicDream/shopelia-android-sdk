@@ -68,7 +68,7 @@ public class Versions implements BaseModel<Versions> {
             if (index == 0) {
                 versions.mFirstKey = key;
             }
-            version.setOptions(key);
+            version.setOptions(key, options);
             versions.mVersions.append(key, version);
             versions.appendOptions(options);
             versions.mIsValid = versions.mIsValid && version.isValid();

@@ -148,4 +148,8 @@ public class Product implements BaseModel<Product> {
         return hasVersion() && getCurrentVersion().isValid() && merchant != null;
     }
 
+    public boolean isDone() {
+        return false;
+    }
+
 }

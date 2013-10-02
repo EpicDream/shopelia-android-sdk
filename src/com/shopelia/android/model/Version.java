@@ -41,6 +41,7 @@ public class Version implements BaseModel<Version> {
 
     // Options
     private long optionsHashcode = FIRST_OPTION;
+    private Option[] options;
 
     private Version(JSONObject object) throws JSONException {
         // Informations
@@ -75,10 +76,12 @@ public class Version implements BaseModel<Version> {
 
         // Options
         optionsHashcode = source.readLong();
+        options = (Option[]) source.readParcelableArray(Option.class.getClassLoader());
     }
 
-    public void setOptions(long optionsHash) {
+    public void setOptions(long optionsHash, Option[] options) {
         optionsHash = Long.valueOf(optionsHash);
+        this.options = options;
     }
 
     @Override
@@ -107,6 +110,7 @@ public class Version implements BaseModel<Version> {
 
         // Options
         dest.writeLong(optionsHashcode);
+        dest.writeParcelableArray(options, flags);
     }
 
     public static Version inflate(JSONObject object) throws JSONException {
