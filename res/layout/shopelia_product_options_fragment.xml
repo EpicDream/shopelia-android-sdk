@@ -22,7 +22,9 @@
         android:id="@+id/options_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_extra_large"
         android:orientation="vertical" >
+
     </LinearLayout>
 
 </LinearLayout>

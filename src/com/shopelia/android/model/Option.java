@@ -60,6 +60,11 @@ public class Option implements BaseModel<Option> {
     }
 
     @Override
+    public String toString() {
+        return getValue();
+    }
+
+    @Override
     public long getId() {
         return 0;
     }

@@ -7,8 +7,12 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.TextView;
 
 import com.shopelia.android.app.ShopeliaFragment;
+import com.shopelia.android.model.Option;
 import com.shopelia.android.model.Options;
 import com.shopelia.android.model.Product;
 
@@ -69,6 +73,9 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
         private int mIndex = 0;
         private View mView;
 
+        private Spinner mSelector;
+        private TextView mOptionLabel;
+
         public OptionsItem(int index) {
             mIndex = index;
         }
@@ -79,10 +86,21 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
 
         public void attachView(View v) {
             mView = v;
+            mSelector = findViewById(R.id.options_selector);
+            mOptionLabel = findViewById(R.id.option_label);
+        }
+
+        public <T extends View> T findViewById(int id) {
+            return (T) mView.findViewById(id);
         }
 
         public void refreshUi(Options options) {
-
+            ArrayAdapter<Option> adapter = new ArrayAdapter<Option>(mView.getContext(), android.R.layout.simple_dropdown_item_1line);
+            for (Option option : options) {
+                adapter.add(option);
+            }
+            mSelector.setAdapter(adapter);
+            mOptionLabel.setText(getResources().getString(R.string.shopelia_product_options_option_pattern, (mIndex + 1)));
         }
 
     }
@@ -92,5 +110,7 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     public void onEventMainThread(Product product) {
         refreshUi(product);
     }
+
+    // Spinners
 
 }
