@@ -14,10 +14,12 @@ public class ExtendedProduct implements JsonData {
         String DOWNLOAD_TIME = "download_at";
         String JSON = "json";
         String READY = "ready";
+        String OPTIONS_COMPLETED = "options_completed";
     }
 
     public String url;
     public boolean ready;
+    public boolean optionsCompleted;
 
     private JSONObject mJson;
     public long download_at;
@@ -36,6 +38,7 @@ public class ExtendedProduct implements JsonData {
     public void setJson(JSONObject object) {
         mJson = object;
         ready = object.optInt(Api.READY, 0) == 1;
+        optionsCompleted = object.optInt(Api.OPTIONS_COMPLETED, 0) == 1;
         mProduct = null;
     }
 

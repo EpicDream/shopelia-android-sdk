@@ -58,6 +58,7 @@ public class ProductAPI extends ApiController {
 
     private static final long POLLING_FREQUENCY = TimeUnits.SECONDS / 2;
     private static final long POLLING_EXPIRATION = 20 * TimeUnits.SECONDS;
+    private static final long POLLING_OPTIONS_EXPIRATION = 4 * TimeUnits.MINUTES;
 
     private HttpGetPoller mPoller;
     private SharedPreferences mPreferences;
@@ -117,8 +118,18 @@ public class ProductAPI extends ApiController {
                 try {
                     mProduct.setJson(new JSONObject(newResult.response.getBodyAsString()));
                     mProduct.download_at = System.currentTimeMillis();
-                    getEventBus().postSticky(new OnProductUpdateEvent(mProduct.getProduct(), true, mProduct.isValid() && mProduct.ready));
+                    boolean isDone = mProduct.isValid() && mProduct.ready
+                            && (!mProduct.getProduct().hasVersion() || mProduct.optionsCompleted);
+
                     if (mProduct.isValid() && mProduct.ready) {
+                        getEventBus().postSticky(new OnProductUpdateEvent(mProduct.getProduct(), true, isDone));
+                    }
+
+                    if (mProduct.ready && mProduct.getProduct().hasVersion()) {
+                        mPoller.setExpiryDuration(POLLING_OPTIONS_EXPIRATION);
+                    }
+
+                    if (isDone) {
                         addProductToCache(mProduct);
                         saveProducts(mProducts);
                     }
