@@ -6,6 +6,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.os.Parcel;
+import android.text.TextUtils;
 
 public class Option implements BaseModel<Option> {
 
@@ -19,11 +20,15 @@ public class Option implements BaseModel<Option> {
     public final String src;
 
     private Option(JSONObject object) throws JSONException {
-        this.text = object.optString(Api.TEXT, null);
-        this.src = object.optString(Api.SRC, null);
+        this.text = ensureNotEmpty(object.optString(Api.TEXT, null));
+        this.src = ensureNotEmpty(object.optString(Api.SRC, null));
         if (!isText() && !isImage()) {
             throw new JSONException("Should hold either src or text");
         }
+    }
+
+    private String ensureNotEmpty(String str) {
+        return TextUtils.isEmpty(str) ? null : str;
     }
 
     private Option(Parcel source) {

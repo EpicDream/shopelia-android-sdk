@@ -148,7 +148,7 @@
     <string name="shopelia_product_shipping_fees" formatted="false">+ %s de frais de livraison</string>
     <string name="shopelia_product_free_shipping">Livraison gratuite</string>
     <string name="shopelia_product_shipping_is_included">livraison <font fgcolor="#FF2b9b82">incluse</font></string>
-    <string name="shopelia_product_loading">Veuillez patienter...</string>
+    <string name="shopelia_product_loading">Chargement du produit...</string>
 
     <!-- Waiting process -->
     <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>

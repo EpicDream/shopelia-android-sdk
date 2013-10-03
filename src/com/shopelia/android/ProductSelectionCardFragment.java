@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
@@ -13,6 +14,10 @@ import com.shopelia.android.model.Product;
 import com.shopelia.android.model.Version;
 
 public class ProductSelectionCardFragment extends CardFragment {
+
+    public class OnSubmitProductEvent {
+
+    }
 
     public static final String TAG = "Product Selection";
 
@@ -40,6 +45,13 @@ public class ProductSelectionCardFragment extends CardFragment {
         mProduct = getArguments().getParcelable(ARGS_PRODUCT);
         refreshPrices();
         refreshOptionsFragment();
+        findViewById(R.id.validate).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                getActivityEventBus().post(new OnSubmitProductEvent());
+            }
+        });
     }
 
     @Override

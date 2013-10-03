@@ -1,8 +1,10 @@
 package com.shopelia.android;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.shopelia.android.ProductSelectionCardFragment.OnSubmitProductEvent;
 import com.shopelia.android.app.CardHolderActivity;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.Option;
@@ -35,6 +37,7 @@ public class ProductActivity extends CardHolderActivity {
         setActivityStyle(STYLE_FULLSCREEN);
         super.onCreate(savedInstanceState);
         mProductAPI = new ProductAPI(this);
+        startWaiting(getString(R.string.shopelia_product_loading), false, false);
     }
 
     @Override
@@ -71,6 +74,9 @@ public class ProductActivity extends CardHolderActivity {
 
     public void onEventMainThread(OnProductUpdateEvent event) {
         mProduct = event.resource;
+        if (event.isDone) {
+            // stopWaiting();
+        }
         if (mCurrentOptions != null) {
             mProduct.setCurrentVersion(mCurrentOptions);
         }
@@ -92,6 +98,13 @@ public class ProductActivity extends CardHolderActivity {
             getEventBus().postSticky(mProduct);
             Log.d(null, "UPDATE PRODUCT");
         }
+    }
+
+    public void onEventMainThread(OnSubmitProductEvent event) {
+        getOrder().product = mProduct;
+        Intent intent = new Intent(this, PrepareOrderActivity.class);
+        intent.putExtra(EXTRA_ORDER, getOrder());
+        startActivityForResult(intent, REQUEST_CHECKOUT);
     }
 
 }

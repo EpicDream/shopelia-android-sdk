@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 public class Options extends ArrayList<Option> implements Parcelable {
 
@@ -29,7 +30,8 @@ public class Options extends ArrayList<Option> implements Parcelable {
 
     @Override
     public boolean add(Option object) {
-        if (contains(object)) {
+        Log.d(null, "TRY TO ADD " + object);
+        if (contains(object) && object != null) {
             return false;
         }
         return super.add(object);

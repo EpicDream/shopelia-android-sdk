@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -36,13 +37,10 @@ import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Order;
 import com.shopelia.android.model.PaymentCard;
-import com.shopelia.android.model.Product;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiController.ErrorInflater;
 import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
-import com.shopelia.android.remote.api.ProductAPI;
 import com.shopelia.android.remote.api.ProductAPI.OnProductNotAvailable;
-import com.shopelia.android.remote.api.ProductAPI.OnProductUpdateEvent;
 import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.remote.api.UserAPI.OnAccountCreationSucceedEvent;
 import com.shopelia.android.remote.api.UserAPI.OnSignInEvent;
@@ -73,22 +71,14 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     private SignUpFragment mSignUpFragment = new SignUpFragment();
     private ScrollView mScrollView;
 
-    private Product mProduct;
-
     private int mSignInViewCount = 0;
 
-    // Cache
-    private String mCachedPincode = null;
-
     private Map<Class<?>, Fragment.SavedState> mSavedStates = new HashMap<Class<?>, Fragment.SavedState>();
-
-    private ProductAPI mProductAPI;
 
     @SuppressLint("NewApi")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mProductAPI = new ProductAPI(this);
         setHostContentView(R.layout.shopelia_prepare_order_activity);
         mScrollView = (ScrollView) findViewById(R.id.scrollview);
 
@@ -97,6 +87,10 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
             finish();
             return;
         }
+
+        Log.d(null, "PRODUCT IS = " + getOrder().product.getCurrentVersion().isValid() + " " + getOrder().product.isValid());
+
+        ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(getOrder().product, false);
 
         if (savedInstanceState == null) {
             if (!UserManager.get(this).isLogged() || isCalledByAcountManager()) {
@@ -119,19 +113,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
         }
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mProductAPI.registerSticky(this);
-    }
-
-    public void onEventMainThread(OnProductUpdateEvent event) {
-        if (event.resource.isValid()) {
-            mProduct = event.resource;
-            ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(event.resource, event.isFromNetwork);
-        }
-    }
-
     public void onEventMainThread(OnProductNotAvailable event) {
         ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(event.resource);
         fragment.show(getSupportFragmentManager(), null);
@@ -139,12 +120,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
 
     public void onEventMainThread(OnApiErrorEvent event) {
 
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        mProductAPI.unregister(this);
     }
 
     @Override
@@ -158,13 +133,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
                 setResult(resultCode, result);
                 finish();
                 return;
-            case REQUEST_CREATE_PINCODE:
-                if (resultCode == RESULT_OK) {
-                    final Order order = getOrder();
-                    mCachedPincode = order.user.pincode;
-                    createAccount();
-                }
-                break;
             case REQUEST_ADD_PAYMENT_CARD:
                 if (resultCode == RESULT_OK) {
                     getOrder().user.addPaymentCard((PaymentCard) data.getParcelableExtra(AddPaymentCardActivity.EXTRA_PAYMENT_CARD));
@@ -192,7 +160,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     @Override
     public void onSignUp(JSONObject result) {
         setOrder(Order.inflate(result));
-        getOrder().user.pincode = mCachedPincode;
         createAccount();
     }
 
@@ -243,8 +210,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     }
 
     private void prepareOrder(Order order) {
-        order.product = mProduct;
-
         order.user = UserManager.get(this).getUser();
     }
 

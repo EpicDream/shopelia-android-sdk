@@ -57,7 +57,7 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     }
 
     private void refreshUi(Product product) {
-        mIsLoading = !product.isDone();
+        mIsLoading = getBaseActivity().isInWaitingMode();
         if (mOptionsItems == null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             final int size = product.versions.getOptionsCount();

@@ -76,7 +76,11 @@ public class Version implements BaseModel<Version> {
 
         // Options
         optionsHashcode = source.readLong();
-        options = (Option[]) source.readParcelableArray(Option.class.getClassLoader());
+        Parcelable[] p = source.readParcelableArray(Option.class.getClassLoader());
+        options = new Option[p.length];
+        for (int index = 0; index < p.length; index++) {
+            options[index] = (Option) p[index];
+        }
     }
 
     public void setOptions(long optionsHash, Option[] options) {
@@ -86,6 +90,10 @@ public class Version implements BaseModel<Version> {
 
     public Option[] getOptions() {
         return options;
+    }
+
+    public long getOptionHashcode() {
+        return optionsHashcode;
     }
 
     @Override
@@ -104,6 +112,7 @@ public class Version implements BaseModel<Version> {
         dest.writeString(name);
         dest.writeString(description);
         dest.writeString(shippingExtra);
+        dest.writeString(availabilityInfo);
         dest.writeString(imageUrl);
 
         // Prices

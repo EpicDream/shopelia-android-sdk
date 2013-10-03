@@ -6,6 +6,8 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.util.LongSparseArray;
 
+import com.shopelia.android.model.Version;
+
 /**
  * Utility class made to ease {@link Parcel} usage.
  * 
@@ -94,7 +96,7 @@ public final class ParcelUtils {
         }
     }
 
-    public static <T> void writeLongSparseArray(Parcel dest, LongSparseArray<T> array, int flags) {
+    public static <T extends Parcelable> void writeLongSparseArray(Parcel dest, LongSparseArray<T> array, int flags) {
         dest.writeByte((byte) (array != null ? 1 : 0));
         if (array == null) {
             return;
@@ -109,22 +111,51 @@ public final class ParcelUtils {
         }
         dest.writeLongArray(keys);
         for (int index = 0; index < size; index++) {
-            dest.writeValue(array.valueAt(index));
+            dest.writeParcelable(array.valueAt(index), flags);
+            ParcelUtils.writeParcelable(dest, array.valueAt(index), flags);
         }
     }
 
-    public static <T> LongSparseArray<T> readLongSparseArray(Parcel source, ClassLoader classLoader) {
+    public static <T extends Parcelable> LongSparseArray<T> readLongSparseArray(Parcel source, ClassLoader classLoader) {
         if (source.readByte() == 0) {
             return null;
         }
         final int size = source.readInt();
         final long[] keys = new long[size];
         source.readLongArray(keys);
-        LongSparseArray<T> out = new LongSparseArray<T>();
+        LongSparseArray<T> out = new LongSparseArray<T>(size);
         for (int index = 0; index < size; index++) {
-            out.append(keys[index], (T) source.readValue(classLoader));
+            out.append(keys[index], (T) ParcelUtils.readParcelable(source, classLoader));
         }
         return out;
+    }
+
+    public static void writeVersionArray(Parcel dest, LongSparseArray<Version> array, int flags) {
+        byte exists = (byte) (array != null ? 1 : 0);
+        dest.writeByte(exists);
+        if (array != null) {
+            final int size = array.size();
+            dest.writeInt(size);
+            for (int index = 0; index < size; index++) {
+                Version version = array.valueAt(index);
+                if (version != null) {
+                    dest.writeParcelable(version, flags);
+                }
+            }
+        }
+    }
+
+    public static LongSparseArray<Version> readVersionsArray(Parcel source) {
+        if (source.readByte() == 1) {
+            LongSparseArray<Version> versions = new LongSparseArray<Version>();
+            final int size = source.readInt();
+            for (int index = 0; index < size; index++) {
+                Version version = source.readParcelable(Version.class.getClassLoader());
+                versions.append(version.getOptionHashcode(), version);
+            }
+            return versions;
+        }
+        return null;
     }
 
 }

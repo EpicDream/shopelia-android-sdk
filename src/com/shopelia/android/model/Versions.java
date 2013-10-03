@@ -22,18 +22,24 @@ public class Versions implements BaseModel<Versions> {
     }
 
     private Versions(Parcel source) {
-        mVersions = ParcelUtils.readLongSparseArray(source, Version.class.getClassLoader());
-        mOptions = (Options[]) source.readArray(Option.class.getClassLoader());
+        mVersions = ParcelUtils.readVersionsArray(source);
+        Parcelable[] p = source.readParcelableArray(Option.class.getClassLoader());
+        mOptions = new Options[p.length];
+        System.arraycopy(p, 0, mOptions, 0, p.length);
         mFirstKey = source.readLong();
         mIsValid = source.readByte() == 1;
     }
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        ParcelUtils.writeLongSparseArray(dest, mVersions, flags);
-        dest.writeArray(mOptions);
+        ParcelUtils.writeVersionArray(dest, mVersions, flags);
+        dest.writeParcelableArray(mOptions, flags);
         dest.writeLong(mFirstKey);
         dest.writeByte((byte) (mIsValid ? 1 : 0));
+    }
+
+    public void addVersion(Version version) {
+        mVersions.append(version.getOptionHashcode(), version);
     }
 
     public int getOptionsCount() {

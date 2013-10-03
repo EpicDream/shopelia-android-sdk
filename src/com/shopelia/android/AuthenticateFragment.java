@@ -118,7 +118,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
                     dialog.dismiss();
                     UserManager.get(getActivity()).logout();
                     if (!getShowsDialog()) {
-                        getActivity().startActivityForResult(new Intent(getActivity(), PrepareOrderActivity.class), 12);
+                        getActivity().startActivityForResult(new Intent(getActivity(), ProductActivity.class), 12);
                     } else {
                         getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
                         getActivity().finish();

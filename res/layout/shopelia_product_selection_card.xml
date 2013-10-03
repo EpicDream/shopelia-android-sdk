@@ -146,7 +146,7 @@
     </LinearLayout>
 
     <com.shopelia.android.widget.ValidationButton
-        android:id="@+id/validationButton1"
+        android:id="@+id/validate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:shopelia_text="@string/shopelia_product_purchase_this"

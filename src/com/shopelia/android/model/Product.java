@@ -40,9 +40,12 @@ public class Product implements BaseModel<Product> {
 
     protected Product(Parcel source) {
         url = source.readString();
-        mCurrentVersionKey = source.readLong();
-        Versions v = ParcelUtils.readParcelable(source, Versions.class.getClassLoader());
-        versions = v != null ? v : new Versions();
+        versions = new Versions();
+        Version version = ParcelUtils.readParcelable(source, Version.class.getClassLoader());
+        if (version != null) {
+            mCurrentVersionKey = version.getOptionHashcode();
+            versions.addVersion(version);
+        }
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
@@ -70,8 +73,7 @@ public class Product implements BaseModel<Product> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);
-        dest.writeLong(mCurrentVersionKey);
-        ParcelUtils.writeParcelable(dest, versions, flags);
+        ParcelUtils.writeParcelable(dest, getCurrentVersion(), flags);
         ParcelUtils.writeParcelable(dest, merchant, flags);
         ParcelUtils.writeParcelable(dest, tax, flags);
         ParcelUtils.writeParcelable(dest, currency, flags);

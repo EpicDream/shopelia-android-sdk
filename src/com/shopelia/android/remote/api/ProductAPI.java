@@ -133,7 +133,7 @@ public class ProductAPI extends ApiController {
                         addProductToCache(mProduct);
                         saveProducts(mProducts);
                     }
-                    return mProduct.isValid();
+                    return isDone;
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
