@@ -484,6 +484,9 @@ public class ImageLoader {
                                 }
                             } catch (Exception e) {
                                 exception = e;
+
+                            } catch (OutOfMemoryError e) {
+                                flush();
                             } catch (Throwable t) {
                                 if (t instanceof Error) {
                                     throw (Error) t;
