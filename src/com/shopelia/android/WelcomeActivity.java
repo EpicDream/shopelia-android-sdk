@@ -88,16 +88,14 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
         UserManager um = UserManager.get(this);
         if (um.isLogged() && um.hasAccountPermission() && um.getAccount() == null) {
             um.logout();
-            startActivityForResult(new Intent(this, PrepareOrderActivity.class), REQUEST_CHECKOUT);
+            startActivityForResult(new Intent(this, ProductActivity.class), REQUEST_CHECKOUT);
             return;
         } else if (um.getUser() != null && !um.isAutoSignedIn()) {
             setHostContentView(R.layout.shopelia_welcome_activity);
             FragmentManager fm = getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.replace(R.id.fragment_container, new AuthenticateFragment());
-            ft.commit();
+            startActivityForResult(new Intent(this, ProductActivity.class), REQUEST_CHECKOUT);
         } else if (um.getCheckoutCount() > 0 || um.isAutoSignedIn()) {
-            startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
+            startActivityForResult(new Intent(this, ProductActivity.class), 0);
         } else {
             if (getIntent().getExtras().getBoolean(Shopelia.EXTRA_DISPLAY_WELCOME_SCREEN, true)) {
                 setHostContentView(R.layout.shopelia_welcome_activity);
@@ -107,7 +105,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
                 ft.replace(R.id.fragment_container, new WelcomeFragment());
                 ft.commit();
             } else {
-                startActivityForResult(new Intent(this, PrepareOrderActivity.class), 0);
+                startActivityForResult(new Intent(this, ProductActivity.class), 0);
             }
 
         }
@@ -158,7 +156,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
     @Override
     public void onUserAuthenticate(boolean autoSignIn) {
         UserManager.get(this).setAutoSignIn(autoSignIn);
-        startActivityForResult(new Intent(this, PrepareOrderActivity.class), REQUEST_CHECKOUT);
+        startActivityForResult(new Intent(this, ProductActivity.class), REQUEST_CHECKOUT);
     }
 
     @Override

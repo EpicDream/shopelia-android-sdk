@@ -6,6 +6,7 @@ import android.os.Bundle;
 import com.shopelia.android.ProductSelectionCardFragment.OnSubmitProductEvent;
 import com.shopelia.android.app.CardHolderActivity;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Option;
 import com.shopelia.android.model.Product;
 import com.shopelia.android.remote.api.ProductAPI;
@@ -122,9 +123,12 @@ public class ProductActivity extends CardHolderActivity {
 
     public void onEventMainThread(OnSubmitProductEvent event) {
         getOrder().product = mProduct;
-        Intent intent = new Intent(this, PrepareOrderActivity.class);
-        intent.putExtra(EXTRA_ORDER, getOrder());
-        startActivityForResult(intent, REQUEST_CHECKOUT);
+        if (UserManager.get(this).isLogged()) {
+            new AuthenticateFragment().show(getSupportFragmentManager(), null);
+        } else {
+            Intent intent = new Intent(this, PrepareOrderActivity.class);
+            intent.putExtra(EXTRA_ORDER, getOrder());
+            startActivityForResult(intent, REQUEST_CHECKOUT);
+        }
     }
-
 }

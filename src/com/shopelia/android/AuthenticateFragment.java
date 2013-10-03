@@ -78,12 +78,6 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
 
         mVerifyAPI = new VerifyAPI(getActivity());
 
-        if (getShowsDialog()) {
-            findViewById(R.id.remember_me).setVisibility(View.GONE);
-            setCancelable(false);
-        } else {
-
-        }
     }
 
     @Override
