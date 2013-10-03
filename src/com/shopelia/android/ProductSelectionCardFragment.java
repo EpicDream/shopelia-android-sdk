@@ -42,6 +42,26 @@ public class ProductSelectionCardFragment extends CardFragment {
         refreshOptionsFragment();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        getActivityEventBus().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivityEventBus().unregister(this);
+    }
+
+    // Events
+    public void onEventMainThread(Product product) {
+        getArguments().putParcelable(ARGS_PRODUCT, product);
+        mProduct = product;
+        refreshPrices();
+        refreshOptionsFragment();
+    }
+
     private void refreshPrices() {
         setPriceOrHide(R.id.product_price, mProduct.getCurrentVersion().productPrice);
         setPriceOrHide(R.id.delivery_price, mProduct.getCurrentVersion().shippingPrice, 0);
