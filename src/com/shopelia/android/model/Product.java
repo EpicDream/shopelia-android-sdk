@@ -19,6 +19,9 @@ public class Product implements BaseModel<Product> {
         String URL = "url";
         String MERCHANT = "merchant";
         String VERSIONS = "versions";
+        String QUANTITY = "quantity";
+        String PRODUCT_VERSION_ID = "product_version_id";
+
     }
 
     public static final String IDENTIFIER = Product.class.getName();
@@ -32,6 +35,8 @@ public class Product implements BaseModel<Product> {
 
     public final Versions versions;
     public long mCurrentVersionKey;
+
+    private int mQuantity = 1;
 
     public Product(String url) {
         this.url = url;
@@ -62,6 +67,8 @@ public class Product implements BaseModel<Product> {
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
+        json.put(Api.PRODUCT_VERSION_ID, getCurrentVersion().getId());
+        json.put(Api.QUANTITY, mQuantity);
         return json;
     }
 

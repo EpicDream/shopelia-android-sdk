@@ -2,7 +2,6 @@ package com.shopelia.android;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 
 import com.shopelia.android.ProductSelectionCardFragment.OnSubmitProductEvent;
 import com.shopelia.android.app.CardHolderActivity;
@@ -37,7 +36,6 @@ public class ProductActivity extends CardHolderActivity {
         setActivityStyle(STYLE_FULLSCREEN);
         super.onCreate(savedInstanceState);
         mProductAPI = new ProductAPI(this);
-        startWaiting(getString(R.string.shopelia_product_loading), false, false);
     }
 
     @Override
@@ -45,6 +43,7 @@ public class ProductActivity extends CardHolderActivity {
         super.onResume();
         mProductAPI.registerSticky(this);
         if (mProduct == null || !mProduct.isValid()) {
+            startWaiting(getString(R.string.shopelia_product_loading), false, true);
             mProductAPI.getProduct(new Product(getIntent().getExtras().getString(EXTRA_PRODUCT_URL)));
         }
     }
@@ -53,6 +52,28 @@ public class ProductActivity extends CardHolderActivity {
     protected void onPause() {
         super.onPause();
         mProductAPI.unregister(this);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == RESULT_LOGOUT) {
+            finish();
+            return;
+        }
+        switch (requestCode) {
+            case REQUEST_CHECKOUT:
+                if (resultCode == RESULT_OK) {
+                    setResult(RESULT_OK);
+                    finish();
+                } else {
+
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
     @Override
@@ -75,7 +96,7 @@ public class ProductActivity extends CardHolderActivity {
     public void onEventMainThread(OnProductUpdateEvent event) {
         mProduct = event.resource;
         if (event.isDone) {
-            // stopWaiting();
+            stopWaiting();
         }
         if (mCurrentOptions != null) {
             mProduct.setCurrentVersion(mCurrentOptions);
@@ -96,7 +117,6 @@ public class ProductActivity extends CardHolderActivity {
             mProduct.setCurrentVersion(event.lastChange, event.options);
             mCurrentOptions = mProduct.getCurrentVersion().getOptions();
             getEventBus().postSticky(mProduct);
-            Log.d(null, "UPDATE PRODUCT");
         }
     }
 

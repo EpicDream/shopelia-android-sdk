@@ -174,11 +174,15 @@ public class Version implements BaseModel<Version> {
     }
 
     public float getExpectedTotalPrice() {
-        return 0;
+        return (centify(productPrice) + centify(shippingPrice)) / 100.f;
     }
 
     public boolean isShippingFree() {
         return false;
+    }
+
+    public double getExpectedCashfrontValue() {
+        return (centify(cashfrontValue)) / 100.f;
     }
 
 }

@@ -15,7 +15,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
@@ -88,10 +87,6 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
             return;
         }
 
-        Log.d(null, "PRODUCT IS = " + getOrder().product.getCurrentVersion().isValid() + " " + getOrder().product.isValid());
-
-        ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(getOrder().product, false);
-
         if (savedInstanceState == null) {
             if (!UserManager.get(this).isLogged() || isCalledByAcountManager()) {
                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -113,6 +108,12 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
         }
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        ((ProductSheetWidget) findViewById(R.id.product_sheet)).setProductInfo(getOrder().product, false);
+    }
+
     public void onEventMainThread(OnProductNotAvailable event) {
         ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(event.resource);
         fragment.show(getSupportFragmentManager(), null);
@@ -126,6 +127,11 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+        if (resultCode == RESULT_LOGOUT) {
+            setResult(RESULT_LOGOUT);
+            finish();
+            return;
+        }
         switch (requestCode) {
             case REQUEST_CHECKOUT:
                 Intent result = new Intent();
