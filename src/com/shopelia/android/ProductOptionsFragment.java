@@ -50,6 +50,7 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        Log.d(null, "CREATE VIEW");
         mOptionsContainer = findViewById(R.id.options_container);
         Product product = (Product) getActivityEventBus().getStickyEvent(Product.class);
         refreshUi(product);
@@ -129,9 +130,17 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
             mAdapter.add(options);
             mOptionLabel.setText(getResources().getString(R.string.shopelia_product_options_option_pattern, (mIndex + 1)));
             if (mOptions[mIndex] == null) {
+                Log.d(null, "RESET TO 0");
                 setCurrentOption(mIndex, options.get(0));
             }
-            Log.d(null, "REFRESH UI");
+            int currentSelection = mSelector.getSelectedItemPosition();
+            if (currentSelection >= 0) {
+                mOptions[mIndex] = product.getCurrentVersion().getOptions()[mIndex];
+                int indexOf = mAdapter.indexOf(product.getCurrentVersion().getOptions()[mIndex]);
+                if (indexOf != currentSelection) {
+                    mSelector.setSelection(indexOf);
+                }
+            }
             if (!product.getCurrentVersion().getOptions()[mIndex].equals(mOptions[mIndex])) {
                 mOptions[mIndex] = product.getCurrentVersion().getOptions()[mIndex];
                 mSelector.setSelection(mAdapter.indexOf(product.getCurrentVersion().getOptions()[mIndex]));
@@ -241,7 +250,6 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     }
 
     public void setCurrentOption(int index, Option option) {
-        Log.d(null, "CURRENT OPTION CHANGED");
         mOptions[index] = option;
         boolean canSend = true;
         for (Option o : mOptions) {

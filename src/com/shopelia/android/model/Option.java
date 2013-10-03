@@ -85,7 +85,7 @@ public class Option implements BaseModel<Option> {
             Option option = (Option) o;
             return isText() ? text.equals(option.text) : src.equals(option.src);
         }
-        return super.equals(o);
+        return false;
     }
 
     @Override
