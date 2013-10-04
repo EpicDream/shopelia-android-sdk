@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.shopelia.android.app.CardFragment;
+import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.view.animation.AnimationHelper;
 import com.shopelia.android.view.animation.AnimationHelper.OnAnimationCompleteListener;
 
@@ -17,20 +18,20 @@ public class ErrorCardFragment extends CardFragment {
 
     }
 
-    private static final String ARGS_MESSAGE = "args:message";
+    public static class OnErrorButtonClickEvent {
 
-    public static ErrorCardFragment newInstance(int messageId) {
-        ErrorCardFragment fragment = new ErrorCardFragment();
-        Bundle args = new Bundle();
-        args.putInt(ARGS_MESSAGE, messageId);
-        fragment.setArguments(args);
-        return fragment;
     }
 
-    public static ErrorCardFragment newInstance(CharSequence message) {
+    private static final OnErrorButtonClickEvent EVENT_ON_ERROR_BUTTON_CLICK = new OnErrorButtonClickEvent();
+
+    private static final String ARGS_MESSAGE = "args:message";
+    private static final String ARGS_BUTTON = "args:button";
+
+    public static ErrorCardFragment newInstance(CharSequence message, CharSequence button) {
         ErrorCardFragment fragment = new ErrorCardFragment();
         Bundle args = new Bundle();
         args.putString(ARGS_MESSAGE, message.toString());
+        args.putString(ARGS_BUTTON, button.toString());
         fragment.setArguments(args);
         return fragment;
     }
@@ -44,18 +45,19 @@ public class ErrorCardFragment extends CardFragment {
     public void onBindView(View view, Bundle savedInstanceState) {
         super.onBindView(view, savedInstanceState);
         setMessage(getMessage());
+        setButtonMessage(getButtonMessage());
+        getActivityEventBus().register(this, DismissEvent.class);
     }
 
     @Override
     public void onCardShouldBeVisible() {
         super.onCardShouldBeVisible();
-        // AnimationHelper.playVerticalLandIn(getView(), 200, 800, null);
-        getActivityEventBus().register(this, DismissEvent.class);
+        AnimationHelper.playVerticalSlideIn(getView(), 200, 800, null);
         findViewById(R.id.back_button).setOnClickListener(new OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                // Should finish activity
+                getActivityEventBus().post(EVENT_ON_ERROR_BUTTON_CLICK);
             }
         });
     }
@@ -77,6 +79,23 @@ public class ErrorCardFragment extends CardFragment {
         return null;
     }
 
+    public void setButtonMessage(CharSequence message) {
+        TextView view = findViewById(R.id.back_button_message);
+        view.setText(message);
+    }
+
+    public CharSequence getButtonMessage() {
+        Object message = getArguments().get(ARGS_BUTTON);
+        if (message instanceof CharSequence) {
+            return (CharSequence) message;
+        } else if (message instanceof Integer) {
+            int messageId = ((Integer) message).intValue();
+            CharSequence sequence = getText(messageId);
+            return sequence;
+        }
+        return null;
+    }
+
     @Override
     public void onPause() {
         super.onPause();
@@ -88,8 +107,7 @@ public class ErrorCardFragment extends CardFragment {
 
             @Override
             public void onAnimationComplete() {
-                // getActivityEventBus().post(new
-                // BaseActivity.DetachFragmentEvent(ErrorCardFragment.this));
+                getActivityEventBus().post(new ShopeliaActivity.RemoveFragmentEvent(ErrorCardFragment.this));
             }
         });
     }

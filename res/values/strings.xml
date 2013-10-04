@@ -53,9 +53,9 @@
     <string name="shopelia_product_price_delivery">Livraison</string>
     <string name="shopelia_product_price_delivery_free">gratuite</string>
     <string name="shopelia_product_price_shopelia">Avantage Shopelia</string>
-	<string name="shopelia_product_options_choose">Veuillez choisir</string>
-	<string name="shopelia_product_options_option_pattern">Option %d</string>
-	
+    <string name="shopelia_product_options_choose">Veuillez choisir</string>
+    <string name="shopelia_product_options_option_pattern">Option %d</string>
+
     <!-- Authenticate -->
     <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
     <string name="shopelia_authenticate_title">Authentification</string>
@@ -206,7 +206,7 @@
     <!-- Product not found -->
     <string name="shopelia_product_not_found_title">Désolé, ce produit n\'est pas disponible.</string>
     <string name="shopelia_product_not_fount_text" formatted="false">Vous pouvez visiter la fiche produit chez le marchand %s afin d\'avoir plus d\'informations.</string>
-    <string name="shopelia_product_not_fount_validation">Voir la fiche produit</string>
+    <string name="shopelia_product_not_fount_validation">Voir le produit chez le marchand</string>
 
     <!-- Time -->
     <plurals name="hour">
@@ -258,6 +258,9 @@
     <string name="shopelia_error_network_error">Une erreur réseau est survenue</string>
     <string name="shopelia_error_server_broke_down">Les serveurs shopelia ne répondent pas</string>
     <string name="shopelia_error_user_already_exists" formatted="false">Vous avez déjà un compte shopelia.</string>
+    <string name="shopelia_error_default_back_message">Retour</string>
+    <string name="shopelia_error_no_network">Une erreur réseau est survenue.</string>
+    <string name="shopelia_error_no_network_button">Réessayer</string>
 
     <!-- Common -->
     <string name="shopelia_common_buy">Acheter</string>

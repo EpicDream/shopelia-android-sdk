@@ -9,11 +9,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.model.Product;
+import com.shopelia.android.view.animation.AnimationHelper;
+import com.shopelia.android.view.animation.AnimationHelper.OnAnimationCompleteListener;
 import com.shopelia.android.widget.FontableTextView;
 
 public class ProductNotFoundFragment extends ShopeliaFragment<Void> {
+
+    public static class DismissEvent {
+
+    }
 
     private static final String ARGS_PRODUCT = "args:product";
 
@@ -36,11 +43,27 @@ public class ProductNotFoundFragment extends ShopeliaFragment<Void> {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        getActivityEventBus().register(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getActivityEventBus().unregister(this);
+    }
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final Product product = getArguments().getParcelable(ARGS_PRODUCT);
         FontableTextView text = findViewById(R.id.text);
-        text.setText(getString(R.string.shopelia_product_not_fount_text, product.merchant.name));
+        if (product.merchant != null) {
+            text.setText(getString(R.string.shopelia_product_not_fount_text, product.merchant.name));
+        } else {
+            text.setVisibility(View.GONE);
+        }
         findViewById(R.id.validate).setOnClickListener(new OnClickListener() {
 
             @Override
@@ -54,6 +77,7 @@ public class ProductNotFoundFragment extends ShopeliaFragment<Void> {
                 }
             }
         });
+        AnimationHelper.playVerticalSlideIn(getView(), 200, 0, null);
     }
 
     @Override
@@ -62,6 +86,21 @@ public class ProductNotFoundFragment extends ShopeliaFragment<Void> {
         if (getActivity() != null) {
             getActivity().finish();
         }
+    }
+
+    // Events
+    public void onEventMainThread(DismissEvent event) {
+        close();
+    }
+
+    public void close() {
+        AnimationHelper.playVerticalSlideOut(getView(), 200, 0, new OnAnimationCompleteListener() {
+
+            @Override
+            public void onAnimationComplete() {
+                getActivityEventBus().post(new ShopeliaActivity.RemoveFragmentEvent(ProductNotFoundFragment.this));
+            }
+        });
     }
 
 }

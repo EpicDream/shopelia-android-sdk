@@ -1,5 +1,7 @@
 package com.shopelia.android.http;
 
+import java.io.IOException;
+
 import com.shopelia.android.http.HttpGetPoller.HttpGetRequest;
 import com.shopelia.android.http.HttpGetPoller.HttpGetResponse;
 import com.shopelia.android.remote.api.ShopeliaRestClient;
@@ -51,6 +53,9 @@ public class HttpGetPoller extends AbstractPoller<HttpGetRequest, HttpGetRespons
             response = mClient.get(param.endpoint, param.params);
         } catch (Exception e) {
             exception = e;
+        }
+        if (response == null) {
+            exception = new IOException();
         }
         return new HttpGetResponse(response, exception);
     }

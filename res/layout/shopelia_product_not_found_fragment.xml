@@ -2,17 +2,28 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:layout_marginLeft="@dimen/shopelia_margin_normal"
+    android:layout_marginRight="@dimen/shopelia_margin_normal"
+    android:background="@drawable/shopelia_card_background"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/shopelia_activity_vertical_margin"
     android:paddingLeft="@dimen/shopelia_activity_horizontal_margin"
     android:paddingRight="@dimen/shopelia_activity_horizontal_margin"
-    android:paddingTop="@dimen/shopelia_activity_vertical_margin"
-    android:paddingBottom="@dimen/shopelia_activity_vertical_margin"
-    android:orientation="vertical" >
+    android:paddingTop="@dimen/shopelia_activity_vertical_margin" >
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/shopelia_ic_error_logo" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
         android:gravity="center"
         android:text="@string/shopelia_product_not_found_title"
         android:textColor="@color/shopelia_dark"
@@ -34,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:background="@drawable/shopelia_bg_red_button"
         app:shopelia_text="@string/shopelia_product_not_fount_validation" >
 
     </com.shopelia.android.widget.ValidationButton>

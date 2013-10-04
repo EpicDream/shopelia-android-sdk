@@ -3,6 +3,7 @@ package com.shopelia.android.widget;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
@@ -55,6 +56,17 @@ public class ValidationButton extends FrameLayout {
             } finally {
                 ta.recycle();
             }
+        }
+        if (super.getBackground() != null && super.getBackground() instanceof BitmapDrawable) {
+            int paddingHorizontal = getChildAt(0).getPaddingTop();
+            int paddingVertical = getChildAt(0).getPaddingLeft();
+            setCompatBackground(super.getBackground());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                super.setBackground(null);
+            } else {
+                super.setBackgroundDrawable(null);
+            }
+            getChildAt(0).setPadding(paddingHorizontal, paddingVertical, paddingHorizontal, paddingVertical);
         }
     }
 

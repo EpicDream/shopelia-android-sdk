@@ -10,7 +10,10 @@ import android.content.Context;
 import android.graphics.PixelFormat;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,6 +48,15 @@ import de.greenrobot.event.EventBus;
  * @author Pierre Pollastri
  */
 public abstract class ShopeliaActivity extends FragmentActivity {
+
+    public static class RemoveFragmentEvent {
+        public final Fragment fragment;
+
+        public RemoveFragmentEvent(Fragment fragment) {
+            this.fragment = fragment;
+        }
+
+    }
 
     public static final String EXTRA_ORDER = Config.EXTRA_PREFIX + "ORDER";
     protected static final String EXTRA_INIT_ORDER = Config.EXTRA_PREFIX + "INIT_ORDER";
@@ -483,8 +495,11 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
     // Events
 
-    public void onEvent(Object event) {
-
+    public void onEvent(RemoveFragmentEvent event) {
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.remove(event.fragment);
+        ft.commit();
     }
 
 }

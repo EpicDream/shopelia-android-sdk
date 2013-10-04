@@ -2,6 +2,8 @@ package com.shopelia.android;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.AuthenticateFragment.OnAuthenticateEvent;
 import com.shopelia.android.ProductSelectionCardFragment.OnSubmitProductEvent;
@@ -11,7 +13,9 @@ import com.shopelia.android.image.ImageLoader;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Option;
 import com.shopelia.android.model.Product;
+import com.shopelia.android.remote.api.MerchantsAPI;
 import com.shopelia.android.remote.api.ProductAPI;
+import com.shopelia.android.remote.api.ProductAPI.OnNetworkError;
 import com.shopelia.android.remote.api.ProductAPI.OnProductUpdateEvent;
 
 public class ProductActivity extends CardHolderActivity {
@@ -47,6 +51,8 @@ public class ProductActivity extends CardHolderActivity {
         super.onResume();
         mProductAPI.registerSticky(this);
         if (mProduct == null || !mProduct.isValid()) {
+            getEventBus().post(new ProductNotFoundFragment.DismissEvent());
+            getEventBus().post(new ErrorCardFragment.DismissEvent());
             startWaiting(getString(R.string.shopelia_product_loading), false, true);
             mProductAPI.getProduct(new Product(getIntent().getExtras().getString(EXTRA_PRODUCT_URL)));
         } else {
@@ -101,6 +107,8 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     public void onEventMainThread(OnProductUpdateEvent event) {
+        getEventBus().post(new ProductNotFoundFragment.DismissEvent());
+        getEventBus().post(new ErrorCardFragment.DismissEvent());
         mProduct = event.resource;
         if (event.isDone) {
             stopWaiting();
@@ -117,6 +125,26 @@ public class ProductActivity extends CardHolderActivity {
             addCard(ProductSelectionCardFragment.newInstance(event.resource), 0, false, ProductSelectionCardFragment.TAG);
         }
         getEventBus().postSticky(event.resource);
+    }
+
+    public void onEventMainThread(ProductAPI.OnProductNotAvailable event) {
+        stopWaiting();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        Product p = new Product(getIntent().getExtras().getString(EXTRA_PRODUCT_URL));
+        p.merchant = new MerchantsAPI(this).getMerchant(p.url);
+        ft.replace(R.id.overlay_frame, ProductNotFoundFragment.newInstance(p));
+        ft.commit();
+    }
+
+    public void onEventMainThread(OnNetworkError event) {
+        getEventBus().post(new ProductNotFoundFragment.DismissEvent());
+        stopWaiting();
+        FragmentManager fm = getSupportFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        ft.replace(R.id.overlay_frame, ErrorCardFragment.newInstance(getString(R.string.shopelia_error_no_network),
+                getString(R.string.shopelia_error_no_network_button)));
+        ft.commit();
     }
 
     public void onEventMainThread(ProductOptionsFragment.OnOptionsChanged event) {
@@ -136,6 +164,13 @@ public class ProductActivity extends CardHolderActivity {
             intent.putExtra(EXTRA_ORDER, getOrder());
             startActivityForResult(intent, REQUEST_CHECKOUT);
         }
+    }
+
+    public void onEventMainThread(ErrorCardFragment.OnErrorButtonClickEvent event) {
+        getEventBus().post(new ProductNotFoundFragment.DismissEvent());
+        getEventBus().post(new ErrorCardFragment.DismissEvent());
+        startWaiting(getString(R.string.shopelia_product_loading), false, true);
+        mProductAPI.getProduct(new Product(getIntent().getExtras().getString(EXTRA_PRODUCT_URL)));
     }
 
     public void onEventMainThread(OnAuthenticateEvent event) {

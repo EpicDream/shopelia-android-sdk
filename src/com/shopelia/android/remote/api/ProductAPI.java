@@ -43,6 +43,10 @@ public class ProductAPI extends ApiController {
 
     }
 
+    public class OnNetworkError {
+
+    }
+
     public class OnProductNotAvailable extends OnResourceEvent<Product> {
 
         protected OnProductNotAvailable(Product resource) {
@@ -67,7 +71,7 @@ public class ProductAPI extends ApiController {
     private CountDownLatch mCacheLoaded = new CountDownLatch(1);
 
     private static final Class<?>[] sEventTypes = new Class<?>[] {
-            OnProductNotAvailable.class, OnProductUpdateEvent.class
+            OnProductNotAvailable.class, OnProductUpdateEvent.class, OnApiErrorEvent.class
     };
 
     public ProductAPI(Context context) {
@@ -113,7 +117,8 @@ public class ProductAPI extends ApiController {
         @Override
         public boolean onResult(HttpGetResponse previousResult, final HttpGetResponse newResult) {
             if (newResult.exception != null) {
-                fireError(newResult.response, null, newResult.exception);
+                getEventBus().post(new OnNetworkError());
+                return true;
             } else if (newResult.response != null) {
                 try {
                     mProduct.setJson(new JSONObject(newResult.response.getBodyAsString()));
