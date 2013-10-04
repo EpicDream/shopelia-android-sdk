@@ -43,7 +43,7 @@ public class ShopeliaFragment<Contract> extends DialogFragment {
     }
 
     public void onAttach() {
-        if (getShopeliaDialog() == null) {
+        if (!getShowsDialog()) {
             onCreateShopeliaActionBar(getBaseActivity().getShopeliaActionBar());
         }
     }

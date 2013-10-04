@@ -24,7 +24,9 @@ public class ProcessOrderActivity extends ShopeliaActivity implements OnUserAuth
     protected void onCreate(Bundle saveState) {
         super.onCreate(saveState);
         setHostContentView(R.layout.shopelia_process_order_activity);
-
+        getOrder().user = UserManager.get(this).getUser();
+        getOrder().address = getOrder().user.getDefaultAddress();
+        getOrder().card = getOrder().user.getDefaultPaymentCard();
         if (saveState == null) {
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.fragment_container, mConfirmationFragment);

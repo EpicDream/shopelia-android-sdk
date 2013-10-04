@@ -16,7 +16,6 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
-import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
 import com.shopelia.android.WelcomeFragment.WelcomeParent;
 import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.app.ShopeliaActivity;
@@ -24,7 +23,7 @@ import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Merchant;
 import com.shopelia.android.model.User;
 
-public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, OnUserAuthenticateListener {
+public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
 
     public static final String ACTIVITY_NAME = "Welcome Activity";
 
@@ -33,7 +32,9 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
 
     public static final long SHOW_WAITING_DIALOG_DELAY = 2000L;
 
-    public boolean mIsCanceling = false;
+    private static final String SAVE_DISMISS = "save:dismiss";
+
+    private boolean mDismiss = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +45,12 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
             setActivityStyle(STYLE_DIALOG);
         }
         super.onCreate(savedInstanceState);
+
+        if (savedInstanceState != null && savedInstanceState.getBoolean(SAVE_DISMISS)) {
+            finish();
+            return;
+        }
+
         if (!um.isLogged() && um.hasAccountPermission() && um.getAccount() != null) {
             setHostContentView(R.layout.shopelia_loading_layout);
             um.restoreFromAccount(new AccountManagerCallback<Bundle>() {
@@ -90,12 +97,9 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
             um.logout();
             startActivityForResult(new Intent(this, ProductActivity.class), REQUEST_CHECKOUT);
             return;
-        } else if (um.getUser() != null && !um.isAutoSignedIn()) {
+        } else if (um.getCheckoutCount() > 0) {
             setHostContentView(R.layout.shopelia_welcome_activity);
-            FragmentManager fm = getSupportFragmentManager();
             startActivityForResult(new Intent(this, ProductActivity.class), REQUEST_CHECKOUT);
-        } else if (um.getCheckoutCount() > 0 || um.isAutoSignedIn()) {
-            startActivityForResult(new Intent(this, ProductActivity.class), 0);
         } else {
             if (getIntent().getExtras().getBoolean(Shopelia.EXTRA_DISPLAY_WELCOME_SCREEN, true)) {
                 setHostContentView(R.layout.shopelia_welcome_activity);
@@ -113,8 +117,15 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
+        mDismiss = true;
         intent.putExtras(getIntent().getExtras());
         super.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean(SAVE_DISMISS, mDismiss);
     }
 
     @Override
@@ -151,12 +162,6 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent, 
     @Override
     public void cancel() {
         onBackPressed();
-    }
-
-    @Override
-    public void onUserAuthenticate(boolean autoSignIn) {
-        UserManager.get(this).setAutoSignIn(autoSignIn);
-        startActivityForResult(new Intent(this, ProductActivity.class), REQUEST_CHECKOUT);
     }
 
     @Override

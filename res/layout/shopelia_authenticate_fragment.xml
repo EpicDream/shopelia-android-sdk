@@ -72,7 +72,8 @@
         android:button="@drawable/shopelia_btn_check_holo_light"
         android:text="@string/shopelia_authenticate_remember_me"
         android:textColor="@color/shopelia_dark"
-        android:textSize="@dimen/shopelia_font_size_extra_small" />
+        android:textSize="@dimen/shopelia_font_size_extra_small"
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/disclaimer"
@@ -94,6 +95,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
         android:gravity="center_vertical" >
 
         <ImageView

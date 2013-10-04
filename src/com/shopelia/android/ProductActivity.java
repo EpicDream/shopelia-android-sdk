@@ -3,9 +3,11 @@ package com.shopelia.android;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.shopelia.android.AuthenticateFragment.OnAuthenticateEvent;
 import com.shopelia.android.ProductSelectionCardFragment.OnSubmitProductEvent;
 import com.shopelia.android.app.CardHolderActivity;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.image.ImageLoader;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Option;
 import com.shopelia.android.model.Product;
@@ -37,6 +39,7 @@ public class ProductActivity extends CardHolderActivity {
         setActivityStyle(STYLE_FULLSCREEN);
         super.onCreate(savedInstanceState);
         mProductAPI = new ProductAPI(this);
+        ImageLoader.get(this).flush();
     }
 
     @Override
@@ -46,6 +49,9 @@ public class ProductActivity extends CardHolderActivity {
         if (mProduct == null || !mProduct.isValid()) {
             startWaiting(getString(R.string.shopelia_product_loading), false, true);
             mProductAPI.getProduct(new Product(getIntent().getExtras().getString(EXTRA_PRODUCT_URL)));
+        } else {
+            stopWaiting();
+            getEventBus().postSticky(mProduct);
         }
     }
 
@@ -131,4 +137,12 @@ public class ProductActivity extends CardHolderActivity {
             startActivityForResult(intent, REQUEST_CHECKOUT);
         }
     }
+
+    public void onEventMainThread(OnAuthenticateEvent event) {
+        UserManager.get(this).setAutoSignIn(event.autoSignIn);
+        Intent intent = new Intent(this, ProcessOrderActivity.class);
+        intent.putExtra(EXTRA_ORDER, getOrder());
+        startActivityForResult(intent, REQUEST_CHECKOUT);
+    }
+
 }

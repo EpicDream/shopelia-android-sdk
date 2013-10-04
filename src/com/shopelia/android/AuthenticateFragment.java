@@ -13,8 +13,6 @@ import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 
-import com.shopelia.android.AuthenticateFragment.OnUserAuthenticateListener;
-import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.User;
@@ -36,10 +34,18 @@ import com.shopelia.android.widget.form.FormContainer.OnSubmitListener;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.PasswordField;
 
-public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateListener> {
+public class AuthenticateFragment extends ShopeliaFragment<Void> {
 
     public interface OnUserAuthenticateListener {
         public void onUserAuthenticate(boolean authoSignIn);
+    }
+
+    public class OnAuthenticateEvent {
+        public final boolean autoSignIn;
+
+        public OnAuthenticateEvent(boolean autoSignIn) {
+            this.autoSignIn = autoSignIn;
+        }
     }
 
     public static final String DIALOG_NAME = "Authentification";
@@ -111,12 +117,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
                     closeSoftKeyboard();
                     dialog.dismiss();
                     UserManager.get(getActivity()).logout();
-                    if (!getShowsDialog()) {
-                        getActivity().startActivityForResult(new Intent(getActivity(), ProductActivity.class), 12);
-                    } else {
-                        getActivity().setResult(ShopeliaActivity.RESULT_LOGOUT);
-                        getActivity().finish();
-                    }
+                    dismiss();
                 }
             }, null).show();
 
@@ -173,7 +174,7 @@ public class AuthenticateFragment extends ShopeliaFragment<OnUserAuthenticateLis
         if (getShowsDialog()) {
             dismiss();
         }
-        getContract().onUserAuthenticate(findViewById(R.id.remember_me, CheckBox.class).isChecked());
+        getActivityEventBus().post(new OnAuthenticateEvent(findViewById(R.id.remember_me, CheckBox.class).isChecked()));
     }
 
     public void onEventMainThread(OnVerifyFailedEvent event) {

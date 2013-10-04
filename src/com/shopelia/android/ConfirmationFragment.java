@@ -27,9 +27,6 @@ import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
 import com.shopelia.android.remote.api.OrderAPI;
 import com.shopelia.android.remote.api.OrderAPI.OnInvalidOrderRequestEvent;
 import com.shopelia.android.remote.api.OrderAPI.OnOrderConfirmationEvent;
-import com.shopelia.android.remote.api.ProductAPI;
-import com.shopelia.android.remote.api.ProductAPI.OnProductNotAvailable;
-import com.shopelia.android.remote.api.ProductAPI.OnProductUpdateEvent;
 import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.remote.api.UserAPI.OnAuthTokenRevokedEvent;
 import com.shopelia.android.remote.api.UserAPI.OnUserUpdateDoneEvent;
@@ -48,24 +45,20 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     private static final int REQUEST_PAYMENT_CARD = 0x201;
 
     private boolean mIsOrdering = false;
-    private ProductAPI mProductAPI;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mProductAPI = new ProductAPI(getActivity());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        mProductAPI.registerSticky(this);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        mProductAPI.unregister(this);
     }
 
     @Override
@@ -85,30 +78,8 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         }
         SingleAddressFragment.newInstance(getOrder().address).replace(getFragmentManager(), R.id.address);
         SinglePaymentCardFragment.newInstance(getOrder().card).replace(getFragmentManager(), R.id.payment_card);
+        findViewById(R.id.product_sheet, ProductSheetWidget.class).setProductInfo(getOrder().product, false);
         setupUi();
-        if (UserManager.get(getActivity()).isAutoSignedIn()) {
-            updateUser(false);
-        }
-        mProductAPI.getProduct(getOrder().product);
-    }
-
-    public void onEventMainThread(OnProductUpdateEvent event) {
-        if (getActivity() != null) {
-            getOrder().product = event.resource;
-            findViewById(R.id.product_sheet, ProductSheetWidget.class).setProductInfo(getOrder().product, event.isFromNetwork);
-            setupUi();
-        }
-    }
-
-    public void onEventMainThread(OnProductNotAvailable event) {
-        if (getActivity() != null) {
-            ProductNotFoundFragment fragment = ProductNotFoundFragment.newInstance(event.resource);
-            fragment.show(getChildFragmentManager(), null);
-        }
-    }
-
-    public void onEventMainThread(OnApiErrorEvent event) {
-
     }
 
     @Override
@@ -277,16 +248,9 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
     }
 
     private void setupUi() {
-        setupProductUi();
         setupPriceUi();
         setupUserUi();
         findViewById(R.id.validate).setEnabled(getOrder().product.isValid());
-    }
-
-    private void setupProductUi() {
-        //@formatter:off
-       
-        //@formatter:on
     }
 
     private void setupUserUi() {

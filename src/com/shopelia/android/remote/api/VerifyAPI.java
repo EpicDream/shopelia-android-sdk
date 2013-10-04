@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
+import android.util.Log;
 
 import com.shopelia.android.R;
 import com.shopelia.android.concurent.ScheduledTask;
@@ -96,10 +97,13 @@ public class VerifyAPI extends ApiController {
             public void onComplete(HttpResponse httpResponse) {
                 if (httpResponse.getStatus() == 200) {
                     try {
+                        Log.d(null, "VERIFY " + new JSONObject(httpResponse.getBodyAsString()).toString(2));
                         User user = User.inflate(new JSONObject(httpResponse.getBodyAsString()).getJSONObject(User.Api.USER));
+
                         UserManager.get(getContext()).update(user);
                     } catch (JSONException e) {
                         // Do nothing
+                        e.printStackTrace();
                     }
                     getEventBus().post(new OnVerifySucceedEvent());
                 } else if (httpResponse.getStatus() == 401 && object.has(User.Api.PASSWORD)
