@@ -40,6 +40,7 @@ import com.shopelia.android.widget.form.FormField;
 import com.shopelia.android.widget.form.FormField.ListenerAdapter;
 import com.shopelia.android.widget.form.FormLinearLayout;
 import com.shopelia.android.widget.form.HeaderField;
+import com.shopelia.android.widget.form.PasswordField;
 import com.shopelia.android.widget.form.PhoneField;
 import com.shopelia.android.widget.form.SingleLinePaymentCardField;
 import com.turbomanage.httpclient.AsyncCallback;
@@ -66,6 +67,7 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
         TRACKER_NAME = new SparseArray<String>();
         TRACKER_NAME.put(R.id.email, Analytics.Events.UserInteractions.Fields.EMAIL);
         TRACKER_NAME.put(R.id.phone, Analytics.Events.UserInteractions.Fields.PHONE);
+        TRACKER_NAME.put(R.id.password, Analytics.Events.UserInteractions.Fields.PASSWORD);
     }
 
     private FormLinearLayout mFormContainer;
@@ -108,7 +110,10 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
 				.setOnValidateListener(mEmailOnValidateListener)
 				.setListener(mTrackingListener)
 				.setOnClickListener(mOnClickFieldClickListener);
-
+		mFormContainer.findFieldById(R.id.password, PasswordField.class)
+                .setJsonPath(Order.Api.USER, User.Api.PASSWORD).mandatory()
+                .setListener(mTrackingListener)
+                .setOnClickListener(mOnClickFieldClickListener);
 		/*
 		 * Shipment details
 		 */

@@ -176,6 +176,8 @@ public class User implements BaseModel<User> {
         JSONObject out = new JSONObject();
         out.put(User.Api.FIRST_NAME, user.firstname);
         out.put(User.Api.LAST_NAME, user.lastname);
+        out.put(User.Api.PASSWORD, user.password);
+        out.put(User.Api.PASSWORD_CONFIRMATION, user.password);
         out.put(User.Api.EMAIL, user.email);
         out.put(Api.PINCODE, user.pincode);
         JSONArray addresses = new JSONArray();

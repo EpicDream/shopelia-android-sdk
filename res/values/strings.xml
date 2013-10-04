@@ -55,7 +55,9 @@
     <string name="shopelia_product_price_shopelia">Avantage Shopelia</string>
     <string name="shopelia_product_options_choose">Veuillez choisir</string>
     <string name="shopelia_product_options_option_pattern">Option %d</string>
-
+	<string name="shopelia_product_description_go_merchant_title">Aller chez le marchand</string>
+	<string name="shopelia_product_description_go_merchant_content">Voulez-vous allez sur la fiche du marchand ?</string>
+    
     <!-- Authenticate -->
     <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
     <string name="shopelia_authenticate_title">Authentification</string>

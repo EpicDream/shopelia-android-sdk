@@ -1,5 +1,9 @@
 package com.shopelia.android;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -69,7 +73,25 @@ public class ProductSummaryCardFragment extends CardFragment {
 
         @Override
         public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setTitle(R.string.shopelia_product_description_go_merchant_title).setMessage(
+                    R.string.shopelia_product_description_go_merchant_content);
+            builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
 
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Intent newIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mProduct.url));
+                    startActivity(newIntent);
+                }
+            });
+            builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+            builder.show();
         }
     };
 

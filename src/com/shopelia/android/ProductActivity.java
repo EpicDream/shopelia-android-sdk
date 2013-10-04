@@ -107,6 +107,7 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     public void onEventMainThread(OnProductUpdateEvent event) {
+        getOrder().product = event.resource;
         getEventBus().post(new ProductNotFoundFragment.DismissEvent());
         getEventBus().post(new ErrorCardFragment.DismissEvent());
         mProduct = event.resource;
@@ -156,7 +157,6 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     public void onEventMainThread(OnSubmitProductEvent event) {
-        getOrder().product = mProduct;
         if (UserManager.get(this).isLogged()) {
             new AuthenticateFragment().show(getSupportFragmentManager(), null);
         } else {

@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -251,6 +252,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
             mWaitModeRunnable = null;
         }
         if ((mMode & MODE_WAITING) == MODE_WAITING) {
+            Log.d(null, "STOP WAITING");
             getShopeliaActionBar().restore();
             getShopeliaActionBar().commit();
             if (mProgressDialog != null) {

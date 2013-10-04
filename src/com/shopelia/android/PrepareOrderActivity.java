@@ -165,7 +165,9 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
 
     @Override
     public void onSignUp(JSONObject result) {
+        Order order = getOrder();
         setOrder(Order.inflate(result));
+        getOrder().product = order.product;
         createAccount();
     }
 
@@ -226,9 +228,8 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
         if (order.user.paymentCards.size() > 0) {
             order.card = order.user.paymentCards.get(0);
         }
-
         Intent intent = new Intent(this, ProcessOrderActivity.class);
-        intent.putExtra(ShopeliaActivity.EXTRA_ORDER, order);
+        intent.putExtra(ShopeliaActivity.EXTRA_ORDER, getOrder());
         startActivityForResult(intent, ShopeliaActivity.REQUEST_CHECKOUT);
     }
 

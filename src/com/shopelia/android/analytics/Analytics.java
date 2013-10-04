@@ -15,6 +15,7 @@ public interface Analytics {
                 String NAME = "Full Name";
                 String ADDRESS_1 = "Address 1";
                 String ADDRESS_2 = "Address 2";
+                String PASSWORD = "Password";
                 String ZIP = "Zip";
                 String COUNTRY = "Country";
                 String CITY = "City";
