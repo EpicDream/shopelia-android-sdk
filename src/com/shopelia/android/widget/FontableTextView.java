@@ -3,6 +3,9 @@ package com.shopelia.android.widget;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.text.Html;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.widget.TextView;
 
@@ -44,6 +47,11 @@ public class FontableTextView extends TextView {
         }
     }
 
+    @Override
+    public void setText(CharSequence text, BufferType type) {
+        super.setText(fixSpanColor(text), type);
+    }
+
     public boolean isFromHtml() {
         return mIsHtml;
     }
@@ -52,6 +60,22 @@ public class FontableTextView extends TextView {
         if (mIsHtml != fromHtml) {
             mIsHtml = fromHtml;
             setText(getText());
+        }
+    }
+
+    // For Android 4.3 xml parser bug -_-
+    private CharSequence fixSpanColor(CharSequence text) {
+        if (text instanceof Spanned) {
+            final SpannableString s = new SpannableString(text);
+            final ForegroundColorSpan[] spans = s.getSpans(0, s.length(), ForegroundColorSpan.class);
+            for (final ForegroundColorSpan oldSpan : spans) {
+                final ForegroundColorSpan newSpan = new ForegroundColorSpan(0xFF000000 | oldSpan.getForegroundColor());
+                s.setSpan(newSpan, s.getSpanStart(oldSpan), s.getSpanEnd(oldSpan), s.getSpanFlags(oldSpan));
+                s.removeSpan(oldSpan);
+            }
+            return s;
+        } else {
+            return text;
         }
     }
 
