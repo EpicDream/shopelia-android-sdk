@@ -12,6 +12,10 @@
         -->
     </style>
 
+    <style name="Widget.ProgressBar" parent="android:Widget.ProgressBar">
+        
+    </style>
+    
     <!-- Application theme. -->
 
     <style name="Animation.Shopelia.FloatingFrame" parent="android:Animation">
