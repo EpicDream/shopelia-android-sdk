@@ -50,14 +50,15 @@
     <string name="shopelia_product_purchase_this">Acheter</string>
     <string name="shopelia_product_price_total">Total</string>
     <string name="shopelia_product_price_product">Prix du produit</string>
+    <string name="shopelia_product_price_strikeout">Ancien prix</string>
     <string name="shopelia_product_price_delivery">Livraison</string>
     <string name="shopelia_product_price_delivery_free">gratuite</string>
     <string name="shopelia_product_price_shopelia">Avantage Shopelia</string>
     <string name="shopelia_product_options_choose">Veuillez choisir</string>
     <string name="shopelia_product_options_option_pattern">Option %d</string>
-	<string name="shopelia_product_description_go_merchant_title">Aller chez le marchand</string>
-	<string name="shopelia_product_description_go_merchant_content">Voulez-vous aller sur la fiche du marchand ?</string>
-    
+    <string name="shopelia_product_description_go_merchant_title">Aller chez le marchand</string>
+    <string name="shopelia_product_description_go_merchant_content">Voulez-vous aller sur la fiche du marchand ?</string>
+
     <!-- Authenticate -->
     <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
     <string name="shopelia_authenticate_title">Authentification</string>
@@ -126,7 +127,8 @@
     <string name="shopelia_form_address_edit">Editer</string>
     <string name="shopelia_form_address_delete">Supprimer</string>
     <string name="shopelia_form_address_country_not_found">Ce pays est indisponnible</string>
-	<string name="shopelia_form_address_country_not_available">Shopelia n\'est pas encore disponible dans votre pays. Pour le moment seul la France, la Belgique et le Luxembourg peuvent utiliser le service.</string>
+    <string name="shopelia_form_address_country_not_available">Shopelia n\'est pas encore disponible dans votre pays. Pour le moment seul la France, la Belgique et le Luxembourg peuvent utiliser le service.</string>
+
     <string-array name="shopelia_form_address_item_actions">
         <item>@string/shopelia_form_address_delete</item>
     </string-array>
@@ -149,7 +151,7 @@
     <!-- Product sheet -->
     <string name="shopelia_product_shipping_fees" formatted="false">+ %s de frais de livraison</string>
     <string name="shopelia_product_free_shipping">Livraison gratuite</string>
-    <string name="shopelia_product_shipping_is_included">livraison <font color="#2b9b82" fgcolor="#2b9b82">incluse</font></string>
+    <string name="shopelia_product_shipping_is_included">livraison <font fgcolor="#2b9b82" color="#2b9b82">incluse</font></string>
     <string name="shopelia_product_loading">Chargement du produit...</string>
 
     <!-- Waiting process -->
@@ -164,7 +166,7 @@
     <string name="shopelia_confirmation_cashfront">Réduction Shopelia</string>
     <string name="shopelia_confirmation_total_price">TOTAL</string>
     <string name="shopelia_confirmation_error">Une erreur est survenue. Impossible de valider votre commande.</string>
-    <string name="shopelia_confirmation_free"><font color="#2b9b82" fgcolor="#2b9b82">Gratuit</font></string>
+    <string name="shopelia_confirmation_free"><font fgcolor="#2b9b82" color="#2b9b82">Gratuit</font></string>
     <string name="shopelia_confirmation_update_user">Mise à jour...</string>
     <string name="shopelia_confirmation_you_have_no_card">Vous n\'avez renseigné aucune carte de paiement. Vous devez enregistrer au moins une carte de paiement pour commander.</string>
     <string name="shopelia_confirmation_add_a_card">Cliquez ici pour ajouter une carte de paiement</string>

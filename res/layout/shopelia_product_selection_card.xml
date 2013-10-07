@@ -23,6 +23,30 @@
         android:layout_marginBottom="@dimen/shopelia_margin_normal" >
 
         <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView04"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/shopelia_product_price_strikeout"
+            android:textColorHint="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/product_price_strikeout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:text="40.50€"
+            android:textColor="@color/shopelia_red"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal" >
+
+        <com.shopelia.android.widget.FontableTextView
             android:id="@+id/FontableTextView05"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -124,7 +148,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/shopelia_margin_large" >
+        android:layout_marginBottom="@dimen/shopelia_margin_small" >
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/fontableTextView1"
@@ -145,13 +169,30 @@
 
     </LinearLayout>
 
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/product_availability_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="En stock, il reste 42 exemplaires"
+        android:textColor="@color/shopelia_dark" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/product_shipping_extra"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:text="Livraison chez vous en 3 jours"
+        android:textColor="@color/shopelia_dark" />
+
     <com.shopelia.android.widget.ValidationButton
         android:id="@+id/validate"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:shopelia_text="@string/shopelia_product_purchase_this"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginTop="@dimen/shopelia_margin_large"
         app:shopelia_icon="@drawable/shopelia_logo_picture"
-        android:layout_marginBottom="@dimen/shopelia_margin_normal" >
+        app:shopelia_text="@string/shopelia_product_purchase_this" >
 
     </com.shopelia.android.widget.ValidationButton>
 

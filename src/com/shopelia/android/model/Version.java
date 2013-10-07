@@ -49,7 +49,8 @@ public class Version implements BaseModel<Version> {
         name = object.getString(Api.NAME);
         description = object.optString(Api.DESCRIPTION);
         shippingExtra = object.optString(Api.SHIPPING_EXTRAS);
-        availabilityInfo = object.optString(Api.AVAILABILITY_INFO);
+        availabilityInfo = shippingExtra == null || !shippingExtra.equalsIgnoreCase(object.optString(Api.AVAILABILITY_INFO)) ? object
+                .optString(Api.AVAILABILITY_INFO) : null;
         imageUrl = object.optString(Api.IMAGE_URL);
 
         // Prices informations
@@ -57,6 +58,7 @@ public class Version implements BaseModel<Version> {
         shippingPrice = (float) object.optDouble(Api.SHIPPING_PRICE, NO_PRICE);
         cashfrontValue = (float) object.optDouble(Api.CASHFRONT_VALUE, NO_PRICE);
         priceStrikeOut = (float) object.optDouble(Api.PRICE_STRIKEOUT, NO_PRICE);
+
     }
 
     private Version(Parcel source) {
