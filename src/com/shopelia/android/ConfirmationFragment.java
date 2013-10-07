@@ -274,7 +274,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             findViewById(R.id.price_shipping_info, TextView.class).setText(getOrder().product.getCurrentVersion().shippingExtra);
 
             findViewById(R.id.price_cashfront, TextView.class).setText(
-                    getOrder().product.currency.format(getOrder().product.getCurrentVersion().cashfrontValue));
+                    "-" + getOrder().product.currency.format(getOrder().product.getCurrentVersion().cashfrontValue));
 
             if (getOrder().product.getCurrentVersion().cashfrontValue == Product.NO_PRICE
                     || getOrder().product.getCurrentVersion().cashfrontValue == 0) {

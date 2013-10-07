@@ -39,11 +39,7 @@ public class WelcomeActivity extends ShopeliaActivity implements WelcomeParent {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         final UserManager um = UserManager.get(this);
-        if (!um.isLogged() && um.getAccount() == null) {
-            setActivityStyle(STYLE_TRANSLUCENT);
-        } else {
-            setActivityStyle(STYLE_DIALOG);
-        }
+        setActivityStyle(STYLE_TRANSLUCENT);
         super.onCreate(savedInstanceState);
 
         if (savedInstanceState != null && savedInstanceState.getBoolean(SAVE_DISMISS)) {

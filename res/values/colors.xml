@@ -37,7 +37,7 @@
     <color name="shopelia_titleBarBackground">#333333</color>
     <color name="shopelia_titleBarBottomBorder">#000000</color>
     <color name="shopelia_titleBarTopBorder">#555555</color>
-    <color name="shopelia_headerTitleSectionOkColor">@color/shopelia_green</color>
+    <color name="shopelia_headerTitleSectionOkColor">@color/shopelia_dark_green</color>
     <color name="shopelia_headerTitleSectionRegularColor">@color/shopelia_dark</color>
 
     <!-- Holo -->

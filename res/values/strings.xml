@@ -164,7 +164,7 @@
     <string name="shopelia_confirmation_cashfront">Réduction Shopelia</string>
     <string name="shopelia_confirmation_total_price">TOTAL</string>
     <string name="shopelia_confirmation_error">Une erreur est survenue. Impossible de valider votre commande.</string>
-    <string name="shopelia_confirmation_free">Gratuit</string>
+    <string name="shopelia_confirmation_free"><font color="#2b9b82" fgcolor="#2b9b82">Gratuit</font></string>
     <string name="shopelia_confirmation_update_user">Mise à jour...</string>
     <string name="shopelia_confirmation_you_have_no_card">Vous n\'avez renseigné aucune carte de paiement. Vous devez enregistrer au moins une carte de paiement pour commander.</string>
     <string name="shopelia_confirmation_add_a_card">Cliquez ici pour ajouter une carte de paiement</string>

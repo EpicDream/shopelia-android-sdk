@@ -178,7 +178,7 @@ public class Version implements BaseModel<Version> {
     }
 
     public boolean isShippingFree() {
-        return false;
+        return shippingPrice <= 0.f;
     }
 
     public double getExpectedCashfrontValue() {

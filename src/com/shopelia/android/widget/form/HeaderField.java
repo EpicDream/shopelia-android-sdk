@@ -59,7 +59,7 @@ public class HeaderField extends FormField {
     public HeaderField setTitle(String title) {
         mTitle = title;
         if (mTitle != null) {
-            // mTitle = mTitle.toUpperCase();
+            mTitle = mTitle.toUpperCase();
         }
         return this;
     }
