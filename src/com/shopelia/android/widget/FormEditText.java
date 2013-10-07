@@ -68,6 +68,12 @@ public class FormEditText extends EditText implements Checkable, Errorable {
     }
 
     @Override
+    public void setInputType(int type) {
+        super.setInputType(type);
+        setTypeface(CustomFontHelper.getDefault(getContext()));
+    }
+
+    @Override
     public void setError(boolean hasError) {
         if (hasError() != hasError) {
             mError = hasError;

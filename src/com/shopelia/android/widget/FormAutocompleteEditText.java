@@ -51,6 +51,12 @@ public class FormAutocompleteEditText extends AutoCompleteTextView implements Ch
     }
 
     @Override
+    public void setInputType(int type) {
+        super.setInputType(type);
+        setTypeface(CustomFontHelper.getDefault(getContext()));
+    }
+
+    @Override
     public void setChecked(boolean checked) {
         if (checked != mChecked) {
             mChecked = checked;
