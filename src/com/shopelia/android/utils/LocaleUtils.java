@@ -37,4 +37,21 @@ public final class LocaleUtils {
         return countries;
     }
 
+    public static List<String> getAvailableCountries() {
+        List<String> countries = new ArrayList<String>(3);
+        countries.add("BE");
+        countries.add("FR");
+        countries.add("LU");
+        return countries;
+    }
+
+    public static List<String> getAvailableCountriesDisplayNames() {
+        List<String> isos = getAvailableCountries();
+        List<String> out = new ArrayList<String>();
+        for (String iso : isos) {
+            out.add(new Locale("", iso).getDisplayCountry());
+        }
+        return out;
+    }
+
 }

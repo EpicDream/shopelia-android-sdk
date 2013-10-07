@@ -56,7 +56,7 @@
     <string name="shopelia_product_options_choose">Veuillez choisir</string>
     <string name="shopelia_product_options_option_pattern">Option %d</string>
 	<string name="shopelia_product_description_go_merchant_title">Aller chez le marchand</string>
-	<string name="shopelia_product_description_go_merchant_content">Voulez-vous allez sur la fiche du marchand ?</string>
+	<string name="shopelia_product_description_go_merchant_content">Voulez-vous aller sur la fiche du marchand ?</string>
     
     <!-- Authenticate -->
     <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
@@ -126,7 +126,7 @@
     <string name="shopelia_form_address_edit">Editer</string>
     <string name="shopelia_form_address_delete">Supprimer</string>
     <string name="shopelia_form_address_country_not_found">Ce pays est indisponnible</string>
-
+	<string name="shopelia_form_address_country_not_available">Shopelia n\'est pas encore disponible dans votre pays. Pour le moment seul la France, la Belgique et le Luxembourg peuvent utiliser le service.</string>
     <string-array name="shopelia_form_address_item_actions">
         <item>@string/shopelia_form_address_delete</item>
     </string-array>
@@ -149,7 +149,7 @@
     <!-- Product sheet -->
     <string name="shopelia_product_shipping_fees" formatted="false">+ %s de frais de livraison</string>
     <string name="shopelia_product_free_shipping">Livraison gratuite</string>
-    <string name="shopelia_product_shipping_is_included">livraison <font fgcolor="#FF2b9b82">incluse</font></string>
+    <string name="shopelia_product_shipping_is_included">livraison <font color="#2b9b82" fgcolor="#2b9b82">incluse</font></string>
     <string name="shopelia_product_loading">Chargement du produit...</string>
 
     <!-- Waiting process -->

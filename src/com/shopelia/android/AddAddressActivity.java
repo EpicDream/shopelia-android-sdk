@@ -146,7 +146,7 @@ public class AddAddressActivity extends ShopeliaActivity {
             .setOnClickListener(mOnClickListener);
         mFormLayout.findFieldById(R.id.country, EditTextField.class)
             .getEditText()
-            .setAdapter(new AutoCompletionAdapter<String>(this, R.layout.shopelia_autocompletion_list_item, LocaleUtils.getCountries()));
+            .setAdapter(new AutoCompletionAdapter<String>(this, R.layout.shopelia_autocompletion_list_item, LocaleUtils.getAvailableCountriesDisplayNames()));
         mFormLayout.findFieldById(R.id.zipcode, NumberField.class)
             .setMinLength(5)
             .setJsonPath(Address.Api.ZIP)
@@ -466,9 +466,15 @@ public class AddAddressActivity extends ShopeliaActivity {
 
         @Override
         public boolean onValidate(EditTextField editTextField, boolean shouldFireError) {
-            boolean isValid = LocaleUtils.getCountryISO2Code((String) editTextField.getResult()) != null;
+            String iso = LocaleUtils.getCountryISO2Code((String) editTextField.getResult());
+            boolean isValid = iso != null;
             if (shouldFireError && !isValid) {
                 editTextField.setError(getString(R.string.shopelia_form_address_country_not_found));
+            }
+            List<String> locales = LocaleUtils.getAvailableCountries();
+            if (isValid && !LocaleUtils.getAvailableCountries().contains(iso) && shouldFireError) {
+                isValid = false;
+                editTextField.setError(getString(R.string.shopelia_form_address_country_not_available));
             }
             return isValid;
         }

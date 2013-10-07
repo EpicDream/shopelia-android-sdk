@@ -56,6 +56,12 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
     private PasswordField mPasswordField;
 
     @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mVerifyAPI = new VerifyAPI(getActivity());
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.shopelia_authenticate_fragment, container, false);
     }
@@ -82,13 +88,14 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
 
         mErrorMessage = findViewById(R.id.error);
 
-        mVerifyAPI = new VerifyAPI(getActivity());
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        if (mVerifyAPI == null) {
+            mVerifyAPI = new VerifyAPI(getActivity());
+        }
         mVerifyAPI.register(this);
     }
 
