@@ -116,6 +116,10 @@ final class CustomFontHelper {
         }
     }
 
+    public static Typeface getDefault(Context context) {
+        return getTypeface(context, FAMILY_NORMAL, STYLE_NORMAL);
+    }
+
     private static class Font {
 
         private final int mResId;
