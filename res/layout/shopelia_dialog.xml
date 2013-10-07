@@ -9,18 +9,26 @@
         android:id="@+id/frame"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/shopelia_floating_frame_dark_top_corner_background"
+        android:background="@drawable/shopelia_floating_frame_background_with_header"
         android:clickable="false"
         android:focusable="false"
         android:focusableInTouchMode="false"
         android:orientation="vertical" >
 
-        <com.shopelia.android.widget.actionbar.ActionBarWidget
-            android:id="@+id/action_bar"
+        <FrameLayout
+            android:layout_marginTop="2dp"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/shopelia_title_bar_height"
-            android:background="@drawable/shopelia_floating_frame_header" >
-        </com.shopelia.android.widget.actionbar.ActionBarWidget>
+            android:layout_height="wrap_content"
+            android:background="@color/shopelia_blue" >
+
+            <com.shopelia.android.widget.actionbar.ActionBarWidget
+                android:id="@+id/action_bar"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/shopelia_title_bar_height"
+                >
+            </com.shopelia.android.widget.actionbar.ActionBarWidget>
+
+        </FrameLayout>
 
         <FrameLayout
             android:id="@+id/host_container"
@@ -29,6 +37,7 @@
             android:background="@android:color/transparent"
              >
         </FrameLayout>
+
     </LinearLayout>
 
 </com.shopelia.android.widget.ExtendedFrameLayout>

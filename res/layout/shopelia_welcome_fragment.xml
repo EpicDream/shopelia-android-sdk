@@ -23,7 +23,7 @@
             android:id="@+id/frame"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/shopelia_floating_frame_dark_top_corner_background"
+            android:background="@drawable/shopelia_floating_frame_background_with_header"
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
@@ -33,18 +33,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/shopelia_margin_large"
-                android:background="@drawable/shopelia_floating_frame_header"
-                android:paddingTop="@dimen/shopelia_margin_large"
+                android:layout_marginTop="2dp"
+                android:background="@color/shopelia_blue"
                 android:paddingBottom="@dimen/shopelia_margin_large"
-                 >
+                android:paddingTop="@dimen/shopelia_margin_normal" >
 
                 <ImageView
                     android:id="@+id/imageView1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:scaleType="fitCenter"
                     android:layout_gravity="center"
-                    android:src="@drawable/shopelia_logo_white" />
+                    android:scaleType="fitCenter"
+                    android:src="@drawable/shopelia_logo_big" />
+
             </FrameLayout>
 
             <LinearLayout
