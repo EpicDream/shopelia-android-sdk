@@ -29,7 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/shopelia_margin_normal"
-                android:src="@drawable/shopelia_present" />
+                android:src="@drawable/shopelia_ic_success_logo" />
 
             <com.shopelia.android.widget.FontableTextView
                 android:id="@+id/title"
@@ -65,7 +65,7 @@
                 android:layout_marginLeft="@dimen/shopelia_margin_large"
                 android:layout_marginRight="@dimen/shopelia_margin_large"
                 android:layout_marginTop="@dimen/shopelia_margin_large"
-                app:shopelia_icon="@drawable/shopelia_check_white"
+                app:shopelia_icon="@drawable/shopelia_logo_picture"
                 app:shopelia_text="@string/shopelia_close_checkout_create_a_password" >
             </com.shopelia.android.widget.ValidationButton>
 

@@ -100,7 +100,7 @@ public class PrepareOrderActivity extends AccountAuthenticatorShopeliaActivity i
                 checkoutOrder(getOrder());
             }
         }
-        new FormListHeader(this).setView(findViewById(R.id.header));
+        new FormListHeader(this).setView(findViewById(R.id.header), getOrder().product);
         new FormListFooter(this).setView(findViewById(R.id.footer));
         if (isCalledByAcountManager()) {
             findViewById(R.id.header).setVisibility(View.GONE);

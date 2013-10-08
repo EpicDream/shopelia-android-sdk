@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.shopelia.android.R;
+import com.shopelia.android.model.Product;
 
 public class FormListHeader {
 
@@ -29,10 +30,10 @@ public class FormListHeader {
         return mView;
     }
 
-    public void setView(View view) {
+    public void setView(View view, Product product) {
         mView = view;
         TextView introductionText = (TextView) mView.findViewById(R.id.introduction_text);
-        String vendor = "";
+        String vendor = product.merchant.name;
         introductionText.setText(Html.fromHtml(mContext.getString(R.string.shopelia_form_main_header_text, vendor)));
     }
 

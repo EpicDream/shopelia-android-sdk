@@ -53,7 +53,7 @@
     <string name="shopelia_product_price_strikeout">Ancien prix</string>
     <string name="shopelia_product_price_delivery">Livraison</string>
     <string name="shopelia_product_price_delivery_free">gratuite</string>
-    <string name="shopelia_product_price_shopelia">Avantage Shopelia</string>
+    <string name="shopelia_product_price_shopelia">Réduction Shopelia</string>
     <string name="shopelia_product_options_choose">Veuillez choisir</string>
     <string name="shopelia_product_options_option_pattern">Option %d</string>
     <string name="shopelia_product_description_go_merchant_title">Aller chez le marchand</string>
@@ -76,19 +76,19 @@
     <string name="shopelia_form_main_password">Mot de passe</string>
     <string name="shopelia_form_main_validate">Poursuivre ma commande</string>
     <string name="shopelia_form_main_sign_in">Connexion</string>
-    <string name="shopelia_form_main_personal_info">Informations personelles</string>
+    <string name="shopelia_form_main_personal_info">Informations personnelles</string>
     <string name="shopelia_form_main_shipping_address">Adresse de livraison</string>
     <string name="shopelia_form_main_payment_method">Moyen de paiement</string>
     <string name="shopelia_form_main_card_number">Numéro de la carte</string>
     <string name="shopelia_form_main_address">Adresse</string>
     <string name="shopelia_form_main_header_text" formatted="false">
 <![CDATA[
-	    Votre commande va être préparée<br>automatiquement avec <b>Shopelia</b><br>sur le site <b>%s</b>.
+	    Votre commande va être passée automatiquement\n avec <b>Shopelia</b> sur le site <b>%s</b>.
 	    ]]>
     </string>
     <string name="shopelia_form_main_footer_text">
 <![CDATA[
-	   En cliquant sur ce bouton vous certifiez avoir lu et accepté les <font color="#0098ce">Conditions d\'utilisation</font>
+	   En cliquant sur ce bouton vous certifiez avoir lu et accepté les <font color="#0098ce">Conditions générales d\'utilisation</font>
 	    ]]>
     </string>
     <string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
@@ -139,8 +139,9 @@
     <string name="shopelia_form_payment_card_cvv">CVV</string>
     <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
     <string name="shopelia_form_payment_card_not_compatible">Shopelia n\'est disponible que pour les cartes Visa et American Express.</string>
-    <string name="shopelia_form_payment_card_secured_server">(Serveur sécurisé)</string>
-
+    <string name="shopelia_form_payment_card_secured_server">Serveur sécurisé</string>
+	<string name="shopelia_form_payment_disclaimer">Le stockage de vos informations de carte bancaire est assuré par <b>Payline</b>, dûment agréé auprès de la <b>banque de France</b> en tant qu\'organisme <b>PCI DSS</b>.</string>
+    
     <!-- Shopelia footer -->
     <string name="shopelia_footer">Paiement sécurisé par</string>
 

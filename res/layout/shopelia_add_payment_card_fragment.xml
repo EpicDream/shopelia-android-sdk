@@ -25,6 +25,14 @@
         android:layout_marginTop="@dimen/shopelia_margin_normal" >
     </com.shopelia.android.widget.form.SingleLinePaymentCardField>
 
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/fontableTextView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:gravity="center_horizontal"
+        android:text="@string/shopelia_form_payment_disclaimer" />
+
     <com.shopelia.android.widget.ValidationButton
         android:id="@+id/validate"
         android:layout_width="match_parent"
