@@ -9,6 +9,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.shopelia.android.app.CardFragment;
@@ -21,9 +25,20 @@ public class ProductSelectionCardFragment extends CardFragment {
 
     }
 
+    public class OnQuantitiySelectedEvent {
+        public final int quantity;
+
+        private OnQuantitiySelectedEvent(int quantity) {
+            this.quantity = quantity;
+        }
+
+    }
+
     public static final String TAG = "Product Selection";
 
     private static final String ARGS_PRODUCT = "args:product";
+
+    private static final int MAX_QUANTITY = 4;
 
     private Product mProduct;
     private ProductOptionsFragment mOptionsFragment;
@@ -54,6 +69,18 @@ public class ProductSelectionCardFragment extends CardFragment {
                 getActivityEventBus().post(new OnSubmitProductEvent());
             }
         });
+        if (mProduct.merchant.allowQuantities) {
+            Spinner s = findViewById(R.id.quantitiy_selector);
+            Integer[] items = new Integer[MAX_QUANTITY];
+            for (int index = 0; index < MAX_QUANTITY; index++) {
+                items[index] = Integer.valueOf(index + 1);
+            }
+            ArrayAdapter<Integer> adapter = new ArrayAdapter<Integer>(getActivity(), android.R.layout.simple_spinner_dropdown_item, items);
+            s.setAdapter(adapter);
+            s.setOnItemSelectedListener(mOnQuantitySelectedListener);
+        } else {
+            ((View) findViewById(R.id.quantitiy_selector).getParent()).setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -137,5 +164,19 @@ public class ProductSelectionCardFragment extends CardFragment {
             ((View) textView.getParent()).setVisibility(View.VISIBLE);
         }
     }
+
+    private OnItemSelectedListener mOnQuantitySelectedListener = new OnItemSelectedListener() {
+
+        @Override
+        public void onItemSelected(AdapterView<?> adapterView, View selected, int position, long id) {
+            getActivityEventBus().post(new OnQuantitiySelectedEvent(position + 1));
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> adapterView) {
+
+        }
+
+    };
 
 }

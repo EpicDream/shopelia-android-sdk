@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:app1="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="@dimen/shopelia_margin_normal"
@@ -14,7 +15,6 @@
         android:id="@+id/option_fragment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" >
-
     </FrameLayout>
 
     <LinearLayout
@@ -63,7 +63,6 @@
             android:text="40.50€"
             android:textColor="@color/shopelia_red"
             android:textSize="@dimen/shopelia_font_size_normal" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -89,7 +88,6 @@
             android:text="2.50€"
             android:textColor="@color/shopelia_red"
             android:textSize="@dimen/shopelia_font_size_normal" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -117,7 +115,6 @@
             android:text="@string/shopelia_product_price_delivery_free"
             android:textColor="@color/shopelia_dark_green"
             android:textSize="@dimen/shopelia_font_size_normal" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -142,7 +139,32 @@
             android:text="-0.50€"
             android:textColor="@color/shopelia_dark_green"
             android:textSize="@dimen/shopelia_font_size_normal" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_normal" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/FontableTextView01"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:layout_weight="1"
+            android:text="@string/shopelia_product_quantity"
+            android:textColorHint="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <Spinner
+            android:id="@+id/quantitiy_selector"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:background="@drawable/shopelia_spinner"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:minWidth="120dp"
+            app1:listitem="@android:layout/simple_spinner_item" />
     </LinearLayout>
 
     <LinearLayout
@@ -166,7 +188,6 @@
             android:text="42.50€"
             android:textColor="@color/shopelia_dark_green"
             android:textSize="@dimen/shopelia_font_size_huge" />
-
     </LinearLayout>
 
     <com.shopelia.android.widget.FontableTextView
@@ -193,7 +214,6 @@
         android:layout_marginTop="@dimen/shopelia_margin_large"
         app:shopelia_icon="@drawable/shopelia_logo_picture"
         app:shopelia_text="@string/shopelia_product_purchase_this" >
-
     </com.shopelia.android.widget.ValidationButton>
 
 </LinearLayout>

@@ -25,6 +25,7 @@ public class Merchant implements BaseModel<Merchant> {
         String LOGO = "logo";
         String URL = "url";
         String CTC_URL = "ctc_url";
+        String ALLOW_QUANTITIES = "allow_quantities";
     }
 
     public static final String IDENTIFIER = Merchant.class.getName();
@@ -34,6 +35,7 @@ public class Merchant implements BaseModel<Merchant> {
     public String logo;
     public Uri uri;
     public String ctcUrl;
+    public boolean allowQuantities;
 
     public Merchant() {
 
@@ -43,6 +45,8 @@ public class Merchant implements BaseModel<Merchant> {
         id = source.readLong();
         name = source.readString();
         logo = source.readString();
+        ctcUrl = source.readString();
+        allowQuantities = source.readByte() == 1;
         uri = source.readParcelable(Uri.class.getClassLoader());
     }
 
@@ -56,6 +60,7 @@ public class Merchant implements BaseModel<Merchant> {
         dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(logo);
+        dest.writeByte((byte) (allowQuantities ? 1 : 0));
         dest.writeParcelable(uri, flags);
     }
 
@@ -79,6 +84,8 @@ public class Merchant implements BaseModel<Merchant> {
         object.put(Api.NAME, name);
         object.put(Api.LOGO, logo);
         object.put(Api.URL, uri.toString());
+        object.put(Api.ALLOW_QUANTITIES, allowQuantities);
+        object.put(Api.CTC_URL, ctcUrl);
         return object;
     }
 
@@ -88,6 +95,8 @@ public class Merchant implements BaseModel<Merchant> {
         merchant.name = object.getString(Api.NAME);
         merchant.logo = object.optString(Api.LOGO);
         merchant.uri = Uri.parse(object.getString(Api.URL));
+        merchant.allowQuantities = object.optInt(Api.ALLOW_QUANTITIES, 0) == 1;
+        merchant.ctcUrl = object.optString(Api.CTC_URL);
         return merchant;
     }
 
