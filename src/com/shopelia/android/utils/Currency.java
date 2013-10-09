@@ -1,7 +1,10 @@
 package com.shopelia.android.utils;
 
 import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
+import android.content.Context;
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -11,17 +14,24 @@ import android.os.Parcelable;
  * @author Pierre Pollastri
  */
 public enum Currency implements Parcelable {
-    EUR("%d.%02d€");
+    EUR("EUR");
 
-    private String mFormat;
+    private String mCurrencyCode;
+    private static String sFormat;
 
-    private Currency(String format) {
-        mFormat = format;
+    private Currency(String currencyCode) {
+        mCurrencyCode = currencyCode;
     }
 
-    public String format(float value) {
+    public String format(Context context, float value) {
         BigDecimal roundfinalPrice = new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP);
         return roundfinalPrice.toPlainString();
+    }
+
+    public String format(double value) {
+        DecimalFormat fmt = new DecimalFormat(getFormat());
+        fmt.setCurrency(java.util.Currency.getInstance(mCurrencyCode));
+        return fmt.format(value);
     }
 
     @Override
@@ -46,4 +56,19 @@ public enum Currency implements Parcelable {
             return Currency.valueOf(source.readString());
         }
     };
+
+    private static String getFormat() {
+        if (sFormat == null) {
+            NumberFormat format = (DecimalFormat) DecimalFormat.getCurrencyInstance();
+            if (format instanceof DecimalFormat) {
+                String localizedPattern = ((DecimalFormat) format).toLocalizedPattern();
+
+                final boolean isPrefix = localizedPattern.indexOf('\u00A4') == 0;
+                sFormat = isPrefix ? "¤###,###,###.00" : "###,###,###.00¤";
+            } else {
+                sFormat = "¤###,###,###.00";
+            }
+        }
+        return sFormat;
+    }
 }
