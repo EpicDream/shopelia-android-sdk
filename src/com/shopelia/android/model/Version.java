@@ -1,5 +1,7 @@
 package com.shopelia.android.model;
 
+import java.math.BigDecimal;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -168,15 +170,12 @@ public class Version implements BaseModel<Version> {
 
     // Price utility methods
     public float getTotalPrice(int quantity) {
-        return (centify(productPrice) * quantity + centify(shippingPrice) - centify(cashfrontValue) * quantity) / 100.f;
-    }
-
-    private int centify(float price) {
-        return (int) (price != NO_PRICE ? price * 100 : 0);
+        return new BigDecimal(productPrice).multiply(BigDecimal.valueOf(quantity)).add(BigDecimal.valueOf(shippingPrice))
+                .subtract(BigDecimal.valueOf(cashfrontValue)).floatValue();
     }
 
     public float getExpectedTotalPrice(int quantity) {
-        return (centify(productPrice) * quantity + centify(shippingPrice)) / 100.f;
+        return new BigDecimal(productPrice).multiply(BigDecimal.valueOf(quantity)).add(BigDecimal.valueOf(shippingPrice)).floatValue();
     }
 
     public boolean isShippingFree() {
@@ -184,7 +183,7 @@ public class Version implements BaseModel<Version> {
     }
 
     public float getExpectedCashfrontValue(int quantity) {
-        return (centify(cashfrontValue) * quantity) / 100.f;
+        return new BigDecimal(cashfrontValue).multiply(BigDecimal.valueOf(quantity)).floatValue();
     }
 
 }

@@ -3,6 +3,7 @@ package com.shopelia.android.utils;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Locale;
 
 import android.content.Context;
 import android.os.Parcel;
@@ -18,6 +19,7 @@ public enum Currency implements Parcelable {
 
     private String mCurrencyCode;
     private static String sFormat;
+    private static Locale sLocale;
 
     private Currency(String currencyCode) {
         mCurrencyCode = currencyCode;
@@ -58,15 +60,15 @@ public enum Currency implements Parcelable {
     };
 
     private static String getFormat() {
-        if (sFormat == null) {
+        if (sFormat == null || !Locale.getDefault().equals(sLocale)) {
             NumberFormat format = (DecimalFormat) DecimalFormat.getCurrencyInstance();
             if (format instanceof DecimalFormat) {
                 String localizedPattern = ((DecimalFormat) format).toLocalizedPattern();
 
-                final boolean isPrefix = localizedPattern.indexOf('\u00A4') == 0;
-                sFormat = isPrefix ? "¤###,###,###.00" : "###,###,###.00¤";
+                final boolean isPrefix = localizedPattern.indexOf('¤') == 0;
+                sFormat = isPrefix ? "¤###,###,##0.00" : "###,###,##0.00¤";
             } else {
-                sFormat = "¤###,###,###.00";
+                sFormat = "¤###,###,##0.00";
             }
         }
         return sFormat;
