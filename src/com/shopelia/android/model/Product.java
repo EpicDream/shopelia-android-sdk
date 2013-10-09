@@ -156,17 +156,43 @@ public class Product implements BaseModel<Product> {
     }
 
     public void setCurrentVersion(int lastOptionChanged, Option... options) {
-        if (versions.getVersion(options) == null) {
-            int index = 0;
-            for (; index < options.length; index++) {
-                if (index != lastOptionChanged)
-                    break;
-            }
-            setCurrentVersion(getAvailableOptions(index, lastOptionChanged, options).getOptions());
-        } else {
-            setCurrentVersion(options);
+        Option[] opts = new Option[options.length];
+        System.arraycopy(options, 0, opts, 0, options.length);
+        if (_setCurrentVersion(0, lastOptionChanged, opts)) {
+            setCurrentVersion(opts);
         }
+    }
 
+    private boolean _setCurrentVersion(int currentOption, int lastOptionChanged, Option[] options) {
+        // Check if the version is available
+
+        // Iterate through all option
+        // call _setCurrentVersion on another option
+        // If successfull stop
+        // else continue
+
+        if (!versions.hasVersion(options)) {
+            Option before = options[currentOption];
+            Options opts = versions.getOptions(currentOption);
+            for (Option opt : opts) {
+                // Compute the next available options index
+                int next = getNextOptionIndexAvailable(currentOption + 1, lastOptionChanged);
+                if (next != -1 ? _setCurrentVersion(next, lastOptionChanged, options) : versions.hasVersion(options)) {
+                    return true;
+                }
+                options[currentOption] = opt;
+            }
+            options[currentOption] = before;
+            return false;
+        }
+        return true;
+    }
+
+    private int getNextOptionIndexAvailable(int desiredIndex, int forbidden) {
+        int index = desiredIndex;
+        for (; index < versions.getOptionsCount() && index == forbidden; index++)
+            ;
+        return index < versions.getOptionsCount() && index != forbidden ? index : -1;
     }
 
     public void setQuantity(int quantity) {

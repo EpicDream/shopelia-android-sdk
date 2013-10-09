@@ -102,6 +102,12 @@ public class ProductAPI extends ApiController {
         saveProducts(mProducts);
     }
 
+    public void stop() {
+        if (mPoller != null) {
+            mPoller.stop();
+        }
+    }
+
     @Override
     public Class<?>[] getEventTypes() {
         return sEventTypes;

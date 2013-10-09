@@ -1,5 +1,8 @@
 package com.shopelia.android.model;
 
+import java.util.Collections;
+import java.util.Comparator;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -58,6 +61,14 @@ public class Versions implements BaseModel<Versions> {
         return mVersions.get(key);
     }
 
+    public boolean hasVersion(Option... options) {
+        return hasVersion(Option.hashCode(options));
+    }
+
+    public boolean hasVersion(long key) {
+        return getVersion(key) != null;
+    }
+
     public int getVersionsCount() {
         return mVersions.size();
     }
@@ -78,6 +89,16 @@ public class Versions implements BaseModel<Versions> {
             versions.mVersions.append(key, version);
             versions.appendOptions(options);
             versions.mIsValid = versions.mIsValid && version.isValid();
+        }
+        for (Options options : versions.mOptions) {
+            Collections.sort(options, new Comparator<Option>() {
+
+                @Override
+                public int compare(Option lhs, Option rhs) {
+                    return lhs.getValue().compareToIgnoreCase(rhs.getValue());
+                }
+
+            });
         }
         return versions;
     }
