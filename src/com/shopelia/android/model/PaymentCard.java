@@ -1,6 +1,7 @@
 package com.shopelia.android.model;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import org.json.JSONArray;
@@ -9,6 +10,7 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 public class PaymentCard implements BaseModel<PaymentCard> {
 
@@ -35,7 +37,7 @@ public class PaymentCard implements BaseModel<PaymentCard> {
     public long id = INVALID_ID;
     public String number;
     public String expMonth;
-    public String expYear;
+    private String expYear;
     public String cvv;
 
     public PaymentCard() {
@@ -58,7 +60,7 @@ public class PaymentCard implements BaseModel<PaymentCard> {
         }
         json.put(Api.NUMBER, number);
         json.put(Api.EXP_MONTH, expMonth);
-        json.put(Api.EXP_YEAR, "20" + expYear);
+        json.put(Api.EXP_YEAR, expYear);
         json.put(Api.CVV, cvv);
         return json;
     }
@@ -98,9 +100,6 @@ public class PaymentCard implements BaseModel<PaymentCard> {
         card.expMonth = object.getString(Api.EXP_MONTH);
         card.expYear = object.getString(Api.EXP_YEAR);
         card.cvv = object.optString(Api.CVV);
-        if (card.expYear != null && card.expYear.length() > 2) {
-            card.expYear = card.expYear.substring(card.expYear.length() - 2);
-        }
         return card;
     }
 
@@ -119,6 +118,16 @@ public class PaymentCard implements BaseModel<PaymentCard> {
 
     public String getDisplayableExpiryDate(Locale locale) {
         return expMonth + "/" + expYear;
+    }
+
+    public String getShortExpiryYear() {
+        return TextUtils.isEmpty(expYear) ? "00" : expYear.substring(expYear.length() - 2);
+    }
+
+    public void setShortExpiryYear(String year) {
+        String prefix = String.valueOf(Calendar.getInstance().get(Calendar.YEAR));
+        prefix = prefix.substring(0, prefix.length() - 2);
+        expYear = prefix + year;
     }
 
     @Override
@@ -145,8 +154,23 @@ public class PaymentCard implements BaseModel<PaymentCard> {
 
     @Override
     public boolean isValid() {
-        // TODO Auto-generated method stub
-        return false;
+        return !isExpired();
+    }
+
+    public boolean isExpired() {
+        try {
+            int M = Integer.valueOf(expMonth) - 1;
+            int Y = Integer.valueOf(expYear);
+            Calendar calendar = Calendar.getInstance();
+            if ((calendar.get(Calendar.YEAR) == Y && calendar.get(Calendar.MONTH) > M) || (Y < calendar.get(Calendar.YEAR))) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
 }

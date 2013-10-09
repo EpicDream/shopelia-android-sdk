@@ -56,7 +56,7 @@ public class SinglePaymentCardFragment extends ShopeliaFragment<OnPaymentCardCha
     }
 
     protected void refresh() {
-        if (mCard != null) {
+        if (mCard != null && !mCard.isExpired()) {
             findViewById(R.id.display_card).setVisibility(View.VISIBLE);
             findViewById(R.id.add_card_button).setVisibility(View.GONE);
             StringBuilder number = new StringBuilder(mCard.number);
@@ -87,6 +87,8 @@ public class SinglePaymentCardFragment extends ShopeliaFragment<OnPaymentCardCha
         } else {
             findViewById(R.id.display_card).setVisibility(View.GONE);
             findViewById(R.id.add_card_button).setVisibility(View.VISIBLE);
+            findViewById(R.id.reason, TextView.class).setText(
+                    getText(mCard == null ? R.string.shopelia_confirmation_you_have_no_card : R.string.shopelia_confirmation_card_expired));
             findViewById(R.id.add_card_button).setOnClickListener(new OnClickListener() {
 
                 @Override

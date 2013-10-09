@@ -24,6 +24,7 @@ public class Merchant implements BaseModel<Merchant> {
         String NAME = "name";
         String LOGO = "logo";
         String URL = "url";
+        String CTC_URL = "ctc_url";
     }
 
     public static final String IDENTIFIER = Merchant.class.getName();
@@ -32,6 +33,7 @@ public class Merchant implements BaseModel<Merchant> {
     public String name;
     public String logo;
     public Uri uri;
+    public String ctcUrl;
 
     public Merchant() {
 

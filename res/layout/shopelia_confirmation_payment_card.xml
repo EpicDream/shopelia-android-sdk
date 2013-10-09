@@ -29,7 +29,7 @@
                 android:src="@drawable/shopelia_card" />
 
             <com.shopelia.android.widget.FontableTextView
-                android:id="@+id/fontableTextView1"
+                android:id="@+id/reason"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"

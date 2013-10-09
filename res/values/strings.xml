@@ -168,6 +168,7 @@
     <string name="shopelia_confirmation_free"><font fgcolor="#2b9b82" color="#2b9b82">Gratuit</font></string>
     <string name="shopelia_confirmation_update_user">Mise à jour...</string>
     <string name="shopelia_confirmation_you_have_no_card">Vous n\'avez renseigné aucune carte de paiement. Vous devez enregistrer au moins une carte de paiement pour commander.</string>
+    <string name="shopelia_confirmation_card_expired">Votre carte de paiement est arrivé à expiration. Enregistrez une nouvelle carte pour commander.</string>
     <string name="shopelia_confirmation_add_a_card">Cliquez ici pour ajouter une carte de paiement</string>
     <string name="shopelia_confirmation_you_have_no_address">Vous n\'avez renseigné aucune adresse. Vous devez enregistrer au moins une adresse pour commander.</string>
     <string name="shopelia_confirmation_add_a_address">Cliquez ici pour ajouter une adresse</string>

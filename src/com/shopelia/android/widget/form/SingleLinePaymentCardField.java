@@ -310,7 +310,7 @@ public class SingleLinePaymentCardField extends FormField {
         }
         if (card != null) {
             card.expMonth = expMonth;
-            card.expYear = expYear;
+            card.setShortExpiryYear(expYear);
         }
         return isValid;
     }
