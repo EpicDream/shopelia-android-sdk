@@ -1,5 +1,7 @@
 package com.shopelia.android.utils;
 
+import java.math.BigDecimal;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -18,11 +20,8 @@ public enum Currency implements Parcelable {
     }
 
     public String format(float value) {
-        return format((int) (value * 100));
-    }
-
-    public String format(int value) {
-        return String.format(mFormat, value / 100, value % 100);
+        BigDecimal roundfinalPrice = new BigDecimal(value).setScale(2, BigDecimal.ROUND_HALF_UP);
+        return roundfinalPrice.toPlainString();
     }
 
     @Override

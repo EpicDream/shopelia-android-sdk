@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.AuthenticateFragment.OnAuthenticateEvent;
+import com.shopelia.android.ProductSelectionCardFragment.OnQuantitiySelectedEvent;
 import com.shopelia.android.ProductSelectionCardFragment.OnSubmitProductEvent;
 import com.shopelia.android.app.CardHolderActivity;
 import com.shopelia.android.config.Config;
@@ -34,6 +35,7 @@ public class ProductActivity extends CardHolderActivity {
     private boolean mHasProductSummary = false;
     private boolean mHasProductSelection = false;
     private Option[] mCurrentOptions;
+    private int mQuantity = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -107,7 +109,6 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     public void onEventMainThread(OnProductUpdateEvent event) {
-        getOrder().product = event.resource;
         getEventBus().post(new ProductNotFoundFragment.DismissEvent());
         getEventBus().post(new ErrorCardFragment.DismissEvent());
         mProduct = event.resource;
@@ -117,6 +118,8 @@ public class ProductActivity extends CardHolderActivity {
         if (mCurrentOptions != null) {
             mProduct.setCurrentVersion(mCurrentOptions);
         }
+        mProduct.setQuantity(mQuantity);
+        getOrder().product = mProduct;
         if (!mHasProductSummary && event.resource.hasVersion()) {
             mHasProductSummary = true;
             addCard(new ProductSummaryCardFragment(), 0, false, ProductSummaryCardFragment.TAG);
@@ -178,6 +181,11 @@ public class ProductActivity extends CardHolderActivity {
         Intent intent = new Intent(this, ProcessOrderActivity.class);
         intent.putExtra(EXTRA_ORDER, getOrder());
         startActivityForResult(intent, REQUEST_CHECKOUT);
+    }
+
+    public void onEventMainThread(OnQuantitiySelectedEvent event) {
+        mProduct.setQuantity(event.quantity);
+        getEventBus().postSticky(mProduct);
     }
 
 }

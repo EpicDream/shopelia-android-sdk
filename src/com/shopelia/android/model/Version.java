@@ -167,24 +167,24 @@ public class Version implements BaseModel<Version> {
     };
 
     // Price utility methods
-    public float getTotalPrice() {
-        return (centify(productPrice) + centify(shippingPrice) - centify(cashfrontValue)) / 100.f;
+    public float getTotalPrice(int quantity) {
+        return (centify(productPrice) * quantity + centify(shippingPrice) - centify(cashfrontValue) * quantity) / 100.f;
     }
 
     private int centify(float price) {
         return (int) (price != NO_PRICE ? price * 100 : 0);
     }
 
-    public float getExpectedTotalPrice() {
-        return (centify(productPrice) + centify(shippingPrice)) / 100.f;
+    public float getExpectedTotalPrice(int quantity) {
+        return (centify(productPrice) * quantity + centify(shippingPrice)) / 100.f;
     }
 
     public boolean isShippingFree() {
         return shippingPrice <= 0.f;
     }
 
-    public double getExpectedCashfrontValue() {
-        return (centify(cashfrontValue)) / 100.f;
+    public float getExpectedCashfrontValue(int quantity) {
+        return (centify(cashfrontValue) * quantity) / 100.f;
     }
 
 }

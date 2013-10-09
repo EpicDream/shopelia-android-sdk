@@ -163,8 +163,11 @@
             android:background="@drawable/shopelia_spinner"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:gravity="center"
             android:minWidth="120dp"
+            android:textAlignment="center"
             app1:listitem="@android:layout/simple_spinner_item" />
+
     </LinearLayout>
 
     <LinearLayout

@@ -41,10 +41,12 @@ public class Product implements BaseModel<Product> {
     public Product(String url) {
         this.url = url;
         versions = new Versions();
+        ensureDefaultValues();
     }
 
     protected Product(Parcel source) {
         url = source.readString();
+        mQuantity = source.readInt();
         versions = new Versions();
         Version version = ParcelUtils.readParcelable(source, Version.class.getClassLoader());
         if (version != null) {
@@ -54,14 +56,19 @@ public class Product implements BaseModel<Product> {
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
+        ensureDefaultValues();
     }
 
     public float getTotalPrice() {
-        return getCurrentVersion().getTotalPrice();
+        return getCurrentVersion().getTotalPrice(mQuantity);
     }
 
     public float getExpectedTotalPrice() {
-        return getCurrentVersion().getExpectedTotalPrice();
+        return getCurrentVersion().getExpectedTotalPrice(mQuantity);
+    }
+
+    public float getExpectedCashfrontValue() {
+        return getCurrentVersion().getExpectedCashfrontValue(mQuantity);
     }
 
     @Override
@@ -80,6 +87,7 @@ public class Product implements BaseModel<Product> {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(url);
+        dest.writeInt(mQuantity);
         ParcelUtils.writeParcelable(dest, getCurrentVersion(), flags);
         ParcelUtils.writeParcelable(dest, merchant, flags);
         ParcelUtils.writeParcelable(dest, tax, flags);
@@ -159,6 +167,18 @@ public class Product implements BaseModel<Product> {
             setCurrentVersion(options);
         }
 
+    }
+
+    public void setQuantity(int quantity) {
+        if (quantity < 1) {
+            mQuantity = 1;
+        } else {
+            mQuantity = quantity;
+        }
+    }
+
+    public int getQuantity() {
+        return mQuantity;
     }
 
     private Version getAvailableOptions(int indexToChange, int lastIndexToChange, Option[] base) {

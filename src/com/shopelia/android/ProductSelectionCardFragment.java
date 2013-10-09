@@ -60,15 +60,7 @@ public class ProductSelectionCardFragment extends CardFragment {
     public void onBindView(View view, Bundle savedInstanceState) {
         super.onBindView(view, savedInstanceState);
         mProduct = getArguments().getParcelable(ARGS_PRODUCT);
-        refreshPrices();
-        refreshOptionsFragment();
-        findViewById(R.id.validate).setOnClickListener(new OnClickListener() {
 
-            @Override
-            public void onClick(View v) {
-                getActivityEventBus().post(new OnSubmitProductEvent());
-            }
-        });
         if (mProduct.merchant.allowQuantities) {
             Spinner s = findViewById(R.id.quantitiy_selector);
             Integer[] items = new Integer[MAX_QUANTITY];
@@ -81,6 +73,16 @@ public class ProductSelectionCardFragment extends CardFragment {
         } else {
             ((View) findViewById(R.id.quantitiy_selector).getParent()).setVisibility(View.GONE);
         }
+
+        refreshPrices();
+        refreshOptionsFragment();
+        findViewById(R.id.validate).setOnClickListener(new OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                getActivityEventBus().post(new OnSubmitProductEvent());
+            }
+        });
     }
 
     @Override
@@ -104,12 +106,14 @@ public class ProductSelectionCardFragment extends CardFragment {
     }
 
     private void refreshPrices() {
+        Spinner s = findViewById(R.id.quantitiy_selector);
+        s.setSelection(mProduct.getQuantity() - 1);
         TextView t = findViewById(R.id.product_price_strikeout);
         t.setPaintFlags(t.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
         setPriceOrHide(R.id.product_price_strikeout, mProduct.getCurrentVersion().priceStrikeOut);
         setPriceOrHide(R.id.product_price, mProduct.getCurrentVersion().productPrice);
         setPriceOrHide(R.id.delivery_price, mProduct.getCurrentVersion().shippingPrice, 0);
-        setPriceOrHide(R.id.product_total_price, mProduct.getCurrentVersion().getTotalPrice());
+        setPriceOrHide(R.id.product_total_price, mProduct.getTotalPrice());
         setMinusPriceOrHide(R.id.price_cashfront, mProduct.getCurrentVersion().cashfrontValue);
         findViewById(R.id.product_delivery_free_layout).setVisibility(
                 mProduct.getCurrentVersion().shippingPrice <= 0.f ? View.VISIBLE : View.GONE);
