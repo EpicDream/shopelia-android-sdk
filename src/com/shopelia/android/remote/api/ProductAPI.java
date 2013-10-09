@@ -122,6 +122,9 @@ public class ProductAPI extends ApiController {
             } else if (newResult.response != null) {
                 try {
                     mProduct.setJson(new JSONObject(newResult.response.getBodyAsString()));
+                    if (mProduct.getProduct() == null) {
+                        return false;
+                    }
                     mProduct.download_at = System.currentTimeMillis();
                     boolean isDone = mProduct.isValid() && mProduct.ready
                             && (!mProduct.getProduct().hasVersion() || mProduct.optionsCompleted);
@@ -129,7 +132,6 @@ public class ProductAPI extends ApiController {
                     if (mProduct.isValid() && mProduct.ready) {
                         getEventBus().postSticky(new OnProductUpdateEvent(mProduct.getProduct(), true, isDone));
                     }
-
                     if (mProduct.ready && mProduct.getProduct().hasVersion()) {
                         mPoller.setExpiryDuration(POLLING_OPTIONS_EXPIRATION);
                     }

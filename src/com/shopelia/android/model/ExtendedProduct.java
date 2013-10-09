@@ -57,7 +57,7 @@ public class ExtendedProduct implements JsonData {
                 mProduct = Product.inflate(mJson);
                 mProduct.url = !TextUtils.isEmpty(mProduct.url) ? mProduct.url : url;
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         }
         return mProduct;

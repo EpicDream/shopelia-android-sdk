@@ -8,6 +8,7 @@ import org.json.JSONObject;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.SpannableStringBuilder;
@@ -69,6 +70,8 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
         TRACKER_NAME.put(R.id.phone, Analytics.Events.UserInteractions.Fields.PHONE);
         TRACKER_NAME.put(R.id.password, Analytics.Events.UserInteractions.Fields.PASSWORD);
     }
+
+    private static final Uri CGU_URI = Uri.parse("https://www.shopelia.com/cgu");
 
     private FormLinearLayout mFormContainer;
 
@@ -147,6 +150,7 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
         }
 
         getContract().getValidationButton().setOnClickListener(mOnClickListener);
+        findViewById(R.id.cgu).setOnClickListener(mOnClickCguListener);
     }
 
     public void onCreateAccountError(JSONObject object) {
@@ -359,6 +363,16 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
                 getTracker().onFocusIn(action);
                 v.setOnClickListener(null);
             }
+        }
+    };
+
+    private OnClickListener mOnClickCguListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(CGU_URI);
+            startActivity(i);
         }
     };
 

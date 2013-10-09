@@ -69,4 +69,16 @@
         android:visibility="gone" >
     </com.shopelia.android.widget.form.SingleLinePaymentCardField>
 
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/cgu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
+        android:layout_marginTop="@dimen/shopelia_margin_normal"
+        android:autoLink="web"
+        android:gravity="center"
+        android:clickable="true"
+        android:text="@string/shopelia_form_main_cgu"
+        android:textColorLink="@color/shopelia_link_text_color" />
+
 </com.shopelia.android.widget.form.FormLinearLayout>
