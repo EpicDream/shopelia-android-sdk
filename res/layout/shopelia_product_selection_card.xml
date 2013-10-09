@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/shopelia_margin_normal"
             android:text="40.50€"
-            android:textColor="@color/shopelia_red"
+            android:textColor="@color/shopelia_dark_green"
             android:textSize="@dimen/shopelia_font_size_normal" />
     </LinearLayout>
 
@@ -86,7 +86,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/shopelia_margin_normal"
             android:text="2.50€"
-            android:textColor="@color/shopelia_red"
+            android:textColor="@color/shopelia_dark_green"
             android:textSize="@dimen/shopelia_font_size_normal" />
     </LinearLayout>
 
@@ -137,7 +137,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/shopelia_margin_normal"
             android:text="-0.50€"
-            android:textColor="@color/shopelia_dark_green"
+            android:textColor="@color/shopelia_dark_blue"
             android:textSize="@dimen/shopelia_font_size_normal" />
     </LinearLayout>
 

@@ -276,6 +276,8 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             findViewById(R.id.price_cashfront, TextView.class).setText(
                     "-" + getOrder().product.currency.format(getOrder().product.getCurrentVersion().cashfrontValue));
 
+            findViewById(R.id.product_quantity, TextView.class).setText(String.valueOf(getOrder().product.getQuantity()));
+
             if (getOrder().product.getCurrentVersion().cashfrontValue == Product.NO_PRICE
                     || getOrder().product.getCurrentVersion().cashfrontValue == 0) {
                 findViewById(R.id.price_cashfront_layout).setVisibility(View.GONE);

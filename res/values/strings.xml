@@ -151,7 +151,7 @@
     <!-- Product sheet -->
     <string name="shopelia_product_shipping_fees" formatted="false">+ %s de frais de livraison</string>
     <string name="shopelia_product_free_shipping">Livraison gratuite</string>
-    <string name="shopelia_product_shipping_is_included">livraison <font fgcolor="#2b9b82" color="#2b9b82">incluse</font></string>
+    <string name="shopelia_product_shipping_is_included">Livraison <font fgcolor="#2b9b82" color="#2b9b82">incluse</font></string>
     <string name="shopelia_product_loading">Chargement du produit...</string>
 
     <!-- Waiting process -->

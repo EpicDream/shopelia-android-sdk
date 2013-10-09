@@ -67,6 +67,7 @@ public class ProductActivity extends CardHolderActivity {
     protected void onPause() {
         super.onPause();
         mProductAPI.unregister(this);
+        mProductAPI.stop();
     }
 
     @Override
