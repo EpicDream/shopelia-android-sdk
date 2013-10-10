@@ -17,7 +17,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CheckBox;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.shopelia.android.SignUpFragment.OnSignUpListener;
@@ -74,6 +77,7 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
     private static final Uri CGU_URI = Uri.parse("https://www.shopelia.com/cgu");
 
     private FormLinearLayout mFormContainer;
+    private CheckBox mCguCheckBox;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -150,7 +154,10 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
         }
 
         getContract().getValidationButton().setOnClickListener(mOnClickListener);
+
         findViewById(R.id.cgu).setOnClickListener(mOnClickCguListener);
+        mCguCheckBox = findViewById(R.id.cgu_checkbox);
+        mCguCheckBox.setOnClickListener(mOnCguCheckBoxClickListener);
     }
 
     public void onCreateAccountError(JSONObject object) {
@@ -225,8 +232,16 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
             if (mFormContainer.validate()) {
-                JSONObject result = mFormContainer.toJson();
-                getContract().onSignUp(result);
+                if (mCguCheckBox.isChecked()) {
+                    JSONObject result = mFormContainer.toJson();
+                    getContract().onSignUp(result);
+                } else {
+                    TextView cgu = findViewById(R.id.cgu);
+                    cgu.setTextColor(getResources().getColor(R.color.shopelia_red));
+                    View parent = (View) cgu.getParent();
+                    parent.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup));
+                }
+
             }
         }
     };
@@ -373,6 +388,15 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
             Intent i = new Intent(Intent.ACTION_VIEW);
             i.setData(CGU_URI);
             startActivity(i);
+        }
+    };
+
+    private OnClickListener mOnCguCheckBoxClickListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            TextView cgu = findViewById(R.id.cgu);
+            cgu.setTextColor(getResources().getColor(R.color.shopelia_dark));
         }
     };
 

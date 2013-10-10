@@ -60,6 +60,7 @@ public class Merchant implements BaseModel<Merchant> {
         dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(logo);
+        dest.writeString(ctcUrl);
         dest.writeByte((byte) (allowQuantities ? 1 : 0));
         dest.writeParcelable(uri, flags);
     }

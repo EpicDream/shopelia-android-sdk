@@ -6,6 +6,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 
 import com.shopelia.android.AuthenticateFragment.OnAuthenticateEvent;
+import com.shopelia.android.AuthenticateFragment.OnLogoutEvent;
 import com.shopelia.android.ProductSelectionCardFragment.OnQuantitiySelectedEvent;
 import com.shopelia.android.ProductSelectionCardFragment.OnSubmitProductEvent;
 import com.shopelia.android.app.CardHolderActivity;
@@ -180,6 +181,12 @@ public class ProductActivity extends CardHolderActivity {
     public void onEventMainThread(OnAuthenticateEvent event) {
         UserManager.get(this).setAutoSignIn(event.autoSignIn);
         Intent intent = new Intent(this, ProcessOrderActivity.class);
+        intent.putExtra(EXTRA_ORDER, getOrder());
+        startActivityForResult(intent, REQUEST_CHECKOUT);
+    }
+
+    public void onEventMainThread(OnLogoutEvent event) {
+        Intent intent = new Intent(this, PrepareOrderActivity.class);
         intent.putExtra(EXTRA_ORDER, getOrder());
         startActivityForResult(intent, REQUEST_CHECKOUT);
     }

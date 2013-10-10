@@ -90,15 +90,17 @@ public class Versions implements BaseModel<Versions> {
             versions.appendOptions(options);
             versions.mIsValid = versions.mIsValid && version.isValid();
         }
-        for (Options options : versions.mOptions) {
-            Collections.sort(options, new Comparator<Option>() {
+        if (versions.mOptions != null) {
+            for (Options options : versions.mOptions) {
+                Collections.sort(options, new Comparator<Option>() {
 
-                @Override
-                public int compare(Option lhs, Option rhs) {
-                    return lhs.getValue().compareToIgnoreCase(rhs.getValue());
-                }
+                    @Override
+                    public int compare(Option lhs, Option rhs) {
+                        return lhs.getValue().compareToIgnoreCase(rhs.getValue());
+                    }
 
-            });
+                });
+            }
         }
         return versions;
     }

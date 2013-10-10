@@ -40,6 +40,10 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
         public void onUserAuthenticate(boolean authoSignIn);
     }
 
+    public class OnLogoutEvent {
+
+    }
+
     public class OnAuthenticateEvent {
         public final boolean autoSignIn;
 
@@ -124,6 +128,7 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
                     closeSoftKeyboard();
                     dialog.dismiss();
                     UserManager.get(getActivity()).logout();
+                    getActivityEventBus().post(new OnLogoutEvent());
                     dismiss();
                 }
             }, null).show();

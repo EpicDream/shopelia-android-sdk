@@ -56,7 +56,6 @@ public class Product implements BaseModel<Product> {
         merchant = ParcelUtils.readParcelable(source, Merchant.class.getClassLoader());
         tax = ParcelUtils.readParcelable(source, Tax.class.getClassLoader());
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
-        ensureDefaultValues();
     }
 
     public float getTotalPrice() {

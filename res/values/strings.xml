@@ -88,7 +88,7 @@
 	    ]]>
     </string>
     <string name="shopelia_form_main_cgu">
-	   En cliquant sur ce bouton vous certifiez avoir lu et accepté les <a href="shopelia.com/cgu">Conditions générales d\'utilisation</a>
+	   J\'accepte les <a href="shopelia.com/cgu">Conditions Générales d\'Utilisation</a> de Shopelia
     </string>
     <string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
     <string name="shopelia_form_main_use_secured_server">Continuer sur serveur sécurisé</string>
@@ -139,7 +139,7 @@
     <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
     <string name="shopelia_form_payment_card_not_compatible">Shopelia n\'est disponible que pour les cartes Visa et American Express.</string>
     <string name="shopelia_form_payment_card_secured_server">Serveur sécurisé</string>
-	<string name="shopelia_form_payment_disclaimer">Le stockage de vos informations de carte bancaire est assuré par <b>Payline</b>, dûment agréé auprès de la <b>banque de France</b> en tant qu\'organisme <b>PCI DSS</b>.</string>
+	<string name="shopelia_form_payment_disclaimer">Le stockage de vos informations de carte bancaire est assuré par <b>Payline</b>, organisme agréé PCI DSS auprès de la banque de France.</string>
     
     <!-- Shopelia footer -->
     <string name="shopelia_footer">Paiement sécurisé par</string>

@@ -69,16 +69,33 @@
         android:visibility="gone" >
     </com.shopelia.android.widget.form.SingleLinePaymentCardField>
 
-    <com.shopelia.android.widget.FontableTextView
-        android:id="@+id/cgu"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/shopelia_margin_mid_large"
-        android:layout_marginTop="@dimen/shopelia_margin_normal"
-        android:autoLink="web"
-        android:gravity="center"
-        android:clickable="true"
-        android:text="@string/shopelia_form_main_cgu"
-        android:textColorLink="@color/shopelia_link_text_color" />
+        android:layout_marginBottom="@dimen/shopelia_margin_normal"
+        android:layout_marginTop="@dimen/shopelia_margin_small"
+        android:gravity="center_vertical"
+        android:paddingBottom="@dimen/shopelia_margin_normal" >
+
+        <CheckBox
+            android:id="@+id/cgu_checkbox"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:button="@drawable/shopelia_btn_check_holo_light" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/cgu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:autoLink="web"
+            android:button="@drawable/shopelia_btn_check_holo_light"
+            android:checked="false"
+            android:clickable="true"
+            android:linksClickable="true"
+            android:text="@string/shopelia_form_main_cgu"
+            android:textColorLink="@color/shopelia_link_text_color" />
+
+    </LinearLayout>
 
 </com.shopelia.android.widget.form.FormLinearLayout>
