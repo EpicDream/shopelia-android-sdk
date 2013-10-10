@@ -115,10 +115,7 @@ public class ProductSelectionCardFragment extends CardFragment {
         setPriceOrHide(R.id.delivery_price, mProduct.getCurrentVersion().shippingPrice, 0);
         setPriceOrHide(R.id.product_total_price, mProduct.getTotalPrice());
         setMinusPriceOrHide(R.id.price_cashfront, mProduct.getCurrentVersion().cashfrontValue);
-        findViewById(R.id.product_delivery_free_layout).setVisibility(
-                mProduct.getCurrentVersion().shippingPrice <= 0.f ? View.VISIBLE : View.GONE);
-        TextView availabilityInfo = findViewById(R.id.product_availability_info);
-        TextView shippingExtra = findViewById(R.id.product_shipping_extra);
+        findViewById(R.id.product_delivery_free_layout).setVisibility(mProduct.getExpectedCashfrontValue() > 0 ? View.VISIBLE : View.GONE);
         setTextOrHide(R.id.product_availability_info, mProduct.getCurrentVersion().availabilityInfo);
         setTextOrHide(R.id.product_shipping_extra, mProduct.getCurrentVersion().shippingExtra);
         TextView quantityMultiply = findViewById(R.id.product_quantity_multiply);

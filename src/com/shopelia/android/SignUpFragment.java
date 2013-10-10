@@ -109,7 +109,6 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
 		 */
 		mFormContainer.findFieldById(R.id.phone, PhoneField.class)
 				.setJsonPath(Order.Api.ADDRESS, Address.Api.PHONE).mandatory()
-				.setOnValidateListener(mPhoneOnValidateListener)
 				.setListener(mTrackingListener)
 				.setOnClickListener(mOnClickFieldClickListener);
 		mFormContainer.findFieldById(R.id.email, EmailField.class)
@@ -242,55 +241,6 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
                 getContract().onSignUp(result);
             }
         }
-    };
-
-    private OnValidateListener mPhoneOnValidateListener = new OnValidateListener() {
-
-        private String mCurrentNumber = "";
-
-        @Override
-        public boolean onValidate(EditTextField editTextField, boolean shouldFireError) {
-            return true;
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            super.afterTextChanged(s);
-            final String number = s.toString().replace(" ", "");
-            if (PhoneField.PHONE_PATTERN.matcher(number).matches() && !number.equals(mCurrentNumber)) {
-                mCurrentNumber = number;
-                ShopeliaRestClient.V1(getActivity()).get(Command.V1.Phones.Lookup(mCurrentNumber), null, new AsyncCallback() {
-
-                    @Override
-                    public void onComplete(HttpResponse httpResponse) {
-                        try {
-                            JSONObject address = new JSONObject(httpResponse.getBodyAsString());
-                            AddressField field = (AddressField) mFormContainer.findFieldById(R.id.address);
-                            if (field != null) {
-                                Address addressWithPhone = Address.inflate(address);
-                                if (addressWithPhone.isValid()) {
-                                    // Could track REVERSE DIRECTORY ADD ADDRESS
-                                    // METHOD
-                                }
-                                addressWithPhone.phone = number;
-                                field.setAddress(addressWithPhone);
-                            }
-                        } catch (Exception e) {
-                            onError(e);
-                        }
-                    }
-
-                    public void onError(Exception e) {
-                        mCurrentNumber = "";
-                        if (Config.INFO_LOGS_ENABLED) {
-                            e.printStackTrace();
-                        }
-                    };
-
-                });
-            }
-        }
-
     };
 
     private OnValidateListener mEmailOnValidateListener = new OnValidateListener() {
