@@ -13,8 +13,6 @@ import android.os.Parcelable;
 import com.shopelia.android.config.Config;
 
 /**
- * Helper enum including informations about vendors
- * 
  * @author Pierre Pollastri
  */
 public class Merchant implements BaseModel<Merchant> {
@@ -24,7 +22,7 @@ public class Merchant implements BaseModel<Merchant> {
         String NAME = "name";
         String LOGO = "logo";
         String URL = "url";
-        String CTC_URL = "ctc_url";
+        String TC_URL = "tc_url";
         String ALLOW_QUANTITIES = "allow_quantities";
     }
 
@@ -34,7 +32,7 @@ public class Merchant implements BaseModel<Merchant> {
     public String name;
     public String logo;
     public Uri uri;
-    public String ctcUrl;
+    public String tcUrl;
     public boolean allowQuantities;
 
     public Merchant() {
@@ -45,7 +43,7 @@ public class Merchant implements BaseModel<Merchant> {
         id = source.readLong();
         name = source.readString();
         logo = source.readString();
-        ctcUrl = source.readString();
+        tcUrl = source.readString();
         allowQuantities = source.readByte() == 1;
         uri = source.readParcelable(Uri.class.getClassLoader());
     }
@@ -60,7 +58,7 @@ public class Merchant implements BaseModel<Merchant> {
         dest.writeLong(id);
         dest.writeString(name);
         dest.writeString(logo);
-        dest.writeString(ctcUrl);
+        dest.writeString(tcUrl);
         dest.writeByte((byte) (allowQuantities ? 1 : 0));
         dest.writeParcelable(uri, flags);
     }
@@ -86,7 +84,7 @@ public class Merchant implements BaseModel<Merchant> {
         object.put(Api.LOGO, logo);
         object.put(Api.URL, uri.toString());
         object.put(Api.ALLOW_QUANTITIES, allowQuantities);
-        object.put(Api.CTC_URL, ctcUrl);
+        object.put(Api.TC_URL, tcUrl);
         return object;
     }
 
@@ -97,7 +95,7 @@ public class Merchant implements BaseModel<Merchant> {
         merchant.logo = object.optString(Api.LOGO);
         merchant.uri = Uri.parse(object.getString(Api.URL));
         merchant.allowQuantities = object.optInt(Api.ALLOW_QUANTITIES, 0) == 1;
-        merchant.ctcUrl = object.optString(Api.CTC_URL);
+        merchant.tcUrl = object.optString(Api.TC_URL);
         return merchant;
     }
 

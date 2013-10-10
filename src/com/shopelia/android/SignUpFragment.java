@@ -231,17 +231,15 @@ public class SignUpFragment extends AccountAuthenticatorShopeliaFragment<OnSignU
             view.requestFocus();
             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
-            if (mFormContainer.validate()) {
-                if (mCguCheckBox.isChecked()) {
-                    JSONObject result = mFormContainer.toJson();
-                    getContract().onSignUp(result);
-                } else {
-                    TextView cgu = findViewById(R.id.cgu);
-                    cgu.setTextColor(getResources().getColor(R.color.shopelia_red));
-                    View parent = (View) cgu.getParent();
-                    parent.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup));
-                }
-
+            if (!mCguCheckBox.isChecked()) {
+                TextView cgu = findViewById(R.id.cgu);
+                cgu.setTextColor(getResources().getColor(R.color.shopelia_red));
+                View parent = (View) cgu.getParent();
+                parent.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup));
+            }
+            if (mFormContainer.validate() && mCguCheckBox.isChecked()) {
+                JSONObject result = mFormContainer.toJson();
+                getContract().onSignUp(result);
             }
         }
     };

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Rect;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -12,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.CheckBox;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +33,7 @@ import com.shopelia.android.remote.api.UserAPI;
 import com.shopelia.android.remote.api.UserAPI.OnAuthTokenRevokedEvent;
 import com.shopelia.android.remote.api.UserAPI.OnUserUpdateDoneEvent;
 import com.shopelia.android.utils.DialogHelper;
+import com.shopelia.android.utils.TextHelper;
 import com.shopelia.android.view.animation.ResizeAnimation;
 import com.shopelia.android.view.animation.ResizeAnimation.OnViewRectComputedListener;
 import com.shopelia.android.widget.FontableTextView;
@@ -80,6 +83,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         SinglePaymentCardFragment.newInstance(getOrder().card).replace(getFragmentManager(), R.id.payment_card);
         findViewById(R.id.product_sheet, ProductSheetWidget.class).setProductInfo(getOrder().product, false);
         setupUi();
+
     }
 
     @Override
@@ -166,7 +170,14 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
 
         @Override
         public void onClick(View v) {
-            order(false);
+            if (!findViewById(R.id.cgv_checkbox, CheckBox.class).isChecked()) {
+                TextView cgv = findViewById(R.id.cgv);
+                cgv.setTextColor(getResources().getColor(R.color.shopelia_red));
+                View parent = (View) cgv.getParent();
+                parent.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.shopelia_wakeup));
+            } else {
+                order(false);
+            }
         }
     };
 
@@ -251,6 +262,14 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         setupPriceUi();
         setupUserUi();
         findViewById(R.id.validate).setEnabled(getOrder().product.isValid());
+        TextView cgv = findViewById(R.id.cgv);
+        cgv.setText(TextHelper.formatText(getText(R.string.shopelia_confirmation_cgv), getOrder().product.merchant.name));
+        cgv.setOnClickListener(mOnClickCgvListener);
+        findViewById(R.id.cgv_checkbox).setOnClickListener(mOnClickCgvCheckboxListener);
+        if (TextUtils.isEmpty(getOrder().product.merchant.tcUrl)) {
+            ((View) cgv.getParent()).setVisibility(View.GONE);
+            findViewById(R.id.cgv_checkbox, CheckBox.class).setChecked(true);
+        }
     }
 
     private void setupUserUi() {
@@ -308,4 +327,24 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
             findViewById(R.id.price_layout).setVisibility(View.GONE);
         }
     }
+
+    private OnClickListener mOnClickCgvListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            Intent i = new Intent(Intent.ACTION_VIEW);
+            i.setData(Uri.parse(getOrder().product.merchant.tcUrl));
+            startActivity(i);
+        }
+    };
+
+    private OnClickListener mOnClickCgvCheckboxListener = new OnClickListener() {
+
+        @Override
+        public void onClick(View v) {
+            TextView cgv = findViewById(R.id.cgv);
+            cgv.setTextColor(getResources().getColor(R.color.shopelia_dark));
+        }
+    };
+
 }

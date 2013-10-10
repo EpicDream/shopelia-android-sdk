@@ -58,8 +58,8 @@
     <string name="shopelia_product_options_option_pattern">Option %d</string>
     <string name="shopelia_product_description_go_merchant_title">Aller chez le marchand</string>
     <string name="shopelia_product_description_go_merchant_content">Voulez-vous aller sur la fiche du marchand ?</string>
-	<string name="shopelia_product_quantity">Quantité</string>
-    
+    <string name="shopelia_product_quantity">Quantité</string>
+
     <!-- Authenticate -->
     <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
     <string name="shopelia_authenticate_title">Authentification</string>
@@ -87,9 +87,7 @@
 	    Votre commande va être passée automatiquement\n avec <b>Shopelia</b> sur le site <b>%s</b>.
 	    ]]>
     </string>
-    <string name="shopelia_form_main_cgu">
-	   J\'accepte les <a href="shopelia.com/cgu">Conditions Générales d\'Utilisation</a> de Shopelia
-    </string>
+    <string name="shopelia_form_main_cgu">	   J\'accepte les <a href="shopelia.com/cgu">Conditions Générales d\'Utilisation</a> de Shopelia</string>
     <string name="shopelia_form_address_display_format" formatted="false">%s, %s, %s</string>
     <string name="shopelia_form_main_use_secured_server">Continuer sur serveur sécurisé</string>
     <string name="shopelia_form_main_create_account">Créer un compte</string>
@@ -139,8 +137,8 @@
     <string name="shopelia_form_payment_card_validate">Enregistrer ma carte</string>
     <string name="shopelia_form_payment_card_not_compatible">Shopelia n\'est disponible que pour les cartes Visa et American Express.</string>
     <string name="shopelia_form_payment_card_secured_server">Serveur sécurisé</string>
-	<string name="shopelia_form_payment_disclaimer">Le stockage de vos informations de carte bancaire est assuré par <b>Payline</b>, organisme agréé PCI DSS auprès de la banque de France.</string>
-    
+    <string name="shopelia_form_payment_disclaimer">Le stockage de vos informations de carte bancaire est assuré par <b>Payline</b>, organisme agréé PCI DSS auprès de la banque de France.</string>
+
     <!-- Shopelia footer -->
     <string name="shopelia_footer">Paiement sécurisé par</string>
 
@@ -173,6 +171,7 @@
     <string name="shopelia_confirmation_add_a_card">Cliquez ici pour ajouter une carte de paiement</string>
     <string name="shopelia_confirmation_you_have_no_address">Vous n\'avez renseigné aucune adresse. Vous devez enregistrer au moins une adresse pour commander.</string>
     <string name="shopelia_confirmation_add_a_address">Cliquez ici pour ajouter une adresse</string>
+    <string name="shopelia_confirmation_cgv">J\'accepte les <a href="shopelia.com/cgu">Conditions Générales de Vente</a> du marchand %@</string>
 
     <!-- Pin code -->
     <string name="shopelia_pincode_create">CRÉEZ VOTRE CODE D\'ACCÈS</string>
