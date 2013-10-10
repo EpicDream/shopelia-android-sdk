@@ -18,6 +18,8 @@ public class Order implements BaseModel<Order> {
         String PRODUCTS = "products";
         String EXPECTED_PRICE_TOTAL = "expected_price_total";
         String EXPECTED_CASHFRONT_VALUE = "expected_cashfront_value";
+        String EXPECTED_SHIPPING_PRICE = "expected_shipping_price";
+        String EXPECTED_PRODUCT_PRICE = "expected_product_price";
         String ORDER = "order";
     }
 

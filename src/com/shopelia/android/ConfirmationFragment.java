@@ -23,7 +23,6 @@ import com.shopelia.android.app.ShopeliaActivity;
 import com.shopelia.android.app.ShopeliaFragment;
 import com.shopelia.android.drawable.TicketDrawable;
 import com.shopelia.android.manager.UserManager;
-import com.shopelia.android.model.Product;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.ApiController.OnApiErrorEvent;
 import com.shopelia.android.remote.api.OrderAPI;
@@ -280,20 +279,20 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
         if (getOrder().product != null && getOrder().product.isValid()) {
             findViewById(R.id.price_product_name, TextView.class).setText(getOrder().product.getCurrentVersion().name);
             findViewById(R.id.price_value_no_shipping, TextView.class).setText(
-                    getOrder().product.currency.format(getOrder().product.getCurrentVersion().productPrice));
+                    getOrder().product.currency.format(getOrder().product.getSingleProductPrice()));
             if (getOrder().product.getCurrentVersion().isShippingFree()) {
                 FontableTextView fees = findViewById(R.id.price_value_shipping);
                 fees.setText(R.string.shopelia_confirmation_free);
             } else {
                 findViewById(R.id.price_value_shipping, TextView.class).setText(
-                        getOrder().product.currency.format(getOrder().product.getCurrentVersion().shippingPrice));
+                        getOrder().product.currency.format(getOrder().product.getShippingPrice()));
             }
             findViewById(R.id.price_value_total, TextView.class).setText(
                     getOrder().product.currency.format(getOrder().product.getTotalPrice()));
             findViewById(R.id.price_shipping_info, TextView.class).setText(getOrder().product.getCurrentVersion().shippingExtra);
 
             findViewById(R.id.price_cashfront, TextView.class).setText(
-                    "-" + getOrder().product.currency.format(getOrder().product.getCurrentVersion().cashfrontValue));
+                    "-" + getOrder().product.currency.format(getOrder().product.getExpectedCashfrontValue()));
 
             findViewById(R.id.product_quantity, TextView.class).setText(String.valueOf(getOrder().product.getQuantity()));
 
@@ -301,8 +300,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                     getString(R.string.shopelia_confirmation_quantity_multiply, getOrder().product.getQuantity()));
             findViewById(R.id.product_quantity_multiply).setVisibility(getOrder().product.getQuantity() == 1 ? View.GONE : View.VISIBLE);
 
-            if (getOrder().product.getCurrentVersion().cashfrontValue == Product.NO_PRICE
-                    || getOrder().product.getCurrentVersion().cashfrontValue == 0) {
+            if (!getOrder().product.hasCashfront()) {
                 findViewById(R.id.price_cashfront_layout).setVisibility(View.GONE);
             }
 

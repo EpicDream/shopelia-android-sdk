@@ -1,5 +1,7 @@
 package com.shopelia.android;
 
+import java.math.BigDecimal;
+
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -110,12 +112,13 @@ public class ProductSelectionCardFragment extends CardFragment {
         s.setSelection(mProduct.getQuantity() - 1);
         TextView t = findViewById(R.id.product_price_strikeout);
         t.setPaintFlags(t.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-        setPriceOrHide(R.id.product_price_strikeout, mProduct.getCurrentVersion().priceStrikeOut);
-        setPriceOrHide(R.id.product_price, mProduct.getCurrentVersion().productPrice);
-        setPriceOrHide(R.id.delivery_price, mProduct.getCurrentVersion().shippingPrice, 0);
+        setPriceOrHide(R.id.product_price_strikeout, mProduct.getStrikeoutPrice());
+        setPriceOrHide(R.id.product_price, mProduct.getSingleProductPrice());
+        setPriceOrHide(R.id.delivery_price, mProduct.getCurrentVersion().getShippingPrice(), BigDecimal.ZERO);
         setPriceOrHide(R.id.product_total_price, mProduct.getTotalPrice());
-        setMinusPriceOrHide(R.id.price_cashfront, mProduct.getCurrentVersion().cashfrontValue);
-        findViewById(R.id.product_delivery_free_layout).setVisibility(mProduct.getExpectedCashfrontValue() > 0 ? View.VISIBLE : View.GONE);
+        setMinusPriceOrHide(R.id.price_cashfront, mProduct.getExpectedCashfrontValue());
+        findViewById(R.id.product_delivery_free_layout).setVisibility(
+                mProduct.getShippingPrice().compareTo(BigDecimal.ZERO) <= 0 ? View.VISIBLE : View.GONE);
         setTextOrHide(R.id.product_availability_info, mProduct.getCurrentVersion().availabilityInfo);
         setTextOrHide(R.id.product_shipping_extra, mProduct.getCurrentVersion().shippingExtra);
         TextView quantityMultiply = findViewById(R.id.product_quantity_multiply);
@@ -145,28 +148,24 @@ public class ProductSelectionCardFragment extends CardFragment {
         }
     }
 
-    private void setPriceOrHide(int id, float price) {
+    private void setPriceOrHide(int id, BigDecimal price) {
         setPriceOrHide(id, price, Version.NO_PRICE);
     }
 
-    private void setPriceOrHide(int id, float price, float failureValue) {
+    private void setPriceOrHide(int id, BigDecimal price, BigDecimal failureValue) {
         TextView textView = findViewById(id);
         textView.setText(mProduct.currency.format(price));
-        if (price == failureValue) {
+        if (price.compareTo(failureValue) == 0) {
             ((View) textView.getParent()).setVisibility(View.GONE);
         } else {
             ((View) textView.getParent()).setVisibility(View.VISIBLE);
         }
     }
 
-    private void setMinusPriceOrHide(int id, float price) {
+    private void setMinusPriceOrHide(int id, BigDecimal price) {
         TextView textView = findViewById(id);
         textView.setText("-" + mProduct.currency.format(price));
-        if (price <= 0.f) {
-            ((View) textView.getParent()).setVisibility(View.GONE);
-        } else {
-            ((View) textView.getParent()).setVisibility(View.VISIBLE);
-        }
+        ((View) textView.getParent()).setVisibility(price.compareTo(BigDecimal.ZERO) <= 0 ? View.GONE : View.VISIBLE);
     }
 
     private OnItemSelectedListener mOnQuantitySelectedListener = new OnItemSelectedListener() {

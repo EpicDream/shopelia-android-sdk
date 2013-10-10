@@ -23,6 +23,7 @@ import com.shopelia.android.remote.api.VerifyAPI.OnUpdateUiEvent;
 import com.shopelia.android.remote.api.VerifyAPI.OnVerifyFailedEvent;
 import com.shopelia.android.remote.api.VerifyAPI.OnVerifySucceedEvent;
 import com.shopelia.android.utils.DialogHelper;
+import com.shopelia.android.utils.ViewUtils;
 import com.shopelia.android.widget.FontableTextView;
 import com.shopelia.android.widget.actionbar.ActionBar;
 import com.shopelia.android.widget.actionbar.ActionBar.Item;
@@ -97,6 +98,7 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
     @Override
     public void onResume() {
         super.onResume();
+        ViewUtils.forceRequestFocus(mPasswordField.getEditText());
         if (mVerifyAPI == null) {
             mVerifyAPI = new VerifyAPI(getActivity());
         }

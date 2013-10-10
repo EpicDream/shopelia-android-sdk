@@ -9,6 +9,9 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.shopelia.android.utils.JsonUtils;
+import com.shopelia.android.utils.ParcelUtils;
+
 public class Version implements BaseModel<Version> {
 
     public interface Api {
@@ -24,15 +27,15 @@ public class Version implements BaseModel<Version> {
         String AVAILABILITY_INFO = "availability_info";
     }
 
-    public static final float NO_PRICE = -1;
+    public static final BigDecimal NO_PRICE = new BigDecimal("-1");
     public static final long FIRST_OPTION = 0;
     private final long id;
 
     // Prices
-    public final float productPrice;
-    public final float shippingPrice;
-    public final float cashfrontValue;
-    public final float priceStrikeOut;
+    private final BigDecimal productPrice;
+    private final BigDecimal shippingPrice;
+    private final BigDecimal cashfrontValue;
+    private final BigDecimal priceStrikeOut;
 
     // Informations
     public final String name;
@@ -56,11 +59,10 @@ public class Version implements BaseModel<Version> {
         imageUrl = object.optString(Api.IMAGE_URL);
 
         // Prices informations
-        productPrice = (float) object.optDouble(Api.PRODUCT_PRICE, NO_PRICE);
-        shippingPrice = (float) object.optDouble(Api.SHIPPING_PRICE, NO_PRICE);
-        cashfrontValue = (float) object.optDouble(Api.CASHFRONT_VALUE, NO_PRICE);
-        priceStrikeOut = (float) object.optDouble(Api.PRICE_STRIKEOUT, NO_PRICE);
-
+        productPrice = JsonUtils.optBigDecimal(object, Api.PRODUCT_PRICE, NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        shippingPrice = JsonUtils.optBigDecimal(object, Api.SHIPPING_PRICE, NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        cashfrontValue = JsonUtils.optBigDecimal(object, Api.CASHFRONT_VALUE, BigDecimal.ZERO).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+        priceStrikeOut = JsonUtils.optBigDecimal(object, Api.PRICE_STRIKEOUT, NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
     }
 
     private Version(Parcel source) {
@@ -73,10 +75,10 @@ public class Version implements BaseModel<Version> {
         imageUrl = source.readString();
 
         // Prices
-        productPrice = source.readFloat();
-        shippingPrice = source.readFloat();
-        cashfrontValue = source.readFloat();
-        priceStrikeOut = source.readFloat();
+        productPrice = ParcelUtils.readBigDecimal(source, NO_PRICE);
+        shippingPrice = ParcelUtils.readBigDecimal(source, NO_PRICE);
+        cashfrontValue = ParcelUtils.readBigDecimal(source, BigDecimal.ZERO);
+        priceStrikeOut = ParcelUtils.readBigDecimal(source, NO_PRICE);
 
         // Options
         optionsHashcode = source.readLong();
@@ -120,10 +122,10 @@ public class Version implements BaseModel<Version> {
         dest.writeString(imageUrl);
 
         // Prices
-        dest.writeFloat(productPrice);
-        dest.writeFloat(shippingPrice);
-        dest.writeFloat(cashfrontValue);
-        dest.writeFloat(priceStrikeOut);
+        ParcelUtils.writeBigDecimal(dest, productPrice, NO_PRICE);
+        ParcelUtils.writeBigDecimal(dest, shippingPrice, NO_PRICE);
+        ParcelUtils.writeBigDecimal(dest, cashfrontValue, BigDecimal.ZERO);
+        ParcelUtils.writeBigDecimal(dest, priceStrikeOut, NO_PRICE);
 
         // Options
         dest.writeLong(optionsHashcode);
@@ -169,21 +171,41 @@ public class Version implements BaseModel<Version> {
     };
 
     // Price utility methods
-    public float getTotalPrice(int quantity) {
-        return new BigDecimal(productPrice).multiply(BigDecimal.valueOf(quantity)).add(BigDecimal.valueOf(shippingPrice))
-                .subtract(BigDecimal.valueOf(cashfrontValue)).floatValue();
+    public BigDecimal getTotalPrice(int quantity) {
+        return productPrice.multiply(BigDecimal.valueOf(quantity)).add(shippingPrice).subtract(cashfrontValue);
     }
 
-    public float getExpectedTotalPrice(int quantity) {
-        return new BigDecimal(productPrice).multiply(BigDecimal.valueOf(quantity)).add(BigDecimal.valueOf(shippingPrice)).floatValue();
+    public BigDecimal getExpectedTotalPrice(int quantity) {
+        return productPrice.multiply(BigDecimal.valueOf(quantity)).add(shippingPrice.equals(NO_PRICE) ? BigDecimal.ZERO : shippingPrice);
     }
 
     public boolean isShippingFree() {
-        return shippingPrice <= 0.f;
+        return shippingPrice.compareTo(BigDecimal.ZERO) <= 0;
     }
 
-    public float getExpectedCashfrontValue(int quantity) {
-        return new BigDecimal(cashfrontValue).multiply(BigDecimal.valueOf(quantity)).floatValue();
+    public BigDecimal getExpectedCashfrontValue(int quantity) {
+        return cashfrontValue.multiply(BigDecimal.valueOf(quantity));
+    }
+
+    /**
+     * Raw price no cashfront
+     * 
+     * @return
+     */
+    public BigDecimal getPrice(int quantity) {
+        return productPrice.multiply(BigDecimal.valueOf(quantity));
+    }
+
+    public BigDecimal getStrikeoutPrice() {
+        return priceStrikeOut;
+    }
+
+    public BigDecimal getShippingPrice() {
+        return shippingPrice;
+    }
+
+    public boolean hasCashfront() {
+        return cashfrontValue.compareTo(BigDecimal.ZERO) > 1;
     }
 
 }

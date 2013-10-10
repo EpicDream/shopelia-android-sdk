@@ -1,5 +1,6 @@
 package com.shopelia.android.model;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import org.json.JSONArray;
@@ -20,6 +21,7 @@ public class Product implements BaseModel<Product> {
         String MERCHANT = "merchant";
         String VERSIONS = "versions";
         String QUANTITY = "quantity";
+        String PRICE = "price";
         String PRODUCT_VERSION_ID = "product_version_id";
 
     }
@@ -58,22 +60,43 @@ public class Product implements BaseModel<Product> {
         currency = ParcelUtils.readParcelable(source, Currency.class.getClassLoader());
     }
 
-    public float getTotalPrice() {
+    public BigDecimal getTotalPrice() {
         return getCurrentVersion().getTotalPrice(mQuantity);
     }
 
-    public float getExpectedTotalPrice() {
+    public BigDecimal getProductPrice() {
+        return getCurrentVersion().getPrice(mQuantity);
+    }
+
+    public BigDecimal getExpectedTotalPrice() {
         return getCurrentVersion().getExpectedTotalPrice(mQuantity);
     }
 
-    public float getExpectedCashfrontValue() {
+    public BigDecimal getExpectedCashfrontValue() {
         return getCurrentVersion().getExpectedCashfrontValue(mQuantity);
+    }
+
+    public BigDecimal getSingleProductPrice() {
+        return getCurrentVersion().getPrice(1);
+    }
+
+    public BigDecimal getStrikeoutPrice() {
+        return getCurrentVersion().getStrikeoutPrice();
+    }
+
+    public BigDecimal getShippingPrice() {
+        return getCurrentVersion().getShippingPrice();
+    }
+
+    public boolean hasCashfront() {
+        return getCurrentVersion().hasCashfront();
     }
 
     @Override
     public JSONObject toJson() throws JSONException {
         JSONObject json = new JSONObject();
         json.put(Api.PRODUCT_VERSION_ID, getCurrentVersion().getId());
+        json.put(Api.PRICE, getSingleProductPrice());
         json.put(Api.QUANTITY, mQuantity);
         return json;
     }

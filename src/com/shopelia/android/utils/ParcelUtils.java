@@ -1,5 +1,6 @@
 package com.shopelia.android.utils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 import android.os.Parcel;
@@ -156,6 +157,21 @@ public final class ParcelUtils {
             return versions;
         }
         return null;
+    }
+
+    public static void writeBigDecimal(Parcel dest, BigDecimal value, BigDecimal invalid) {
+        byte exists = (byte) (value != null && !value.equals(invalid) ? 1 : 0);
+        dest.writeByte(exists);
+        if (exists == 1) {
+            dest.writeSerializable(value);
+        }
+    }
+
+    public static BigDecimal readBigDecimal(Parcel source, BigDecimal fallback) {
+        if (source.readByte() == 1) {
+            return (BigDecimal) source.readSerializable();
+        }
+        return fallback;
     }
 
 }

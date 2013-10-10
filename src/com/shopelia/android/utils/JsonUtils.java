@@ -1,5 +1,6 @@
 package com.shopelia.android.utils;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -129,4 +130,16 @@ public final class JsonUtils {
             task.execute();
         }
     }
+
+    public static BigDecimal optBigDecimal(JSONObject object, String key, BigDecimal fallback) {
+        BigDecimal out = fallback;
+        if (object.has(key)) {
+            String value = object.optString(key, null);
+            if (value != null) {
+                out = new BigDecimal(value);
+            }
+        }
+        return out;
+    }
+
 }

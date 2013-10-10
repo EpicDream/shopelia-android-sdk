@@ -30,7 +30,7 @@ public enum Currency implements Parcelable {
         return roundfinalPrice.toPlainString();
     }
 
-    public String format(double value) {
+    public String format(BigDecimal value) {
         DecimalFormat fmt = new DecimalFormat(getFormat());
         fmt.setCurrency(java.util.Currency.getInstance(mCurrencyCode));
         return fmt.format(value);
