@@ -10,13 +10,37 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/shopelia_margin_small"
-        android:gravity="center" >
+        android:layout_marginTop="@dimen/shopelia_margin_small" >
+
+        <com.shopelia.android.widget.FontableTextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:text="@string/shopelia_product_quantity"
+            android:textColor="@color/shopelia_dark"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/product_quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="42"
+            android:textColor="@color/shopelia_dark_blue"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/shopelia_margin_small" >
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/price_product_name"
-            android:layout_width="180dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:layout_weight="1"
             android:ellipsize="end"
             android:maxLines="2"
             android:text="Produit"
@@ -24,13 +48,24 @@
             android:textSize="@dimen/shopelia_font_size_normal" />
 
         <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/price_value_no_shipping"
-            android:layout_width="match_parent"
+            android:id="@+id/product_quantity_multiply"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="right"
+            android:text="42 x"
+            android:textColor="@color/shopelia_dark_blue"
+            android:textSize="@dimen/shopelia_font_size_normal" />
+
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/price_value_no_shipping"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/shopelia_margin_small"
             android:gravity="right"
             android:text="12.89€"
             android:textColor="@color/shopelia_dark_green"
             android:textSize="@dimen/shopelia_font_size_normal" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -55,7 +90,6 @@
             android:text="2,79€"
             android:textColor="@color/shopelia_dark_green"
             android:textSize="@dimen/shopelia_font_size_normal" />
-
     </LinearLayout>
 
     <LinearLayout
@@ -82,29 +116,6 @@
             android:textSize="@dimen/shopelia_font_size_normal" />
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/shopelia_margin_small" >
-
-        <com.shopelia.android.widget.FontableTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/shopelia_margin_normal"
-            android:text="@string/shopelia_product_quantity"
-            android:textColor="@color/shopelia_dark"
-            android:textSize="@dimen/shopelia_font_size_normal" />
-
-        <com.shopelia.android.widget.FontableTextView
-            android:id="@+id/product_quantity"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="right"
-            android:text="42"
-            android:textColor="@color/shopelia_dark_blue"
-            android:textSize="@dimen/shopelia_font_size_normal" />
-    </LinearLayout>
-    
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -140,10 +151,10 @@
         android:textSize="@dimen/shopelia_font_size_small" />
 
     <CheckBox
-        android:id="@+id/auto_cancel" 
+        android:id="@+id/auto_cancel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:text="Commande de test" />
+        android:text="Commande de test"
+        android:visibility="gone" />
 
 </LinearLayout>

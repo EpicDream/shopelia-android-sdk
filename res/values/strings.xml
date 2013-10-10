@@ -172,7 +172,8 @@
     <string name="shopelia_confirmation_you_have_no_address">Vous n\'avez renseigné aucune adresse. Vous devez enregistrer au moins une adresse pour commander.</string>
     <string name="shopelia_confirmation_add_a_address">Cliquez ici pour ajouter une adresse</string>
     <string name="shopelia_confirmation_cgv">J\'accepte les <a href="shopelia.com/cgu">Conditions Générales de Vente</a> du marchand %@</string>
-
+	<string name="shopelia_confirmation_quantity_multiply">%d x </string>
+    
     <!-- Pin code -->
     <string name="shopelia_pincode_create">CRÉEZ VOTRE CODE D\'ACCÈS</string>
     <string name="shopelia_pincode_re_enter">VÉRIFIEZ VOTRE CODE D\'ACCÈS</string>

@@ -121,6 +121,9 @@ public class ProductSelectionCardFragment extends CardFragment {
         TextView shippingExtra = findViewById(R.id.product_shipping_extra);
         setTextOrHide(R.id.product_availability_info, mProduct.getCurrentVersion().availabilityInfo);
         setTextOrHide(R.id.product_shipping_extra, mProduct.getCurrentVersion().shippingExtra);
+        TextView quantityMultiply = findViewById(R.id.product_quantity_multiply);
+        quantityMultiply.setText(getString(R.string.shopelia_confirmation_quantity_multiply, mProduct.getQuantity()));
+        quantityMultiply.setVisibility(mProduct.getQuantity() > 1 ? View.VISIBLE : View.GONE);
     }
 
     private void refreshOptionsFragment() {
