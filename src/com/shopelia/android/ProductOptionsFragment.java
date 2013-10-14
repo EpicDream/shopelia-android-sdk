@@ -248,7 +248,6 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     }
 
     public void setCurrentOption(int index, Option option) {
-        new Exception().printStackTrace();
         if (mIsRefreshing) {
             return;
         }
