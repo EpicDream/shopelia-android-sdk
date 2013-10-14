@@ -92,6 +92,7 @@
                 layout="@layout/shopelia_confirmation_price" />
 
             <LinearLayout
+                android:id="@+id/cgv_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/shopelia_margin_normal"

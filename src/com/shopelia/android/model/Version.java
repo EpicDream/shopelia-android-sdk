@@ -205,7 +205,7 @@ public class Version implements BaseModel<Version> {
     }
 
     public boolean hasCashfront() {
-        return cashfrontValue.compareTo(BigDecimal.ZERO) > 1;
+        return cashfrontValue.compareTo(BigDecimal.ZERO) > 0;
     }
 
 }

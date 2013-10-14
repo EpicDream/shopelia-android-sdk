@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,7 +38,7 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     private List<OptionsItem> mOptionsItems;
     private ViewGroup mOptionsContainer;
     private boolean mIsLoading = true;
-
+    private boolean mIsRefreshing = false;
     private Option[] mOptions;
 
     @Override
@@ -50,13 +49,13 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d(null, "CREATE VIEW");
         mOptionsContainer = findViewById(R.id.options_container);
         Product product = (Product) getActivityEventBus().getStickyEvent(Product.class);
         refreshUi(product);
     }
 
     private void refreshUi(Product product) {
+        mIsRefreshing = true;
         mIsLoading = getBaseActivity().isInWaitingMode();
         if (mOptionsItems == null) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
@@ -78,6 +77,7 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
         for (int index = 0; index < size; index++) {
             mOptionsItems.get(index).refreshUi(product, product.versions.getOptions(index));
         }
+        mIsRefreshing = false;
     }
 
     @Override
@@ -130,7 +130,6 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
             mAdapter.add(options);
             mOptionLabel.setText(getResources().getString(R.string.shopelia_product_options_option_pattern, (mIndex + 1)));
             if (mOptions[mIndex] == null) {
-                Log.d(null, "RESET TO 0");
                 setCurrentOption(mIndex, options.get(0));
             }
             int currentSelection = mSelector.getSelectedItemPosition();
@@ -144,7 +143,6 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
             if (!product.getCurrentVersion().getOptions()[mIndex].equals(mOptions[mIndex])) {
                 mOptions[mIndex] = product.getCurrentVersion().getOptions()[mIndex];
                 mSelector.setSelection(mAdapter.indexOf(product.getCurrentVersion().getOptions()[mIndex]));
-                Log.d(null, "REFRESH SELECTION");
             }
         }
 
@@ -250,6 +248,10 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     }
 
     public void setCurrentOption(int index, Option option) {
+        new Exception().printStackTrace();
+        if (mIsRefreshing) {
+            return;
+        }
         mOptions[index] = option;
         boolean canSend = true;
         for (Option o : mOptions) {

@@ -96,6 +96,9 @@ public class Merchant implements BaseModel<Merchant> {
         merchant.uri = Uri.parse(object.getString(Api.URL));
         merchant.allowQuantities = object.optInt(Api.ALLOW_QUANTITIES, 0) == 1;
         merchant.tcUrl = object.optString(Api.TC_URL);
+        if (merchant.tcUrl != null && merchant.tcUrl.equalsIgnoreCase("null")) {
+            merchant.tcUrl = null;
+        }
         return merchant;
     }
 

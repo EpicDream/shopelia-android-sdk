@@ -300,9 +300,7 @@ public class ConfirmationFragment extends ShopeliaFragment<Void> {
                     getString(R.string.shopelia_confirmation_quantity_multiply, getOrder().product.getQuantity()));
             findViewById(R.id.product_quantity_multiply).setVisibility(getOrder().product.getQuantity() == 1 ? View.GONE : View.VISIBLE);
 
-            if (!getOrder().product.hasCashfront()) {
-                findViewById(R.id.price_cashfront_layout).setVisibility(View.GONE);
-            }
+            findViewById(R.id.price_cashfront_layout).setVisibility(getOrder().product.hasCashfront() ? View.VISIBLE : View.GONE);
 
             // Testing purposes
             if (getOrder().user.email.equals("elarch@gmail.com") || getOrder().user.email.contains("shopelia")

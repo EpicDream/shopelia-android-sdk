@@ -3,7 +3,6 @@ package com.shopelia.android.manager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.Manifest.permission;
 import android.accounts.Account;
 import android.accounts.AccountManager;
 import android.accounts.AccountManagerCallback;
@@ -18,7 +17,6 @@ import com.shopelia.android.app.tracking.Tracker;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.model.User;
 import com.shopelia.android.remote.api.UserAPI;
-import com.shopelia.android.utils.ContextUtils;
 
 public class UserManager {
 
@@ -92,10 +90,10 @@ public class UserManager {
             Editor editor = mPreferences.edit();
             editor.putString(PREFS_USER_JSON, mUser.toJson().toString());
             editor.commit();
-            AccountManager manager = getAccountManager();
-            if (manager != null) {
+            // AccountManager manager = getAccountManager();
+            // if (manager != null) {
 
-            }
+            // }
         } catch (JSONException e) {
             if (Config.ERROR_LOGS_ENABLED) {
                 Log.e("Shopelia", "Impossible to save user", e);
@@ -124,13 +122,7 @@ public class UserManager {
     @SuppressWarnings("deprecation")
     @SuppressLint("NewApi")
     public void restoreFromAccount(AccountManagerCallback<Bundle> callback) {
-        if (hasAccountPermission() && getAccount() != null) {
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-                getAccountManager().getAuthToken(getAccount(), Config.AUTH_TOKEN_TYPE, null, false, callback, null);
-            } else {
-                getAccountManager().getAuthToken(getAccount(), Config.AUTH_TOKEN_TYPE, false, callback, null);
-            }
-        }
+
     }
 
     public void logout() {
@@ -149,6 +141,9 @@ public class UserManager {
     }
 
     public Account getAccount() {
+        if (true) {
+            return null;
+        }
         if (mAccount != null) {
             return mAccount;
         }
@@ -166,6 +161,9 @@ public class UserManager {
     }
 
     private void addAccount(User user, String authToken) {
+        if (true) {
+            return;
+        }
         Account[] accounts = getAccounts();
         AccountManager manager = getAccountManager();
 
@@ -186,6 +184,9 @@ public class UserManager {
     }
 
     private void removeAccount() {
+        if (true) {
+            return;
+        }
         AccountManager manager = getAccountManager();
         if (getAccount() != null) {
             if (Config.INFO_LOGS_ENABLED) {
@@ -197,6 +198,9 @@ public class UserManager {
     }
 
     public Account[] getAccounts() {
+        if (true) {
+            return null;
+        }
         AccountManager manager = getAccountManager();
         if (manager == null) {
             return null;
@@ -205,12 +209,11 @@ public class UserManager {
     }
 
     public AccountManager getAccountManager() {
-        return hasAccountPermission() ? AccountManager.get(mContext) : null;
+        return null;
     }
 
     public boolean hasAccountPermission() {
-        return ContextUtils.hasPermissions(mContext, permission.MANAGE_ACCOUNTS, permission.USE_CREDENTIALS, permission.GET_ACCOUNTS,
-                permission.AUTHENTICATE_ACCOUNTS);
+        return false;
     }
 
     public boolean isLogged() {

@@ -27,16 +27,12 @@ public class ProductActivity extends CardHolderActivity {
      */
     public static final String EXTRA_PRODUCT_URL = Config.EXTRA_PREFIX + "PRODUCT_URL";
 
-    private static final String SAVE_PRODUCT = "save:product";
-
     public static final String ACTIVITY_NAME = "Product";
 
     private ProductAPI mProductAPI;
-    private Product mProduct;
     private boolean mHasProductSummary = false;
     private boolean mHasProductSelection = false;
     private Option[] mCurrentOptions;
-    private int mQuantity = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,14 +49,14 @@ public class ProductActivity extends CardHolderActivity {
     protected void onResume() {
         super.onResume();
         mProductAPI.registerSticky(this);
-        if (mProduct == null || !mProduct.isValid()) {
+        if (getOrder().product == null || !getOrder().product.isValid()) {
             getEventBus().post(new ProductNotFoundFragment.DismissEvent());
             getEventBus().post(new ErrorCardFragment.DismissEvent());
             startWaiting(getString(R.string.shopelia_product_loading), false, true);
             mProductAPI.getProduct(new Product(getIntent().getExtras().getString(EXTRA_PRODUCT_URL)));
         } else {
             stopWaiting();
-            getEventBus().postSticky(mProduct);
+            getEventBus().postSticky(getOrder().product);
         }
     }
 
@@ -94,34 +90,25 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putParcelable(SAVE_PRODUCT, mProduct);
-    }
-
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        mProduct = savedInstanceState.getParcelable(SAVE_PRODUCT);
-    }
-
-    @Override
     public String getActivityName() {
         return ACTIVITY_NAME;
     }
 
     public void onEventMainThread(OnProductUpdateEvent event) {
+        if (mCurrentOptions == null) {
+            mCurrentOptions = event.resource.getCurrentVersion().getOptions();
+        }
+        int quantity = getOrder().product != null ? getOrder().product.getQuantity() : 1;
         getEventBus().post(new ProductNotFoundFragment.DismissEvent());
         getEventBus().post(new ErrorCardFragment.DismissEvent());
-        mProduct = event.resource;
+        getOrder().product = event.resource;
         if (event.isDone) {
             stopWaiting();
         }
         if (mCurrentOptions != null) {
-            mProduct.setCurrentVersion(mCurrentOptions);
+            getOrder().product.setCurrentVersion(mCurrentOptions);
         }
-        mProduct.setQuantity(mQuantity);
-        getOrder().product = mProduct;
+        getOrder().product.setQuantity(quantity);
         if (!mHasProductSummary && event.resource.hasVersion()) {
             mHasProductSummary = true;
             addCard(new ProductSummaryCardFragment(), 0, false, ProductSummaryCardFragment.TAG);
@@ -154,10 +141,10 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     public void onEventMainThread(ProductOptionsFragment.OnOptionsChanged event) {
-        if (mProduct != null) {
-            mProduct.setCurrentVersion(event.lastChange, event.options);
-            mCurrentOptions = mProduct.getCurrentVersion().getOptions();
-            getEventBus().postSticky(mProduct);
+        if (getOrder().product != null) {
+            getOrder().product.setCurrentVersion(event.lastChange, event.options);
+            mCurrentOptions = getOrder().product.getCurrentVersion().getOptions();
+            getEventBus().postSticky(getOrder().product);
         }
     }
 
@@ -192,8 +179,8 @@ public class ProductActivity extends CardHolderActivity {
     }
 
     public void onEventMainThread(OnQuantitiySelectedEvent event) {
-        mProduct.setQuantity(event.quantity);
-        getEventBus().postSticky(mProduct);
+        getOrder().product.setQuantity(event.quantity);
+        getEventBus().postSticky(getOrder().product);
     }
 
 }

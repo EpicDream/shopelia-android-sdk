@@ -92,13 +92,14 @@ public class AuthenticateFragment extends ShopeliaFragment<Void> {
         findViewById(R.id.remember_me, CheckBox.class).setOnCheckedChangeListener(mOnCheckedChangeListener);
 
         mErrorMessage = findViewById(R.id.error);
-
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        ViewUtils.forceRequestFocus(mPasswordField.getEditText());
+        if (mPasswordField != null) {
+            ViewUtils.forceRequestFocus(mPasswordField.getEditText());
+        }
         if (mVerifyAPI == null) {
             mVerifyAPI = new VerifyAPI(getActivity());
         }

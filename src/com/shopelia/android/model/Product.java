@@ -229,19 +229,6 @@ public class Product implements BaseModel<Product> {
         return mQuantity;
     }
 
-    private Version getAvailableOptions(int indexToChange, int lastIndexToChange, Option[] base) {
-        Version version = null;
-        Options options = versions.getOptions(indexToChange);
-        for (Option option : options) {
-            base[indexToChange] = option;
-            version = versions.getVersion(base);
-            if (version != null) {
-                break;
-            }
-        }
-        return version;
-    }
-
     public Version getCurrentVersion() {
         return versions.getVersion(mCurrentVersionKey);
     }
