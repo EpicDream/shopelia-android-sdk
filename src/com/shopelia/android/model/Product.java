@@ -129,18 +129,27 @@ public class Product implements BaseModel<Product> {
         }
     };
 
-    public Product(JSONObject object) throws JSONException {
+    public Product(JSONObject object, boolean hasVerions) throws JSONException {
         url = object.optString(Api.URL);
         if (object.has(Api.MERCHANT)) {
             merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
         }
-        versions = Versions.inflate(object.getJSONArray(Api.VERSIONS));
+        if (hasVerions) {
+            versions = Versions.inflate(object.getJSONArray(Api.VERSIONS));
+        } else {
+            versions = new Versions();
+            versions.addVersion(Version.inflate(object));
+        }
         mCurrentVersionKey = versions.getFirstKey();
         ensureDefaultValues();
     }
 
     public static Product inflate(JSONObject object) throws JSONException {
-        return new Product(object);
+        return new Product(object, true);
+    }
+
+    public static Product inflateSingleVersion(JSONObject object) throws JSONException {
+        return new Product(object, false);
     }
 
     public static ArrayList<Product> inflate(JSONArray a) throws JSONException {

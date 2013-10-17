@@ -44,7 +44,7 @@ public class ShopeliaViewHelper implements ShopeliaView {
 
     public ShopeliaViewHelper(Context context, AttributeSet attrs, boolean editMode) {
         mContext = context;
-        mTracker = Tracker.Factory.getTracker(Tracker.PROVIDER_SHOPELIA, context);
+        mTracker = Tracker.Factory.getTracker(editMode ? Tracker.PROVIDER_DUMMY : Tracker.PROVIDER_SHOPELIA, context);
     }
 
     public void setCallback(Callback callback) {
