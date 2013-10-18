@@ -38,7 +38,7 @@
 
             <com.shopelia.android.widget.ProductSheetWidget
                 android:id="@+id/product_sheet"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/shopelia_margin_normal"
                 android:layout_marginTop="@dimen/shopelia_margin_normal" />
