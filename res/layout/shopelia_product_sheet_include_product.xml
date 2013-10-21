@@ -2,8 +2,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/content"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
     android:orientation="horizontal"
     android:visibility="visible" >
 
@@ -12,13 +13,11 @@
         android:layout_width="130dp"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/shopelia_margin_normal"
-        android:scaleType="centerInside"
-         />
+        android:scaleType="centerInside" />
 
     <LinearLayout
-        android:layout_width="0dp"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="60"
         android:orientation="vertical" >
 
         <com.shopelia.android.widget.FontableTextView
@@ -56,24 +55,18 @@
                 app:shopelia_crossFadingEnabled="true" />
         </LinearLayout>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.shopelia.android.widget.FontableTextView
+            android:id="@+id/product_price"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="top" >
-
-            <com.shopelia.android.widget.FontableTextView
-                android:id="@+id/product_price"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/shopelia_margin_normal"
-                android:text="1642€"
-                android:textColor="@color/shopelia_dark_green"
-                android:textSize="@dimen/shopelia_font_size_huge"
-                android:textStyle="normal"
-                app:shopelia_fontFamily="light"
-                app:shopelia_fontStyle="normal" />
-
-        </LinearLayout>
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
+            android:gravity="left"
+            android:text="1642€"
+            android:textColor="@color/shopelia_dark_green"
+            android:textSize="@dimen/shopelia_font_size_huge"
+            android:textStyle="normal"
+            app:shopelia_fontFamily="light"
+            app:shopelia_fontStyle="normal" />
 
         <com.shopelia.android.widget.FontableTextView
             android:id="@+id/product_shipping_fees"
