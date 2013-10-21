@@ -407,6 +407,9 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
 	public String getTrackerName() {
 		String tracker = null;
+		if (mOrder != null) {
+			tracker = mOrder.tracker;
+		}
 		if (getIntent() != null) {
 			tracker = getIntent().getStringExtra(EXTRA_TRACKER);
 		}
