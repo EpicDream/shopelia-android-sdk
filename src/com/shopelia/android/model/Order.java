@@ -22,6 +22,7 @@ public class Order implements BaseModel<Order> {
 		String EXPECTED_PRODUCT_PRICE = "expected_product_price";
 		String ORDER = "order";
 		String TRACKER = "tracker";
+		String INFORMATIONS = "informations";
 	}
 
 	public String uuid = NO_UUID;
@@ -37,6 +38,8 @@ public class Order implements BaseModel<Order> {
 	// User
 	public User user;
 
+	public String informations;
+
 	public final String tracker;
 
 	public Order(String tracker) {
@@ -45,6 +48,7 @@ public class Order implements BaseModel<Order> {
 
 	private Order(Parcel source) {
 		uuid = source.readString();
+		informations = source.readString();
 		tracker = source.readString();
 		product = ParcelUtils.readParcelable(source,
 				Product.class.getClassLoader());
@@ -73,6 +77,7 @@ public class Order implements BaseModel<Order> {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(uuid);
+		dest.writeString(informations);
 		dest.writeString(tracker);
 		ParcelUtils.writeParcelable(dest, product, flags);
 		ParcelUtils.writeParcelable(dest, card, flags);

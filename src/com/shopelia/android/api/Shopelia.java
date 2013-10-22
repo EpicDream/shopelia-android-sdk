@@ -20,6 +20,7 @@ import com.shopelia.android.app.tracking.Tracker;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.model.Merchant;
+import com.shopelia.android.model.Product;
 
 /**
  * This class eases the use of the Shopelia service and should be the only one
@@ -53,6 +54,8 @@ public final class Shopelia implements Parcelable {
 	 * Url of the product to purchase
 	 */
 	public static final String EXTRA_PRODUCT_URL = ProductActivity.EXTRA_PRODUCT_URL;
+
+	public static final String EXTRA_PRODUCT = ProductActivity.EXTRA_PRODUCT;
 
 	/**
 	 * An email that will be pre-filled for the user
@@ -110,6 +113,10 @@ public final class Shopelia implements Parcelable {
 		} else {
 			mController.fetch(context.getApplicationContext(), this);
 		}
+	}
+
+	public void setProduct(Product product) {
+		mData.putExtra(EXTRA_PRODUCT, product);
 	}
 
 	public void setOnProductAvailabilityChangeListener(

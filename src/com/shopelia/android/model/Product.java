@@ -24,6 +24,7 @@ public class Product implements BaseModel<Product> {
 		String QUANTITY = "quantity";
 		String PRICE = "price";
 		String PRODUCT_VERSION_ID = "product_version_id";
+		String SATURN = "saturn";
 
 	}
 
@@ -38,8 +39,8 @@ public class Product implements BaseModel<Product> {
 
 	public final Versions versions;
 	public long mCurrentVersionKey;
-
 	private int mQuantity = 1;
+	private boolean mFromSaturn = false;
 
 	public Product(String url) {
 		this.url = url;
@@ -47,8 +48,29 @@ public class Product implements BaseModel<Product> {
 		ensureDefaultValues();
 	}
 
+	protected Product(JSONObject object, boolean hasVersions)
+			throws JSONException {
+		url = object.optString(Api.URL);
+		if (object.has(Api.PRODUCT_URL)) {
+			url = object.getString(Api.PRODUCT_URL);
+		}
+		if (object.has(Api.MERCHANT)) {
+			merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
+		}
+		if (hasVersions) {
+			versions = Versions.inflate(object.getJSONArray(Api.VERSIONS));
+		} else {
+			versions = new Versions();
+			versions.addVersion(Version.inflate(object));
+		}
+		mFromSaturn = !object.has(Api.SATURN) || object.getInt(Api.SATURN) == 1;
+		mCurrentVersionKey = versions.getFirstKey();
+		ensureDefaultValues();
+	}
+
 	protected Product(Parcel source) {
 		url = source.readString();
+		mFromSaturn = source.readByte() == 1;
 		mQuantity = source.readInt();
 		versions = new Versions();
 		Version version = ParcelUtils.readParcelable(source,
@@ -98,8 +120,21 @@ public class Product implements BaseModel<Product> {
 
 	@Override
 	public JSONObject toJson() throws JSONException {
+		return isFromSaturn() ? toJsonFromSaturnImpl()
+				: toJsonNotFromSaturnImpl();
+	}
+
+	private JSONObject toJsonFromSaturnImpl() throws JSONException {
 		JSONObject json = new JSONObject();
 		json.put(Api.PRODUCT_VERSION_ID, getCurrentVersion().getId());
+		json.put(Api.PRICE, getSingleProductPrice());
+		json.put(Api.QUANTITY, mQuantity);
+		return json;
+	}
+
+	private JSONObject toJsonNotFromSaturnImpl() throws JSONException {
+		JSONObject json = new JSONObject();
+		json.put(Api.URL, url);
 		json.put(Api.PRICE, getSingleProductPrice());
 		json.put(Api.QUANTITY, mQuantity);
 		return json;
@@ -113,6 +148,7 @@ public class Product implements BaseModel<Product> {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(url);
+		dest.writeByte((byte) ((mFromSaturn) ? 1 : 0));
 		dest.writeInt(mQuantity);
 		ParcelUtils.writeParcelable(dest, getCurrentVersion(), flags);
 		ParcelUtils.writeParcelable(dest, merchant, flags);
@@ -132,24 +168,6 @@ public class Product implements BaseModel<Product> {
 			return new Product(source);
 		}
 	};
-
-	public Product(JSONObject object, boolean hasVerions) throws JSONException {
-		url = object.optString(Api.URL);
-		if (object.has(Api.PRODUCT_URL)) {
-			url = object.getString(Api.PRODUCT_URL);
-		}
-		if (object.has(Api.MERCHANT)) {
-			merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
-		}
-		if (hasVerions) {
-			versions = Versions.inflate(object.getJSONArray(Api.VERSIONS));
-		} else {
-			versions = new Versions();
-			versions.addVersion(Version.inflate(object));
-		}
-		mCurrentVersionKey = versions.getFirstKey();
-		ensureDefaultValues();
-	}
 
 	public static Product inflate(JSONObject object) throws JSONException {
 		return new Product(object, true);
@@ -256,6 +274,10 @@ public class Product implements BaseModel<Product> {
 
 	public boolean hasVersion() {
 		return versions.getVersionsCount() > 0;
+	}
+
+	public boolean isFromSaturn() {
+		return mFromSaturn;
 	}
 
 	@Override

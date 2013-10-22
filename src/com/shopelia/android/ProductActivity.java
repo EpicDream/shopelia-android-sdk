@@ -28,6 +28,8 @@ public class ProductActivity extends CardHolderActivity {
 	public static final String EXTRA_PRODUCT_URL = Config.EXTRA_PREFIX
 			+ "PRODUCT_URL";
 
+	public static final String EXTRA_PRODUCT = Config.EXTRA_PREFIX + "PRODUCT";
+
 	public static final String ACTIVITY_NAME = "Product";
 
 	private ProductAPI mProductAPI;
@@ -55,7 +57,10 @@ public class ProductActivity extends CardHolderActivity {
 	protected void onResume() {
 		super.onResume();
 		mProductAPI.registerSticky(this);
-		if (getOrder().product == null || !getOrder().product.isValid()) {
+		if (getIntent().hasExtra(EXTRA_PRODUCT)) {
+			getOrder().product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
+			mProductAPI.getProduct(getOrder().product);
+		} else if (getOrder().product == null || !getOrder().product.isValid()) {
 			getEventBus().post(new ProductNotFoundFragment.DismissEvent());
 			getEventBus().post(new ErrorCardFragment.DismissEvent());
 			startWaiting(getString(R.string.shopelia_product_loading), false,
