@@ -64,6 +64,8 @@ public class Product implements BaseModel<Product> {
 			versions.addVersion(Version.inflate(object));
 		}
 		mFromSaturn = !object.has(Api.SATURN) || object.getInt(Api.SATURN) == 1;
+		// TODO Remove temporary
+		mFromSaturn = true;
 		mCurrentVersionKey = versions.getFirstKey();
 		ensureDefaultValues();
 	}

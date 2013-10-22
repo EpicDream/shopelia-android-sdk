@@ -136,7 +136,8 @@ public class Version implements BaseModel<Version> {
 
 		// Options
 		dest.writeLong(optionsHashcode);
-		dest.writeParcelableArray(options, flags);
+		dest.writeParcelableArray(options != null ? options : new Option[0],
+				flags);
 	}
 
 	public static Version inflate(JSONObject object) throws JSONException {
