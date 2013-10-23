@@ -48,7 +48,7 @@ public class Product implements BaseModel<Product> {
 		ensureDefaultValues();
 	}
 
-	protected Product(JSONObject object, boolean hasVersions)
+	protected Product(JSONObject object, boolean hasVersions, int scale)
 			throws JSONException {
 		url = object.optString(Api.URL);
 		if (object.has(Api.PRODUCT_URL)) {
@@ -58,14 +58,13 @@ public class Product implements BaseModel<Product> {
 			merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
 		}
 		if (hasVersions) {
-			versions = Versions.inflate(object.getJSONArray(Api.VERSIONS));
+			versions = Versions.inflate(object.getJSONArray(Api.VERSIONS),
+					scale);
 		} else {
 			versions = new Versions();
-			versions.addVersion(Version.inflate(object));
+			versions.addVersion(Version.inflate(object, scale));
 		}
 		mFromSaturn = !object.has(Api.SATURN) || object.getInt(Api.SATURN) == 1;
-		// TODO Remove temporary
-		mFromSaturn = true;
 		mCurrentVersionKey = versions.getFirstKey();
 		ensureDefaultValues();
 	}
@@ -172,12 +171,12 @@ public class Product implements BaseModel<Product> {
 	};
 
 	public static Product inflate(JSONObject object) throws JSONException {
-		return new Product(object, true);
+		return new Product(object, true, 1);
 	}
 
 	public static Product inflateSingleVersion(JSONObject object)
 			throws JSONException {
-		return new Product(object, false);
+		return new Product(object, false, 100);
 	}
 
 	public static ArrayList<Product> inflate(JSONArray a) throws JSONException {

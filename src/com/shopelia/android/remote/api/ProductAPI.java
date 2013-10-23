@@ -240,7 +240,8 @@ public class ProductAPI extends ApiController {
 			mProduct = fromCache;
 		}
 		if (mProduct.getProduct() == null || !mProduct.getProduct().isValid()) {
-			Log.d(null, "PRODUCT NOK " + event.product.isValid());
+			Log.d(null, "PRODUCT NOK " + event.product.isValid()
+					+ event.product.merchant);
 			if (mPoller != null) {
 				mPoller.stop();
 			}

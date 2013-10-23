@@ -16,101 +16,107 @@ import android.text.TextUtils;
 
 import com.shopelia.android.utils.IOUtils;
 
-final class UUIDManager {
+final public class UUIDManager {
 
-    public interface OnReceiveUuidListener {
-        public void onReceiveUuid(String uuid);
-    }
+	public interface OnReceiveUuidListener {
+		public void onReceiveUuid(String uuid);
+	}
 
-    private static final String DIRECTORY = "Shopelia/";
-    private static final String SAVE_FILE = "uuid";
-    private static final String CHARSET = "UTF-8";
+	private static final String DIRECTORY = "Shopelia/";
+	private static final String SAVE_FILE = "uuid";
+	private static final String CHARSET = "UTF-8";
 
-    private static UUIDManager sInstance;
+	private static UUIDManager sInstance;
 
-    private String mUuid;
+	private String mUuid;
 
-    private UUIDManager() {
+	private UUIDManager() {
 
-    }
+	}
 
-    private static UUIDManager getInstance() {
-        return sInstance == null ? sInstance = new UUIDManager() : sInstance;
-    }
+	private static UUIDManager getInstance() {
+		return sInstance == null ? sInstance = new UUIDManager() : sInstance;
+	}
 
-    public void setUuid(String uuid) {
-        mUuid = uuid;
-    }
+	public void setUuid(String uuid) {
+		mUuid = uuid;
+	}
 
-    public static void obtainUuid(OnReceiveUuidListener listener) {
-        UUIDManager manager = getInstance();
-        if (manager.mUuid != null) {
-            listener.onReceiveUuid(manager.mUuid);
-        } else {
-            new RetrieveUuid(listener).execute();
-        }
-    }
+	public static void obtainUuid(OnReceiveUuidListener listener) {
+		UUIDManager manager = getInstance();
+		if (manager.mUuid != null) {
+			listener.onReceiveUuid(manager.mUuid);
+		} else {
+			new RetrieveUuid(listener).execute();
+		}
+	}
 
-    public static void release() {
-        sInstance = null;
-    }
+	public static void release() {
+		sInstance = null;
+	}
 
-    private static class RetrieveUuid extends AsyncTask<Void, Void, String> {
+	private static class RetrieveUuid extends AsyncTask<Void, Void, String> {
 
-        private OnReceiveUuidListener mListener;
+		private OnReceiveUuidListener mListener;
 
-        public RetrieveUuid(OnReceiveUuidListener listener) {
-            mListener = listener;
-        }
+		public RetrieveUuid(OnReceiveUuidListener listener) {
+			mListener = listener;
+		}
 
-        @Override
-        protected String doInBackground(Void... params) {
-            File uuidFile = new File(new File(Environment.getExternalStorageDirectory(), DIRECTORY), SAVE_FILE);
-            String uuid = null;
+		@Override
+		protected String doInBackground(Void... params) {
+			File uuidFile = new File(new File(
+					Environment.getExternalStorageDirectory(), DIRECTORY),
+					SAVE_FILE);
+			String uuid = null;
 
-            if (uuidFile.exists()) {
-                try {
-                    StringWriter writer = new StringWriter();
-                    InputStreamReader reader = new InputStreamReader(new FileInputStream(uuidFile), CHARSET);
-                    IOUtils.copy(reader, writer);
-                    uuid = writer.toString();
-                } catch (Exception e) {
+			if (uuidFile.exists()) {
+				try {
+					StringWriter writer = new StringWriter();
+					InputStreamReader reader = new InputStreamReader(
+							new FileInputStream(uuidFile), CHARSET);
+					IOUtils.copy(reader, writer);
+					uuid = writer.toString();
+				} catch (Exception e) {
 
-                }
-            }
+				}
+			}
 
-            if (TextUtils.isEmpty(uuid)) {
-                uuid = createUuid();
-                saveUuid(uuid);
-            }
-            return uuid;
-        }
+			if (TextUtils.isEmpty(uuid)) {
+				uuid = createUuid();
+				saveUuid(uuid);
+			}
+			return uuid;
+		}
 
-        @Override
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            getInstance().setUuid(result);
-            mListener.onReceiveUuid(result);
-        }
+		@Override
+		protected void onPostExecute(String result) {
+			super.onPostExecute(result);
+			getInstance().setUuid(result);
+			mListener.onReceiveUuid(result);
+		}
 
-        private String createUuid() {
-            return UUID.randomUUID().toString().replace("-", "").substring(0, 32).toLowerCase();
-        }
+		private String createUuid() {
+			return UUID.randomUUID().toString().replace("-", "")
+					.substring(0, 32).toLowerCase();
+		}
 
-        private void saveUuid(String uuid) {
-            try {
-                File dir = new File(Environment.getExternalStorageDirectory(), DIRECTORY);
-                dir.mkdirs();
-                StringReader reader = new StringReader(uuid);
-                OutputStreamWriter writer = new OutputStreamWriter(new FileOutputStream(new File(dir, SAVE_FILE)), CHARSET);
-                IOUtils.copy(reader, writer);
-                writer.close();
-                reader.close();
-            } catch (IOException e) {
+		private void saveUuid(String uuid) {
+			try {
+				File dir = new File(Environment.getExternalStorageDirectory(),
+						DIRECTORY);
+				dir.mkdirs();
+				StringReader reader = new StringReader(uuid);
+				OutputStreamWriter writer = new OutputStreamWriter(
+						new FileOutputStream(new File(dir, SAVE_FILE)), CHARSET);
+				IOUtils.copy(reader, writer);
+				writer.close();
+				reader.close();
+			} catch (IOException e) {
 
-            }
-        }
+			}
+		}
 
-    }
+	}
 
 }

@@ -169,6 +169,7 @@ public class ProductActivity extends CardHolderActivity {
 	}
 
 	public void onEventMainThread(OnSubmitProductEvent event) {
+		getOrder().informations = event.informations;
 		if (UserManager.get(this).isLogged()) {
 			new AuthenticateFragment().show(getSupportFragmentManager(), null);
 		} else {

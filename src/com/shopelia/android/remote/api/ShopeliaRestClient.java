@@ -4,6 +4,7 @@ import java.net.CookieHandler;
 import java.net.CookieManager;
 import java.net.CookiePolicy;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
@@ -11,6 +12,8 @@ import android.content.Context;
 import android.os.Build;
 import android.text.TextUtils;
 
+import com.shopelia.android.app.tracking.UUIDManager;
+import com.shopelia.android.app.tracking.UUIDManager.OnReceiveUuidListener;
 import com.shopelia.android.config.Config;
 import com.shopelia.android.http.LogcatRequestLogger;
 import com.shopelia.android.manager.UserManager;
@@ -105,8 +108,23 @@ public final class ShopeliaRestClient extends AndroidHttpClient {
 		}
 	}
 
-	public void post(String path, JSONObject object, AsyncCallback callback) {
-		post(path, CONTENT_TYPE_JSON, object.toString().getBytes(), callback);
+	public void post(final String path, final JSONObject object,
+			final AsyncCallback callback) {
+		UUIDManager.obtainUuid(new OnReceiveUuidListener() {
+
+			@Override
+			public void onReceiveUuid(String uuid) {
+				if (object != null) {
+					try {
+						object.put("visitor", uuid);
+					} catch (JSONException e) {
+						// Ignore
+					}
+				}
+				post(path, CONTENT_TYPE_JSON, object.toString().getBytes(),
+						callback);
+			}
+		});
 	}
 
 	public HttpResponse post(String path, JSONObject object) {

@@ -59,7 +59,7 @@
     <string name="shopelia_product_description_go_merchant_title">Aller chez le marchand</string>
     <string name="shopelia_product_description_go_merchant_content">Voulez-vous aller sur la fiche du marchand ?</string>
     <string name="shopelia_product_quantity">Quantité</string>
-
+	<string name="shopelia_product_informations_hint">Précisez si nécessaire les options souhaitées (taille, couleur, ...)</string>
     <!-- Authenticate -->
     <string name="shopelia_authenticate_remove_check">Tous les achats sont à votre charge. Vous pouvez à tout moment désactiver cette option en vous déconnectant de votre compte Shopelia.</string>
     <string name="shopelia_authenticate_title">Authentification</string>
@@ -151,7 +151,7 @@
     <string name="shopelia_product_free_shipping">Livraison gratuite</string>
     <string name="shopelia_product_shipping_is_included">Livraison <font fgcolor="#2b9b82" color="#2b9b82">incluse</font></string>
     <string name="shopelia_product_loading">Chargement du produit...</string>
-
+	<string name="shopelia_product_informations_label">Informations</string>
     <!-- Waiting process -->
     <string name="shopelia_waiting_shopelia_is_preparing_your_order" formatted="false">Shopelia prépare votre commande sur %s</string>
     <string name="shopelia_waiting_with_shopelia_order_with_1_click">Avec Shopelia, commandez facilement en 1-clic avec votre mobile sur n\'importe quel site e-commerce !</string>

@@ -21,6 +21,8 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/shopelia_margin_large"
         android:text="Nom du produit"
+        android:maxLines="3"
+        android:ellipsize="end"
         android:textColor="@color/shopelia_dark"
         android:textSize="@dimen/shopelia_font_size_large" />
 

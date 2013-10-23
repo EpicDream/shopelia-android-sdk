@@ -27,7 +27,7 @@ public class Version implements BaseModel<Version> {
 		String AVAILABILITY_INFO = "availability_info";
 	}
 
-	public static final BigDecimal NO_PRICE = new BigDecimal("-1");
+	public static final BigDecimal NO_PRICE = new BigDecimal("0");
 	public static final long FIRST_OPTION = 0;
 	private final long id;
 
@@ -48,7 +48,7 @@ public class Version implements BaseModel<Version> {
 	private long optionsHashcode = FIRST_OPTION;
 	private Option[] options;
 
-	private Version(JSONObject object) throws JSONException {
+	private Version(JSONObject object, BigDecimal scale) throws JSONException {
 		// Informations
 		id = object.optLong(Api.ID);
 		name = object.getString(Api.NAME);
@@ -62,13 +62,13 @@ public class Version implements BaseModel<Version> {
 
 		// Prices informations
 		productPrice = JsonUtils.optBigDecimal(object, Api.PRODUCT_PRICE,
-				NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				scale, NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		shippingPrice = JsonUtils.optBigDecimal(object, Api.SHIPPING_PRICE,
-				NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				scale, NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		cashfrontValue = JsonUtils.optBigDecimal(object, Api.CASHFRONT_VALUE,
-				BigDecimal.ZERO).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				scale, BigDecimal.ZERO).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		priceStrikeOut = JsonUtils.optBigDecimal(object, Api.PRICE_STRIKEOUT,
-				NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+				scale, NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 	}
 
 	private Version(Parcel source) {
@@ -140,8 +140,9 @@ public class Version implements BaseModel<Version> {
 				flags);
 	}
 
-	public static Version inflate(JSONObject object) throws JSONException {
-		return new Version(object);
+	public static Version inflate(JSONObject object, int scale)
+			throws JSONException {
+		return new Version(object, new BigDecimal(scale));
 	}
 
 	@Override

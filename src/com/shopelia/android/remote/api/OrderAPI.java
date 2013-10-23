@@ -57,13 +57,14 @@ public class OrderAPI extends ApiController {
 			orderObject.put(Api.INFORMATIONS, order.informations);
 			orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL,
 					order.product.getExpectedTotalPrice());
+			orderObject.put(Order.Api.INFORMATIONS, order.informations);
 			orderObject.put(Order.Api.EXPECTED_SHIPPING_PRICE,
 					order.product.getShippingPrice());
 			orderObject.put(Order.Api.EXPECTED_PRODUCT_PRICE,
 					order.product.getProductPrice());
 			orderObject.put(PaymentCard.Api.PAYMENT_CARD_ID, order.card.id);
 			orderObject.put(Address.Api.ADDRESS_ID, order.address.id);
-			orderObject.put(Order.Api.TRACKER, order.tracker);
+			params.put(Order.Api.TRACKER, order.tracker);
 			if (test) {
 				orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL, 1);
 			}
@@ -125,7 +126,7 @@ public class OrderAPI extends ApiController {
 					order.product.getProductPrice());
 			orderObject.put(PaymentCard.Api.PAYMENT_CARD_ID, order.card.id);
 			orderObject.put(Address.Api.ADDRESS_ID, order.address.id);
-			orderObject.put(Order.Api.TRACKER, order.tracker);
+			params.put(Order.Api.TRACKER, order.tracker);
 			if (test) {
 				orderObject.put(Order.Api.EXPECTED_PRICE_TOTAL, 1);
 			}
