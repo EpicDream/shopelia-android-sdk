@@ -58,6 +58,10 @@ public class ProductActivity extends CardHolderActivity {
 		super.onResume();
 		mProductAPI.registerSticky(this);
 		if (getIntent().hasExtra(EXTRA_PRODUCT)) {
+			getEventBus().post(new ProductNotFoundFragment.DismissEvent());
+			getEventBus().post(new ErrorCardFragment.DismissEvent());
+			startWaiting(getString(R.string.shopelia_product_loading), false,
+					true);
 			getOrder().product = getIntent().getParcelableExtra(EXTRA_PRODUCT);
 			mProductAPI.getProduct(getOrder().product);
 		} else if (getOrder().product == null || !getOrder().product.isValid()) {

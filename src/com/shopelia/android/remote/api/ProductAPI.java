@@ -11,7 +11,6 @@ import org.json.JSONObject;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.shopelia.android.http.AbstractPoller.OnPollerEventListener;
 import com.shopelia.android.http.HttpGetPoller;
@@ -234,14 +233,18 @@ public class ProductAPI extends ApiController {
 			// Do nothing
 		}
 		Product product = event.product;
+		if (product != null && product.isValid() && product.isFromSaturn()) {
+			product = new Product(product.url);
+		}
 		mProduct = new ExtendedProduct(product);
 		ExtendedProduct fromCache = findProductByUrl(product.url);
 		if (fromCache != null && !product.isValid()) {
 			mProduct = fromCache;
 		}
-		if (mProduct.getProduct() == null || !mProduct.getProduct().isValid()) {
-			Log.d(null, "PRODUCT NOK " + event.product.isValid()
-					+ event.product.merchant);
+		if (mProduct.getProduct() == null
+				|| !mProduct.getProduct().isValid()
+				|| (mProduct.getProduct().isValid() && mProduct.getProduct()
+						.isFromSaturn())) {
 			if (mPoller != null) {
 				mPoller.stop();
 			}
@@ -254,7 +257,6 @@ public class ProductAPI extends ApiController {
 					.setParam(new HttpGetRequest(Command.V1.Products.$, map))
 					.setOnPollerEventListener(mOnPollerEventListener).poll();
 		} else {
-			Log.d(null, "PRODUCT OK");
 			getEventBus().postSticky(
 					new OnProductUpdateEvent(mProduct.getProduct(), false,
 							mProduct.isValid()));
