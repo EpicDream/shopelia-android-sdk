@@ -43,7 +43,7 @@
         android:paddingBottom="@dimen/shopelia_margin_large"
         android:text="@string/shopelia_product_more_information"
         android:textColor="@color/shopelia_link_text_color"
-        android:visibility="gone" />
+        android:visibility="visible" />
 
     <LinearLayout
         android:layout_width="match_parent"

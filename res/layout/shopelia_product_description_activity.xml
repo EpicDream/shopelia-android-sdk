@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
+
+        <LinearLayout
+            android:id="@+id/summary"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/shopelia_margin_normal"
+            android:layout_marginLeft="@dimen/shopelia_margin_normal"
+            android:layout_marginRight="@dimen/shopelia_margin_normal"
+            android:layout_marginTop="@dimen/shopelia_margin_normal"
+            android:background="@drawable/shopelia_card_background"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/shopelia_margin_normal"
+            android:paddingLeft="@dimen/shopelia_margin_normal"
+            android:paddingRight="@dimen/shopelia_margin_normal"
+            android:paddingTop="@dimen/shopelia_margin_normal" >
+
+            <com.shopelia.android.widget.NoScrollWebView
+                android:id="@+id/webview"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shopelia_card_background"
+                android:clipToPadding="false" />
+        </LinearLayout>
+    </LinearLayout>
+
+</ScrollView>

@@ -45,7 +45,7 @@
     <string name="shopelia_welcome_continue_on"><u>continuer sur le site du marchand</u></string>
 
     <!-- Product -->
-    <string name="shopelia_product_more_information">En savoir plus</string>
+    <string name="shopelia_product_more_information"><a>Description du produit</a></string>
     <string name="shopelia_product_sold_and_delivered_by_merchant">Vendu et expédié par</string>
     <string name="shopelia_product_purchase_this">Acheter</string>
     <string name="shopelia_product_price_total">Total</string>

@@ -18,89 +18,116 @@ import com.shopelia.android.widget.AsyncImageView;
 
 public class ProductSummaryCardFragment extends CardFragment {
 
-    public static final String TAG = "ProductSummary";
+	public static final String TAG = "ProductSummary";
 
-    private Product mProduct;
-    private TextView mProductTitle;
-    private TextView mProductDescription;
-    private AsyncImageView mProductImage;
-    private TextView mMerchantName;
+	private static final String ARGS_ALLOW_DESCRIPTION = "allow_description";
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.shopelia_product_summary_card, container, false);
-    }
+	private Product mProduct;
+	private TextView mProductTitle;
+	private TextView mProductDescription;
+	private AsyncImageView mProductImage;
+	private TextView mMerchantName;
 
-    @Override
-    public void onBindView(View view, Bundle savedInstanceState) {
-        super.onBindView(view, savedInstanceState);
-        clear(mProductTitle = findViewById(R.id.product_title));
-        clear(mProductDescription = findViewById(R.id.product_description));
-        clear(mMerchantName = findViewById(R.id.product_merchant_name));
-        mProductImage = findViewById(R.id.product_image);
+	public static ProductSummaryCardFragment newInstance(
+			boolean allowDescription) {
+		ProductSummaryCardFragment fragment = new ProductSummaryCardFragment();
+		Bundle args = new Bundle();
+		args.putBoolean(ARGS_ALLOW_DESCRIPTION, allowDescription);
+		fragment.setArguments(args);
+		return fragment;
+	}
 
-        mMerchantName.setOnClickListener(mOnClickOnMerchantListener);
-        findViewById(R.id.product_more).setOnClickListener(mOnClickOnMoreListener);
-    }
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		return inflater.inflate(R.layout.shopelia_product_summary_card,
+				container, false);
+	}
 
-    @Override
-    public void onResume() {
-        super.onResume();
-        getActivityEventBus().registerSticky(this, Product.class);
-    }
+	@Override
+	public void onBindView(View view, Bundle savedInstanceState) {
+		super.onBindView(view, savedInstanceState);
+		clear(mProductTitle = findViewById(R.id.product_title));
+		clear(mProductDescription = findViewById(R.id.product_description));
+		clear(mMerchantName = findViewById(R.id.product_merchant_name));
+		mProductImage = findViewById(R.id.product_image);
+		mMerchantName.setOnClickListener(mOnClickOnMerchantListener);
+		findViewById(R.id.product_more).setOnClickListener(
+				mOnClickOnMoreListener);
+		if (getArguments() != null
+				&& !getArguments().getBoolean(ARGS_ALLOW_DESCRIPTION, true)) {
+			findViewById(R.id.product_more).setVisibility(View.GONE);
+		}
+	}
 
-    @Override
-    public void onPause() {
-        super.onPause();
-        getActivityEventBus().unregister(this);
-    }
+	@Override
+	public void onResume() {
+		super.onResume();
+		getActivityEventBus().registerSticky(this, Product.class);
+	}
 
-    // Events
-    public void onEventMainThread(Product product) {
-        mProduct = product;
-        mProductTitle.setText(product.getCurrentVersion().name);
-        mProductDescription.setText(Html.fromHtml(product.getCurrentVersion().description));
-        mProductImage.setUrl(product.getCurrentVersion().imageUrl);
-        mMerchantName.setText(product.merchant.name);
-    }
+	@Override
+	public void onPause() {
+		super.onPause();
+		getActivityEventBus().unregister(this);
+	}
 
-    private static TextView clear(TextView tv) {
-        tv.setText(null);
-        return tv;
-    }
+	// Events
+	public void onEventMainThread(Product product) {
+		mProduct = product;
+		mProductTitle.setText(product.getCurrentVersion().name);
+		mProductDescription.setText(Html.fromHtml(
+				product.getCurrentVersion().description).toString());
+		mProductImage.setUrl(product.getCurrentVersion().imageUrl);
+		mMerchantName.setText(product.merchant.name);
+	}
 
-    private OnClickListener mOnClickOnMerchantListener = new OnClickListener() {
+	private static TextView clear(TextView tv) {
+		tv.setText(null);
+		return tv;
+	}
 
-        @Override
-        public void onClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(R.string.shopelia_product_description_go_merchant_title).setMessage(
-                    R.string.shopelia_product_description_go_merchant_content);
-            builder.setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+	private OnClickListener mOnClickOnMerchantListener = new OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    Intent newIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(mProduct.url));
-                    startActivity(newIntent);
-                }
-            });
-            builder.setNegativeButton(android.R.string.no, new DialogInterface.OnClickListener() {
+		@Override
+		public void onClick(View v) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(
+					R.string.shopelia_product_description_go_merchant_title)
+					.setMessage(
+							R.string.shopelia_product_description_go_merchant_content);
+			builder.setPositiveButton(android.R.string.yes,
+					new DialogInterface.OnClickListener() {
 
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.dismiss();
-                }
-            });
-            builder.show();
-        }
-    };
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							Intent newIntent = new Intent(Intent.ACTION_VIEW,
+									Uri.parse(mProduct.url));
+							startActivity(newIntent);
+						}
+					});
+			builder.setNegativeButton(android.R.string.no,
+					new DialogInterface.OnClickListener() {
 
-    private OnClickListener mOnClickOnMoreListener = new OnClickListener() {
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							dialog.dismiss();
+						}
+					});
+			builder.show();
+		}
+	};
 
-        @Override
-        public void onClick(View v) {
+	private OnClickListener mOnClickOnMoreListener = new OnClickListener() {
 
-        }
-    };
+		@Override
+		public void onClick(View v) {
+			Intent intent = new Intent(getActivity(),
+					ProductDescriptionActivity.class);
+			intent.putExtra(ProductDescriptionActivity.EXTRA_PRODUCT,
+					getOrder().product);
+			startActivity(intent);
+		}
+	};
 
 }
