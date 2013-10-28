@@ -42,6 +42,12 @@ final public class UUIDManager {
 		mUuid = uuid;
 	}
 
+	public static String obtainUuid() {
+		String uuid = new RetrieveUuid(null).doInBackground();
+		getInstance().mUuid = uuid;
+		return uuid;
+	}
+
 	public static void obtainUuid(OnReceiveUuidListener listener) {
 		UUIDManager manager = getInstance();
 		if (manager.mUuid != null) {

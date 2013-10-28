@@ -9,7 +9,7 @@ import android.util.Log;
 
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.shopelia.android.analytics.Analytics;
-import com.shopelia.android.config.Build;
+import com.shopelia.android.config.ShopeliaBuild;
 import com.shopelia.android.model.User;
 
 class MixPanelTracker extends Tracker {
@@ -40,8 +40,8 @@ class MixPanelTracker extends Tracker {
     public JSONObject getSuperProperties(Context context) {
         JSONObject properties = new JSONObject();
         try {
-            properties.put(Analytics.Properties.SDK, Build.SDK);
-            properties.put(Analytics.Properties.SDK_VERSION, Build.VERSION.RELEASE);
+            properties.put(Analytics.Properties.SDK, ShopeliaBuild.SDK);
+            properties.put(Analytics.Properties.SDK_VERSION, ShopeliaBuild.VERSION.RELEASE);
             if (!TextUtils.isEmpty(mSessionId)) {
                 properties.put(Analytics.Properties.SESSION, mSessionId);
             }
