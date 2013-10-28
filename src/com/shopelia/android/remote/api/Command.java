@@ -113,6 +113,15 @@ public final class Command {
 			public static final String $ = V1.$ + "/products";
 		}
 
+		public static final class Messages {
+			public static final String $ = V1.$ + "/georges/messages";
+
+			public static String Read(long id) {
+				return $ + "/" + id + "/read";
+			}
+
+		}
+
 	}
 
 }
