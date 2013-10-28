@@ -9,12 +9,14 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.text.TextUtils;
 
 import com.shopelia.android.app.tracking.UUIDManager;
 import com.shopelia.android.app.tracking.UUIDManager.OnReceiveUuidListener;
 import com.shopelia.android.config.Config;
+import com.shopelia.android.config.ShopeliaBuild;
 import com.shopelia.android.http.LogcatRequestLogger;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.utils.ContextUtils;
@@ -78,11 +80,26 @@ public final class ShopeliaRestClient extends AndroidHttpClient {
 		addHeader("Accept", version);
 		addHeader("X-Shopelia-ApiKey", apiKey);
 
-		// addHeader("User-Agent", String.format("shopelia:%s:%d:%s:%s:%s:%s",
-		// ShopeliaBuild.SDK, ShopeliaBuild.VERSION.SDK_INT,
-		// ShopeliaBuild.VERSION.RELEASE, Build.VERSION.RELEASE,
-		// Build.MANUFACTURER + " " + Build.MODEL,
-		// UUIDManager.obtainUuid()));
+		PackageManager packageManager = context.getApplicationContext()
+				.getPackageManager();
+		String packageName = context.getPackageName();
+
+		String versionName = "undefined"; // initialize String
+		int versionCode = -1;
+		try {
+			versionName = packageManager.getPackageInfo(packageName, 0).versionName;
+			versionCode = packageManager.getPackageInfo(packageName, 0).versionCode;
+		} catch (PackageManager.NameNotFoundException e) {
+			e.printStackTrace();
+		}
+
+		addHeader(
+				"User-Agent",
+				String.format(
+						"shopelia:os[%s]:build[%d]:version[%s]:os_version[%s]:phone[%s]:uuid[%s]",
+						ShopeliaBuild.SDK, versionCode, versionName,
+						Build.VERSION.RELEASE, Build.MANUFACTURER + " "
+								+ Build.MODEL, UUIDManager.obtainUuid()));
 
 		/*
 		 * Timeouts and retries
