@@ -15,7 +15,6 @@ import android.text.TextUtils;
 import com.shopelia.android.app.tracking.UUIDManager;
 import com.shopelia.android.app.tracking.UUIDManager.OnReceiveUuidListener;
 import com.shopelia.android.config.Config;
-import com.shopelia.android.config.ShopeliaBuild;
 import com.shopelia.android.http.LogcatRequestLogger;
 import com.shopelia.android.manager.UserManager;
 import com.shopelia.android.utils.ContextUtils;
@@ -79,11 +78,11 @@ public final class ShopeliaRestClient extends AndroidHttpClient {
 		addHeader("Accept", version);
 		addHeader("X-Shopelia-ApiKey", apiKey);
 
-		addHeader("User-Agent", String.format("shopelia:%s:%d:%s:%s:%s:%s",
-				ShopeliaBuild.SDK, ShopeliaBuild.VERSION.SDK_INT,
-				ShopeliaBuild.VERSION.RELEASE, Build.VERSION.RELEASE,
-				Build.MANUFACTURER + " " + Build.MODEL,
-				UUIDManager.obtainUuid()));
+		// addHeader("User-Agent", String.format("shopelia:%s:%d:%s:%s:%s:%s",
+		// ShopeliaBuild.SDK, ShopeliaBuild.VERSION.SDK_INT,
+		// ShopeliaBuild.VERSION.RELEASE, Build.VERSION.RELEASE,
+		// Build.MANUFACTURER + " " + Build.MODEL,
+		// UUIDManager.obtainUuid()));
 
 		/*
 		 * Timeouts and retries

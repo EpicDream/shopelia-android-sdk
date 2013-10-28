@@ -119,6 +119,8 @@
         <activity
             android:name="io.card.payment.DataEntryActivity"
             android:screenOrientation="portrait" />
+        
+        
     </application>
 
 </manifest>
