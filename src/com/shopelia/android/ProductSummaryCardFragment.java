@@ -127,6 +127,7 @@ public class ProductSummaryCardFragment extends CardFragment {
 			intent.putExtra(ProductDescriptionActivity.EXTRA_PRODUCT,
 					getOrder().product);
 			startActivity(intent);
+			getTracker().track("Click On Product Description");
 		}
 	};
 
