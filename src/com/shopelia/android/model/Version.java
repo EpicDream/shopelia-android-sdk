@@ -21,7 +21,7 @@ public class Version implements BaseModel<Version> {
 		String NAME = "name";
 		String DESCRIPTION = "description";
 		String IMAGE_URL = "image_url";
-		String IMAGE_SIZE = "size";
+		String IMAGE_SIZE = "image_size";
 		String PRODUCT_PRICE = "price";
 		String SHIPPING_PRICE = "price_shipping";
 		String SHIPPING_EXTRAS = "shipping_info";
@@ -74,6 +74,7 @@ public class Version implements BaseModel<Version> {
 				scale, BigDecimal.ZERO).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 		priceStrikeOut = JsonUtils.optBigDecimal(object, Api.PRICE_STRIKEOUT,
 				scale, NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
+
 	}
 
 	private Version(Parcel source) {
@@ -140,7 +141,6 @@ public class Version implements BaseModel<Version> {
 				e.printStackTrace();
 			}
 		}
-
 		return new Pair<Integer, Integer>(width, height);
 	}
 

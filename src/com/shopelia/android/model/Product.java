@@ -186,6 +186,11 @@ public class Product implements BaseModel<Product> {
 		return new Product(object, false, 100);
 	}
 
+	public static Product inflateSingleVersion(JSONObject object, int scale)
+			throws JSONException {
+		return new Product(object, false, scale);
+	}
+
 	public static ArrayList<Product> inflate(JSONArray a) throws JSONException {
 		final int size = a.length();
 		ArrayList<Product> products = new ArrayList<Product>(size);
