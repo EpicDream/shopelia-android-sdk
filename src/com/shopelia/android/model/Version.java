@@ -19,6 +19,7 @@ public class Version implements BaseModel<Version> {
 		String NAME = "name";
 		String DESCRIPTION = "description";
 		String IMAGE_URL = "image_url";
+		String IMAGE_SIZE = "size";
 		String PRODUCT_PRICE = "price";
 		String SHIPPING_PRICE = "price_shipping";
 		String SHIPPING_EXTRAS = "shipping_info";
@@ -40,6 +41,7 @@ public class Version implements BaseModel<Version> {
 	// Informations
 	public final String name;
 	public final String imageUrl;
+	public final String imageSize;
 	public final String description;
 	public final String shippingExtra;
 	public final String availabilityInfo;
@@ -59,6 +61,7 @@ public class Version implements BaseModel<Version> {
 						.optString(Api.AVAILABILITY_INFO)) ? object
 				.optString(Api.AVAILABILITY_INFO) : null;
 		imageUrl = object.optString(Api.IMAGE_URL);
+		imageSize = object.optString(Api.IMAGE_SIZE, "0x0");
 
 		// Prices informations
 		productPrice = JsonUtils.optBigDecimal(object, Api.PRODUCT_PRICE,
@@ -79,6 +82,7 @@ public class Version implements BaseModel<Version> {
 		shippingExtra = source.readString();
 		availabilityInfo = source.readString();
 		imageUrl = source.readString();
+		imageSize = source.readString();
 
 		// Prices
 		productPrice = ParcelUtils.readBigDecimal(source, NO_PRICE);
@@ -127,6 +131,7 @@ public class Version implements BaseModel<Version> {
 		dest.writeString(shippingExtra);
 		dest.writeString(availabilityInfo);
 		dest.writeString(imageUrl);
+		dest.writeString(imageSize);
 
 		// Prices
 		ParcelUtils.writeBigDecimal(dest, productPrice, NO_PRICE);

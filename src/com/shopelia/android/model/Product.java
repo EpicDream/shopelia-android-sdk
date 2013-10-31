@@ -25,6 +25,7 @@ public class Product implements BaseModel<Product> {
 		String PRICE = "price";
 		String PRODUCT_VERSION_ID = "product_version_id";
 		String SATURN = "saturn";
+		String BRAND = "brand";
 
 	}
 
@@ -37,6 +38,8 @@ public class Product implements BaseModel<Product> {
 	public Tax tax;
 	public Currency currency;
 
+	public final String brand;
+
 	public final Versions versions;
 	public long mCurrentVersionKey;
 	private int mQuantity = 1;
@@ -44,6 +47,7 @@ public class Product implements BaseModel<Product> {
 
 	public Product(String url) {
 		this.url = url;
+		brand = null;
 		versions = new Versions();
 		ensureDefaultValues();
 	}
@@ -54,6 +58,7 @@ public class Product implements BaseModel<Product> {
 		if (object.has(Api.PRODUCT_URL)) {
 			url = object.getString(Api.PRODUCT_URL);
 		}
+		brand = object.optString(Api.BRAND);
 		if (object.has(Api.MERCHANT)) {
 			merchant = Merchant.inflate(object.getJSONObject(Api.MERCHANT));
 		}
@@ -71,6 +76,7 @@ public class Product implements BaseModel<Product> {
 
 	protected Product(Parcel source) {
 		url = source.readString();
+		brand = source.readString();
 		mFromSaturn = source.readByte() == 1;
 		mQuantity = source.readInt();
 		versions = new Versions();
@@ -149,6 +155,7 @@ public class Product implements BaseModel<Product> {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(url);
+		dest.writeString(brand);
 		dest.writeByte((byte) ((mFromSaturn) ? 1 : 0));
 		dest.writeInt(mQuantity);
 		ParcelUtils.writeParcelable(dest, getCurrentVersion(), flags);
