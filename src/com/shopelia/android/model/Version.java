@@ -8,6 +8,8 @@ import org.json.JSONObject;
 import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
+import android.util.Pair;
 
 import com.shopelia.android.utils.JsonUtils;
 import com.shopelia.android.utils.ParcelUtils;
@@ -120,6 +122,26 @@ public class Version implements BaseModel<Version> {
 
 	public Uri getImageUri() {
 		return Uri.parse(imageUrl);
+	}
+
+	public Pair<Integer, Integer> getImageSize() {
+		int width = 0;
+		int height = 0;
+		int indexOfMultiply;
+
+		if (!TextUtils.isEmpty(imageSize)
+				&& (indexOfMultiply = imageSize.indexOf('x')) != -1) {
+			try {
+				width = Integer
+						.valueOf(imageSize.substring(0, indexOfMultiply));
+				height = Integer.valueOf(imageSize
+						.substring(indexOfMultiply + 1));
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
+
+		return new Pair<Integer, Integer>(width, height);
 	}
 
 	@Override
