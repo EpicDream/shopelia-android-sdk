@@ -2,6 +2,7 @@ package com.shopelia.android.utils;
 
 import java.math.BigDecimal;
 import java.math.MathContext;
+import java.math.RoundingMode;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -41,7 +42,7 @@ public enum Currency implements Parcelable {
 	public String roundAndFormat(BigDecimal value) {
 		DecimalFormat fmt = new DecimalFormat(getRoundedFormat());
 		fmt.setCurrency(java.util.Currency.getInstance(mCurrencyCode));
-		return fmt.format(value.round(new MathContext(1)));
+		return fmt.format(value.round(new MathContext(2, RoundingMode.UP)));
 	}
 
 	@Override
