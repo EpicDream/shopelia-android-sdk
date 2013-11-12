@@ -1,16 +1,14 @@
 package com.shopelia.android.remote.api;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CountDownLatch;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+import java.io.StringWriter;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.content.SharedPreferences;
-import android.text.TextUtils;
 
 import com.shopelia.android.http.AbstractPoller.OnPollerEventListener;
 import com.shopelia.android.http.HttpGetPoller;
@@ -18,7 +16,6 @@ import com.shopelia.android.http.HttpGetPoller.HttpGetRequest;
 import com.shopelia.android.http.HttpGetPoller.HttpGetResponse;
 import com.shopelia.android.model.ExtendedProduct;
 import com.shopelia.android.model.Product;
-import com.shopelia.android.utils.JsonUtils;
 import com.shopelia.android.utils.TimeUnits;
 import com.turbomanage.httpclient.ParameterMap;
 
@@ -56,20 +53,18 @@ public class ProductAPI extends ApiController {
 
 	}
 
-	private static final String PRIVATE_PREFERENCE = "Shopelia$ProductAPI.PrivatePreference";
-	private static final String PREFS_PRODUCT = "product:products";
-
 	private static final long KEEP_ALIVE = 20 * TimeUnits.MINUTES;
 
 	private static final long POLLING_FREQUENCY = TimeUnits.SECONDS / 2;
 	private static final long POLLING_EXPIRATION = 20 * TimeUnits.SECONDS;
 	private static final long POLLING_OPTIONS_EXPIRATION = 4 * TimeUnits.MINUTES;
 
+	private static final String CACHE_DIR = "shopelia/products";
+	private static final long DISK_CACHE_SIZE = 5 * 1024 * 1024; // 5 Mo
+
 	private HttpGetPoller mPoller;
-	private SharedPreferences mPreferences;
-	private ArrayList<ExtendedProduct> mProducts;
 	private ExtendedProduct mProduct;
-	private CountDownLatch mCacheLoaded = new CountDownLatch(1);
+	private Cache mCache;
 
 	private static final Class<?>[] sEventTypes = new Class<?>[] {
 			OnProductNotAvailable.class, OnProductUpdateEvent.class,
@@ -77,8 +72,8 @@ public class ProductAPI extends ApiController {
 
 	public ProductAPI(Context context) {
 		super(context);
-		mPreferences = context.getSharedPreferences(PRIVATE_PREFERENCE,
-				Context.MODE_PRIVATE);
+		mCache = new Cache(new File(context.getCacheDir(), CACHE_DIR),
+				KEEP_ALIVE, DISK_CACHE_SIZE);
 		getEventBus().register(this);
 		getEventBus().post(new LoadProductFromCacheEvent());
 	}
@@ -90,18 +85,19 @@ public class ProductAPI extends ApiController {
 	public void addProductToCache(Product base, JSONObject object) {
 		ExtendedProduct p = new ExtendedProduct(base);
 		p.setJson(object);
-		p.download_at = System.currentTimeMillis();
 		addProductToCache(p);
 	}
 
 	private void addProductToCache(ExtendedProduct p) {
-		synchronized (mProducts) {
-			mProducts.add(p);
+		p.download_at = System.currentTimeMillis();
+		try {
+			StringReader reader = new StringReader(p.toJson().toString());
+			mCache.write(p.url, reader);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (JSONException e) {
+			e.printStackTrace();
 		}
-	}
-
-	public void save() {
-		saveProducts(mProducts);
 	}
 
 	public void stop() {
@@ -149,10 +145,8 @@ public class ProductAPI extends ApiController {
 					if (mProduct.ready && mProduct.getProduct().hasVersion()) {
 						mPoller.setExpiryDuration(POLLING_OPTIONS_EXPIRATION);
 					}
-
 					if (isDone) {
 						addProductToCache(mProduct);
-						saveProducts(mProducts);
 					}
 					return isDone;
 				} catch (JSONException e) {
@@ -170,47 +164,21 @@ public class ProductAPI extends ApiController {
 	};
 
 	private ExtendedProduct findProductByUrl(String url) {
-		synchronized (mProducts) {
-			int count = mProducts.size();
-			for (int index = 0; index < count; index++) {
-				ExtendedProduct product = mProducts.get(index);
-				if (product.url.equals(url)) {
-					if (product.download_at + KEEP_ALIVE < System
-							.currentTimeMillis() || !product.isValid()) {
-						mProducts.remove(index);
-						index -= 1;
-						count -= 1;
-						continue;
-					}
-					saveProducts(mProducts);
-					return product;
-				}
-			}
-			return null;
-		}
-	}
-
-	private void loadProductsFromCache() {
-		String json = mPreferences.getString(PREFS_PRODUCT, null);
-		if (!TextUtils.isEmpty(json)) {
+		if (mCache.exists(url)) {
+			StringWriter cachedProduct = new StringWriter();
 			try {
-				mProducts = ExtendedProduct.inflate(new JSONArray(json));
-			} catch (Exception e) {
-				mProducts = new ArrayList<ExtendedProduct>();
+				mCache.read(url, cachedProduct);
+				ExtendedProduct product = ExtendedProduct
+						.inflate(new JSONObject(cachedProduct.toString()));
+				return System.currentTimeMillis() - product.download_at < KEEP_ALIVE ? product
+						: null;
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (JSONException e) {
+				e.printStackTrace();
 			}
-		} else {
-			mProducts = new ArrayList<ExtendedProduct>();
 		}
-		mCacheLoaded.countDown();
-	}
-
-	private void saveProducts(List<ExtendedProduct> products) {
-		synchronized (products) {
-			SharedPreferences.Editor editor = mPreferences.edit();
-			editor.putString(PREFS_PRODUCT, JsonUtils.toJson(products)
-					.toString());
-			editor.commit();
-		}
+		return null;
 	}
 
 	// Private Events
@@ -227,11 +195,6 @@ public class ProductAPI extends ApiController {
 	}
 
 	public void onEventAsync(GetProductEvent event) {
-		try {
-			mCacheLoaded.await();
-		} catch (InterruptedException e) {
-			// Do nothing
-		}
 		Product product = event.product;
 		if (product != null && product.isValid() && product.isFromSaturn()) {
 			product = new Product(product.url);
@@ -264,7 +227,7 @@ public class ProductAPI extends ApiController {
 	}
 
 	public void onEventAsync(LoadProductFromCacheEvent event) {
-		loadProductsFromCache();
+
 	}
 
 }
