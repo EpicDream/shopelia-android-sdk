@@ -7,7 +7,7 @@
     android:layout_marginTop="@dimen/shopelia_margin_normal"
     android:background="@drawable/shopelia_card_background"
     android:orientation="vertical"
-    android:padding="@dimen/shopelia_margin_large" >
+    android:padding="@dimen/shopelia_margin_large" xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <com.shopelia.android.widget.AsyncImageView
         android:id="@+id/product_image"
@@ -34,6 +34,16 @@
         android:maxLines="3"
         android:text="Description du produit sur plusieurs lignes, avec plein de caractères de partout"
         android:visibility="gone" />
+
+    <com.shopelia.android.widget.FontableTextView
+        android:id="@+id/product_brand"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Brand"
+        android:textColor="@color/shopelia_dark"
+        android:textSize="@dimen/shopelia_font_size_large"
+        app:shopelia_fontFamily="light"
+        app:shopelia_fontStyle="italic" />
 
     <com.shopelia.android.widget.FontableTextView
         android:id="@+id/product_more"

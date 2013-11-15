@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -24,6 +25,7 @@ public class ProductSummaryCardFragment extends CardFragment {
 
 	private Product mProduct;
 	private TextView mProductTitle;
+	private TextView mProductBrand;
 	private TextView mProductDescription;
 	private AsyncImageView mProductImage;
 	private TextView mMerchantName;
@@ -52,6 +54,7 @@ public class ProductSummaryCardFragment extends CardFragment {
 		clear(mMerchantName = findViewById(R.id.product_merchant_name));
 		mProductImage = findViewById(R.id.product_image);
 		mMerchantName.setOnClickListener(mOnClickOnMerchantListener);
+		clear(mProductBrand = findViewById(R.id.product_brand));
 		findViewById(R.id.product_more).setOnClickListener(
 				mOnClickOnMoreListener);
 		if (getArguments() != null
@@ -80,6 +83,10 @@ public class ProductSummaryCardFragment extends CardFragment {
 				product.getCurrentVersion().description).toString());
 		mProductImage.setUrl(product.getCurrentVersion().imageUrl);
 		mMerchantName.setText(product.merchant.name);
+		mProductBrand.setText(product.brand);
+		mProductBrand
+				.setVisibility(!TextUtils.isEmpty(product.brand) ? View.VISIBLE
+						: View.GONE);
 	}
 
 	private static TextView clear(TextView tv) {
