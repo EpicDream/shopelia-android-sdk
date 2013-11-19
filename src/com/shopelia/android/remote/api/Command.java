@@ -124,6 +124,10 @@ public final class Command {
 				return $ + "/" + id + "/read";
 			}
 
+            public static String Status() {
+                return V1.$ + "/georges/status";
+            }
+
 		}
 
 	}
