@@ -33,16 +33,10 @@ public class FontableTextView extends TextView {
 
             final int fontFamily = a.getInt(R.styleable.FontableTextView_shopelia_fontFamily, CustomFontHelper.FAMILY_NORMAL);
             final int fontStyle = a.getInt(R.styleable.FontableTextView_shopelia_fontStyle, CustomFontHelper.STYLE_NORMAL);
-            final String htmlText = a.getString(R.styleable.FontableTextView_shopelia_htmlText);
             if (!isInEditMode()) {
                 setTypeface(CustomFontHelper.getTypeface(getContext(), fontFamily, fontStyle));
             }
 
-            if (htmlText != null && !isInEditMode()) {
-                setText(Html.fromHtml(htmlText));
-            } else if (htmlText != null && isInEditMode()) {
-                setText(htmlText);
-            }
             a.recycle();
         }
     }

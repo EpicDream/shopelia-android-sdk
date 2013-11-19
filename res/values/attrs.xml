@@ -1,78 +1,1 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <attr name="shopelia_fontStyle">
-        <flag name="normal" value="0" />
-        <flag name="bold" value="1" />
-        <flag name="italic" value="2" />
-    </attr>
-    <attr name="shopelia_fontFamily">
-        <enum name="normal" value="0" />
-        <enum name="condensed" value="1" />
-        <enum name="light" value="2" />
-    </attr>
-
-    <declare-styleable name="FontableTextView">
-        <attr name="shopelia_fontStyle" />
-        <attr name="shopelia_fontFamily" />
-        <attr name="shopelia_htmlText" format="string" />
-    </declare-styleable>
-    
-    <declare-styleable name="FormEditText">
-        <attr name="shopelia_fontStyle" />
-        <attr name="shopelia_fontFamily" />
-    </declare-styleable>
-
-      <declare-styleable name="FormEditTextButton">
-        <attr name="shopelia_fontStyle" />
-        <attr name="shopelia_fontFamily" />
-    </declare-styleable>
-    
-    <attr name="shopelia_text" format="string" />
-    <attr name="shopelia_hint" format="string" />
-    <attr name="shopelia_icon" format="integer" />
-    <attr name="shopelia_textSize" format="integer" />
-    <attr name="shopelia_max_length" format="integer" />
-    <attr name="shopelia_segment_width" format="integer" />
-
-    <declare-styleable name="ValidationButton">
-        <attr name="shopelia_text" />
-        <attr name="shopelia_icon" />
-        <attr name="shopelia_textSize" />
-    </declare-styleable>
-    <declare-styleable name="HeaderField">
-        <attr name="shopelia_text" />
-        <attr name="shopelia_icon" />
-    </declare-styleable>
-    <declare-styleable name="EditTextField">
-        <attr name="shopelia_text" />
-        <attr name="shopelia_hint" />
-        <attr name="shopelia_max_length" />
-    </declare-styleable>
-    <declare-styleable name="NumberInput">
-        <attr name="shopelia_number_background" format="integer" />
-    </declare-styleable>
-    <declare-styleable name="FormState">
-        <attr name="state_error" format="boolean" />
-    </declare-styleable>
-    <declare-styleable name="AsyncImageView">
-        <attr name="shopelia_defaultSrc" format="reference" />
-        <attr name="shopelia_url" format="string" />
-        <attr name="shopelia_inDensity">
-            <enum name="ldpi" value="120" />
-            <enum name="mdpi" value="160" />
-            <enum name="hdpi" value="240" />
-            <enum name="xhdpi" value="320" />
-        </attr>
-        <attr name="shopelia_crossFadingEnabled" format="boolean" />
-        <attr name="shopelia_crossFadingDuration" format="integer" />
-        <attr name="shopelia_isFixedSize" format="boolean" />
-    </declare-styleable>
-    <declare-styleable name="SegmentedEditText">
-        <attr name="shopelia_segment_width" />
-    </declare-styleable>
-    <declare-styleable name="ExtendedFrameLayout">
-        <attr name="shopelia_enable_dispatch_drawable_state" format="boolean" />
-    </declare-styleable>
-
-</resources>
+<?xml version="1.0" encoding="utf-8"?><resources>    <attr name="shopelia_fontStyle">        <flag name="normal" value="0" />        <flag name="bold" value="1" />        <flag name="italic" value="2" />    </attr>    <attr name="shopelia_fontFamily">        <enum name="normal" value="0" />        <enum name="condensed" value="1" />        <enum name="light" value="2" />    </attr>    <attr name="shopelia_htmlText" format="string" />    <declare-styleable name="FontableTextView">        <attr name="shopelia_fontStyle" />        <attr name="shopelia_fontFamily" />        <attr name="shopelia_htmlText" />    </declare-styleable>        <declare-styleable name="FormEditText">        <attr name="shopelia_fontStyle" />        <attr name="shopelia_fontFamily" />    </declare-styleable>      <declare-styleable name="FormEditTextButton">        <attr name="shopelia_fontStyle" />        <attr name="shopelia_fontFamily" />    </declare-styleable>        <attr name="shopelia_text" format="string" />    <attr name="shopelia_hint" format="string" />    <attr name="shopelia_icon" format="integer" />    <attr name="shopelia_textSize" format="integer" />    <attr name="shopelia_max_length" format="integer" />    <attr name="shopelia_segment_width" format="integer" />    <declare-styleable name="ValidationButton">        <attr name="shopelia_text" />        <attr name="shopelia_icon" />        <attr name="shopelia_textSize" />    </declare-styleable>    <declare-styleable name="HeaderField">        <attr name="shopelia_text" />        <attr name="shopelia_icon" />    </declare-styleable>    <declare-styleable name="EditTextField">        <attr name="shopelia_text" />        <attr name="shopelia_hint" />        <attr name="shopelia_max_length" />    </declare-styleable>    <declare-styleable name="NumberInput">        <attr name="shopelia_number_background" format="integer" />    </declare-styleable>    <declare-styleable name="FormState">        <attr name="state_error" format="boolean" />    </declare-styleable>    <declare-styleable name="AsyncImageView">        <attr name="shopelia_defaultSrc" format="reference" />        <attr name="shopelia_url" format="string" />        <attr name="shopelia_inDensity">            <enum name="ldpi" value="120" />            <enum name="mdpi" value="160" />            <enum name="hdpi" value="240" />            <enum name="xhdpi" value="320" />        </attr>        <attr name="shopelia_crossFadingEnabled" format="boolean" />        <attr name="shopelia_crossFadingDuration" format="integer" />        <attr name="shopelia_isFixedSize" format="boolean" />    </declare-styleable>    <declare-styleable name="SegmentedEditText">        <attr name="shopelia_segment_width" />    </declare-styleable>    <declare-styleable name="ExtendedFrameLayout">        <attr name="shopelia_enable_dispatch_drawable_state" format="boolean" />    </declare-styleable></resources>
