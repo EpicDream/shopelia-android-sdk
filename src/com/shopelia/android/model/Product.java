@@ -9,6 +9,7 @@ import org.json.JSONObject;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import com.shopelia.android.utils.Currency;
 import com.shopelia.android.utils.ParcelUtils;
@@ -18,6 +19,7 @@ public class Product implements BaseModel<Product> {
 
 	public interface Api {
 		String URL = "url";
+        String MONETIZED_URL = "monetized_url";
 		String PRODUCT_URL = "product_url";
 		String MERCHANT = "merchant";
 		String VERSIONS = "versions";
@@ -44,6 +46,7 @@ public class Product implements BaseModel<Product> {
 	public long mCurrentVersionKey;
 	private int mQuantity = 1;
 	private boolean mFromSaturn = false;
+    private String mMonetizedUrl;
 
 	public Product(String url) {
 		this.url = url;
@@ -55,6 +58,7 @@ public class Product implements BaseModel<Product> {
 	protected Product(JSONObject object, boolean hasVersions, int scale)
 			throws JSONException {
 		url = object.optString(Api.URL);
+        mMonetizedUrl = object.optString(Api.MONETIZED_URL);
 		if (object.has(Api.PRODUCT_URL)) {
 			url = object.getString(Api.PRODUCT_URL);
 		}
@@ -76,6 +80,7 @@ public class Product implements BaseModel<Product> {
 
 	protected Product(Parcel source) {
 		url = source.readString();
+        mMonetizedUrl = source.readString();
 		brand = source.readString();
 		mFromSaturn = source.readByte() == 1;
 		mQuantity = source.readInt();
@@ -288,6 +293,10 @@ public class Product implements BaseModel<Product> {
 	public boolean hasVersion() {
 		return versions.getVersionsCount() > 0;
 	}
+
+    public String getMonetizedUrl() {
+        return TextUtils.isEmpty(mMonetizedUrl) ? url : mMonetizedUrl;
+    }
 
 	public boolean isFromSaturn() {
 		return mFromSaturn;

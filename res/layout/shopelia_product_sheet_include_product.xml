@@ -46,13 +46,17 @@
                 android:textSize="@dimen/shopelia_font_size_small"
                 app:shopelia_fontStyle="normal" />
 
-            <com.shopelia.android.widget.AsyncImageView
-                android:id="@+id/product_vendor_icon"
+            <com.shopelia.android.widget.FontableTextView
+                android:id="@+id/product_vendor_name"
                 android:layout_width="match_parent"
                 android:layout_height="16dp"
                 android:layout_marginLeft="@dimen/shopelia_margin_normal"
                 android:scaleType="fitCenter"
-                app:shopelia_crossFadingEnabled="true" />
+                app:shopelia_fontFamily="normal"
+                app:shopelia_fontStyle="bold"
+                android:textColor="@color/shopelia_blue"
+                android:text="Super marchand"
+                 />
         </LinearLayout>
 
         <com.shopelia.android.widget.FontableTextView

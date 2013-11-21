@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.shopelia.android.R;
 import com.shopelia.android.model.Product;
@@ -29,7 +30,7 @@ public class ProductSheetWidget extends FrameLayout {
     private AsyncImageView mProductImage;
     @SuppressWarnings("unused")
     private FontableTextView mVendorText;
-    private AsyncImageView mVendorLogo;
+    private TextView mMerchantName;
     private FontableTextView mProductPrice;
     private Product mProduct;
     private View mLoading;
@@ -63,9 +64,8 @@ public class ProductSheetWidget extends FrameLayout {
         mProductShippingInfo = (FontableTextView) findViewById(R.id.product_shipping_info);
         mProductImage = (AsyncImageView) findViewById(R.id.product_image);
         mProductPrice = (FontableTextView) findViewById(R.id.product_price);
-        mVendorLogo = (AsyncImageView) findViewById(R.id.product_vendor_icon);
-        mVendorLogo.setDrawableAlignement(AsyncImageView.ALIGN_LEFT | AsyncImageView.ALIGN_CENTER_VERTICAL);
-        mVendorText = (FontableTextView) findViewById(R.id.product_vendor_text);
+        mMerchantName = (TextView) findViewById(R.id.product_merchant_name);
+        mVendorText = (FontableTextView) findViewById(R.id.product_vendor_name);
         mLoading = findViewById(R.id.loading);
         mContent = findViewById(R.id.content);
         mSwitcher = findViewById(R.id.switcher);
@@ -99,7 +99,7 @@ public class ProductSheetWidget extends FrameLayout {
             // mProductShippingInfo.setText(mProduct.shippingExtra);
             int visibility = TextUtils.isEmpty(mProduct.getCurrentVersion().shippingExtra) ? View.GONE : View.VISIBLE;
             mProductShippingInfo.setVisibility(visibility);
-            mVendorLogo.setUrl(mProduct.merchant.logo);
+            mVendorText.setText(mProduct.merchant.name);
             if (animate) {
                 switchViews();
             } else {

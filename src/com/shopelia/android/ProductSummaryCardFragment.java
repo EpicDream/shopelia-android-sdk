@@ -109,7 +109,7 @@ public class ProductSummaryCardFragment extends CardFragment {
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
 							Intent newIntent = new Intent(Intent.ACTION_VIEW,
-									Uri.parse(mProduct.url));
+									Uri.parse(mProduct.getMonetizedUrl()));
 							startActivity(newIntent);
 						}
 					});
