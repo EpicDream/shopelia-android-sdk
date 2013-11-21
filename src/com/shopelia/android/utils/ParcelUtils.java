@@ -174,4 +174,16 @@ public final class ParcelUtils {
         return fallback;
     }
 
+    public static String[] readStringArray(Parcel source) {
+        int size = source.readInt();
+        String[] array = new String[size];
+        source.readStringArray(array);
+        return array;
+    }
+
+    public static void writeStringArray(Parcel dest, String[] array) {
+        dest.writeInt(array != null ? array.length : 0);
+        dest.writeStringArray(array);
+    }
+
 }

@@ -20,7 +20,8 @@ public class ProductDescriptionActivity extends ShopeliaActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHostContentView(R.layout.shopelia_product_description_activity);
-		mWebView = (WebView) findViewById(R.id.webview);
+		mWebView = (WebView) findViewById(R.id.description_content);
+        getProduct();
 		mWebView.loadDataWithBaseURL(null,
 				getProduct().getCurrentVersion().description, "text/html",
 				"utf-8", null);

@@ -5,17 +5,22 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.view.PagerAdapter;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
 import com.shopelia.android.app.CardFragment;
 import com.shopelia.android.model.Product;
 import com.shopelia.android.widget.AsyncImageView;
+import com.shopelia.android.widget.ViewPager;
 
 public class ProductSummaryCardFragment extends CardFragment {
 
@@ -24,11 +29,18 @@ public class ProductSummaryCardFragment extends CardFragment {
 	private static final String ARGS_ALLOW_DESCRIPTION = "allow_description";
 
 	private Product mProduct;
+    private ViewPager mViewPager;
 	private TextView mProductTitle;
 	private TextView mProductBrand;
 	private TextView mProductDescription;
-	private AsyncImageView mProductImage;
 	private TextView mMerchantName;
+    private ImagesAdapter mImagesAdapter;
+    private ValueAnimator mLeftAnimatorIn;
+    private ValueAnimator mRightAnimatorIn;
+    private ValueAnimator mLeftAnimatorOut;
+    private ValueAnimator mRightAnimatorOut;
+    private View mGoLeft;
+    private View mGoRight;
 
 	public static ProductSummaryCardFragment newInstance(
 			boolean allowDescription) {
@@ -49,10 +61,13 @@ public class ProductSummaryCardFragment extends CardFragment {
 	@Override
 	public void onBindView(View view, Bundle savedInstanceState) {
 		super.onBindView(view, savedInstanceState);
+        mImagesAdapter = new ImagesAdapter();
+        mViewPager = findViewById(R.id.product_images);
+        mViewPager.setAdapter(mImagesAdapter);
+        mViewPager.setOnPageChangeListener(mOnPageChangeListener);
 		clear(mProductTitle = findViewById(R.id.product_title));
 		clear(mProductDescription = findViewById(R.id.product_description));
 		clear(mMerchantName = findViewById(R.id.product_merchant_name));
-		mProductImage = findViewById(R.id.product_image);
 		mMerchantName.setOnClickListener(mOnClickOnMerchantListener);
 		clear(mProductBrand = findViewById(R.id.product_brand));
 		findViewById(R.id.product_more).setOnClickListener(
@@ -61,6 +76,29 @@ public class ProductSummaryCardFragment extends CardFragment {
 				&& !getArguments().getBoolean(ARGS_ALLOW_DESCRIPTION, true)) {
 			findViewById(R.id.product_more).setVisibility(View.GONE);
 		}
+        mGoLeft = findViewById(R.id.go_left);
+        mGoLeft.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mViewPager.getCurrentItem() > 0) {
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() - 1, true);
+                }
+            }
+        });
+        mGoRight = findViewById(R.id.go_right);
+        mGoRight.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (mViewPager.getCurrentItem() + 1 < mImagesAdapter.getCount()) {
+                    mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1, true);
+                }
+            }
+        });
+        mLeftAnimatorIn = ObjectAnimator.ofFloat(mGoLeft, "alpha", 1.f).setDuration(400);
+        mRightAnimatorIn = ObjectAnimator.ofFloat(mGoRight, "alpha", 1.f).setDuration(400);
+        mLeftAnimatorOut = ObjectAnimator.ofFloat(mGoLeft, "alpha", 0.f).setDuration(400);
+        mRightAnimatorOut = ObjectAnimator.ofFloat(mGoRight, "alpha", 0.f).setDuration(400);
+        mGoLeft.setVisibility(View.INVISIBLE);
 	}
 
 	@Override
@@ -80,14 +118,31 @@ public class ProductSummaryCardFragment extends CardFragment {
 		mProduct = product;
 		mProductTitle.setText(product.getCurrentVersion().name);
 		mProductDescription.setText(Html.fromHtml(
-				product.getCurrentVersion().description).toString());
-		mProductImage.setUrl(product.getCurrentVersion().imageUrl);
+                product.getCurrentVersion().description).toString());
 		mMerchantName.setText(product.merchant.name);
 		mProductBrand.setText(product.brand);
 		mProductBrand
 				.setVisibility(!TextUtils.isEmpty(product.brand) ? View.VISIBLE
 						: View.GONE);
+        if (needRefresh(product.getCurrentVersion().imagesUrls, mImagesAdapter.mUrls)) {
+            mImagesAdapter = new ImagesAdapter();
+            mImagesAdapter.update(product.getCurrentVersion().imagesUrls);
+            mViewPager.setAdapter(mImagesAdapter);
+            mGoLeft.setVisibility(View.INVISIBLE);
+        }
 	}
+
+    private boolean needRefresh(String[] newUrls, String[] oldUrls) {
+        if (newUrls.length == oldUrls.length) {
+            for (int index = 0; index < newUrls.length; index++) {
+                if (!TextUtils.equals(newUrls[index], oldUrls[index])) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return true;
+    }
 
 	private static TextView clear(TextView tv) {
 		tv.setText(null);
@@ -137,5 +192,95 @@ public class ProductSummaryCardFragment extends CardFragment {
 			getTracker().track("Click On Product Description");
 		}
 	};
+
+    private class ImagesAdapter extends PagerAdapter {
+
+        private String[] mUrls;
+        private LayoutInflater mInflater;
+
+        public ImagesAdapter() {
+            mUrls = new String[0];
+            mInflater = LayoutInflater.from(getActivity());
+        }
+
+        public void update(String[] urls) {
+            if (urls == null) {
+                urls = new String[0];
+            }
+            mUrls = urls;
+            //notifyDataSetChanged();
+        }
+
+        @Override
+        public int getCount() {
+            return mUrls.length;
+        }
+
+        @Override
+        public boolean isViewFromObject(View view, Object o) {
+            return view == o;
+        }
+
+
+        @Override
+        public Object instantiateItem(ViewGroup collection, int position) {
+            View v = createView(mInflater, collection);
+            bindView(v, position);
+            collection.addView(v,0);
+            return v;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup collection, int position, Object view) {
+            collection.removeView((View) view);
+        }
+
+
+        public View createView(LayoutInflater inflater, ViewGroup parent) {
+            View v = inflater.inflate(R.layout.shopelia_product_image, parent, false);
+            ViewHolder holder = new ViewHolder();
+            holder.image = (AsyncImageView) v.findViewById(R.id.image);
+            v.setTag(holder);
+            return v;
+        }
+
+        private void bindView(View v, int position) {
+            ViewHolder holder = (ViewHolder) v.getTag();
+            holder.image.setUrl(mUrls[position]);
+        }
+
+        private class ViewHolder {
+            AsyncImageView image;
+        }
+
+    }
+
+    private android.support.v4.view.ViewPager.OnPageChangeListener mOnPageChangeListener = new android.support.v4.view.ViewPager.OnPageChangeListener() {
+        @Override
+        public void onPageScrolled(int position, float positionOffset, int positionPixelOffset) {
+
+        }
+
+        @Override
+        public void onPageSelected(int position) {
+            mGoLeft.setVisibility(View.VISIBLE);
+            mGoRight.setVisibility(View.VISIBLE);
+            if (position == 0 && !mLeftAnimatorOut.isRunning()) {
+                mLeftAnimatorOut.start();
+            } else {
+                mLeftAnimatorIn.start();
+            }
+            if (position == mImagesAdapter.getCount() - 1) {
+                mRightAnimatorOut.start();
+            } else {
+                mRightAnimatorIn.start();
+            }
+        }
+
+        @Override
+        public void onPageScrollStateChanged(int state) {
+
+        }
+    };
 
 }

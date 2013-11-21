@@ -160,6 +160,7 @@ public class Product implements BaseModel<Product> {
 	@Override
 	public void writeToParcel(Parcel dest, int flags) {
 		dest.writeString(url);
+        dest.writeString(mMonetizedUrl);
 		dest.writeString(brand);
 		dest.writeByte((byte) ((mFromSaturn) ? 1 : 0));
 		dest.writeInt(mQuantity);

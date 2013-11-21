@@ -47,6 +47,7 @@ public class Version implements BaseModel<Version> {
 	public final String description;
 	public final String shippingExtra;
 	public final String availabilityInfo;
+    public final String[] imagesUrls;
 
 	// Options
 	private long optionsHashcode = FIRST_OPTION;
@@ -75,6 +76,11 @@ public class Version implements BaseModel<Version> {
 		priceStrikeOut = JsonUtils.optBigDecimal(object, Api.PRICE_STRIKEOUT,
 				scale, NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
+        // Images urls
+        imagesUrls = new String[10];
+        for (int index = 0; index < imagesUrls.length; index++) {
+            imagesUrls[index] = imageUrl;
+        }
 	}
 
 	private Version(Parcel source) {
@@ -101,6 +107,9 @@ public class Version implements BaseModel<Version> {
 		for (int index = 0; index < p.length; index++) {
 			options[index] = (Option) p[index];
 		}
+
+        // Images urls
+        imagesUrls = ParcelUtils.readStringArray(source);
 	}
 
 	public void setOptions(long optionsHash, Option[] options) {
@@ -165,6 +174,9 @@ public class Version implements BaseModel<Version> {
 		dest.writeLong(optionsHashcode);
 		dest.writeParcelableArray(options != null ? options : new Option[0],
 				flags);
+
+        // Image urls
+        ParcelUtils.writeStringArray(dest, imagesUrls);
 	}
 
 	public static Version inflate(JSONObject object, int scale)
