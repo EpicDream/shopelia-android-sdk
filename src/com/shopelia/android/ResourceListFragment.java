@@ -84,7 +84,6 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
         if (mList.size() > 0) {
             refresh();
         } else {
-
             getActivity().finish();
         }
     }
@@ -173,21 +172,39 @@ public class ResourceListFragment extends ShopeliaFragment<OnItemSelectedListene
     private OnItemLongClickListener mOnItemLongClickListener = new OnItemLongClickListener() {
         @Override
         public boolean onItemLongClick(final AdapterView<?> adapterView, final View v, final int position, long itemId) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle(R.string.shopelia_dialog_title).setItems(R.array.shopelia_form_address_item_actions,
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int which) {
-                            switch (which) {
-                                case -1:
-                                    mOnEditItemClickListener.onEditItemClick(v, (BaseModel) adapterView.getItemAtPosition(position));
-                                    break;
-                                case 0:
-                                    deleteItem(position);
-                                    break;
+            if ((mOptions & ResourceListActivity.OPTION_DELETE) != 0 && (mOptions & ResourceListActivity.OPTION_EDIT) != 0) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.shopelia_dialog_title).setItems(R.array.shopelia_form_address_item_actions,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case 0:
+                                        mOnEditItemClickListener.onEditItemClick(v, (BaseModel) adapterView.getItemAtPosition(position));
+                                        break;
+                                    case 1:
+                                        deleteItem(position);
+                                        break;
+                                }
                             }
-                        }
-                    });
-            builder.create().show();
+                        });
+                builder.create().show();
+            } else {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle(R.string.shopelia_dialog_title).setItems(R.array.shopelia_form_payment_item_actions,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int which) {
+                                switch (which) {
+                                    case -1:
+                                        mOnEditItemClickListener.onEditItemClick(v, (BaseModel) adapterView.getItemAtPosition(position));
+                                        break;
+                                    case 0:
+                                        deleteItem(position);
+                                        break;
+                                }
+                            }
+                        });
+                builder.create().show();
+            }
             return true;
         }
     };

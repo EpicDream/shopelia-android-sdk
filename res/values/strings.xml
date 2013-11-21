@@ -127,6 +127,11 @@
     <string name="shopelia_form_address_country_not_available">Shopelia n\'est pas encore disponible dans votre pays. Pour le moment seul la France, la Belgique et le Luxembourg peuvent utiliser le service.</string>
 
     <string-array name="shopelia_form_address_item_actions">
+        <item>@string/shopelia_form_address_edit</item>
+        <item>@string/shopelia_form_address_delete</item>
+    </string-array>
+
+    <string-array name="shopelia_form_payment_item_actions">
         <item>@string/shopelia_form_address_delete</item>
     </string-array>
 

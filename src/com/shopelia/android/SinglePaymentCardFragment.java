@@ -79,7 +79,7 @@ public class SinglePaymentCardFragment extends ShopeliaFragment<OnPaymentCardCha
                 public void onClick(View arg0) {
                     Intent intent = new Intent(getActivity(), ResourceListActivity.class);
                     intent.putExtra(ResourceListActivity.EXTRA_RESOURCE, PaymentCard.IDENTIFIER);
-                    intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_ALL);
+                    intent.putExtra(ResourceListActivity.EXTRA_OPTIONS, ResourceListActivity.OPTION_DELETE | ResourceListActivity.OPTION_ADD | ResourceListActivity.OPTION_SELECT);
                     intent.putExtra(ResourceListActivity.EXTRA_DEFAULT_ITEM, mCard.id);
                     startActivityForResult(intent, REQUEST_SELECT_PAYMENT_CARD);
                 }

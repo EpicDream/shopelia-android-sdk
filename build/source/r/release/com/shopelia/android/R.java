@@ -24,7 +24,8 @@ public final class R {
     }
     public static final class array {
         public static int shopelia_form_address_item_actions=0x7f070000;
-        public static int shopelia_welcome_list=0x7f070001;
+        public static int shopelia_form_payment_item_actions=0x7f070001;
+        public static int shopelia_welcome_list=0x7f070002;
     }
     public static final class attr {
         /** <p>Must be an integer value, such as "<code>100</code>".
