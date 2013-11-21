@@ -1,14 +1,15 @@
 package com.shopelia.android.view.animation;
 
-import java.util.EventListener;
-
 import android.graphics.Rect;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 
 import com.shopelia.android.utils.ViewUtils;
 import com.shopelia.android.utils.ViewUtils.OnMeasureListener;
+
+import java.util.EventListener;
 
 public class ResizeAnimation extends Animation {
 
@@ -27,6 +28,8 @@ public class ResizeAnimation extends Animation {
         mTargetView = target;
         mFrom.set(0, 0, target.getWidth(), target.getHeight());
         mTo.set(0, 0, toWidth, toHeight);
+        setDuration(400);
+        setInterpolator(new AccelerateInterpolator());
     }
 
     public void computeSize(final OnViewRectComputedListener l) {
