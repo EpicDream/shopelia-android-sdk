@@ -21,6 +21,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
@@ -29,6 +30,7 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.FrameLayout;
 
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.shopelia.android.R;
 import com.shopelia.android.api.Shopelia;
 import com.shopelia.android.app.tracking.Tracker;
@@ -392,6 +394,9 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
 	@Override
 	public View findViewById(int id) {
+        if (id == R.id.shopelia_decor_view) {
+            return getDecorView();
+        }
 		return mRootView.findViewById(id);
 	}
 
@@ -470,7 +475,7 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 
 	@Override
 	public void onBackPressed() {
-		if (getActivityStyle() == STYLE_DIALOG
+		/*if (getActivityStyle() == STYLE_DIALOG
 				|| getActivityStyle() == STYLE_TRANSLUCENT) {
 			if (mIsCanceling) {
 				return;
@@ -506,10 +511,14 @@ public abstract class ShopeliaActivity extends FragmentActivity {
 			} else {
 				super.onBackPressed();
 			}
-		} else {
+		} else {*/
 			super.onBackPressed();
-		}
+		//}
 	}
+
+    public ViewGroup getDecorView() {
+        return (ViewGroup) super.findViewById(R.id.shopelia_decor_view);
+    }
 
 	protected boolean isPartOfOrderWorkFlow() {
 		return true;

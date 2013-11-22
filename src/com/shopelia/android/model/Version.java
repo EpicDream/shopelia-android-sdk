@@ -2,6 +2,7 @@ package com.shopelia.android.model;
 
 import java.math.BigDecimal;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,6 +23,8 @@ public class Version implements BaseModel<Version> {
 		String DESCRIPTION = "description";
 		String IMAGE_URL = "image_url";
 		String IMAGE_SIZE = "image_size";
+        String IMAGES = "images";
+        String IMAGES_URLS = "url";
 		String PRODUCT_PRICE = "price";
 		String SHIPPING_PRICE = "price_shipping";
 		String SHIPPING_EXTRAS = "shipping_info";
@@ -77,9 +80,15 @@ public class Version implements BaseModel<Version> {
 				scale, NO_PRICE).setScale(2, BigDecimal.ROUND_HALF_EVEN);
 
         // Images urls
-        imagesUrls = new String[10];
-        for (int index = 0; index < imagesUrls.length; index++) {
-            imagesUrls[index] = imageUrl;
+        JSONArray images = object.optJSONArray(Api.IMAGES);
+        if (images == null || images.length() == 0) {
+            imagesUrls = new String[1];
+            imagesUrls[0] = imageUrl;
+        } else {
+            imagesUrls = new String[images.length()];
+            for (int index = 0; index < imagesUrls.length; index++) {
+                imagesUrls[index] = images.getJSONObject(index).getString(Api.IMAGES_URLS);
+            }
         }
 	}
 

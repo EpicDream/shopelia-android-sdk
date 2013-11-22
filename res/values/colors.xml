@@ -6,6 +6,7 @@
     <color name="shopelia_dark_grey">#adadad</color>
     <color name="shopelia_dark_translucent_60">#AA333333</color>
     <color name="shopelia_dark_translucent_30">#4d333333</color>
+    <color name="shopelia_black_translucent_60">#EE000000</color>
 
     <!-- Light -->
     <color name="shopelia_light">#f5f5f5</color>

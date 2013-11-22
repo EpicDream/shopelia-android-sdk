@@ -5,6 +5,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.text.Html;
 import android.text.TextUtils;
@@ -98,7 +100,8 @@ public class ProductSummaryCardFragment extends CardFragment {
         mRightAnimatorIn = ObjectAnimator.ofFloat(mGoRight, "alpha", 1.f).setDuration(400);
         mLeftAnimatorOut = ObjectAnimator.ofFloat(mGoLeft, "alpha", 0.f).setDuration(400);
         mRightAnimatorOut = ObjectAnimator.ofFloat(mGoRight, "alpha", 0.f).setDuration(400);
-        mGoLeft.setVisibility(View.INVISIBLE);
+        mGoLeft.setVisibility(View.GONE);
+        mGoRight.setVisibility(View.GONE);
 	}
 
 	@Override
@@ -128,7 +131,8 @@ public class ProductSummaryCardFragment extends CardFragment {
             mImagesAdapter = new ImagesAdapter();
             mImagesAdapter.update(product.getCurrentVersion().imagesUrls);
             mViewPager.setAdapter(mImagesAdapter);
-            mGoLeft.setVisibility(View.INVISIBLE);
+            mGoLeft.setVisibility(View.GONE);
+            mGoRight.setVisibility(product.getCurrentVersion().imagesUrls.length > 1 ? View.VISIBLE : View.GONE);
         }
 	}
 
@@ -247,6 +251,7 @@ public class ProductSummaryCardFragment extends CardFragment {
         private void bindView(View v, int position) {
             ViewHolder holder = (ViewHolder) v.getTag();
             holder.image.setUrl(mUrls[position]);
+            //holder.image.setOnClickListener(mOnClickImageListener);
         }
 
         private class ViewHolder {
@@ -280,6 +285,17 @@ public class ProductSummaryCardFragment extends CardFragment {
         @Override
         public void onPageScrollStateChanged(int state) {
 
+        }
+    };
+
+    private OnClickListener mOnClickImageListener = new OnClickListener() {
+        @Override
+        public void onClick(View view) {
+            FragmentManager fm = getBaseActivity().getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.add(R.id.shopelia_decor_view, new GalleryFragment(), GalleryFragment.TAG);
+            ft.addToBackStack(null);
+            ft.commit();
         }
     };
 

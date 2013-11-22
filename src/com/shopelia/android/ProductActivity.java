@@ -1,9 +1,15 @@
 package com.shopelia.android;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.shopelia.android.AuthenticateFragment.OnAuthenticateEvent;
 import com.shopelia.android.AuthenticateFragment.OnLogoutEvent;
@@ -20,7 +26,7 @@ import com.shopelia.android.remote.api.ProductAPI;
 import com.shopelia.android.remote.api.ProductAPI.OnNetworkError;
 import com.shopelia.android.remote.api.ProductAPI.OnProductUpdateEvent;
 
-public class ProductActivity extends CardHolderActivity {
+public class ProductActivity extends CardHolderActivity implements SensorEventListener {
 
 	/**
 	 * Url of the product to purchase
@@ -37,6 +43,9 @@ public class ProductActivity extends CardHolderActivity {
 	private boolean mHasProductSelection = false;
 	private Option[] mCurrentOptions;
 
+    private SensorManager mSensorManager;
+    private Sensor mAccelerometer;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// This is the activity to be called by the SDK. It must init the order
@@ -51,11 +60,14 @@ public class ProductActivity extends CardHolderActivity {
 			removeCardNow(ProductSelectionCardFragment.TAG);
 			removeCardNow(ProductSummaryCardFragment.TAG);
 		}
+        mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
+        mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 	}
 
 	@Override
 	protected void onResume() {
 		super.onResume();
+        mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
 		mProductAPI.registerSticky(this);
 		if (getIntent().hasExtra(EXTRA_PRODUCT)) {
 			getEventBus().post(new ProductNotFoundFragment.DismissEvent());
@@ -77,9 +89,10 @@ public class ProductActivity extends CardHolderActivity {
 		}
 	}
 
-	@Override
+    @Override
 	protected void onPause() {
 		super.onPause();
+        mSensorManager.unregisterListener(this);
 		mProductAPI.unregister(this);
 		mProductAPI.stop();
 	}
@@ -210,4 +223,13 @@ public class ProductActivity extends CardHolderActivity {
 		getEventBus().postSticky(getOrder().product);
 	}
 
+    @Override
+    public void onSensorChanged(SensorEvent sensorEvent) {
+
+    }
+
+    @Override
+    public void onAccuracyChanged(Sensor sensor, int i) {
+
+    }
 }

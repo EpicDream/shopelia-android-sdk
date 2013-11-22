@@ -2,13 +2,13 @@
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
+    android:paddingLeft="40dp"
+    android:paddingRight="40dp"
     android:layout_height="match_parent">
 
     <com.shopelia.android.widget.AsyncImageView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="220dp"
         android:scaleType="centerInside"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
         android:id="@+id/image" />
 </LinearLayout>
