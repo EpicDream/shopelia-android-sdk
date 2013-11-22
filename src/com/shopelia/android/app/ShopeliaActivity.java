@@ -520,6 +520,10 @@ public abstract class ShopeliaActivity extends FragmentActivity {
         return (ViewGroup) super.findViewById(R.id.shopelia_decor_view);
     }
 
+    public ViewGroup getRootView() {
+        return mRootView;
+    }
+
 	protected boolean isPartOfOrderWorkFlow() {
 		return true;
 	}

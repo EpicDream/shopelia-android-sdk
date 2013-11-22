@@ -10,7 +10,15 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.nineoldandroids.animation.Animator;
+import com.nineoldandroids.animation.AnimatorSet;
+import com.nineoldandroids.animation.ObjectAnimator;
+import com.nineoldandroids.animation.ValueAnimator;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.shopelia.android.AuthenticateFragment.OnAuthenticateEvent;
 import com.shopelia.android.AuthenticateFragment.OnLogoutEvent;
 import com.shopelia.android.ProductSelectionCardFragment.OnQuantitiySelectedEvent;
@@ -45,6 +53,8 @@ public class ProductActivity extends CardHolderActivity implements SensorEventLi
 
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
+
+    private boolean mZoomed = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -223,6 +233,36 @@ public class ProductActivity extends CardHolderActivity implements SensorEventLi
 		getEventBus().postSticky(getOrder().product);
 	}
 
+    private View v;
+
+    public void onEventMainThread(ProductSummaryCardFragment.OnImageAskZoomEvent event) {
+        if (mZoomed) {
+            return ;
+        }
+        View view = event.asker;
+        if (true) {
+            //view.setVisibility(View.INVISIBLE);
+            ViewGroup rootView = getRootView();
+            mZoomed = true;
+            v = view;
+            ViewHelper.setPivotX(rootView, event.position[0] + view.getWidth() / 2);
+            ViewHelper.setPivotY(rootView, event.position[1] + view.getHeight() / 2);
+            ValueAnimator zoomInX = ObjectAnimator.ofFloat(rootView, "scaleX", 10).setDuration(600);
+            ValueAnimator zoomInY = ObjectAnimator.ofFloat(rootView, "scaleY", 10).setDuration(600);
+            ValueAnimator opacity = ObjectAnimator.ofFloat(view, "alpha", 0).setDuration(200);
+            opacity.setStartDelay(200);
+            AnimatorSet set = new AnimatorSet();
+            set.playTogether(zoomInX, zoomInY, opacity);
+            set.start();
+            FragmentManager fm = getSupportFragmentManager();
+            FragmentTransaction ft = fm.beginTransaction();
+            ft.add(R.id.shopelia_decor_view, new GalleryFragment(), GalleryFragment.TAG);
+            ft.commit();
+        } else {
+
+        }
+    }
+
     @Override
     public void onSensorChanged(SensorEvent sensorEvent) {
 
@@ -231,5 +271,24 @@ public class ProductActivity extends CardHolderActivity implements SensorEventLi
     @Override
     public void onAccuracyChanged(Sensor sensor, int i) {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        View view = v;
+        if (!mZoomed) {
+            super.onBackPressed();
+        } else if (v != null) {
+            mZoomed = false;
+            v = null;
+            ViewGroup rootView = getRootView();
+            ValueAnimator zoomOutX = ObjectAnimator.ofFloat(rootView, "scaleX", 1).setDuration(600);
+            ValueAnimator zoomOutY = ObjectAnimator.ofFloat(rootView, "scaleY", 1).setDuration(600);
+            ValueAnimator opacity = ObjectAnimator.ofFloat(view, "alpha", 1).setDuration(200);
+            AnimatorSet set = new AnimatorSet();
+            set.playTogether(zoomOutX, zoomOutY, opacity);
+            set.start();
+            getEventBus().post(GalleryFragment.DISMISS);
+        }
     }
 }

@@ -2,13 +2,13 @@
     android:id="@+id/shopelia_decor_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-
-    android:background="@color/shopelia_white">
+>
 
     <com.shopelia.android.widget.ViewPager
         android:id="@+id/product_images"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@drawable/shopelia_ic_success_logo"
         />
 
 </FrameLayout>

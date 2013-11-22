@@ -10,7 +10,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.text.Html;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -19,12 +18,23 @@ import android.widget.TextView;
 
 import com.nineoldandroids.animation.ObjectAnimator;
 import com.nineoldandroids.animation.ValueAnimator;
+import com.nineoldandroids.view.ViewHelper;
+import com.nineoldandroids.view.ViewPropertyAnimator;
 import com.shopelia.android.app.CardFragment;
 import com.shopelia.android.model.Product;
 import com.shopelia.android.widget.AsyncImageView;
 import com.shopelia.android.widget.ViewPager;
 
 public class ProductSummaryCardFragment extends CardFragment {
+
+    public class OnImageAskZoomEvent {
+        public final View asker;
+        public final int[] position = mViewPosition;
+
+        private OnImageAskZoomEvent(View asker) {
+            this.asker = asker;
+        }
+    }
 
 	public static final String TAG = "ProductSummary";
 
@@ -251,7 +261,7 @@ public class ProductSummaryCardFragment extends CardFragment {
         private void bindView(View v, int position) {
             ViewHolder holder = (ViewHolder) v.getTag();
             holder.image.setUrl(mUrls[position]);
-            //holder.image.setOnClickListener(mOnClickImageListener);
+            holder.image.setOnClickListener(mOnClickImageListener);
         }
 
         private class ViewHolder {
@@ -288,14 +298,13 @@ public class ProductSummaryCardFragment extends CardFragment {
         }
     };
 
+    private int[] mViewPosition = new int[2];
+
     private OnClickListener mOnClickImageListener = new OnClickListener() {
         @Override
         public void onClick(View view) {
-            FragmentManager fm = getBaseActivity().getSupportFragmentManager();
-            FragmentTransaction ft = fm.beginTransaction();
-            ft.add(R.id.shopelia_decor_view, new GalleryFragment(), GalleryFragment.TAG);
-            ft.addToBackStack(null);
-            ft.commit();
+          view.getLocationInWindow(mViewPosition);
+          getActivityEventBus().post(new OnImageAskZoomEvent(view));
         }
     };
 
