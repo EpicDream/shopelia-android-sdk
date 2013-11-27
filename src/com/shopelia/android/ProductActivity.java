@@ -236,6 +236,9 @@ public class ProductActivity extends CardHolderActivity implements SensorEventLi
     private View v;
 
     public void onEventMainThread(ProductSummaryCardFragment.OnImageAskZoomEvent event) {
+        if (true) {
+            return;
+        }
         if (mZoomed) {
             return ;
         }
