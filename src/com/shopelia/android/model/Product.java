@@ -310,7 +310,7 @@ public class Product implements BaseModel<Product> {
 
 	@Override
 	public boolean isValid() {
-		return hasVersion() && getCurrentVersion().isValid()
+		return hasVersion() && getCurrentVersion() != null && getCurrentVersion().isValid()
 				&& merchant != null;
 	}
 

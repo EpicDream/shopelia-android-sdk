@@ -55,6 +55,9 @@ public class ProductOptionsFragment extends ShopeliaFragment<Void> {
     }
 
     private void refreshUi(Product product) {
+        if (product == null) {
+            return ;
+        }
         mIsRefreshing = true;
         mIsLoading = getBaseActivity().isInWaitingMode();
         if (mOptionsItems == null) {

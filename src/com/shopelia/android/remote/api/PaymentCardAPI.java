@@ -4,6 +4,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.shopelia.android.http.JsonAsyncCallback;
 import com.shopelia.android.manager.UserManager;
@@ -45,6 +46,7 @@ public class PaymentCardAPI extends ApiController {
 
             @Override
             public void onComplete(HttpResponse response, JSONObject object) {
+                Log.d(null, response.getBodyAsString());
                 try {
                     PaymentCard card = PaymentCard.inflate(object.getJSONObject(PaymentCard.Api.PAYMENT_CARD));
                     user.paymentCards.add(card);

@@ -167,7 +167,20 @@ public class User implements BaseModel<User> {
             user.paymentCards = new ArrayList<PaymentCard>();
         }
         user.has_password = json.optInt(Api.HAS_PASSWORD);
+        user.ensurePaymentCardAreValid();
         return user;
+    }
+
+    public void ensurePaymentCardAreValid() {
+        int count = paymentCards.size();
+        for (int index = 0; index < count; index++) {
+            PaymentCard card = paymentCards.get(index);
+            if (!card.isValid()) {
+                paymentCards.remove(index);
+                count--;
+                index--;
+            }
+        }
     }
 
     public static JSONObject createObjectForAccountCreation(User user, Address address, PaymentCard card) throws JSONException {
